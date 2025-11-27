@@ -31,7 +31,8 @@
     "recharts": "^2.12.7",
     "zustand": "^4.5.2",
     "axios": "^1.6.8",
-    "date-fns": "^3.6.0"
+    "date-fns": "^3.6.0",
+    "tailwindcss-animate": "^1.0.7"
   },
   "devDependencies": {
     "eslint": "^8",

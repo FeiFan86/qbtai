@@ -1,4 +1,5 @@
-import { create, persist, createJSONStorage } from 'zustand'
+import { create } from 'zustand'
+import { persist, createJSONStorage } from 'zustand/middleware'
 
 // 定义情感分析结果的类型
 export interface EmotionAnalysisResult {
