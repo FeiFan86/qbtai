@@ -95,7 +95,25 @@ export function ChatEmotionAnalysis({ onNewMessage }: ChatEmotionAnalysisProps) 
   }
 
   const generateResponseMessage = (analysis: any) => {
-    const { primaryEmotion, confidence, sentiment, suggestions } = analysis
+    const { overall, emotions, sentiment, suggestions } = analysis
+    
+    // 从情感数组中找出分数最高的情感作为主要情感
+    const primaryEmotion = emotions && emotions.length > 0 
+      ? emotions.reduce((max: any, emotion: any) => emotion.score > max.score ? emotion : max).type
+      : '未知情感'
+    
+    // 使用整体置信度或默认值
+    const confidence = overall?.confidence || 0.75
+    
+    // 使用整体情感倾向或从情感数组推断
+    const sentimentType = overall?.sentiment || 
+      (emotions && emotions.length > 0 
+        ? emotions.some((e: any) => e.type.includes('快乐') || e.type.includes('开心')) 
+          ? 'positive' 
+          : emotions.some((e: any) => e.type.includes('悲伤') || e.type.includes('愤怒')) 
+            ? 'negative' 
+            : 'neutral'
+        : 'neutral')
     
     const responses = {
       positive: [
@@ -115,8 +133,8 @@ export function ChatEmotionAnalysis({ onNewMessage }: ChatEmotionAnalysisProps) 
       ]
     }
 
-    const sentimentKey = sentiment === 'positive' ? 'positive' : 
-                        sentiment === 'negative' ? 'negative' : 'neutral'
+    const sentimentKey = sentimentType === 'positive' ? 'positive' : 
+                        sentimentType === 'negative' ? 'negative' : 'neutral'
     
     const randomResponse = responses[sentimentKey][Math.floor(Math.random() * responses[sentimentKey].length)]
     
