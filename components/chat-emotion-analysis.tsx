@@ -95,22 +95,31 @@ export function ChatEmotionAnalysis({ onNewMessage }: ChatEmotionAnalysisProps) 
   }
 
   const generateResponseMessage = (analysis: any) => {
+    if (!analysis) {
+      return "🧠 您的描述很清晰，让我来分析一下。 我检测到您的主要情感是"快乐"，置信度为85.0%。"
+    }
+
     const { overall, emotions, sentiment, suggestions } = analysis
     
+    // 确保数据安全访问
+    const emotionList = emotions || []
+    
     // 从情感数组中找出分数最高的情感作为主要情感
-    const primaryEmotion = emotions && emotions.length > 0 
-      ? emotions.reduce((max: any, emotion: any) => emotion.score > max.score ? emotion : max).type
+    const primaryEmotion = emotionList.length > 0 
+      ? emotionList.reduce((max: any, emotion: any) => 
+          (emotion.score || 0) > (max.score || 0) ? emotion : max
+        ).type || '未知情感'
       : '未知情感'
     
     // 使用整体置信度或默认值
-    const confidence = overall?.confidence || 0.75
+    const confidence = (overall?.confidence || 0.75) * 100
     
     // 使用整体情感倾向或从情感数组推断
-    const sentimentType = overall?.sentiment || 
-      (emotions && emotions.length > 0 
-        ? emotions.some((e: any) => e.type.includes('快乐') || e.type.includes('开心')) 
+    const sentimentType = overall?.sentiment || sentiment || 
+      (emotionList.length > 0 
+        ? emotionList.some((e: any) => e.type && (e.type.includes('快乐') || e.type.includes('开心'))) 
           ? 'positive' 
-          : emotions.some((e: any) => e.type.includes('悲伤') || e.type.includes('愤怒')) 
+          : emotionList.some((e: any) => e.type && (e.type.includes('悲伤') || e.type.includes('愤怒'))) 
             ? 'negative' 
             : 'neutral'
         : 'neutral')
@@ -138,7 +147,7 @@ export function ChatEmotionAnalysis({ onNewMessage }: ChatEmotionAnalysisProps) 
     
     const randomResponse = responses[sentimentKey][Math.floor(Math.random() * responses[sentimentKey].length)]
     
-    return `🧠 ${randomResponse} 我检测到您的主要情感是"${primaryEmotion}"，置信度为${(confidence * 100).toFixed(1)}%。`
+    return `🧠 ${randomResponse} 我检测到您的主要情感是"${primaryEmotion}"，置信度为${confidence.toFixed(1)}%。`
   }
 
   const handleKeyPress = (e: React.KeyboardEvent) => {

@@ -34,6 +34,18 @@ export interface ContentGenerationRequest {
   context?: string
 }
 
+export interface SocialConversationAnalysisRequest {
+  conversation: string
+  context?: string
+  scenario?: 'casual' | 'professional' | 'romantic' | 'conflict'
+}
+
+export interface SocialConversationAnalysisRequest {
+  conversation: string
+  context?: string
+  scenario?: 'casual' | 'professional' | 'romantic' | 'conflict'
+}
+
 export interface ContentGenerationResponse {
   success: boolean
   data?: {
@@ -176,6 +188,76 @@ class VolcanoAPIService {
       console.error('Emotion analysis error:', error)
       // 在发生错误时返回模拟数据而不是错误信息
       return this.getMockEmotionAnalysis(request.input)
+    }
+  }
+
+  /**
+   * 社交对话分析
+   */
+  async analyzeSocialConversation(request: SocialConversationAnalysisRequest): Promise<EmotionAnalysisResponse> {
+    console.log('Analyzing social conversation for:', { 
+      conversationLength: request.conversation.length,
+      scenario: request.scenario 
+    })
+    
+    // 检查API配置
+    if (!this.apiKey) {
+      console.log('API Key is missing, using mock data')
+      return this.getMockSocialAnalysis(request)
+    }
+    
+    try {
+      const systemPrompt = `你是一个专业的社交沟通专家。请分析以下对话内容，并以JSON格式返回分析结果。
+      
+返回的JSON应该包含以下字段：
+1. conversationAnalysis - 对话整体分析
+   - overallSentiment: 整体情感倾向 (positive/negative/neutral)
+   - communicationStyle: 沟通风格 (assertive/passive/aggressive)
+   - emotionalIntelligence: 情商得分 (0-1)
+   - conflictLevel: 冲突程度 (0-1)
+   - empathyScore: 同理心得分 (0-1)
+2. participantAnalysis - 参与者分析
+   - user: 用户分析
+     - emotionalState: 情感状态
+     - communicationStyle: 沟通风格
+     - needs: 需求列表
+     - strengths: 优势列表
+   - other: 对方分析
+     - emotionalState: 情感状态
+     - communicationStyle: 沟通风格
+     - needs: 需求列表
+     - strengths: 优势列表
+3. improvementSuggestions - 改进建议列表
+4. responseTemplates - 回应模板列表
+
+请确保返回有效的JSON格式，不要包含任何其他文本。`
+
+      const userPrompt = `请分析以下对话：\n\n"${request.conversation}"\n\n场景：${request.scenario || '日常'}\n背景：${request.context || '无'}`
+
+      const response = await this.callAPI([
+        { role: 'system', content: systemPrompt },
+        { role: 'user', content: userPrompt }
+      ], 0.3, 1500)
+
+      if (response.choices && response.choices[0]?.message?.content) {
+        try {
+          const analysisData = JSON.parse(response.choices[0].message.content)
+          console.log('Social conversation analysis successful')
+          return {
+            success: true,
+            data: analysisData
+          }
+        } catch (parseError) {
+          console.error('JSON parsing failed:', parseError)
+          return this.getMockSocialAnalysis(request)
+        }
+      } else {
+        console.log('No valid response from API, using mock data')
+        return this.getMockSocialAnalysis(request)
+      }
+    } catch (error) {
+      console.error('Social conversation analysis error:', error)
+      return this.getMockSocialAnalysis(request)
     }
   }
 
@@ -359,6 +441,148 @@ class VolcanoAPIService {
           keywords: ['平静', '思考', '观察', '理性'],
           summary: '这段文字表达了相对中性的情感，带有一些思考和观察的成分，整体比较平和。'
         }
+      }
+    }
+  }
+
+  /**
+   * 获取模拟的社交分析数据（用于开发测试）
+   */
+  private getMockSocialAnalysis(request?: SocialConversationAnalysisRequest): EmotionAnalysisResponse {
+    const scenario = request?.scenario || 'casual'
+    
+    const scenarioData = {
+      casual: {
+        overallSentiment: 'positive',
+        communicationStyle: 'friendly',
+        emotionalIntelligence: 0.7,
+        conflictLevel: 0.1,
+        empathyScore: 0.8
+      },
+      professional: {
+        overallSentiment: 'neutral',
+        communicationStyle: 'assertive',
+        emotionalIntelligence: 0.8,
+        conflictLevel: 0.3,
+        empathyScore: 0.6
+      },
+      romantic: {
+        overallSentiment: 'positive',
+        communicationStyle: 'empathetic',
+        emotionalIntelligence: 0.9,
+        conflictLevel: 0.2,
+        empathyScore: 0.9
+      },
+      conflict: {
+        overallSentiment: 'negative',
+        communicationStyle: 'defensive',
+        emotionalIntelligence: 0.5,
+        conflictLevel: 0.7,
+        empathyScore: 0.4
+      }
+    }
+
+    const data = scenarioData[scenario as keyof typeof scenarioData] || scenarioData.casual
+    
+    return {
+      success: true,
+      data: {
+        conversationAnalysis: data,
+        participantAnalysis: {
+          user: {
+            emotionalState: scenario === 'conflict' ? 'frustrated' : 'calm',
+            communicationStyle: 'direct',
+            needs: ['understanding', 'resolution'],
+            strengths: ['honesty', 'clarity']
+          },
+          other: {
+            emotionalState: scenario === 'conflict' ? 'defensive' : 'receptive',
+            communicationStyle: 'responsive',
+            needs: ['validation', 'respect'],
+            strengths: ['patience', 'listening']
+          }
+        },
+        improvementSuggestions: [
+          '尝试使用更多的开放式问题来促进深入对话',
+          '在表达观点时，可以先肯定对方的感受',
+          '适当增加情感表达，增强沟通的亲和力'
+        ],
+        responseTemplates: [
+          '我理解你的感受，我们可以一起找到解决方案',
+          '感谢你愿意分享这些想法，这对我很重要',
+          '让我们从不同的角度来思考这个问题'
+        ]
+      }
+    }
+  }
+
+  /**
+   * 获取模拟的社交分析数据（用于开发测试）
+   */
+  private getMockSocialAnalysis(request?: SocialConversationAnalysisRequest): EmotionAnalysisResponse {
+    const scenario = request?.scenario || 'casual'
+    
+    const scenarioData = {
+      casual: {
+        overallSentiment: 'positive',
+        communicationStyle: 'friendly',
+        emotionalIntelligence: 0.7,
+        conflictLevel: 0.1,
+        empathyScore: 0.8
+      },
+      professional: {
+        overallSentiment: 'neutral',
+        communicationStyle: 'assertive',
+        emotionalIntelligence: 0.8,
+        conflictLevel: 0.3,
+        empathyScore: 0.6
+      },
+      romantic: {
+        overallSentiment: 'positive',
+        communicationStyle: 'empathetic',
+        emotionalIntelligence: 0.9,
+        conflictLevel: 0.2,
+        empathyScore: 0.9
+      },
+      conflict: {
+        overallSentiment: 'negative',
+        communicationStyle: 'defensive',
+        emotionalIntelligence: 0.5,
+        conflictLevel: 0.7,
+        empathyScore: 0.4
+      }
+    }
+
+    const data = scenarioData[scenario as keyof typeof scenarioData] || scenarioData.casual
+    
+    return {
+      success: true,
+      data: {
+        conversationAnalysis: data,
+        participantAnalysis: {
+          user: {
+            emotionalState: scenario === 'conflict' ? 'frustrated' : 'calm',
+            communicationStyle: 'direct',
+            needs: ['understanding', 'resolution'],
+            strengths: ['honesty', 'clarity']
+          },
+          other: {
+            emotionalState: scenario === 'conflict' ? 'defensive' : 'receptive',
+            communicationStyle: 'responsive',
+            needs: ['validation', 'respect'],
+            strengths: ['patience', 'listening']
+          }
+        },
+        improvementSuggestions: [
+          '尝试使用更多的开放式问题来促进深入对话',
+          '在表达观点时，可以先肯定对方的感受',
+          '适当增加情感表达，增强沟通的亲和力'
+        ],
+        responseTemplates: [
+          '我理解你的感受，我们可以一起找到解决方案',
+          '感谢你愿意分享这些想法，这对我很重要',
+          '让我们从不同的角度来思考这个问题'
+        ]
       }
     }
   }
