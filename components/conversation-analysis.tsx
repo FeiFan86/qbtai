@@ -1,7 +1,7 @@
 'use client'
 
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from './ui/card'
-import { Badge } from './ui/badge'
+import { Badge } from '@/components/ui/badge'
 import { Progress } from './ui/progress'
 import { MessageCircle, Users, TrendingUp, AlertTriangle } from 'lucide-react'
 

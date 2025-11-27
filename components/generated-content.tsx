@@ -2,7 +2,7 @@
 
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from './ui/card'
 import { Button } from './ui/button'
-import { Badge } from './ui/badge'
+import { Badge } from '@/components/ui/badge'
 import { Copy, RefreshCw, Download, Share } from 'lucide-react'
 
 interface GeneratedContentProps {
