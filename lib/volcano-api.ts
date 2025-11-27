@@ -367,14 +367,14 @@ class VolcanoAPIService {
    * 获取模拟的内容生成数据（用于开发测试）
    */
   private getMockContentGeneration(request?: ContentGenerationRequest): ContentGenerationResponse {
-    const styleMap = {
+    const styleMap: Record<string, string> = {
       formal: '正式、专业',
       casual: '轻松、随意',
       emotional: '富有情感、感染力',
       professional: '严谨、专业'
     }
     
-    const lengthMap = {
+    const lengthMap: Record<string, string> = {
       short: '简短精炼',
       medium: '中等长度',
       long: '详细全面'
