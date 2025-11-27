@@ -156,8 +156,8 @@ class VolcanoAPIService {
     
     try {
       // 检查API配置
-      if (!this.apiKey) {
-        console.log('API Key is missing, using mock data')
+      if (!this.apiKey || this.apiKey === '226be07e-95ad-4fec-a564-1963c6e04711') {
+        console.log('API Key is missing or default, using mock data')
         return this.getMockEmotionAnalysis(request.input)
       }
 
@@ -201,17 +201,26 @@ class VolcanoAPIService {
           }
         } catch (parseError) {
           console.error('JSON parsing failed:', parseError)
-          // 如果JSON解析失败，返回模拟数据
-          return this.getMockEmotionAnalysis(request.input)
+          // 如果JSON解析失败，返回错误信息
+          return {
+            success: false,
+            error: 'JSON解析失败：' + parseError.message
+          }
         }
       } else {
-        console.log('No valid response from API, using mock data')
-        return this.getMockEmotionAnalysis(request.input)
+        console.log('No valid response from API')
+        return {
+          success: false,
+          error: 'API未返回有效响应'
+        }
       }
     } catch (error) {
       console.error('Emotion analysis error:', error)
-      // 在发生错误时返回模拟数据而不是错误信息
-      return this.getMockEmotionAnalysis(request.input)
+      // 在发生错误时返回错误信息
+      return {
+        success: false,
+        error: '情感分析失败：' + error.message
+      }
     }
   }
 
@@ -225,8 +234,8 @@ class VolcanoAPIService {
     })
     
     // 检查API配置
-    if (!this.apiKey) {
-      console.log('API Key is missing, using mock data')
+    if (!this.apiKey || this.apiKey === '226be07e-95ad-4fec-a564-1963c6e04711') {
+      console.log('API Key is missing or default, using mock data')
       return this.getMockSocialAnalysis(request)
     }
     
@@ -273,15 +282,24 @@ class VolcanoAPIService {
           }
         } catch (parseError) {
           console.error('JSON parsing failed:', parseError)
-          return this.getMockSocialAnalysis(request)
+          return {
+            success: false,
+            error: 'JSON解析失败：' + parseError.message
+          }
         }
       } else {
-        console.log('No valid response from API, using mock data')
-        return this.getMockSocialAnalysis(request)
+        console.log('No valid response from API')
+        return {
+          success: false,
+          error: 'API未返回有效响应'
+        }
       }
     } catch (error) {
       console.error('Social conversation analysis error:', error)
-      return this.getMockSocialAnalysis(request)
+      return {
+        success: false,
+        error: '社交对话分析失败：' + error.message
+      }
     }
   }
 
@@ -292,8 +310,8 @@ class VolcanoAPIService {
     console.log('Generating content for:', request)
     
     // 检查API配置
-    if (!this.apiKey) {
-      console.log('API Key is missing, using mock data')
+    if (!this.apiKey || this.apiKey === '226be07e-95ad-4fec-a564-1963c6e04711') {
+      console.log('API Key is missing or default, using mock data')
       return this.getMockContentGeneration(request)
     }
     
@@ -335,13 +353,18 @@ class VolcanoAPIService {
           }
         }
       } else {
-        console.log('No valid response from API, using mock data')
-        return this.getMockContentGeneration(request)
+        console.log('No valid response from API')
+        return {
+          success: false,
+          error: 'API未返回有效响应'
+        }
       }
     } catch (error) {
       console.error('Content generation error:', error)
-      // 在发生错误时返回模拟数据而不是错误信息
-      return this.getMockContentGeneration(request)
+      return {
+        success: false,
+        error: '内容生成失败：' + error.message
+      }
     }
   }
 
