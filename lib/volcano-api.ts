@@ -40,10 +40,34 @@ export interface SocialConversationAnalysisRequest {
   scenario?: 'casual' | 'professional' | 'romantic' | 'conflict'
 }
 
-export interface SocialConversationAnalysisRequest {
-  conversation: string
-  context?: string
-  scenario?: 'casual' | 'professional' | 'romantic' | 'conflict'
+export interface SocialConversationAnalysisResponse {
+  success: boolean
+  data?: {
+    conversationAnalysis: {
+      overallSentiment: string
+      communicationStyle: string
+      emotionalIntelligence: number
+      conflictLevel: number
+      empathyScore: number
+    }
+    participantAnalysis: {
+      user: {
+        emotionalState: string
+        communicationStyle: string
+        needs: string[]
+        strengths: string[]
+      }
+      other: {
+        emotionalState: string
+        communicationStyle: string
+        needs: string[]
+        strengths: string[]
+      }
+    }
+    improvementSuggestions: string[]
+    responseTemplates: string[]
+  }
+  error?: string
 }
 
 export interface ContentGenerationResponse {
@@ -194,7 +218,7 @@ class VolcanoAPIService {
   /**
    * 社交对话分析
    */
-  async analyzeSocialConversation(request: SocialConversationAnalysisRequest): Promise<EmotionAnalysisResponse> {
+  async analyzeSocialConversation(request: SocialConversationAnalysisRequest): Promise<SocialConversationAnalysisResponse> {
     console.log('Analyzing social conversation for:', { 
       conversationLength: request.conversation.length,
       scenario: request.scenario 
@@ -448,7 +472,7 @@ class VolcanoAPIService {
   /**
    * 获取模拟的社交分析数据（用于开发测试）
    */
-  private getMockSocialAnalysis(request?: SocialConversationAnalysisRequest): EmotionAnalysisResponse {
+  private getMockSocialAnalysis(request?: SocialConversationAnalysisRequest): SocialConversationAnalysisResponse {
     const scenario = request?.scenario || 'casual'
     
     const scenarioData = {
