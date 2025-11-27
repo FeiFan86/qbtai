@@ -22,9 +22,10 @@ interface EmotionAnalysisResultProps {
     keywords: string[]
     summary: string
   }
+  compact?: boolean
 }
 
-export function EmotionAnalysisResult({ result }: EmotionAnalysisResultProps) {
+export function EmotionAnalysisResult({ result, compact = false }: EmotionAnalysisResultProps) {
   const getSentimentIcon = (sentiment: string) => {
     switch (sentiment) {
       case 'positive':
