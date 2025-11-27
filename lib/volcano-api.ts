@@ -202,9 +202,10 @@ class VolcanoAPIService {
         } catch (parseError) {
           console.error('JSON parsing failed:', parseError)
           // 如果JSON解析失败，返回错误信息
+          const errorMessage = parseError instanceof Error ? parseError.message : '未知的JSON解析错误'
           return {
             success: false,
-            error: 'JSON解析失败：' + parseError.message
+            error: 'JSON解析失败：' + errorMessage
           }
         }
       } else {
@@ -217,9 +218,10 @@ class VolcanoAPIService {
     } catch (error) {
       console.error('Emotion analysis error:', error)
       // 在发生错误时返回错误信息
+      const errorMessage = error instanceof Error ? error.message : '未知的情感分析错误'
       return {
         success: false,
-        error: '情感分析失败：' + error.message
+        error: '情感分析失败：' + errorMessage
       }
     }
   }
@@ -296,9 +298,10 @@ class VolcanoAPIService {
       }
     } catch (error) {
       console.error('Social conversation analysis error:', error)
+      const errorMessage = error instanceof Error ? error.message : '未知的社交对话分析错误'
       return {
         success: false,
-        error: '社交对话分析失败：' + error.message
+        error: '社交对话分析失败：' + errorMessage
       }
     }
   }
@@ -361,9 +364,10 @@ class VolcanoAPIService {
       }
     } catch (error) {
       console.error('Content generation error:', error)
+      const errorMessage = error instanceof Error ? error.message : '未知的内容生成错误'
       return {
         success: false,
-        error: '内容生成失败：' + error.message
+        error: '内容生成失败：' + errorMessage
       }
     }
   }
