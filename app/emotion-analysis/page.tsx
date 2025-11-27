@@ -37,18 +37,14 @@ export default function EmotionAnalysisPage() {
           </div>
 
           <Tabs value={activeTab} onValueChange={setActiveTab} className="space-y-6">
-            <TabsList className="grid w-full grid-cols-3">
+            <TabsList className="grid w-full grid-cols-2">
               <TabsTrigger value="chat" className="flex items-center gap-2">
                 <MessageSquare className="h-4 w-4" />
                 对话分析
               </TabsTrigger>
-              <TabsTrigger value="text" className="flex items-center gap-2">
-                <MessageCircle className="h-4 w-4" />
-                文本分析
-              </TabsTrigger>
               <TabsTrigger value="advanced" className="flex items-center gap-2">
                 <Brain className="h-4 w-4" />
-                高级分析
+                高级功能
               </TabsTrigger>
             </TabsList>
             
@@ -83,74 +79,6 @@ export default function EmotionAnalysisPage() {
                       </CardContent>
                     </Card>
                   )}
-                </div>
-              </div>
-            </TabsContent>
-            
-            <TabsContent value="text" className="space-y-6">
-              <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-                {/* 传统文本分析 */}
-                <div className="lg:col-span-2">
-                  <Card>
-                    <CardHeader>
-                      <CardTitle className="flex items-center gap-2">
-                        <MessageCircle className="h-5 w-5 text-pink-500" />
-                        文本情感分析
-                      </CardTitle>
-                      <CardDescription>
-                        输入您想分析的文字内容，AI将为您提供详细的情感分析
-                      </CardDescription>
-                    </CardHeader>
-                    <CardContent>
-                      <div className="text-center py-12">
-                        <MessageSquare className="h-16 w-16 mx-auto text-gray-300 mb-4" />
-                        <p className="text-gray-500">传统文本分析功能已整合到对话模式中</p>
-                        <p className="text-sm text-gray-400 mt-2">
-                          请切换到"对话分析"标签体验更流畅的交互
-                        </p>
-                      </div>
-                    </CardContent>
-                  </Card>
-                </div>
-                
-                {/* 功能介绍 */}
-                <div className="space-y-6">
-                  <Card>
-                    <CardHeader>
-                      <CardTitle className="text-lg">对话分析优势</CardTitle>
-                    </CardHeader>
-                    <CardContent className="space-y-3">
-                      <div className="flex items-start gap-3">
-                        <div className="w-6 h-6 rounded-full bg-pink-100 flex items-center justify-center flex-shrink-0 mt-0.5">
-                          <span className="text-xs font-medium text-pink-600">1</span>
-                        </div>
-                        <div>
-                          <p className="text-sm font-medium">实时交互</p>
-                          <p className="text-xs text-gray-600">多轮对话，深入理解情感变化</p>
-                        </div>
-                      </div>
-                      
-                      <div className="flex items-start gap-3">
-                        <div className="w-6 h-6 rounded-full bg-purple-100 flex items-center justify-center flex-shrink-0 mt-0.5">
-                          <span className="text-xs font-medium text-purple-600">2</span>
-                        </div>
-                        <div>
-                          <p className="text-sm font-medium">上下文感知</p>
-                          <p className="text-xs text-gray-600">基于对话历史进行更准确的分析</p>
-                        </div>
-                      </div>
-                      
-                      <div className="flex items-start gap-3">
-                        <div className="w-6 h-6 rounded-full bg-indigo-100 flex items-center justify-center flex-shrink-0 mt-0.5">
-                          <span className="text-xs font-medium text-indigo-600">3</span>
-                        </div>
-                        <div>
-                          <p className="text-sm font-medium">自然流畅</p>
-                          <p className="text-xs text-gray-600">像与朋友聊天一样分享感受</p>
-                        </div>
-                      </div>
-                    </CardContent>
-                  </Card>
                 </div>
               </div>
             </TabsContent>

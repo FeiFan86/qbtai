@@ -183,9 +183,9 @@ export function ChatEmotionAnalysis({ onNewMessage }: ChatEmotionAnalysisProps) 
         </CardDescription>
       </CardHeader>
       
-      <CardContent className="flex-1 flex flex-col space-y-4">
+      <CardContent className="flex-1 flex flex-col min-h-0">
         {/* 对话区域 */}
-        <div className="flex-1 overflow-y-auto space-y-4 max-h-96">
+        <div className="flex-1 overflow-y-auto space-y-4 mb-4">
           {messages.length === 0 ? (
             <div className="text-center py-8 text-gray-500">
               <Brain className="h-12 w-12 mx-auto mb-4 text-gray-300" />
