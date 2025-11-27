@@ -7,20 +7,87 @@ import { Lightbulb, MessageSquare, ArrowRight, CheckCircle, TrendingUp } from 'l
 
 interface SocialStrategiesProps {
   result: {
-    suggestions: {
-      strategies: string[]
-      phraseSuggestions: string[]
-      improvements: string[]
+    conversationAnalysis: {
+      overallSentiment: string
+      communicationStyle: string
+      emotionalIntelligence: number
+      conflictLevel: number
+      empathyScore: number
     }
-    outcome: {
-      currentTrajectory: string
-      idealOutcome: string
-      nextSteps: string[]
+    participantAnalysis: {
+      user: {
+        emotionalState: string
+        communicationStyle: string
+        needs: string[]
+        strengths: string[]
+      }
+      other: {
+        emotionalState: string
+        communicationStyle: string
+        needs: string[]
+        strengths: string[]
+      }
     }
+    improvementSuggestions: string[]
+    responseTemplates: string[]
   }
 }
 
 export function SocialStrategies({ result }: SocialStrategiesProps) {
+  // 基于分析结果生成策略建议
+  const getCommunicationStrategies = () => {
+    const strategies = []
+    
+    // 基于情感倾向的策略
+    if (result.conversationAnalysis.overallSentiment === 'positive') {
+      strategies.push('继续保持积极态度，增强双方的信任关系')
+      strategies.push('适时表达赞赏和肯定，强化积极氛围')
+    } else if (result.conversationAnalysis.overallSentiment === 'negative') {
+      strategies.push('先处理情绪，再处理问题，避免情绪升级')
+      strategies.push('使用"我"开头的表达方式，减少指责性语言')
+    }
+    
+    // 基于沟通风格的策略
+    if (result.conversationAnalysis.communicationStyle === 'assertive') {
+      strategies.push('平衡自信表达与尊重对方感受')
+    } else if (result.conversationAnalysis.communicationStyle === 'defensive') {
+      strategies.push('尝试开放心态，减少防御性反应')
+    }
+    
+    // 基于冲突程度的策略
+    if (result.conversationAnalysis.conflictLevel > 0.5) {
+      strategies.push('先暂停对话，等情绪平复后再继续')
+      strategies.push('寻找共同点，建立共识基础')
+    }
+    
+    return strategies
+  }
+
+  // 生成行动建议
+  const getActionSteps = () => {
+    const steps = []
+    
+    if (result.conversationAnalysis.empathyScore < 0.6) {
+      steps.push('练习换位思考，理解对方立场')
+    }
+    
+    if (result.conversationAnalysis.emotionalIntelligence < 0.7) {
+      steps.push('提高情绪觉察能力，识别双方情绪变化')
+    }
+    
+    if (result.conversationAnalysis.conflictLevel > 0.3) {
+      steps.push('学习非暴力沟通技巧，减少冲突')
+    }
+    
+    steps.push('定期回顾对话，总结经验教训')
+    steps.push('保持开放心态，持续改进沟通方式')
+    
+    return steps
+  }
+
+  const strategies = getCommunicationStrategies()
+  const actionSteps = getActionSteps()
+
   return (
     <Card>
       <CardHeader>
@@ -37,7 +104,7 @@ export function SocialStrategies({ result }: SocialStrategiesProps) {
         <div>
           <h4 className="text-sm font-medium mb-3">推荐沟通策略</h4>
           <div className="space-y-2">
-            {result.suggestions.strategies.map((strategy, index) => (
+            {strategies.map((strategy, index) => (
               <div key={index} className="flex items-start gap-2">
                 <CheckCircle className="h-4 w-4 text-green-500 mt-0.5" />
                 <p className="text-sm">{strategy}</p>
@@ -46,51 +113,46 @@ export function SocialStrategies({ result }: SocialStrategiesProps) {
           </div>
         </div>
 
-        {/* 话术建议 */}
+        {/* 对方需求分析 */}
         <div>
-          <h4 className="text-sm font-medium mb-3">话术建议</h4>
-          <div className="space-y-2">
-            {result.suggestions.phraseSuggestions.map((phrase, index) => (
-              <div key={index} className="border rounded-lg p-2 bg-blue-50">
-                <div className="flex items-center gap-2">
-                  <MessageSquare className="h-4 w-4 text-blue-500" />
-                  <p className="text-sm italic">"{phrase}"</p>
-                </div>
-              </div>
-            ))}
-          </div>
-        </div>
-
-        {/* 改进方向 */}
-        <div>
-          <h4 className="text-sm font-medium mb-3">改进方向</h4>
+          <h4 className="text-sm font-medium mb-3">对方需求分析</h4>
           <div className="flex flex-wrap gap-2">
-            {result.suggestions.improvements.map((improvement, index) => (
-              <Badge key={index} variant="outline" className="bg-purple-50 text-purple-700 border-purple-200">
-                {improvement}
+            {result.participantAnalysis.other.needs.map((need, index) => (
+              <Badge key={index} variant="outline" className="bg-blue-50 text-blue-700 border-blue-200">
+                {need}
               </Badge>
             ))}
           </div>
         </div>
 
-        {/* 预测结果 */}
-        <div className="pt-2 border-t">
-          <div className="grid grid-cols-1 gap-3">
-            <div>
-              <h4 className="text-sm font-medium mb-1">当前发展趋势</h4>
-              <div className="border rounded-lg p-3 bg-orange-50">
-                <p className="text-sm text-orange-800">{result.outcome.currentTrajectory}</p>
-              </div>
-            </div>
-            
-            <div>
-              <h4 className="text-sm font-medium mb-1">理想结果</h4>
-              <div className="border rounded-lg p-3 bg-green-50">
-                <p className="text-sm text-green-800">{result.outcome.idealOutcome}</p>
-              </div>
-            </div>
+        {/* 用户优势分析 */}
+        <div>
+          <h4 className="text-sm font-medium mb-3">您的沟通优势</h4>
+          <div className="flex flex-wrap gap-2">
+            {result.participantAnalysis.user.strengths.map((strength, index) => (
+              <Badge key={index} variant="outline" className="bg-green-50 text-green-700 border-green-200">
+                {strength}
+              </Badge>
+            ))}
           </div>
         </div>
+
+        {/* 改进建议 */}
+        {result.improvementSuggestions.length > 0 && (
+          <div>
+            <h4 className="text-sm font-medium mb-3">具体改进建议</h4>
+            <div className="space-y-2">
+              {result.improvementSuggestions.map((suggestion, index) => (
+                <div key={index} className="border rounded-lg p-2 bg-purple-50">
+                  <div className="flex items-center gap-2">
+                    <MessageSquare className="h-4 w-4 text-purple-500" />
+                    <p className="text-sm">{suggestion}</p>
+                  </div>
+                </div>
+              ))}
+            </div>
+          </div>
+        )}
 
         {/* 下一步行动 */}
         <div>
@@ -99,7 +161,7 @@ export function SocialStrategies({ result }: SocialStrategiesProps) {
             下一步行动
           </h4>
           <div className="space-y-2">
-            {result.outcome.nextSteps.map((step, index) => (
+            {actionSteps.map((step, index) => (
               <div key={index} className="flex items-center justify-between border rounded-lg p-2">
                 <p className="text-sm">{step}</p>
                 <Button variant="ghost" size="sm" className="h-8 w-8 p-0">
