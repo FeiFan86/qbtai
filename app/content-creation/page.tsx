@@ -84,7 +84,41 @@ export default function ContentCreationPage() {
   const copyToClipboard = (text: string) => {
     navigator.clipboard.writeText(text).then(() => {
       // 这里可以添加一个提示
+      alert('内容已复制到剪贴板')
+    }).catch(err => {
+      console.error('复制失败:', err)
+      alert('复制失败，请手动复制')
     })
+  }
+
+  const downloadContent = (text: string) => {
+    const blob = new Blob([text], { type: 'text/plain;charset=utf-8' })
+    const url = URL.createObjectURL(blob)
+    const a = document.createElement('a')
+    a.href = url
+    a.download = 'AI生成内容.txt'
+    document.body.appendChild(a)
+    a.click()
+    document.body.removeChild(a)
+    URL.revokeObjectURL(url)
+  }
+
+  const shareContent = (text: string) => {
+    if (navigator.share) {
+      navigator.share({
+        title: 'AI生成的情感内容',
+        text: text,
+      }).then(() => {
+        console.log('分享成功')
+      }).catch(err => {
+        console.error('分享失败:', err)
+        // 如果分享失败，回退到复制功能
+        copyToClipboard(text)
+      })
+    } else {
+      // 如果不支持Web Share API，则复制到剪贴板
+      copyToClipboard(text)
+    }
   }
 
   const contentTemplates = [
@@ -259,6 +293,8 @@ export default function ContentCreationPage() {
                   content={generatedContent} 
                   onCopy={copyToClipboard}
                   onRegenerate={handleGenerate}
+                  onDownload={downloadContent}
+                  onShare={shareContent}
                 />
               )}
               
