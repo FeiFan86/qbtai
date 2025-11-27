@@ -14,7 +14,6 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@
 import { Book, Heart, Calendar, TrendingUp, Search, Filter, Trash2, Edit, Eye } from 'lucide-react'
 import { useAppStore, EmotionAnalysisResult } from '@/lib/store'
 import { format } from 'date-fns'
-import { zhCN } from 'date-fns/locale'
 
 export default function EmotionDiaryPage() {
   const [title, setTitle] = useState('')
@@ -28,22 +27,28 @@ export default function EmotionDiaryPage() {
   
   const { emotionHistory, addEmotionAnalysis, clearHistory } = useAppStore()
 
-  // 过滤后的日记列表
-  const filteredDiaries = emotionHistory.filter(diary => {
+  // 添加调试信息
+  console.log('Emotion history:', emotionHistory)
+
+  // 确保数据存在后再过滤
+  const filteredDiaries = emotionHistory && emotionHistory.length > 0 ? emotionHistory.filter(diary => {
+    // 安全地检查数据结构
+    if (!diary || !diary.result) return false
+    
     const matchesSearch = searchTerm === '' || 
-      diary.result.summary.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      diary.input.toLowerCase().includes(searchTerm.toLowerCase())
+      (diary.result.summary && diary.result.summary.toLowerCase().includes(searchTerm.toLowerCase())) ||
+      (diary.input && diary.input.toLowerCase().includes(searchTerm.toLowerCase()))
     
     const matchesTag = filterTag === '' || 
-      diary.result.keywords.some(keyword => keyword.toLowerCase().includes(filterTag.toLowerCase()))
+      (diary.result.keywords && diary.result.keywords.some(keyword => keyword.toLowerCase().includes(filterTag.toLowerCase())))
     
     return matchesSearch && matchesTag
-  })
+  }) : []
 
-  // 所有标签（用于筛选）
-  const allTags = Array.from(new Set(
-    emotionHistory.flatMap(diary => diary.result.keywords)
-  ))
+  // 安全地获取所有标签
+  const allTags = emotionHistory && emotionHistory.length > 0 ? Array.from(new Set(
+    emotionHistory.flatMap(diary => diary.result && diary.result.keywords ? diary.result.keywords : [])
+  )) : []
 
   // 保存日记
   const handleSaveDiary = async () => {
@@ -65,6 +70,7 @@ export default function EmotionDiaryPage() {
       
       if (response.ok) {
         const result = await response.json()
+        console.log('Analysis result:', result)
         
         // 保存到状态管理
         const diaryEntry: EmotionAnalysisResult = {
@@ -75,7 +81,9 @@ export default function EmotionDiaryPage() {
           result: result.data
         }
         
+        console.log('Saving diary entry:', diaryEntry)
         addEmotionAnalysis(diaryEntry)
+        console.log('Diary saved successfully')
         
         // 重置表单
         setTitle('')
@@ -268,43 +276,84 @@ export default function EmotionDiaryPage() {
                   </div>
                 </div>
                 
-                <Button 
-                  variant="outline" 
-                  size="sm"
-                  onClick={() => clearHistory('emotion')}
-                  className="text-red-600 hover:text-red-700"
-                >
-                  <Trash2 className="h-4 w-4 mr-1" />
-                  清空历史
-                </Button>
+                <div className="flex gap-2">
+                  <Button 
+                    variant="outline" 
+                    size="sm"
+                    onClick={() => {
+                      // 添加测试数据
+                      const testEntry: EmotionAnalysisResult = {
+                        id: Date.now().toString(),
+                        timestamp: new Date().toISOString(),
+                        input: '今天工作很顺利，完成了重要的项目，感觉很有成就感。',
+                        type: 'text',
+                        result: {
+                          emotions: [
+                            { type: '快乐', score: 0.75, color: '#10B981' },
+                            { type: '期待', score: 0.45, color: '#EC4899' },
+                            { type: '信任', score: 0.40, color: '#06B6D4' }
+                          ],
+                          overall: {
+                            sentiment: 'positive',
+                            confidence: 0.85
+                          },
+                          keywords: ['开心', '满足', '积极', '美好'],
+                          summary: '这段文字表达了明显的积极情感，显示出快乐和满足感，对未来抱有期待。'
+                        }
+                      }
+                      addEmotionAnalysis(testEntry)
+                    }}
+                    className="text-blue-600 hover:text-blue-700"
+                  >
+                    添加测试数据
+                  </Button>
+                  <Button 
+                    variant="outline" 
+                    size="sm"
+                    onClick={() => clearHistory('emotion')}
+                    className="text-red-600 hover:text-red-700"
+                  >
+                    <Trash2 className="h-4 w-4 mr-1" />
+                    清空历史
+                  </Button>
+                </div>
               </div>
 
               <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-                {filteredDiaries.length > 0 ? (
+                  {filteredDiaries.length > 0 ? (
                   filteredDiaries.map((diary) => (
                     <Card key={diary.id} className="hover:shadow-md transition-shadow">
                       <CardHeader className="pb-2">
                         <div className="flex items-center justify-between">
-                          <Badge className={getEmotionColor(diary.result.overall.sentiment)}>
-                            {getEmotionText(diary.result.overall.sentiment)}
-                          </Badge>
+                          {diary.result && diary.result.overall ? (
+                            <Badge className={getEmotionColor(diary.result.overall.sentiment)}>
+                              {getEmotionText(diary.result.overall.sentiment)}
+                            </Badge>
+                          ) : (
+                            <Badge variant="outline">未知</Badge>
+                          )}
                           <span className="text-xs text-gray-500">
-                            {format(new Date(diary.timestamp), 'MM/dd', { locale: zhCN })}
+                            {diary.timestamp ? format(new Date(diary.timestamp), 'MM/dd') : '未知日期'}
                           </span>
                         </div>
-                        <CardTitle className="text-lg truncate">{diary.input.substring(0, 30)}...</CardTitle>
+                        <CardTitle className="text-lg truncate">
+                          {diary.input ? `${diary.input.substring(0, 30)}...` : '无标题'}
+                        </CardTitle>
                       </CardHeader>
                       <CardContent>
                         <p className="text-sm text-gray-600 line-clamp-3 mb-3">
-                          {diary.result.summary}
+                          {diary.result && diary.result.summary ? diary.result.summary : '无摘要'}
                         </p>
                         
                         <div className="flex flex-wrap gap-1 mb-3">
-                          {diary.result.keywords.slice(0, 3).map((keyword, index) => (
-                            <Badge key={index} variant="outline" className="text-xs">
-                              {keyword}
-                            </Badge>
-                          ))}
+                          {diary.result && diary.result.keywords && diary.result.keywords.length > 0 ? 
+                            diary.result.keywords.slice(0, 3).map((keyword, index) => (
+                              <Badge key={index} variant="outline" className="text-xs">
+                                {keyword}
+                              </Badge>
+                            )) : 
+                            <Badge variant="outline" className="text-xs">无标签</Badge>
+                          }
                         </div>
                         
                         <div className="flex justify-end gap-2">
