@@ -62,7 +62,7 @@ export default function ContentCreationPage() {
 
   // 获取模拟内容
   const getMockContent = (promptText: string, styleType: string) => {
-    const styleMap = {
+    const styleMap: Record<string, string> = {
       formal: '非常正式的语调',
       casual: '轻松随意的语调',
       emotional: '充满情感的语调',
