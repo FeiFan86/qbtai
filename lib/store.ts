@@ -3,7 +3,7 @@ import { create, persist, createJSONStorage } from 'zustand'
 // 定义情感分析结果的类型
 export interface EmotionAnalysisResult {
   id: string
-  timestamp: Date
+  timestamp: string | Date
   input: string
   type: 'text' | 'voice' | 'image'
   result: {
@@ -24,7 +24,7 @@ export interface EmotionAnalysisResult {
 // 定义内容生成结果的类型
 export interface ContentGenerationResult {
   id: string
-  timestamp: Date
+  timestamp: string | Date
   prompt: string
   style: string
   length: string
@@ -38,7 +38,7 @@ export interface ContentGenerationResult {
 // 定义社交分析结果的类型
 export interface SocialAnalysisResult {
   id: string
-  timestamp: Date
+  timestamp: string | Date
   conversation: string
   context?: string
   scenario: string

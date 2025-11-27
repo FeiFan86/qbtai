@@ -1,7 +1,7 @@
 'use client'
 
 import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer } from 'recharts'
-import { format, parseISO } from 'date-fns'
+import { format } from 'date-fns'
 
 interface EmotionTrendChartProps {
   data?: Array<{
@@ -17,7 +17,7 @@ interface EmotionTrendChartProps {
 export function EmotionTrendChart({ data = [] }: EmotionTrendChartProps) {
   const formatDate = (dateString: string) => {
     try {
-      return format(parseISO(dateString), 'MM/dd')
+      return format(new Date(dateString), 'MM/dd')
     } catch {
       return dateString
     }
@@ -68,85 +68,91 @@ export function EmotionTrendChart({ data = [] }: EmotionTrendChartProps) {
 
   return (
     <div className="w-full h-80">
-      <ResponsiveContainer width="100%" height="100%">
-        <LineChart
-          data={chartData}
-          margin={{
-            top: 5,
-            right: 30,
-            left: 20,
-            bottom: 5,
-          }}
-        >
-          <CartesianGrid strokeDasharray="3 3" className="opacity-30" />
-          <XAxis 
-            dataKey="displayDate" 
-            tick={{ fontSize: 12 }}
-            tickLine={{ stroke: '#e5e7eb' }}
-          />
-          <YAxis 
-            tick={{ fontSize: 12 }}
-            tickLine={{ stroke: '#e5e7eb' }}
-            domain={[0, 1]}
-            tickFormatter={(value) => `${(value * 100).toFixed(0)}%`}
-          />
-          <Tooltip content={<CustomTooltip />} />
-          <Legend 
-            formatter={(value) => emotionNames[value as keyof typeof emotionNames]}
-            wrapperStyle={{ fontSize: '14px' }}
-          />
-          
-          <Line 
-            type="monotone" 
-            dataKey="happiness" 
-            stroke={emotionColors.happiness}
-            strokeWidth={2}
-            dot={{ r: 3 }}
-            activeDot={{ r: 5 }}
-            name="快乐"
-          />
-          
-          <Line 
-            type="monotone" 
-            dataKey="sadness" 
-            stroke={emotionColors.sadness}
-            strokeWidth={2}
-            dot={{ r: 3 }}
-            activeDot={{ r: 5 }}
-            name="悲伤"
-          />
-          
-          <Line 
-            type="monotone" 
-            dataKey="anger" 
-            stroke={emotionColors.anger}
-            strokeWidth={2}
-            dot={{ r: 3 }}
-            activeDot={{ r: 5 }}
-            name="愤怒"
-          />
-          
-          <Line 
-            type="monotone" 
-            dataKey="fear" 
-            stroke={emotionColors.fear}
-            strokeWidth={2}
-            dot={{ r: 3 }}
-            activeDot={{ r: 5 }}
-            name="恐惧"
-          />
-          
-          <Line 
-            type="monotone" 
-            dataKey="surprise" 
-            stroke={emotionColors.surprise}
-            strokeWidth={2}
-            dot={{ r: 3 }}
-            activeDot={{ r: 5 }}
-            name="惊讶"
-          />
-        </LineChart>
-      </ResponsiveContainer>
+      {chartData.length > 0 ? (
+        <ResponsiveContainer width="100%" height="100%">
+          <LineChart
+            data={chartData}
+            margin={{
+              top: 5,
+              right: 30,
+              left: 20,
+              bottom: 5,
+            }}
+          >
+            <CartesianGrid strokeDasharray="3 3" className="opacity-30" />
+            <XAxis 
+              dataKey="displayDate" 
+              tick={{ fontSize: 12 }}
+              tickLine={{ stroke: '#e5e7eb' }}
+            />
+            <YAxis 
+              tick={{ fontSize: 12 }}
+              tickLine={{ stroke: '#e5e7eb' }}
+              domain={[0, 1]}
+              tickFormatter={(value) => `${(value * 100).toFixed(0)}%`}
+            />
+            <Tooltip content={<CustomTooltip />} />
+            <Legend 
+              formatter={(value) => emotionNames[value as keyof typeof emotionNames]}
+              wrapperStyle={{ fontSize: '14px' }}
+            />
+            
+            <Line 
+              type="monotone" 
+              dataKey="happiness" 
+              stroke={emotionColors.happiness}
+              strokeWidth={2}
+              dot={{ r: 3 }}
+              activeDot={{ r: 5 }}
+              name="快乐"
+            />
+            
+            <Line 
+              type="monotone" 
+              dataKey="sadness" 
+              stroke={emotionColors.sadness}
+              strokeWidth={2}
+              dot={{ r: 3 }}
+              activeDot={{ r: 5 }}
+              name="悲伤"
+            />
+            
+            <Line 
+              type="monotone" 
+              dataKey="anger" 
+              stroke={emotionColors.anger}
+              strokeWidth={2}
+              dot={{ r: 3 }}
+              activeDot={{ r: 5 }}
+              name="愤怒"
+            />
+            
+            <Line 
+              type="monotone" 
+              dataKey="fear" 
+              stroke={emotionColors.fear}
+              strokeWidth={2}
+              dot={{ r: 3 }}
+              activeDot={{ r: 5 }}
+              name="恐惧"
+            />
+            
+            <Line 
+              type="monotone" 
+              dataKey="surprise" 
+              stroke={emotionColors.surprise}
+              strokeWidth={2}
+              dot={{ r: 3 }}
+              activeDot={{ r: 5 }}
+              name="惊讶"
+            />
+          </LineChart>
+        </ResponsiveContainer>
+      ) : (
+        <div className="flex items-center justify-center h-full">
+          <p className="text-gray-500">暂无数据</p>
+        </div>
+      )}
     </div>
   )
 }

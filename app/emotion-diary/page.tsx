@@ -13,7 +13,7 @@ import { Input } from '@/components/ui/input'
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select'
 import { Book, Heart, Calendar, TrendingUp, Search, Filter, Trash2, Edit, Eye } from 'lucide-react'
 import { useAppStore, EmotionAnalysisResult } from '@/lib/store'
-import { format, parseISO } from 'date-fns'
+import { format } from 'date-fns'
 import { zhCN } from 'date-fns/locale'
 
 export default function EmotionDiaryPage() {
@@ -69,7 +69,7 @@ export default function EmotionDiaryPage() {
         // 保存到状态管理
         const diaryEntry: EmotionAnalysisResult = {
           id: Date.now().toString(),
-          timestamp: new Date(),
+          timestamp: new Date().toISOString(),
           input: content,
           type: 'text',
           result: result.data

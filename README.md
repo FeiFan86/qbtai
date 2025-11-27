@@ -78,6 +78,19 @@ npm run dev
 
 ## 部署到Vercel
 
+### 方法一：直接从Vercel部署（推荐）
+
+1. 点击下方按钮直接部署到Vercel：
+   
+2. 在部署页面配置环境变量：
+   - `VOLCANO_API_KEY`: 您的火山引擎API密钥
+   - `VOLCANO_BASE_URL`: `https://ark.cn-beijing.volces.com/api/v3`
+   - `DEEPSEEK_MODEL`: `deepseek-chat`
+
+3. 点击"Deploy"完成部署
+
+### 方法二：从GitHub部署
+
 1. 将代码推送到GitHub仓库
 2. 在Vercel中导入项目
 3. 配置环境变量
