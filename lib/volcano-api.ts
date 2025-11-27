@@ -284,9 +284,10 @@ class VolcanoAPIService {
           }
         } catch (parseError) {
           console.error('JSON parsing failed:', parseError)
+          const errorMessage = parseError instanceof Error ? parseError.message : '未知的JSON解析错误'
           return {
             success: false,
-            error: 'JSON解析失败：' + parseError.message
+            error: 'JSON解析失败：' + errorMessage
           }
         }
       } else {
