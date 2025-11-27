@@ -1,21 +1,5 @@
 {
   "buildCommand": "npm run build",
-  "devCommand": "npm run dev",
-  "installCommand": "npm install",
   "framework": "nextjs",
-  "outputDirectory": ".next",
-  "regions": ["hkg1"],
-  "functions": {
-    "app/api/**/*.ts": {
-      "maxDuration": 30
-    }
-  },
-  "env": {
-    "NEXT_PUBLIC_APP_NAME": "丘比特AI情感助手"
-  },
-  "build": {
-    "env": {
-      "NEXT_PUBLIC_APP_URL": "https://cupid-ai.vercel.app"
-    }
-  }
+  "outputDirectory": ".next"
 }
