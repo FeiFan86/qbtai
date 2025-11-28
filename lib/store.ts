@@ -105,6 +105,7 @@ interface AppState {
   addEmotionAnalysis: (result: EmotionAnalysisResult) => void
   addContentGeneration: (result: ContentGenerationResult) => void
   addSocialAnalysis: (result: SocialAnalysisResult) => void
+  removeEmotionAnalysis: (id: string) => void
   clearHistory: (type: 'all' | 'emotion' | 'content' | 'social') => void
   setLoading: (loading: boolean) => void
   setActiveTab: (tab: string) => void
@@ -157,6 +158,14 @@ export const useAppStore = create<AppState>()(
       
       addSocialAnalysis: (result) => set((state) => ({
         socialHistory: [result, ...state.socialHistory].slice(0, 100) // 只保留最近100条
+      })),
+      
+      removeEmotionAnalysis: (id) => set((state) => ({
+        emotionHistory: state.emotionHistory.filter(entry => entry.id !== id)
+      })),
+      
+      removeEmotionAnalysis: (id) => set((state) => ({
+        emotionHistory: state.emotionHistory.filter(entry => entry.id !== id)
       })),
       
       clearHistory: (type) => {

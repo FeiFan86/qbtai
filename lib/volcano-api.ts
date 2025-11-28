@@ -236,8 +236,8 @@ class VolcanoAPIService {
     })
     
     // 检查API配置
-    if (!this.apiKey || this.apiKey === '226be07e-95ad-4fec-a564-1963c6e04711') {
-      console.log('API Key is missing or default, using mock data')
+    if (!this.apiKey) {
+      console.log('API Key is missing, using mock data')
       return this.getMockSocialAnalysis(request)
     }
     
@@ -314,8 +314,8 @@ class VolcanoAPIService {
     console.log('Generating content for:', request)
     
     // 检查API配置
-    if (!this.apiKey || this.apiKey === '226be07e-95ad-4fec-a564-1963c6e04711') {
-      console.log('API Key is missing or default, using mock data')
+    if (!this.apiKey) {
+      console.log('API Key is missing, using mock data')
       return this.getMockContentGeneration(request)
     }
     

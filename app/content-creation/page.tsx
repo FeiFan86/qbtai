@@ -26,7 +26,7 @@ export default function ContentCreationPage() {
     
     setIsGenerating(true)
     try {
-      console.log('开始生成内容...')
+      console.log('开始使用火山引擎API生成内容...')
       
       const response = await fetch('/api/content/generate', {
         method: 'POST',
@@ -42,42 +42,20 @@ export default function ContentCreationPage() {
       })
       
       const result = await response.json()
-      console.log('生成结果:', result)
+      console.log('API生成结果:', result)
       
       if (response.ok) {
         setGeneratedContent(result.data)
       } else {
-        console.error('生成失败:', result.error)
-        // 在API失败时提供模拟数据
-        setGeneratedContent(getMockContent(prompt, style))
+        console.error('API生成失败:', result.error)
+        throw new Error(result.error || '生成失败，请重试')
       }
     } catch (error) {
       console.error('请求错误:', error)
-      // 在发生错误时提供模拟数据
-      setGeneratedContent(getMockContent(prompt, style))
+      alert('内容生成失败：' + (error instanceof Error ? error.message : '网络错误，请检查API配置'))
+      setGeneratedContent(null)
     } finally {
       setIsGenerating(false)
-    }
-  }
-
-  // 获取模拟内容
-  const getMockContent = (promptText: string, styleType: string) => {
-    const styleMap: Record<string, string> = {
-      formal: '非常正式的语调',
-      casual: '轻松随意的语调',
-      emotional: '充满情感的语调',
-      professional: '专业严谨的语调'
-    }
-
-    const baseContent = `根据您的要求："${promptText}"，我为您生成了这段内容。这是一个${styleMap[styleType] || '中性'}的示例，展示了AI如何根据不同的需求和风格创建个性化的文本内容。`
-
-    return {
-      content: baseContent + "\n\n在实际应用中，这里将是DeepSeek模型根据您的详细需求生成的高质量内容。这段内容会充分考虑您指定的风格、长度和背景信息，为您提供真正有用的文本。",
-      suggestions: [
-        '可以根据具体受众调整语调',
-        '考虑添加更多具体细节或事例',
-        '可以尝试不同的长度选项'
-      ]
     }
   }
 

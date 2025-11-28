@@ -6,6 +6,7 @@ import { Footer } from '@/components/footer'
 import { Button } from '@/components/ui/button'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
 import { Badge } from '@/components/ui/badge'
+import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle } from '@/components/ui/dialog'
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
 import { Label } from '@/components/ui/label'
 import { Input } from '@/components/ui/input'
@@ -19,8 +20,10 @@ export default function SimpleEmotionDiaryPage() {
   const [content, setContent] = useState('')
   const [isSaving, setIsSaving] = useState(false)
   const [activeTab, setActiveTab] = useState('new')
+  const [selectedDiary, setSelectedDiary] = useState<EmotionAnalysisResult | null>(null)
+  const [isDialogOpen, setIsDialogOpen] = useState(false)
   
-  const { emotionHistory, addEmotionAnalysis, clearHistory } = useAppStore()
+  const { emotionHistory, addEmotionAnalysis, removeEmotionAnalysis, clearHistory, updateUserSettings } = useAppStore()
 
   console.log('Current emotion history:', emotionHistory)
 
@@ -88,6 +91,34 @@ export default function SimpleEmotionDiaryPage() {
         return '中性'
     }
   }
+
+  // 查看日记详情
+  const handleViewDiary = (diary: EmotionAnalysisResult) => {
+    setSelectedDiary(diary)
+    setIsDialogOpen(true)
+  }
+
+  // 删除单条日记
+  const handleDeleteDiary = (id: string) => {
+    if (confirm('确定要删除这条日记吗？')) {
+      removeEmotionAnalysis(id)
+      alert('日记已删除')
+    }
+  }
+
+  // 按日期分组日记
+  const groupedDiaries = emotionHistory.reduce((groups, diary) => {
+    const date = new Date(diary.timestamp)
+    const dateKey = format(date, 'yyyy-MM-dd')
+    if (!groups[dateKey]) {
+      groups[dateKey] = []
+    }
+    groups[dateKey].push(diary)
+    return groups
+  }, {} as Record<string, EmotionAnalysisResult[]>)
+
+  // 获取日期排序的键
+  const sortedDateKeys = Object.keys(groupedDiaries).sort((a, b) => new Date(b).getTime() - new Date(a).getTime())
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-pink-50 via-purple-50 to-indigo-50">
@@ -214,42 +245,77 @@ export default function SimpleEmotionDiaryPage() {
               </div>
 
               {emotionHistory && emotionHistory.length > 0 ? (
-                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-                  {emotionHistory.map((diary) => (
-                    <Card key={diary.id} className="hover:shadow-md transition-shadow">
-                      <CardHeader className="pb-2">
-                        <div className="flex items-center justify-between">
-                          {diary.result && diary.result.overall ? (
-                            <Badge className={getEmotionColor(diary.result.overall.sentiment)}>
-                              {getEmotionText(diary.result.overall.sentiment)}
-                            </Badge>
-                          ) : (
-                            <Badge variant="outline">未知</Badge>
-                          )}
-                          <span className="text-xs text-gray-500">
-                            {diary.timestamp ? format(new Date(diary.timestamp), 'MM/dd') : '未知日期'}
-                          </span>
-                        </div>
-                        <CardTitle className="text-lg truncate">
-                          {diary.input ? `${diary.input.substring(0, 30)}...` : '无标题'}
-                        </CardTitle>
-                      </CardHeader>
-                      <CardContent>
-                        <p className="text-sm text-gray-600 line-clamp-3 mb-3">
-                          {diary.result && diary.result.summary ? diary.result.summary : '无摘要'}
-                        </p>
-                        
-                        {diary.result && diary.result.keywords && diary.result.keywords.length > 0 && (
-                          <div className="flex flex-wrap gap-1 mb-3">
-                            {diary.result.keywords.slice(0, 3).map((keyword, index) => (
-                              <Badge key={index} variant="outline" className="text-xs">
-                                {keyword}
-                              </Badge>
-                            ))}
-                          </div>
-                        )}
-                      </CardContent>
-                    </Card>
+                <div className="space-y-6">
+                  {sortedDateKeys.map((dateKey) => (
+                    <div key={dateKey}>
+                      <h3 className="text-lg font-semibold mb-3 text-gray-700">
+                        {format(new Date(dateKey), 'yyyy年MM月dd日')}
+                      </h3>
+                      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+                        {groupedDiaries[dateKey].map((diary) => (
+                          <Card key={diary.id} className="hover:shadow-md transition-shadow">
+                            <CardHeader className="pb-2">
+                              <div className="flex items-center justify-between">
+                                {diary.result && diary.result.overall ? (
+                                  <Badge className={getEmotionColor(diary.result.overall.sentiment)}>
+                                    {getEmotionText(diary.result.overall.sentiment)}
+                                  </Badge>
+                                ) : (
+                                  <Badge variant="outline">未知</Badge>
+                                )}
+                                <div className="flex gap-1">
+                                  <Button 
+                                    variant="ghost" 
+                                    size="sm" 
+                                    onClick={() => handleViewDiary(diary)}
+                                    className="h-6 w-6 p-0"
+                                  >
+                                    <Eye className="h-3 w-3" />
+                                  </Button>
+                                  <Button 
+                                    variant="ghost" 
+                                    size="sm" 
+                                    onClick={() => handleDeleteDiary(diary.id)}
+                                    className="h-6 w-6 p-0 text-red-500"
+                                  >
+                                    <Trash2 className="h-3 w-3" />
+                                  </Button>
+                                </div>
+                              </div>
+                              <CardTitle className="text-lg truncate">
+                                {diary.input ? `${diary.input.substring(0, 30)}...` : '无标题'}
+                              </CardTitle>
+                            </CardHeader>
+                            <CardContent>
+                              <p className="text-sm text-gray-600 line-clamp-3 mb-3">
+                                {diary.result && diary.result.summary ? diary.result.summary : '无摘要'}
+                              </p>
+                              
+                              {diary.result && diary.result.keywords && diary.result.keywords.length > 0 && (
+                                <div className="flex flex-wrap gap-1 mb-3">
+                                  {diary.result.keywords.slice(0, 3).map((keyword, index) => (
+                                    <Badge key={index} variant="outline" className="text-xs">
+                                      {keyword}
+                                    </Badge>
+                                  ))}
+                                </div>
+                              )}
+                              <div className="flex justify-between items-center text-xs text-gray-500">
+                                <span>{format(new Date(diary.timestamp), 'HH:mm')}</span>
+                                <Button 
+                                  variant="link" 
+                                  size="sm" 
+                                  onClick={() => handleViewDiary(diary)}
+                                  className="h-auto p-0 text-xs"
+                                >
+                                  查看详情
+                                </Button>
+                              </div>
+                            </CardContent>
+                          </Card>
+                        ))}
+                      </div>
+                    </div>
                   ))}
                 </div>
               ) : (
@@ -290,6 +356,94 @@ export default function SimpleEmotionDiaryPage() {
       </main>
       
       <Footer />
+
+      {/* 日记详情弹窗 */}
+      <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
+        <DialogContent className="max-w-2xl">
+          <DialogHeader>
+            <DialogTitle>日记详情</DialogTitle>
+            <DialogDescription>
+              {selectedDiary && format(new Date(selectedDiary.timestamp), 'yyyy年MM月dd日 HH:mm')}
+            </DialogDescription>
+          </DialogHeader>
+          
+          {selectedDiary && (
+            <div className="space-y-4">
+              <div>
+                <h4 className="font-medium mb-2">日记内容</h4>
+                <div className="bg-gray-50 p-4 rounded-lg">
+                  <p className="whitespace-pre-wrap">{selectedDiary.input}</p>
+                </div>
+              </div>
+              
+              <div>
+                <h4 className="font-medium mb-2">情感分析</h4>
+                {selectedDiary.result && selectedDiary.result.overall ? (
+                  <div className="space-y-3">
+                    <div className="flex items-center gap-2">
+                      <Badge className={getEmotionColor(selectedDiary.result.overall.sentiment)}>
+                        {getEmotionText(selectedDiary.result.overall.sentiment)}
+                      </Badge>
+                      <span className="text-sm text-gray-600">
+                        置信度: {(selectedDiary.result.overall.confidence * 100).toFixed(1)}%
+                      </span>
+                    </div>
+                    
+                    {selectedDiary.result.summary && (
+                      <div>
+                        <p className="text-sm text-gray-700">{selectedDiary.result.summary}</p>
+                      </div>
+                    )}
+                    
+                    {selectedDiary.result.emotions && selectedDiary.result.emotions.length > 0 && (
+                      <div>
+                        <h5 className="text-sm font-medium mb-2">情感分布</h5>
+                        <div className="grid grid-cols-2 gap-2">
+                          {selectedDiary.result.emotions.map((emotion, index) => (
+                            <div key={index} className="flex items-center justify-between text-xs">
+                              <span>{emotion.type}</span>
+                              <div className="flex items-center gap-1">
+                                <div 
+                                  className="w-16 h-2 bg-gray-200 rounded-full overflow-hidden"
+                                  title={`${(emotion.score * 100).toFixed(1)}%`}
+                                >
+                                  <div 
+                                    className="h-full rounded-full"
+                                    style={{
+                                      width: `${emotion.score * 100}%`,
+                                      backgroundColor: emotion.color
+                                    }}
+                                  />
+                                </div>
+                                <span className="text-gray-500">{(emotion.score * 100).toFixed(0)}%</span>
+                              </div>
+                            </div>
+                          ))}
+                        </div>
+                      </div>
+                    )}
+                    
+                    {selectedDiary.result.keywords && selectedDiary.result.keywords.length > 0 && (
+                      <div>
+                        <h5 className="text-sm font-medium mb-2">关键词</h5>
+                        <div className="flex flex-wrap gap-1">
+                          {selectedDiary.result.keywords.map((keyword, index) => (
+                            <Badge key={index} variant="outline" className="text-xs">
+                              {keyword}
+                            </Badge>
+                          ))}
+                        </div>
+                      </div>
+                    )}
+                  </div>
+                ) : (
+                  <p className="text-gray-500">无分析数据</p>
+                )}
+              </div>
+            </div>
+          )}
+        </DialogContent>
+      </Dialog>
     </div>
   )
 }
