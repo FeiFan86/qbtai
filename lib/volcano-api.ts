@@ -522,7 +522,7 @@ class VolcanoAPIService {
         other: {
           emotionalState: 'inquisitive',
           communicationStyle: 'direct',
-          needs: ['获取信息', '评估风险', '确保项目可控'],
+          needs: ['获取信息', '评估风险', '确保进度'],
           strengths: ['信息获取', '风险评估']
         }
       },
