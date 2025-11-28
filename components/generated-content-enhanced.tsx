@@ -30,6 +30,7 @@ export function GeneratedContentEnhanced({
 }: GeneratedContentProps) {
   const [copySuccess, setCopySuccess] = useState(false)
   const [exporting, setExporting] = useState(false)
+  const contentRef = useRef<HTMLDivElement>(null)
 
   const handleCopy = async (text: string) => {
     try {
@@ -55,10 +56,10 @@ export function GeneratedContentEnhanced({
   }
 
   const handleExportImage = async () => {
-    if (!content) return
+    if (!content || !contentRef.current) return
     setExporting(true)
     try {
-      await exportToImage(content.content, title)
+      await exportToImage(contentRef.current, title)
     } catch (err) {
       console.error('Image export failed: ', err)
     } finally {
@@ -123,7 +124,7 @@ export function GeneratedContentEnhanced({
         </CardDescription>
       </CardHeader>
       <CardContent className="space-y-4">
-        <div className="p-4 bg-gray-50 rounded-lg">
+        <div ref={contentRef} className="p-4 bg-gray-50 rounded-lg">
           <p className="whitespace-pre-wrap text-sm">{content.content}</p>
         </div>
         
@@ -212,4 +213,4 @@ export function GeneratedContentEnhanced({
   )
 }
 
-import { useState } from 'react'
+import { useState, useRef } from 'react'
