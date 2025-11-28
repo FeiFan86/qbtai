@@ -98,7 +98,7 @@ export function HistoryViewer({ isOpen, onClose, onSelectRecord }: HistoryViewer
   if (!isOpen) return null
 
   return (
-    <>
+    <React.Fragment>
       <div className="fixed inset-0 z-50 bg-black/50 backdrop-blur-sm flex items-center justify-center p-4">
       <div className="bg-white rounded-lg shadow-xl w-full max-w-4xl max-h-[85vh] flex flex-col overflow-hidden">
         {/* 头部 */}
@@ -254,6 +254,6 @@ export function HistoryViewer({ isOpen, onClose, onSelectRecord }: HistoryViewer
           )}
         </div>
       </div>
-    </>
+    </React.Fragment>
   )
 }
