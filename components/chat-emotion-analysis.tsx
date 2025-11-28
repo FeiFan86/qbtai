@@ -96,7 +96,7 @@ export function ChatEmotionAnalysis({ onNewMessage }: ChatEmotionAnalysisProps) 
 
   const generateResponseMessage = (analysis: any) => {
     if (!analysis) {
-      return "🧠 您的描述很清晰，让我来分析一下。 我检测到您的主要情感是"快乐"，置信度为85.0%。"
+      return "🧠 您的描述很清晰，让我来分析一下。 我检测到您的主要情感是\"快乐\"，置信度为85.0%。"
     }
 
     const { overall, emotions, sentiment, suggestions } = analysis
