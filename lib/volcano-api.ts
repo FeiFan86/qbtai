@@ -163,14 +163,16 @@ class VolcanoAPIService {
 
       const systemPrompt = `你是一个专业的情感分析专家。请分析用户输入内容的情感，并以JSON格式返回结果。
       
+重要提示：请用中文返回所有分析结果！
+
 返回的JSON应该包含以下字段：
 1. emotions - 情感数组，包含各种情感类型和对应的分数（0-1）
-   可能的情感类型：快乐(happiness), 悲伤(sadness), 愤怒(anger), 恐惧(fear), 惊讶(surprise), 厌恶(disgust), 期待(anticipation), 信任(trust)
-2. overall - 整体情感倾向，包含sentiment(positive/negative/neutral)和confidence(0-1)
-3. keywords - 提取出的关键词数组
-4. summary - 情感分析的简短总结
+   情感类型请用中文：快乐、悲伤、愤怒、恐惧、惊讶、厌恶、期待、信任
+2. overall - 整体情感倾向，包含sentiment(积极/消极/中性)和confidence(0-1)
+3. keywords - 提取出的关键词数组（用中文）
+4. summary - 情感分析的简短总结（用中文）
 
-请确保返回有效的JSON格式，不要包含任何其他文本。`
+请确保返回有效的JSON格式，所有内容都使用中文，不要包含任何其他文本。`
 
       const userPrompt = `请分析以下内容的情感：\n\n"${request.input}"`
 
@@ -448,7 +450,7 @@ class VolcanoAPIService {
             { type: '愤怒', score: 0.02, color: '#EF4444' },
           ],
           overall: {
-            sentiment: 'positive' as const,
+            sentiment: '积极' as const,
             confidence: 0.85
           },
           keywords: ['开心', '满足', '积极', '美好'],
@@ -468,7 +470,7 @@ class VolcanoAPIService {
             { type: '期待', score: 0.02, color: '#EC4899' },
           ],
           overall: {
-            sentiment: 'negative' as const,
+            sentiment: '消极' as const,
             confidence: 0.80
           },
           keywords: ['难过', '失望', '挫折', '不安'],
@@ -489,7 +491,7 @@ class VolcanoAPIService {
             { type: '愤怒', score: 0.05, color: '#EF4444' },
           ],
           overall: {
-            sentiment: 'neutral' as const,
+            sentiment: '中性' as const,
             confidence: 0.75
           },
           keywords: ['平静', '思考', '观察', '理性'],

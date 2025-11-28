@@ -113,11 +113,14 @@ export function SocialSuggestions({ result }: SocialSuggestionsProps) {
           </div>
         ))}
         
-        <div className="pt-2 border-t">
-          <Button variant="outline" className="w-full">
-            获取更多个性化建议
-          </Button>
-        </div>
+          <div className="pt-4 border-t">
+            <Button 
+              variant="outline" 
+              className="w-full btn-glow hover:bg-pink-50 hover:border-pink-200 transition-all duration-200"
+            >
+              获取更多个性化建议
+            </Button>
+          </div>
       </CardContent>
     </Card>
   )
