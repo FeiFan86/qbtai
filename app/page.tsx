@@ -2,6 +2,7 @@
 
 import { useState, useEffect } from 'react'
 import { Navigation } from '@/components/navigation'
+import { Footer } from '@/components/footer'
 import { Card, CardContent } from '@/components/ui/card'
 import { Button } from '@/components/ui/button'
 import { Badge } from '@/components/ui/badge'
@@ -216,57 +217,7 @@ export default function Home() {
 
       </main>
       
-      {/* 页脚 */}
-      <footer className="bg-gray-900 text-white">
-        <div className="container mx-auto px-4 py-12">
-          <div className="max-w-6xl mx-auto">
-            <div className="text-center mb-8">
-              <h2 className="text-3xl font-bold mb-4">
-                开启您的情感智能之旅
-              </h2>
-              <p className="text-gray-300 text-lg mb-6">
-                与AI一同探索情感的世界，体验前所未有的智能交流
-              </p>
-              
-              <div className="flex flex-col sm:flex-row gap-4 justify-center">
-                <Link href="/emotion-analysis">
-                  <Button size="lg" className="bg-gradient-to-r from-pink-500 to-purple-500 hover:from-pink-600 hover:to-purple-600 text-white px-8 py-3">
-                    免费试用
-                    <Heart className="ml-2 h-5 w-5" />
-                  </Button>
-                </Link>
-                <Link href="/social-assistant">
-                  <Button size="lg" variant="outline" className="border-white text-white hover:bg-white hover:text-gray-900 px-8 py-3">
-                    查看演示
-                    <Play className="ml-2 h-5 w-5" />
-                  </Button>
-                </Link>
-              </div>
-            </div>
-            
-            <div className="border-t border-gray-700 pt-8 mt-8">
-              <div className="flex flex-col md:flex-row justify-between items-center">
-                <div className="text-center md:text-left mb-4 md:mb-0">
-                  <p className="text-gray-400">
-                    © 2024 情感智能分析平台. 保留所有权利.
-                  </p>
-                </div>
-                <div className="flex space-x-6">
-                  <a href="#" className="text-gray-400 hover:text-white transition-colors">
-                    隐私政策
-                  </a>
-                  <a href="#" className="text-gray-400 hover:text-white transition-colors">
-                    服务条款
-                  </a>
-                  <a href="#" className="text-gray-400 hover:text-white transition-colors">
-                    联系我们
-                  </a>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-      </footer>
+      <Footer />
     </div>
   )
 }

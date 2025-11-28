@@ -63,7 +63,15 @@ export function Navigation() {
                 if (pathname === '/emotion-analysis') {
                   const element = document.getElementById('emotion-analysis-center')
                   if (element) {
-                    element.scrollIntoView({ behavior: 'smooth' })
+                    // 考虑导航栏高度，设置滚动偏移
+                    const offset = 80 // 导航栏高度
+                    const elementPosition = element.getBoundingClientRect().top + window.pageYOffset
+                    const offsetPosition = elementPosition - offset
+                    
+                    window.scrollTo({
+                      top: offsetPosition,
+                      behavior: 'smooth'
+                    })
                   }
                 } else {
                   // 否则导航到页面并添加锚点
@@ -140,13 +148,21 @@ export function Navigation() {
               const handleClick = (e: React.MouseEvent) => {
                 if (item.href === '/emotion-analysis') {
                   e.preventDefault()
-                  // 如果已经在情感分析页面，直接滚动到锚点
-                  if (pathname === '/emotion-analysis') {
-                    const element = document.getElementById('emotion-analysis-center')
-                    if (element) {
-                      element.scrollIntoView({ behavior: 'smooth' })
-                    }
-                  } else {
+                // 如果已经在情感分析页面，直接滚动到锚点
+                if (pathname === '/emotion-analysis') {
+                  const element = document.getElementById('emotion-analysis-center')
+                  if (element) {
+                    // 考虑导航栏高度，设置滚动偏移
+                    const offset = 80 // 导航栏高度
+                    const elementPosition = element.getBoundingClientRect().top + window.pageYOffset
+                    const offsetPosition = elementPosition - offset
+                    
+                    window.scrollTo({
+                      top: offsetPosition,
+                      behavior: 'smooth'
+                    })
+                  }
+                } else {
                     // 否则导航到页面并添加锚点
                     window.location.href = '/emotion-analysis#emotion-analysis-center'
                   }

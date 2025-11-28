@@ -25,7 +25,15 @@ export default function EmotionAnalysisPage() {
       setTimeout(() => {
         const element = document.getElementById(EMOTION_ANALYSIS_ID)
         if (element) {
-          element.scrollIntoView({ behavior: 'smooth' })
+          // 考虑导航栏高度，设置滚动偏移
+          const offset = 80 // 导航栏高度
+          const elementPosition = element.getBoundingClientRect().top + window.pageYOffset
+          const offsetPosition = elementPosition - offset
+          
+          window.scrollTo({
+            top: offsetPosition,
+            behavior: 'smooth'
+          })
         }
       }, 100)
     }
