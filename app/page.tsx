@@ -166,7 +166,7 @@ export default function Home() {
       {/* 全局错误提示 */}
       {analysisError && (
         <ErrorMessage 
-          message={analysisError}
+          error={analysisError}
           onRetry={handleAnalyze}
           className="fixed bottom-4 right-4 z-50"
         />
