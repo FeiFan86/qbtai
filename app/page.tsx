@@ -20,7 +20,7 @@ export default function Home() {
     data: analysisData, 
     loading: analysisLoading, 
     error: analysisError, 
-    execute: analyzeConversation 
+    callApi: analyzeConversation 
   } = useApiCall(async (text: string) => {
     // 模拟API调用
     await new Promise(resolve => setTimeout(resolve, 2000))
