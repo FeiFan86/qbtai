@@ -164,10 +164,6 @@ export const useAppStore = create<AppState>()(
         emotionHistory: state.emotionHistory.filter(entry => entry.id !== id)
       })),
       
-      removeEmotionAnalysis: (id) => set((state) => ({
-        emotionHistory: state.emotionHistory.filter(entry => entry.id !== id)
-      })),
-      
       clearHistory: (type) => {
         if (type === 'all') {
           set({ emotionHistory: [], contentHistory: [], socialHistory: [] })
