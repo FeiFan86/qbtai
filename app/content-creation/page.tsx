@@ -181,7 +181,7 @@ export default function ContentCreationPage() {
       <Navigation />
       
       <main className="container mx-auto px-4 py-8">
-        <div className="mx-auto max-w-4xl">
+        <div className="mx-auto max-w-6xl">
           <div className="text-center mb-10">
             <h1 className="text-4xl font-bold tracking-tight gradient-text mb-4">
               情感内容创作

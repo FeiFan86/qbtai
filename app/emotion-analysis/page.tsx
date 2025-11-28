@@ -69,41 +69,6 @@ export default function EmotionAnalysisPage() {
           </div>
 
           <div className="space-y-6">
-            {/* 情感示例 */}
-            <Card>
-              <CardHeader>
-                <CardTitle className="flex items-center gap-2">
-                  <Lightbulb className="h-5 w-5 text-yellow-500" />
-                  情感示例
-                </CardTitle>
-                <CardDescription>
-                  选择一个示例，快速了解情感分析的效果
-                </CardDescription>
-              </CardHeader>
-              <CardContent>
-                <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-4">
-                  {emotionExamples.map((example, index) => (
-                    <div 
-                      key={index}
-                      className="border rounded-lg p-4 cursor-pointer hover:bg-gray-50 transition-colors"
-                      onClick={() => {
-                        // 这里可以设置示例文本，但需要对应组件支持
-                        console.log('示例选择:', example.title)
-                      }}
-                    >
-                      <div className="flex items-center gap-2 mb-3">
-                        {example.icon}
-                        <span className="font-medium">{example.title}</span>
-                      </div>
-                      <p className="text-sm text-gray-600 mb-3">{example.description}</p>
-                      <div className="text-xs text-gray-500 bg-gray-100 p-2 rounded">
-                        {example.example}
-                      </div>
-                    </div>
-                  ))}
-                </div>
-              </CardContent>
-            </Card>
 
             {/* 主要分析功能 - 标签页形式 */}
             <Tabs value={activeTab} onValueChange={setActiveTab} className="space-y-6">
