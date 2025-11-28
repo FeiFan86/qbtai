@@ -109,14 +109,7 @@ export default function Home() {
       <ResponsiveLayout className="py-6">
         {activeTab === 'chat' && (
           <div className="space-y-6">
-            <ChatEmotionAnalysisEnhanced 
-              conversation={conversation}
-              onConversationChange={setConversation}
-              onAnalyze={handleAnalyze}
-              loading={analysisLoading}
-              error={analysisError}
-              result={analysisResult}
-            />
+            <ChatEmotionAnalysisEnhanced />
             
             {analysisResult && (
               <GridLayout cols={{ mobile: 1, tablet: 1, desktop: 2 }}>
