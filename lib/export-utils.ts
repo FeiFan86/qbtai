@@ -84,11 +84,6 @@ export async function shareContent(content: string, title: string = 'AI分析结
 }
 
 // 社交媒体分享
-export async function shareContent(content: string, title: string = 'AI分析结果') {
-  return shareToSocialMedia(content, title)
-}
-
-// 社交媒体分享
 export async function shareToSocialMedia(content: string, title: string = 'AI分析结果') {
   try {
     if (navigator.share) {
