@@ -205,37 +205,48 @@ export default function SimpleEmotionDiaryPage() {
                     variant="outline" 
                     size="sm"
                     onClick={() => {
-                      // 添加测试数据
-                      const testEntry: EmotionAnalysisResult = {
-                        id: Date.now().toString(),
-                        timestamp: new Date().toISOString(),
-                        input: '今天工作很顺利，完成了重要的项目，感觉很有成就感。',
-                        type: 'text',
-                        result: {
-                          emotions: [
-                            { type: '快乐', score: 0.75, color: '#10B981' },
-                            { type: '期待', score: 0.45, color: '#EC4899' }
-                          ],
-                          overall: {
-                            sentiment: 'positive',
-                            confidence: 0.85
-                          },
-                          keywords: ['开心', '满足', '积极', '美好'],
-                          summary: '这段文字表达了明显的积极情感，显示出快乐和满足感。'
-                        }
+                      // 导出日记功能
+                      const exportData = {
+                        exportTime: new Date().toISOString(),
+                        totalEntries: emotionHistory.length,
+                        entries: emotionHistory.map(entry => ({
+                          id: entry.id,
+                          timestamp: entry.timestamp,
+                          title: entry.input ? `${entry.input.substring(0, 30)}...` : '无标题',
+                          content: entry.input,
+                          sentiment: entry.result?.overall?.sentiment || 'neutral',
+                          summary: entry.result?.summary || '无摘要'
+                        }))
                       }
-                      addEmotionAnalysis(testEntry)
-                      alert('测试数据已添加！')
+                      
+                      // 创建下载链接
+                      const dataStr = JSON.stringify(exportData, null, 2)
+                      const dataBlob = new Blob([dataStr], { type: 'application/json' })
+                      const url = URL.createObjectURL(dataBlob)
+                      const link = document.createElement('a')
+                      link.href = url
+                      link.download = `情感日记_导出_${format(new Date(), 'yyyy-MM-dd')}.json`
+                      document.body.appendChild(link)
+                      link.click()
+                      document.body.removeChild(link)
+                      URL.revokeObjectURL(url)
+                      
+                      alert('日记导出成功！')
                     }}
                   >
-                    添加测试数据
+                    <svg className="h-4 w-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+                    </svg>
+                    导出日记
                   </Button>
                   <Button 
                     variant="outline" 
                     size="sm"
                     onClick={() => {
-                      clearHistory('emotion')
-                      alert('历史记录已清空')
+                      if (confirm('确定要清空所有日记记录吗？此操作不可撤销。')) {
+                        clearHistory('emotion')
+                        alert('日记记录已清空')
+                      }
                     }}
                   >
                     <Trash2 className="h-4 w-4 mr-1" />
