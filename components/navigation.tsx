@@ -23,7 +23,7 @@ export function Navigation() {
   }, [])
 
   const navItems = [
-    { href: '/emotion-analysis', label: '情感分析', icon: <Heart className="h-4 w-4" /> },
+    { href: '/emotion-analysis#emotion-analysis-center', label: '情感分析', icon: <Heart className="h-4 w-4" /> },
     { href: '/social-assistant', label: '社交助手', icon: <MessageCircle className="h-4 w-4" /> },
     { href: '/emotion-diary', label: '情感日记', icon: <BarChart3 className="h-4 w-4" /> },
     { href: '/content-creation', label: '内容创作', icon: <Sparkles className="h-4 w-4" /> },

@@ -214,37 +214,6 @@ export default function Home() {
           </div>
         </section>
 
-        {/* 用户评价区域 */}
-        <section className="relative container mx-auto px-4 py-16">
-          <div className="max-w-6xl mx-auto">
-            <div className="text-center mb-16">
-              <h2 className="text-3xl md:text-4xl font-bold text-gray-900 mb-4">用户的声音</h2>
-              <p className="text-xl text-gray-600">来自真实用户的反馈和评价</p>
-            </div>
-            
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-              {testimonials.map((testimonial, index) => (
-                <div 
-                  key={index} 
-                  className={`bg-white rounded-xl p-6 shadow-sm transition-all duration-500 transform ${isLoaded ? 'translate-y-0 opacity-100' : 'translate-y-10 opacity-0'}`}
-                  style={{ transitionDelay: `${index * 100}ms` }}
-                >
-                  <div className="flex mb-4">
-                    {[...Array(testimonial.rating)].map((_, i) => (
-                      <Star key={i} className="h-5 w-5 text-yellow-400 fill-current" />
-                    ))}
-                  </div>
-                  <p className="text-gray-600 mb-6 italic">"{testimonial.content}"</p>
-                  <div>
-                    <div className="font-semibold text-gray-900">{testimonial.name}</div>
-                    <div className="text-sm text-gray-500">{testimonial.role}</div>
-                  </div>
-                </div>
-              ))}
-            </div>
-          </div>
-        </section>
-
         {/* 开始使用区域 */}
         <section className="relative container mx-auto px-4 py-20">
           <div className={`max-w-4xl mx-auto text-center transition-all duration-1000 transform ${isLoaded ? 'scale-100 opacity-100' : 'scale-95 opacity-0'}`}>
