@@ -1,6 +1,7 @@
 'use client'
 
 import { useState, useEffect } from 'react'
+import { useSearchParams } from 'next/navigation'
 import { Navigation } from '@/components/navigation'
 import { Footer } from '@/components/footer'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
@@ -16,11 +17,11 @@ const EMOTION_ANALYSIS_ID = 'emotion-analysis-center'
 export default function EmotionAnalysisPage() {
   const [activeTab, setActiveTab] = useState('chat')
   const [latestAnalysis, setLatestAnalysis] = useState<any>(null)
+  const searchParams = useSearchParams()
 
-  // 处理页面加载时的锚点跳转
+  // 处理页面加载时的滚动定位
   useEffect(() => {
-    const hash = window.location.hash
-    if (hash === '#emotion-analysis-center') {
+    const scrollToCenter = () => {
       // 延迟执行以确保页面已完全渲染
       setTimeout(() => {
         const element = document.getElementById(EMOTION_ANALYSIS_ID)
@@ -37,7 +38,22 @@ export default function EmotionAnalysisPage() {
         }
       }, 100)
     }
-  }, [])
+
+    // 检查URL参数和锚点
+    const shouldScrollToCenter = searchParams.get('scrollToCenter') === 'true'
+    const hash = window.location.hash
+    
+    if (shouldScrollToCenter || hash === '#emotion-analysis-center') {
+      scrollToCenter()
+      
+      // 清除URL参数，避免重复滚动
+      if (shouldScrollToCenter) {
+        const url = new URL(window.location.href)
+        url.searchParams.delete('scrollToCenter')
+        window.history.replaceState({}, '', url.toString())
+      }
+    }
+  }, [searchParams])
 
   const handleNewMessage = (message: any) => {
     if (message.analysis) {

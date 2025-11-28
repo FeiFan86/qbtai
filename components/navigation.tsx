@@ -55,15 +55,16 @@ export function Navigation() {
         {/* 桌面导航 */}
         <nav className="hidden md:flex items-center space-x-1">
           {navItems.map((item) => {
-            // 处理情感分析页面的锚点跳转
+            // 处理情感分析页面的直接定位
             const handleClick = (e: React.MouseEvent) => {
               if (item.href === '/emotion-analysis') {
                 e.preventDefault()
-                // 如果已经在情感分析页面，直接滚动到锚点
+                
+                // 使用路由跳转而不是锚点
                 if (pathname === '/emotion-analysis') {
+                  // 如果已经在情感分析页面，直接滚动到目标区域
                   const element = document.getElementById('emotion-analysis-center')
                   if (element) {
-                    // 考虑导航栏高度，设置滚动偏移
                     const offset = 80 // 导航栏高度
                     const elementPosition = element.getBoundingClientRect().top + window.pageYOffset
                     const offsetPosition = elementPosition - offset
@@ -74,8 +75,8 @@ export function Navigation() {
                     })
                   }
                 } else {
-                  // 否则导航到页面并添加锚点
-                  window.location.href = '/emotion-analysis#emotion-analysis-center'
+                  // 导航到情感分析页面，使用状态标记需要滚动
+                  window.location.href = '/emotion-analysis?scrollToCenter=true'
                 }
               }
             }
@@ -83,7 +84,7 @@ export function Navigation() {
             return (
               <Link
                 key={item.href}
-                href={item.href === '/emotion-analysis' ? '/emotion-analysis#emotion-analysis-center' : item.href}
+                href={item.href}
                 onClick={handleClick}
                 className={`flex items-center space-x-2 px-4 py-2 rounded-lg text-sm font-medium transition-all duration-200 ${
                   isActive(item.href)
@@ -144,27 +145,28 @@ export function Navigation() {
         <div className="md:hidden border-t border-border/40 bg-background/95 backdrop-blur-md">
           <div className="container py-4 space-y-2">
             {navItems.map((item) => {
-              // 处理情感分析页面的锚点跳转（移动端）
+              // 处理情感分析页面的直接定位（移动端）
               const handleClick = (e: React.MouseEvent) => {
                 if (item.href === '/emotion-analysis') {
                   e.preventDefault()
-                // 如果已经在情感分析页面，直接滚动到锚点
-                if (pathname === '/emotion-analysis') {
-                  const element = document.getElementById('emotion-analysis-center')
-                  if (element) {
-                    // 考虑导航栏高度，设置滚动偏移
-                    const offset = 80 // 导航栏高度
-                    const elementPosition = element.getBoundingClientRect().top + window.pageYOffset
-                    const offsetPosition = elementPosition - offset
-                    
-                    window.scrollTo({
-                      top: offsetPosition,
-                      behavior: 'smooth'
-                    })
-                  }
-                } else {
-                    // 否则导航到页面并添加锚点
-                    window.location.href = '/emotion-analysis#emotion-analysis-center'
+                  
+                  // 使用路由跳转而不是锚点
+                  if (pathname === '/emotion-analysis') {
+                    // 如果已经在情感分析页面，直接滚动到目标区域
+                    const element = document.getElementById('emotion-analysis-center')
+                    if (element) {
+                      const offset = 80 // 导航栏高度
+                      const elementPosition = element.getBoundingClientRect().top + window.pageYOffset
+                      const offsetPosition = elementPosition - offset
+                      
+                      window.scrollTo({
+                        top: offsetPosition,
+                        behavior: 'smooth'
+                      })
+                    }
+                  } else {
+                    // 导航到情感分析页面，使用状态标记需要滚动
+                    window.location.href = '/emotion-analysis?scrollToCenter=true'
                   }
                 }
                 setIsMobileMenuOpen(false)
@@ -173,7 +175,7 @@ export function Navigation() {
               return (
                 <Link
                   key={item.href}
-                  href={item.href === '/emotion-analysis' ? '/emotion-analysis#emotion-analysis-center' : item.href}
+                  href={item.href}
                   onClick={handleClick}
                   className={`flex items-center space-x-3 px-4 py-3 rounded-lg text-base font-medium transition-all ${
                     isActive(item.href)
