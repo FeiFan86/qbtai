@@ -503,68 +503,44 @@ class VolcanoAPIService {
   private getMockSocialAnalysis(request?: SocialConversationAnalysisRequest): SocialConversationAnalysisResponse {
     const scenario = request?.scenario || 'casual'
     
-    const scenarioData = {
-      casual: {
-        overallSentiment: 'positive',
-        communicationStyle: 'friendly',
-        emotionalIntelligence: 0.7,
-        conflictLevel: 0.1,
-        empathyScore: 0.8
-      },
-      professional: {
+    // 基于您提供的分析结果创建正确的格式
+    const correctFormat = {
+      conversationAnalysis: {
         overallSentiment: 'neutral',
-        communicationStyle: 'assertive',
-        emotionalIntelligence: 0.8,
+        communicationStyle: 'balanced',
+        emotionalIntelligence: 0.7,
         conflictLevel: 0.3,
         empathyScore: 0.6
       },
-      romantic: {
-        overallSentiment: 'positive',
-        communicationStyle: 'empathetic',
-        emotionalIntelligence: 0.9,
-        conflictLevel: 0.2,
-        empathyScore: 0.9
+      participantAnalysis: {
+        user: {
+          emotionalState: 'concerned',
+          communicationStyle: 'honest',
+          needs: ['寻求理解', '获得支持', '明确期望'],
+          strengths: ['坦诚沟通', '问题识别']
+        },
+        other: {
+          emotionalState: 'inquisitive',
+          communicationStyle: 'direct',
+          needs: ['获取信息', '评估风险', '确保项目可控'],
+          strengths: ['信息获取', '风险评估']
+        }
       },
-      conflict: {
-        overallSentiment: 'negative',
-        communicationStyle: 'defensive',
-        emotionalIntelligence: 0.5,
-        conflictLevel: 0.7,
-        empathyScore: 0.4
-      }
+      improvementSuggestions: [
+        '提供更具体的难题细节和影响评估',
+        '建议可能的解决方案或替代计划',
+        '主动提出下一步行动方案'
+      ],
+      responseTemplates: [
+        '目前遇到[具体问题]，预计影响[时间/范围]，我们正在尝试[解决方案]',
+        '感谢关注，我们遇到了[技术难点]，建议[调整方案]，是否需要详细汇报？',
+        '进度因[原因]受阻，已制定[应对计划]，预计新时间点为[日期]'
+      ]
     }
-
-    const data = scenarioData[scenario as keyof typeof scenarioData] || scenarioData.casual
     
     return {
       success: true,
-      data: {
-        conversationAnalysis: data,
-        participantAnalysis: {
-          user: {
-            emotionalState: scenario === 'conflict' ? 'frustrated' : 'calm',
-            communicationStyle: 'direct',
-            needs: ['understanding', 'resolution'],
-            strengths: ['honesty', 'clarity']
-          },
-          other: {
-            emotionalState: scenario === 'conflict' ? 'defensive' : 'receptive',
-            communicationStyle: 'responsive',
-            needs: ['validation', 'respect'],
-            strengths: ['patience', 'listening']
-          }
-        },
-        improvementSuggestions: [
-          '尝试使用更多的开放式问题来促进深入对话',
-          '在表达观点时，可以先肯定对方的感受',
-          '适当增加情感表达，增强沟通的亲和力'
-        ],
-        responseTemplates: [
-          '我理解你的感受，我们可以一起找到解决方案',
-          '感谢你愿意分享这些想法，这对我很重要',
-          '让我们从不同的角度来思考这个问题'
-        ]
-      }
+      data: correctFormat
     }
   }
 
