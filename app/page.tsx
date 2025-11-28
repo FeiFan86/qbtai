@@ -179,24 +179,3 @@ export default function Home() {
     </div>
   )
 }
-
-// 使用增强版本的组件
-const ChatEmotionAnalysisEnhanced = ({ conversation, onConversationChange, onAnalyze, loading, error, result }: any) => (
-  <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-4 md:p-6">
-    <h2 className="text-xl font-semibold mb-4">对话情感分析</h2>
-    <textarea
-      value={conversation}
-      onChange={(e) => onConversationChange(e.target.value)}
-      placeholder="请输入对话内容..."
-      className="w-full h-32 p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent resize-none"
-    />
-    <TouchButton 
-      onClick={onAnalyze}
-      disabled={loading || !conversation.trim()}
-      className="w-full mt-4"
-      size={isMobile ? 'lg' : 'md'}
-    >
-      {loading ? '分析中...' : '开始分析'}
-    </TouchButton>
-  </div>
-)
