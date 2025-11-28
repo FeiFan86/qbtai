@@ -17,7 +17,7 @@ const EMOTION_ANALYSIS_ID = 'emotion-analysis-center'
 export default function EmotionAnalysisPage() {
   const [activeTab, setActiveTab] = useState('chat')
   const [latestAnalysis, setLatestAnalysis] = useState<any>(null)
-  const searchParams = useSearchParams()
+  const [shouldScroll, setShouldScroll] = useState(false)
 
   // 处理页面加载时的滚动定位
   useEffect(() => {
@@ -40,7 +40,8 @@ export default function EmotionAnalysisPage() {
     }
 
     // 检查URL参数和锚点
-    const shouldScrollToCenter = searchParams.get('scrollToCenter') === 'true'
+    const urlParams = new URLSearchParams(window.location.search)
+    const shouldScrollToCenter = urlParams.get('scrollToCenter') === 'true'
     const hash = window.location.hash
     
     if (shouldScrollToCenter || hash === '#emotion-analysis-center') {
@@ -53,7 +54,7 @@ export default function EmotionAnalysisPage() {
         window.history.replaceState({}, '', url.toString())
       }
     }
-  }, [searchParams])
+  }, [])
 
   const handleNewMessage = (message: any) => {
     if (message.analysis) {
