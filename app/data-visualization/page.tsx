@@ -51,7 +51,7 @@ export default function DataVisualizationPage() {
     ],
     summary: {
       dominantEmotion: '快乐',
-      averageSentiment: '积极',
+      averageSentiment: 'positive',
       emotionalStability: '稳定',
       totalEntries: 15,
       weeklyChange: '+5%'
@@ -130,7 +130,10 @@ export default function DataVisualizationPage() {
                 <CardTitle className="text-sm font-medium">整体基调</CardTitle>
               </CardHeader>
               <CardContent>
-                <div className="text-2xl font-bold text-blue-600">{emotionData?.summary.averageSentiment}</div>
+                <div className="text-2xl font-bold text-blue-600">
+                  {emotionData?.summary.averageSentiment === 'positive' ? '积极' : 
+                   emotionData?.summary.averageSentiment === 'negative' ? '消极' : '中性'}
+                </div>
                 <p className="text-xs text-gray-500">情感整体倾向</p>
               </CardContent>
             </Card>

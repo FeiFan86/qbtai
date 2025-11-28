@@ -468,7 +468,7 @@ class VolcanoAPIService {
             { type: '愤怒', score: 0.02, color: this.getEmotionColor('愤怒') },
           ],
           overall: {
-            sentiment: '积极',
+            sentiment: 'positive',
             confidence: 0.85
           },
           keywords: ['开心', '满足', '积极', '美好'],
@@ -488,7 +488,7 @@ class VolcanoAPIService {
             { type: '期待', score: 0.02, color: this.getEmotionColor('期待') },
           ],
           overall: {
-            sentiment: '消极',
+            sentiment: 'negative',
             confidence: 0.80
           },
           keywords: ['难过', '失望', '挫折', '不安'],
@@ -509,7 +509,7 @@ class VolcanoAPIService {
             { type: '愤怒', score: 0.05, color: this.getEmotionColor('愤怒') },
           ],
           overall: {
-            sentiment: '中性',
+            sentiment: 'neutral',
             confidence: 0.75
           },
           keywords: ['平静', '思考', '观察', '理性'],

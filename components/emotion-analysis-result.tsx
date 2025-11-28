@@ -80,8 +80,8 @@ export function EmotionAnalysisResult({ result, compact = false }: EmotionAnalys
     }))
   }
 
-  const sentimentText = result.overall.sentiment === 'positive' || result.overall.sentiment === '积极' ? '积极' : 
-                      result.overall.sentiment === 'negative' || result.overall.sentiment === '消极' ? '消极' : '中性'
+  const sentimentText = result.overall.sentiment === 'positive' ? '积极' : 
+                      result.overall.sentiment === 'negative' ? '消极' : '中性'
 
   return (
     <Card className="card-hover animate-fade-in-up">
