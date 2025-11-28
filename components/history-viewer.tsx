@@ -99,10 +99,11 @@ export function HistoryViewer({ isOpen, onClose, onSelectRecord }: HistoryViewer
   if (!isOpen) return null
 
   return (
-    <div className="fixed inset-0 z-50 bg-black/50 backdrop-blur-sm flex items-center justify-center p-4" onClick={onClose}>
-      <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-full max-w-4xl max-h-[90vh] bg-white rounded-lg shadow-xl flex flex-col overflow-hidden" onClick={(e) => e.stopPropagation()}>
-        {/* 头部 */}
-        <div className="flex items-center justify-between p-4 md:p-6 border-b bg-gray-50">
+    <div className="fixed inset-0 z-50 bg-black/50 backdrop-blur-sm" onClick={onClose}>
+      <div className="fixed top-0 left-0 w-full h-full flex items-center justify-center p-4">
+        <div className="w-full max-w-4xl max-h-[90vh] bg-white rounded-lg shadow-xl flex flex-col overflow-hidden" onClick={(e) => e.stopPropagation()}>
+          {/* 头部 */}
+          <div className="flex items-center justify-between p-4 md:p-6 border-b bg-gray-50">
           <div>
             <h2 className="text-xl md:text-2xl font-bold text-gray-900">历史记录</h2>
             <p className="text-gray-600 mt-1 text-sm md:text-base">查看和管理您的分析记录</p>
