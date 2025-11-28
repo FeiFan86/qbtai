@@ -277,18 +277,22 @@ export class ApiErrorBoundary extends React.Component<
         return React.createElement(FallbackComponent, { error: this.state.error, retry: this.retry })
       }
 
-      return (
-        <div className="p-4 bg-red-50 border border-red-200 rounded-lg">
-          <h3 className="text-red-800 font-medium">
-            {ApiErrorHandler.getUserFriendlyMessage(this.state.error)}
-          </h3>
-          <button
-            onClick={this.retry}
-            className="mt-2 px-4 py-2 bg-red-600 text-white rounded hover:bg-red-700"
-          >
-            重试
-          </button>
-        </div>
+      return React.createElement(
+        'div',
+        { className: "p-4 bg-red-50 border border-red-200 rounded-lg" },
+        React.createElement(
+          'h3',
+          { className: "text-red-800 font-medium" },
+          ApiErrorHandler.getUserFriendlyMessage(this.state.error)
+        ),
+        React.createElement(
+          'button',
+          {
+            onClick: this.retry,
+            className: "mt-2 px-4 py-2 bg-red-600 text-white rounded hover:bg-red-700"
+          },
+          '重试'
+        )
       )
     }
 
