@@ -104,20 +104,20 @@ export function HistoryViewer({ isOpen, onClose, onSelectRecord }: HistoryViewer
         <div className="w-full max-w-4xl max-h-[90vh] bg-white rounded-lg shadow-xl flex flex-col overflow-hidden" onClick={(e) => e.stopPropagation()}>
           {/* 头部 */}
           <div className="flex items-center justify-between p-4 md:p-6 border-b bg-gray-50">
-          <div>
-            <h2 className="text-xl md:text-2xl font-bold text-gray-900">历史记录</h2>
-            <p className="text-gray-600 mt-1 text-sm md:text-base">查看和管理您的分析记录</p>
+            <div>
+              <h2 className="text-xl md:text-2xl font-bold text-gray-900">历史记录</h2>
+              <p className="text-gray-600 mt-1 text-sm md:text-base">查看和管理您的分析记录</p>
+            </div>
+            <div className="flex items-center gap-2">
+              <Button variant="outline" onClick={clearAll} className="hidden sm:flex">
+                <Trash2 className="h-4 w-4 mr-2" />
+                清空全部
+              </Button>
+              <Button variant="ghost" onClick={onClose} className="rounded-full p-2 h-auto">
+                <X className="h-5 w-5" />
+              </Button>
+            </div>
           </div>
-          <div className="flex items-center gap-2">
-            <Button variant="outline" onClick={clearAll} className="hidden sm:flex">
-              <Trash2 className="h-4 w-4 mr-2" />
-              清空全部
-            </Button>
-            <Button variant="ghost" onClick={onClose} className="rounded-full p-2 h-auto">
-              <X className="h-5 w-5" />
-            </Button>
-          </div>
-        </div>
 
         {/* 标签页 */}
         <div className="px-4 md:px-6 pt-4 bg-white border-b">
