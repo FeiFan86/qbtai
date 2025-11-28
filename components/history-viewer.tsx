@@ -166,7 +166,6 @@ export function HistoryViewer({ isOpen, onClose, onSelectRecord }: HistoryViewer
                   清空全部
                 </Button>
               </div>
-            <div className="space-y-4">
               {filteredHistory.map((record) => (
                 <Card key={record.id} className="hover:shadow-md transition-shadow bg-white overflow-hidden">
                   <CardHeader className="pb-3">
