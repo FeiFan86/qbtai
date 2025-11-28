@@ -10,14 +10,59 @@ import { ChatEmotionAnalysis } from '@/components/chat-emotion-analysis'
 import { EmotionAnalysisResult } from '@/components/emotion-analysis-result'
 import { SocialSuggestions } from '@/components/social-suggestions'
 import { EmotionTrends } from '@/components/emotion-trends'
+import { Button } from '@/components/ui/button'
+import { Textarea } from '@/components/ui/textarea'
+import { Label } from '@/components/ui/label'
 
 export default function EmotionAnalysisPage() {
   const [activeTab, setActiveTab] = useState('chat')
   const [latestAnalysis, setLatestAnalysis] = useState<any>(null)
+  const [text, setText] = useState('')
+  const [isAnalyzing, setIsAnalyzing] = useState(false)
+  const [analysisResult, setAnalysisResult] = useState<any>(null)
 
   const handleNewMessage = (message: any) => {
     if (message.analysis) {
       setLatestAnalysis(message.analysis)
+    }
+  }
+
+  const handleAnalyze = async () => {
+    if (!text.trim()) return
+    
+    setIsAnalyzing(true)
+    try {
+      const response = await fetch('/api/emotion/analyze', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ 
+          input: text,
+          type: 'text',
+          context: []
+        }),
+      })
+      
+      if (response.ok) {
+        const result = await response.json()
+        console.log('情感分析结果:', result)
+        if (result.success && result.data) {
+          setAnalysisResult(result.data)
+        } else {
+          console.error('API返回错误:', result.error)
+          alert('分析失败：' + (result.error || '未知错误'))
+        }
+      } else {
+        const errorText = await response.text()
+        console.error('API请求失败:', response.status, errorText)
+        alert(`请求失败 (${response.status}): ${errorText}`)
+      }
+    } catch (error) {
+      console.error('请求错误:', error)
+      alert('网络错误，请检查连接后重试')
+    } finally {
+      setIsAnalyzing(false)
     }
   }
 
@@ -26,17 +71,64 @@ export default function EmotionAnalysisPage() {
       <Navigation />
       
       <main className="container mx-auto px-4 py-8">
-        <div className="mx-auto max-w-6xl">
+        <div className="mx-auto max-w-4xl">
           <div className="text-center mb-10">
             <h1 className="text-4xl font-bold tracking-tight gradient-text mb-4">
               情感分析中心
             </h1>
             <p className="text-lg text-gray-600 max-w-2xl mx-auto">
-              与AI进行实时对话，深入理解文本背后的情感和意图
+              深入理解文本背后的情感和意图，获取专业的分析结果
             </p>
           </div>
 
-          <Tabs value={activeTab} onValueChange={setActiveTab} className="space-y-6">
+          <div className="space-y-6">
+            {/* 文本分析卡片 */}
+            <Card>
+              <CardHeader>
+                <CardTitle className="flex items-center gap-2">
+                  <Brain className="h-5 w-5 text-purple-500" />
+                  文本情感分析
+                </CardTitle>
+                <CardDescription>
+                  输入文本内容，获取详细的情感分析结果
+                </CardDescription>
+              </CardHeader>
+              <CardContent className="space-y-4">
+                <div>
+                  <Label htmlFor="text">文本内容 *</Label>
+                  <Textarea
+                    id="text"
+                    placeholder="请输入需要分析的文本内容..."
+                    value={text}
+                    onChange={(e) => setText(e.target.value)}
+                    rows={6}
+                  />
+                </div>
+
+                <div className="flex justify-end">
+                  <Button 
+                    onClick={handleAnalyze} 
+                    disabled={!text.trim() || isAnalyzing}
+                    className="bg-gradient-to-r from-pink-500 to-purple-500 hover:from-pink-600 hover:to-purple-600"
+                  >
+                    {isAnalyzing ? '分析中...' : '分析情感'}
+                  </Button>
+                </div>
+              </CardContent>
+            </Card>
+
+            {/* 分析结果 */}
+            {analysisResult && (
+              <EmotionAnalysisResult result={analysisResult} />
+            )}
+
+            {/* 社交建议 */}
+            {analysisResult && (
+              <SocialSuggestions result={analysisResult} />
+            )}
+          </div>
+
+          <Tabs value={activeTab} onValueChange={setActiveTab} className="space-y-6 mt-10">
             <TabsList className="grid w-full grid-cols-2">
               <TabsTrigger value="chat" className="flex items-center gap-2">
                 <MessageSquare className="h-4 w-4" />

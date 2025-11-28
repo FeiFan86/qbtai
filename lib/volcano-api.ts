@@ -182,6 +182,7 @@ class VolcanoAPIService {
       ], 0.2, 1000)
 
       if (response.choices && response.choices[0]?.message?.content) {
+        console.log('Raw response:', response.choices[0].message.content)
         try {
           // 尝试解析JSON响应
           const analysisData = JSON.parse(response.choices[0].message.content)
@@ -203,11 +204,45 @@ class VolcanoAPIService {
           }
         } catch (parseError) {
           console.error('JSON parsing failed:', parseError)
-          // 如果JSON解析失败，返回错误信息
+          console.log('Response content:', response.choices[0].message.content)
+          
+          // 尝试从内容中提取JSON部分
+          const content = response.choices[0].message.content
+          try {
+            // 寻找JSON开始和结束位置
+            const jsonStart = content.indexOf('{')
+            const jsonEnd = content.lastIndexOf('}')
+            
+            if (jsonStart !== -1 && jsonEnd !== -1 && jsonEnd > jsonStart) {
+              const extractedJson = content.substring(jsonStart, jsonEnd + 1)
+              console.log('Extracted JSON:', extractedJson)
+              
+              const analysisData = JSON.parse(extractedJson)
+              
+              // 添加情感的颜色和图标信息
+              const emotionsWithMetadata = analysisData.emotions.map((emotion: any) => ({
+                ...emotion,
+                color: this.getEmotionColor(emotion.type),
+                icon: this.getEmotionIcon(emotion.type)
+              }))
+              
+              console.log('Emotion analysis successful after extraction')
+              return {
+                success: true,
+                data: {
+                  ...analysisData,
+                  emotions: emotionsWithMetadata
+                }
+              }
+            }
+          } catch (extractError) {
+            console.error('JSON extraction also failed:', extractError)
+          }
+          
           const errorMessage = parseError instanceof Error ? parseError.message : '未知的JSON解析错误'
           return {
             success: false,
-            error: 'JSON解析失败：' + errorMessage
+            error: 'JSON解析失败：' + errorMessage + '\n响应内容：' + content.substring(0, 200)
           }
         }
       } else {
@@ -244,8 +279,8 @@ class VolcanoAPIService {
     }
     
     try {
-      const systemPrompt = `你是一个专业的社交沟通专家。请分析以下对话内容，并以JSON格式返回分析结果。
-      
+      const systemPrompt = `你是一个专业的社交沟通专家。请分析以下对话内容，并以严格的JSON格式返回分析结果。
+
 重要提示：请用中文返回所有分析结果！
 
 返回的JSON应该包含以下字段：
@@ -269,7 +304,7 @@ class VolcanoAPIService {
 3. improvementSuggestions - 改进建议列表（用中文描述）
 4. responseTemplates - 回应模板列表（用中文描述）
 
-请确保返回有效的JSON格式，所有内容都使用中文，不要包含任何其他文本。`
+请确保返回有效的JSON格式，不要包含任何其他文本。在JSON前后不要添加任何解释或说明。`
 
       const userPrompt = `请分析以下对话：\n\n"${request.conversation}"\n\n场景：${request.scenario || '日常'}\n背景：${request.context || '无'}`
 
@@ -280,18 +315,43 @@ class VolcanoAPIService {
 
       if (response.choices && response.choices[0]?.message?.content) {
         try {
-          const analysisData = JSON.parse(response.choices[0].message.content)
+          // 尝试直接解析JSON
+          let analysisData = JSON.parse(response.choices[0].message.content)
           console.log('Social conversation analysis successful')
           return {
             success: true,
             data: analysisData
           }
         } catch (parseError) {
-          console.error('JSON parsing failed:', parseError)
+          console.error('Direct JSON parsing failed:', parseError)
+          console.log('Response content:', response.choices[0].message.content)
+          
+          // 尝试从内容中提取JSON部分
+          const content = response.choices[0].message.content
+          try {
+            // 寻找JSON开始和结束位置
+            const jsonStart = content.indexOf('{')
+            const jsonEnd = content.lastIndexOf('}')
+            
+            if (jsonStart !== -1 && jsonEnd !== -1 && jsonEnd > jsonStart) {
+              const extractedJson = content.substring(jsonStart, jsonEnd + 1)
+              console.log('Extracted JSON:', extractedJson)
+              
+              const analysisData = JSON.parse(extractedJson)
+              console.log('Social conversation analysis successful after extraction')
+              return {
+                success: true,
+                data: analysisData
+              }
+            }
+          } catch (extractError) {
+            console.error('JSON extraction also failed:', extractError)
+          }
+          
           const errorMessage = parseError instanceof Error ? parseError.message : '未知的JSON解析错误'
           return {
             success: false,
-            error: 'JSON解析失败：' + errorMessage
+            error: 'JSON解析失败：' + errorMessage + '\n响应内容：' + content.substring(0, 200)
           }
         }
       } else {
