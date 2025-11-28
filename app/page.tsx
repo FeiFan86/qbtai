@@ -116,14 +116,14 @@ export default function Home() {
                 <ConversationAnalysisEnhanced 
                   result={analysisResult}
                   loading={analysisLoading}
-                  error={analysisError}
+                  error={analysisError || undefined}
                   onRetry={handleAnalyze}
                 />
                 
                 <SocialStrategiesEnhanced 
                   result={analysisResult}
                   loading={analysisLoading}
-                  error={analysisError}
+                  error={analysisError || undefined}
                   onRetry={handleAnalyze}
                 />
               </GridLayout>
