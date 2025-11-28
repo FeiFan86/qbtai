@@ -4,7 +4,7 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from './ui/
 import { Badge } from '@/components/ui/badge'
 import { Button } from './ui/button'
 import { Lightbulb, MessageSquare, ArrowRight, CheckCircle, TrendingUp } from 'lucide-react'
-import { LoadingSkeleton } from './loading-skeleton'
+import { LoadingSkeleton, CardSkeleton } from './loading-skeleton'
 import { LoadingSpinner } from './loading-spinner'
 
 interface SocialStrategiesProps {
@@ -97,31 +97,7 @@ export function SocialStrategiesEnhanced({ result, loading = false, error, onRet
 
   if (loading) {
     return (
-      <Card>
-        <CardHeader>
-          <LoadingSkeleton className="h-6 w-48" />
-          <LoadingSkeleton className="h-4 w-64" />
-        </CardHeader>
-        <CardContent className="space-y-6">
-          <div>
-            <LoadingSkeleton className="h-4 w-32 mb-3" />
-            {[1, 2, 3].map(i => (
-              <div key={i} className="flex items-center gap-2 mb-2">
-                <LoadingSkeleton className="h-4 w-4 rounded-full" />
-                <LoadingSkeleton className="h-4 flex-1" />
-              </div>
-            ))}
-          </div>
-          <div>
-            <LoadingSkeleton className="h-4 w-32 mb-3" />
-            <div className="flex flex-wrap gap-2">
-              {[1, 2, 3].map(i => (
-                <LoadingSkeleton key={i} className="h-6 w-16 rounded-full" />
-              ))}
-            </div>
-          </div>
-        </CardContent>
-      </Card>
+      <CardSkeleton />
     )
   }
 

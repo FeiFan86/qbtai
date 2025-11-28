@@ -4,7 +4,7 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from './ui/
 import { Button } from './ui/button'
 import { Badge } from '@/components/ui/badge'
 import { Copy, RefreshCw, Download, Share, CheckCircle, AlertCircle } from 'lucide-react'
-import { LoadingSkeleton } from './loading-skeleton'
+import { LoadingSkeleton, CardSkeleton } from './loading-skeleton'
 import { LoadingSpinner } from './loading-spinner'
 import { exportToPDF, exportToImage, shareContent } from '@/lib/export-utils'
 
@@ -77,27 +77,7 @@ export function GeneratedContentEnhanced({
 
   if (loading) {
     return (
-      <Card>
-        <CardHeader>
-          <LoadingSkeleton className="h-6 w-32" />
-          <LoadingSkeleton className="h-4 w-48" />
-        </CardHeader>
-        <CardContent className="space-y-4">
-          <div className="p-4 bg-gray-50 rounded-lg">
-            <div className="space-y-2">
-              <LoadingSkeleton className="h-4 w-full" />
-              <LoadingSkeleton className="h-4 w-3/4" />
-              <LoadingSkeleton className="h-4 w-5/6" />
-            </div>
-          </div>
-          <div className="flex gap-2 flex-wrap">
-            <LoadingSkeleton className="h-8 w-20 rounded" />
-            <LoadingSkeleton className="h-8 w-24 rounded" />
-            <LoadingSkeleton className="h-8 w-20 rounded" />
-            <LoadingSkeleton className="h-8 w-20 rounded" />
-          </div>
-        </CardContent>
-      </Card>
+      <CardSkeleton />
     )
   }
 

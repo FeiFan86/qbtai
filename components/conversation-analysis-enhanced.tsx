@@ -4,7 +4,7 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from './ui/
 import { Badge } from './ui/badge'
 import { Progress } from './ui/progress'
 import { MessageCircle, Users, TrendingUp, AlertTriangle, RefreshCw } from 'lucide-react'
-import { LoadingSkeleton } from './loading-skeleton'
+import { LoadingSkeleton, CardSkeleton } from './loading-skeleton'
 import { LoadingSpinner } from './loading-spinner'
 
 // 临时替代 cn 函数
@@ -108,67 +108,7 @@ export function ConversationAnalysisEnhanced({ result, loading = false, error, o
 
   if (loading) {
     return (
-      <Card>
-        <CardHeader>
-          <LoadingSkeleton className="h-6 w-32" />
-          <LoadingSkeleton className="h-4 w-48" />
-        </CardHeader>
-        <CardContent className="space-y-6">
-          {/* 情感分析骨架屏 */}
-          <div>
-            <div className="flex items-center justify-between mb-2">
-              <LoadingSkeleton className="h-4 w-24" />
-              <LoadingSkeleton className="h-6 w-12 rounded-full" />
-            </div>
-            <div className="grid grid-cols-2 gap-4 mt-4">
-              <div>
-                <LoadingSkeleton className="h-3 w-16 mb-1" />
-                <div className="flex items-center gap-2">
-                  <div className="flex-1">
-                    <LoadingSkeleton className="h-2 w-full" />
-                  </div>
-                  <LoadingSkeleton className="h-3 w-8" />
-                </div>
-              </div>
-              <div>
-                <LoadingSkeleton className="h-3 w-16 mb-1" />
-                <div className="flex items-center gap-2">
-                  <div className="flex-1">
-                    <LoadingSkeleton className="h-2 w-full" />
-                  </div>
-                  <LoadingSkeleton className="h-3 w-8" />
-                </div>
-              </div>
-            </div>
-          </div>
-
-          {/* 参与者分析骨架屏 */}
-          <div>
-            <LoadingSkeleton className="h-4 w-20 mb-3" />
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-              {[1, 2].map(i => (
-                <div key={i} className="border rounded-lg p-3">
-                  <LoadingSkeleton className="h-4 w-12 mb-2" />
-                  <div className="space-y-2">
-                    <div>
-                      <LoadingSkeleton className="h-3 w-16 mb-1" />
-                      <LoadingSkeleton className="h-5 w-20 rounded-full" />
-                    </div>
-                    <div>
-                      <LoadingSkeleton className="h-3 w-16 mb-1" />
-                      <div className="flex flex-wrap gap-1">
-                        {[1, 2, 3].map(j => (
-                          <LoadingSkeleton key={j} className="h-4 w-12 rounded-full" />
-                        ))}
-                      </div>
-                    </div>
-                  </div>
-                </div>
-              ))}
-            </div>
-          </div>
-        </CardContent>
-      </Card>
+      <CardSkeleton />
     )
   }
 

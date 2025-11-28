@@ -2,7 +2,18 @@
 
 import { Card, CardContent, CardHeader } from './ui/card'
 
-export function LoadingSkeleton() {
+interface LoadingSkeletonProps {
+  className?: string
+}
+
+export function LoadingSkeleton({ className }: LoadingSkeletonProps) {
+  return (
+    <div className={`animate-pulse bg-gray-200 rounded ${className || ''}`}></div>
+  )
+}
+
+// 完整的卡片骨架屏
+export function CardSkeleton() {
   return (
     <Card className="animate-pulse">
       <CardHeader>
