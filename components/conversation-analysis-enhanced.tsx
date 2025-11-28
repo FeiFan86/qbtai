@@ -2,6 +2,7 @@
 
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from './ui/card'
 import { Badge } from './ui/badge'
+import { Button } from './ui/button'
 import { Progress } from './ui/progress'
 import { MessageCircle, Users, TrendingUp, AlertTriangle, RefreshCw } from 'lucide-react'
 import { LoadingSkeleton, CardSkeleton } from './loading-skeleton'
