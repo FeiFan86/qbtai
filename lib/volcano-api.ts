@@ -244,28 +244,30 @@ class VolcanoAPIService {
     try {
       const systemPrompt = `你是一个专业的社交沟通专家。请分析以下对话内容，并以JSON格式返回分析结果。
       
+重要提示：请用中文返回所有分析结果！
+
 返回的JSON应该包含以下字段：
 1. conversationAnalysis - 对话整体分析
-   - overallSentiment: 整体情感倾向 (positive/negative/neutral)
-   - communicationStyle: 沟通风格 (assertive/passive/aggressive)
+   - overallSentiment: 整体情感倾向（积极/消极/中性）
+   - communicationStyle: 沟通风格（自信/被动/攻击性）
    - emotionalIntelligence: 情商得分 (0-1)
    - conflictLevel: 冲突程度 (0-1)
    - empathyScore: 同理心得分 (0-1)
 2. participantAnalysis - 参与者分析
    - user: 用户分析
-     - emotionalState: 情感状态
-     - communicationStyle: 沟通风格
-     - needs: 需求列表
-     - strengths: 优势列表
+     - emotionalState: 情感状态（用中文描述）
+     - communicationStyle: 沟通风格（用中文描述）
+     - needs: 需求列表（用中文描述）
+     - strengths: 优势列表（用中文描述）
    - other: 对方分析
-     - emotionalState: 情感状态
-     - communicationStyle: 沟通风格
-     - needs: 需求列表
-     - strengths: 优势列表
-3. improvementSuggestions - 改进建议列表
-4. responseTemplates - 回应模板列表
+     - emotionalState: 情感状态（用中文描述）
+     - communicationStyle: 沟通风格（用中文描述）
+     - needs: 需求列表（用中文描述）
+     - strengths: 优势列表（用中文描述）
+3. improvementSuggestions - 改进建议列表（用中文描述）
+4. responseTemplates - 回应模板列表（用中文描述）
 
-请确保返回有效的JSON格式，不要包含任何其他文本。`
+请确保返回有效的JSON格式，所有内容都使用中文，不要包含任何其他文本。`
 
       const userPrompt = `请分析以下对话：\n\n"${request.conversation}"\n\n场景：${request.scenario || '日常'}\n背景：${request.context || '无'}`
 
@@ -503,38 +505,39 @@ class VolcanoAPIService {
   private getMockSocialAnalysis(request?: SocialConversationAnalysisRequest): SocialConversationAnalysisResponse {
     const scenario = request?.scenario || 'casual'
     
-    // 基于您提供的分析结果创建正确的格式
+    // 基于用户提供的分析结果创建正确的中文格式
     const correctFormat = {
       conversationAnalysis: {
-        overallSentiment: 'neutral',
-        communicationStyle: 'balanced',
+        overallSentiment: '消极',
+        communicationStyle: '直接',
         emotionalIntelligence: 0.7,
-        conflictLevel: 0.3,
-        empathyScore: 0.6
+        conflictLevel: 0.4,
+        empathyScore: 0.5
       },
       participantAnalysis: {
         user: {
-          emotionalState: 'concerned',
-          communicationStyle: 'honest',
-          needs: ['寻求理解', '获得支持', '明确期望'],
-          strengths: ['坦诚沟通', '问题识别']
+          emotionalState: '防御性或有压力',
+          communicationStyle: '对话中未明确指定',
+          needs: ['工作生活平衡', '理解', '支持'],
+          strengths: ['诚实表达', '自我意识']
         },
         other: {
-          emotionalState: 'inquisitive',
-          communicationStyle: 'direct',
-          needs: ['获取信息', '评估风险', '确保进度'],
-          strengths: ['信息获取', '风险评估']
+          emotionalState: '孤独或被忽视',
+          communicationStyle: '直接且富有表现力',
+          needs: ['优质时间', '情感连接', '关注'],
+          strengths: ['直接沟通', '情感表达']
         }
       },
       improvementSuggestions: [
-        '提供更具体的难题细节和影响评估',
-        '建议可能的解决方案或替代计划',
-        '主动提出下一步行动方案'
+        '承认伴侣的感受以展示同理心',
+        '为关系安排专门的时间',
+        '使用\'我\'的陈述来表达自己的观点而不带责备',
+        '一起讨论如何平衡工作和个人生活'
       ],
       responseTemplates: [
-        '目前遇到[具体问题]，预计影响[时间/范围]，我们正在尝试[解决方案]',
-        '感谢关注，我们遇到了[技术难点]，建议[调整方案]，是否需要详细汇报？',
-        '进度因[原因]受阻，已制定[应对计划]，预计新时间点为[日期]'
+        "我听到你感觉被忽视了，我很抱歉。让我们想办法一起度过更多优质时间。",
+        "我理解你需要更多关注。我们可以每周安排一个特定的时间只为我们两个人吗？",
+        "我很感谢你告诉我你的感受。我的工作一直很忙，但对我来说你很重要。我们如何改善这种情况？"
       ]
     }
     
