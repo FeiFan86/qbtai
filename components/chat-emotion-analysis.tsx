@@ -5,8 +5,11 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from './ui/
 import { Button } from './ui/button'
 import { Textarea } from './ui/textarea'
 import { Badge } from './ui/badge'
-import { Brain, Send, User, Bot, RotateCw, MessageCircle } from 'lucide-react'
+import { Brain, Send, User, Bot, RotateCw, MessageCircle, RefreshCw } from 'lucide-react'
 import { EmotionAnalysisResult } from './emotion-analysis-result'
+import { LoadingSpinner, ErrorMessage, LoadingOverlay } from './loading-spinner'
+import { MessageSkeleton } from './loading-skeleton'
+import { useApiCall, ErrorHandler } from '@/lib/loading-utils'
 
 interface Message {
   id: string

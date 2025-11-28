@@ -4,11 +4,13 @@ import { useState, useEffect } from 'react'
 import Link from 'next/link'
 import { usePathname } from 'next/navigation'
 import { Button } from './ui/button'
-import { Heart, MessageCircle, BarChart3, User, Menu, X, Sparkles } from 'lucide-react'
+import { Heart, MessageCircle, BarChart3, User, Menu, X, Sparkles, History } from 'lucide-react'
+import { HistoryViewer } from './history-viewer'
 
 export function Navigation() {
   const [isScrolled, setIsScrolled] = useState(false)
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false)
+  const [isHistoryOpen, setIsHistoryOpen] = useState(false)
   const pathname = usePathname()
 
   useEffect(() => {
@@ -80,6 +82,17 @@ export function Navigation() {
             </a>
           </Button>
           
+          {/* 历史记录按钮 */}
+          <Button 
+            variant="ghost" 
+            size="icon" 
+            onClick={() => setIsHistoryOpen(true)}
+            title="查看历史记录"
+          >
+            <History className="h-5 w-5" />
+            <span className="sr-only">历史记录</span>
+          </Button>
+          
           <Button variant="ghost" size="icon" className="relative">
             <User className="h-5 w-5" />
             <span className="sr-only">用户中心</span>
@@ -120,6 +133,12 @@ export function Navigation() {
           </div>
         </div>
       )}
+
+      {/* 历史记录弹窗 */}
+      <HistoryViewer 
+        isOpen={isHistoryOpen} 
+        onClose={() => setIsHistoryOpen(false)}
+      />
     </header>
   )
 }
