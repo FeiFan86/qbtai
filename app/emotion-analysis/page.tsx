@@ -36,24 +36,11 @@ export default function EmotionAnalysisPage() {
             behavior: 'smooth'
           })
         }
-      }, 100)
+      }, 300) // 增加延迟时间，确保页面完全加载
     }
 
-    // 检查URL参数和锚点
-    const urlParams = new URLSearchParams(window.location.search)
-    const shouldScrollToCenter = urlParams.get('scrollToCenter') === 'true'
-    const hash = window.location.hash
-    
-    if (shouldScrollToCenter || hash === '#emotion-analysis-center') {
-      scrollToCenter()
-      
-      // 清除URL参数，避免重复滚动
-      if (shouldScrollToCenter) {
-        const url = new URL(window.location.href)
-        url.searchParams.delete('scrollToCenter')
-        window.history.replaceState({}, '', url.toString())
-      }
-    }
+    // 页面加载时总是滚动到情感分析中心
+    scrollToCenter()
   }, [])
 
   const handleNewMessage = (message: any) => {
