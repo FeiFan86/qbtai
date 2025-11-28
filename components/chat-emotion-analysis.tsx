@@ -34,7 +34,10 @@ export function ChatEmotionAnalysis({ onNewMessage }: ChatEmotionAnalysisProps) 
   }
 
   useEffect(() => {
-    scrollToBottom()
+    // 只在有消息变化时滚动，不自动滚动到输入框
+    if (messages.length > 0) {
+      scrollToBottom()
+    }
   }, [messages])
 
   const handleSendMessage = async () => {

@@ -62,21 +62,11 @@ export function Navigation() {
                 
                 // 使用路由跳转而不是锚点
                 if (pathname === '/emotion-analysis') {
-                  // 如果已经在情感分析页面，直接滚动到目标区域
-                  const element = document.getElementById('emotion-analysis-center')
-                  if (element) {
-                    const offset = 80 // 导航栏高度
-                    const elementPosition = element.getBoundingClientRect().top + window.pageYOffset
-                    const offsetPosition = elementPosition - offset
-                    
-                    window.scrollTo({
-                      top: offsetPosition,
-                      behavior: 'smooth'
-                    })
-                  }
+                  // 如果已经在情感分析页面，不进行任何滚动操作
+                  // 保持用户当前的位置
                 } else {
-                  // 导航到情感分析页面，使用URL参数标记需要滚动
-                  window.location.href = '/emotion-analysis?scrollToCenter=true'
+                  // 导航到情感分析页面，不使用任何自动滚动
+                  window.location.href = '/emotion-analysis'
                 }
               }
             }
@@ -152,21 +142,11 @@ export function Navigation() {
                   
                   // 使用路由跳转而不是锚点
                   if (pathname === '/emotion-analysis') {
-                    // 如果已经在情感分析页面，直接滚动到目标区域
-                    const element = document.getElementById('emotion-analysis-center')
-                    if (element) {
-                      const offset = 80 // 导航栏高度
-                      const elementPosition = element.getBoundingClientRect().top + window.pageYOffset
-                      const offsetPosition = elementPosition - offset
-                      
-                      window.scrollTo({
-                        top: offsetPosition,
-                        behavior: 'smooth'
-                      })
-                    }
+                    // 如果已经在情感分析页面，不进行任何滚动操作
+                    // 保持用户当前的位置
                   } else {
-                    // 导航到情感分析页面，使用URL参数标记需要滚动
-                    window.location.href = '/emotion-analysis?scrollToCenter=true'
+                    // 导航到情感分析页面，不使用任何自动滚动
+                    window.location.href = '/emotion-analysis'
                   }
                 }
                 setIsMobileMenuOpen(false)
