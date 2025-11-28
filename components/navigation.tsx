@@ -75,8 +75,8 @@ export function Navigation() {
                     })
                   }
                 } else {
-                  // 使用 Next.js 路由跳转，避免页面重载
-                  window.location.href = '/emotion-analysis'
+                  // 导航到情感分析页面，使用URL参数标记需要滚动
+                  window.location.href = '/emotion-analysis?scrollToCenter=true'
                 }
               }
             }
@@ -165,7 +165,7 @@ export function Navigation() {
                       })
                     }
                   } else {
-                    // 导航到情感分析页面，使用状态标记需要滚动
+                    // 导航到情感分析页面，使用URL参数标记需要滚动
                     window.location.href = '/emotion-analysis?scrollToCenter=true'
                   }
                 }

@@ -39,8 +39,18 @@ export default function EmotionAnalysisPage() {
       }, 300) // 增加延迟时间，确保页面完全加载
     }
 
-    // 页面加载时总是滚动到情感分析中心
-    scrollToCenter()
+    // 检查是否需要滚动到情感分析中心
+    const urlParams = new URLSearchParams(window.location.search)
+    const shouldScrollToCenter = urlParams.get('scrollToCenter') === 'true'
+    
+    if (shouldScrollToCenter) {
+      scrollToCenter()
+      
+      // 清除URL参数，避免重复滚动
+      const url = new URL(window.location.href)
+      url.searchParams.delete('scrollToCenter')
+      window.history.replaceState({}, '', url.toString())
+    }
   }, [])
 
   const handleNewMessage = (message: any) => {
