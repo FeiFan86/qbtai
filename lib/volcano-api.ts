@@ -382,14 +382,23 @@ class VolcanoAPIService {
    */
   private getEmotionColor(emotionType: string): string {
     const colorMap: Record<string, string> = {
-      happiness: '#10B981', // 绿色
-      sadness: '#3B82F6',   // 蓝色
-      anger: '#EF4444',      // 红色
-      fear: '#8B5CF6',       // 紫色
-      surprise: '#F59E0B',   // 橙色
-      disgust: '#6B7280',    // 灰色
-      anticipation: '#EC4899', // 粉色
-      trust: '#06B6D4'       // 青色
+      '快乐': '#10B981', // 绿色
+      '悲伤': '#3B82F6',   // 蓝色
+      '愤怒': '#EF4444',      // 红色
+      '恐惧': '#8B5CF6',       // 紫色
+      '惊讶': '#F59E0B',   // 橙色
+      '厌恶': '#6B7280',    // 灰色
+      '期待': '#EC4899', // 粉色
+      '信任': '#06B6D4',      // 青色
+      // 英文映射（兼容性）
+      happiness: '#10B981',
+      sadness: '#3B82F6',
+      anger: '#EF4444',
+      fear: '#8B5CF6',
+      surprise: '#F59E0B',
+      disgust: '#6B7280',
+      anticipation: '#EC4899',
+      trust: '#06B6D4'
     }
     
     return colorMap[emotionType.toLowerCase()] || '#6B7280'
@@ -401,6 +410,15 @@ class VolcanoAPIService {
   private getEmotionIcon(emotionType: string): string {
     // 这里返回图标的名称，实际组件中会使用lucide-react图标
     const iconMap: Record<string, string> = {
+      '快乐': 'Smile',
+      '悲伤': 'Frown',
+      '愤怒': 'Zap',
+      '恐惧': 'Shield',
+      '惊讶': 'Eye',
+      '厌恶': 'ThumbsDown',
+      '期待': 'Clock',
+      '信任': 'Heart',
+      // 英文映射（兼容性）
       happiness: 'Smile',
       sadness: 'Frown',
       anger: 'Zap',
@@ -442,15 +460,15 @@ class VolcanoAPIService {
         success: true,
         data: {
           emotions: [
-            { type: '快乐', score: 0.75, color: '#10B981' },
-            { type: '期待', score: 0.55, color: '#EC4899' },
-            { type: '信任', score: 0.40, color: '#06B6D4' },
-            { type: '惊讶', score: 0.20, color: '#F59E0B' },
-            { type: '悲伤', score: 0.05, color: '#3B82F6' },
-            { type: '愤怒', score: 0.02, color: '#EF4444' },
+            { type: '快乐', score: 0.75, color: this.getEmotionColor('快乐') },
+            { type: '期待', score: 0.55, color: this.getEmotionColor('期待') },
+            { type: '信任', score: 0.40, color: this.getEmotionColor('信任') },
+            { type: '惊讶', score: 0.20, color: this.getEmotionColor('惊讶') },
+            { type: '悲伤', score: 0.05, color: this.getEmotionColor('悲伤') },
+            { type: '愤怒', score: 0.02, color: this.getEmotionColor('愤怒') },
           ],
           overall: {
-            sentiment: 'positive' as const,
+            sentiment: '积极',
             confidence: 0.85
           },
           keywords: ['开心', '满足', '积极', '美好'],
@@ -462,15 +480,15 @@ class VolcanoAPIService {
         success: true,
         data: {
           emotions: [
-            { type: '悲伤', score: 0.65, color: '#3B82F6' },
-            { type: '愤怒', score: 0.45, color: '#EF4444' },
-            { type: '恐惧', score: 0.25, color: '#8B5CF6' },
-            { type: '厌恶', score: 0.20, color: '#6B7280' },
-            { type: '快乐', score: 0.05, color: '#10B981' },
-            { type: '期待', score: 0.02, color: '#EC4899' },
+            { type: '悲伤', score: 0.65, color: this.getEmotionColor('悲伤') },
+            { type: '愤怒', score: 0.45, color: this.getEmotionColor('愤怒') },
+            { type: '恐惧', score: 0.25, color: this.getEmotionColor('恐惧') },
+            { type: '厌恶', score: 0.20, color: this.getEmotionColor('厌恶') },
+            { type: '快乐', score: 0.05, color: this.getEmotionColor('快乐') },
+            { type: '期待', score: 0.02, color: this.getEmotionColor('期待') },
           ],
           overall: {
-            sentiment: 'negative' as const,
+            sentiment: '消极',
             confidence: 0.80
           },
           keywords: ['难过', '失望', '挫折', '不安'],
@@ -483,15 +501,15 @@ class VolcanoAPIService {
         success: true,
         data: {
           emotions: [
-            { type: '信任', score: 0.50, color: '#06B6D4' },
-            { type: '期待', score: 0.45, color: '#EC4899' },
-            { type: '快乐', score: 0.35, color: '#10B981' },
-            { type: '惊讶', score: 0.20, color: '#F59E0B' },
-            { type: '悲伤', score: 0.15, color: '#3B82F6' },
-            { type: '愤怒', score: 0.05, color: '#EF4444' },
+            { type: '信任', score: 0.50, color: this.getEmotionColor('信任') },
+            { type: '期待', score: 0.45, color: this.getEmotionColor('期待') },
+            { type: '快乐', score: 0.35, color: this.getEmotionColor('快乐') },
+            { type: '惊讶', score: 0.20, color: this.getEmotionColor('惊讶') },
+            { type: '悲伤', score: 0.15, color: this.getEmotionColor('悲伤') },
+            { type: '愤怒', score: 0.05, color: this.getEmotionColor('愤怒') },
           ],
           overall: {
-            sentiment: 'neutral' as const,
+            sentiment: '中性',
             confidence: 0.75
           },
           keywords: ['平静', '思考', '观察', '理性'],

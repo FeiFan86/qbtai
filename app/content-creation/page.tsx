@@ -10,7 +10,7 @@ import { Label } from '@/components/ui/label'
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
 import { Badge } from '@/components/ui/badge'
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select'
-import { PenTool, Heart, MessageSquare, Briefcase, Sparkles, Copy, RefreshCw } from 'lucide-react'
+import { PenTool, Heart, MessageSquare, Briefcase, Sparkles, Copy, RefreshCw, Mail, Mic, Calendar, CheckCircle } from 'lucide-react'
 import { GeneratedContent } from '@/components/generated-content'
 
 export default function ContentCreationPage() {
@@ -45,24 +45,34 @@ export default function ContentCreationPage() {
       console.log('API生成结果:', result)
       
       if (response.ok) {
-        setGeneratedContent(result.data)
+        if (result.success && result.data) {
+          setGeneratedContent(result.data)
+        } else {
+          console.error('API返回错误:', result.error)
+          alert('生成失败：' + (result.error || '未知错误'))
+          setGeneratedContent(null)
+        }
       } else {
-        console.error('API生成失败:', result.error)
-        throw new Error(result.error || '生成失败，请重试')
+        const errorText = await response.text()
+        console.error('API请求失败:', response.status, errorText)
+        alert(`请求失败 (${response.status}): ${errorText}`)
+        setGeneratedContent(null)
       }
     } catch (error) {
       console.error('请求错误:', error)
-      alert('内容生成失败：' + (error instanceof Error ? error.message : '网络错误，请检查API配置'))
+      alert('网络错误，请检查连接后重试')
       setGeneratedContent(null)
     } finally {
       setIsGenerating(false)
     }
   }
 
+  const [showCopySuccess, setShowCopySuccess] = useState(false)
+
   const copyToClipboard = (text: string) => {
     navigator.clipboard.writeText(text).then(() => {
-      // 这里可以添加一个提示
-      alert('内容已复制到剪贴板')
+      setShowCopySuccess(true)
+      setTimeout(() => setShowCopySuccess(false), 2000)
     }).catch(err => {
       console.error('复制失败:', err)
       alert('复制失败，请手动复制')
@@ -131,6 +141,38 @@ export default function ContentCreationPage() {
       prompt: '写一段生日祝福，表达美好的祝愿',
       style: 'casual',
       length: 'short'
+    },
+    {
+      title: '感谢信',
+      description: '生成真诚的感谢信内容',
+      icon: <Mail className="h-5 w-5 text-green-500" />,
+      prompt: '写一封感谢信，表达对帮助和支持的感激之情',
+      style: 'formal',
+      length: 'medium'
+    },
+    {
+      title: '情诗创作',
+      description: '生成优美的情诗表达爱意',
+      icon: <PenTool className="h-5 w-5 text-purple-500" />,
+      prompt: '创作一首情诗，表达深深的爱意和思念',
+      style: 'emotional',
+      length: 'short'
+    },
+    {
+      title: '演讲稿',
+      description: '生成激励人心的演讲稿',
+      icon: <Mic className="h-5 w-5 text-red-500" />,
+      prompt: '写一篇演讲稿，激励团队追求卓越和成功',
+      style: 'professional',
+      length: 'long'
+    },
+    {
+      title: '邀请函',
+      description: '生成正式的邀请函内容',
+      icon: <Calendar className="h-5 w-5 text-indigo-500" />,
+      prompt: '写一份邀请函，邀请参加活动或庆典',
+      style: 'formal',
+      length: 'medium'
     }
   ]
 
@@ -149,42 +191,43 @@ export default function ContentCreationPage() {
             </p>
           </div>
 
-          <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-            {/* 左侧输入区域 */}
-            <div className="lg:col-span-2 space-y-6">
-              {/* 快速模板 */}
-              <Card>
-                <CardHeader>
-                  <CardTitle className="flex items-center gap-2">
-                    <Sparkles className="h-5 w-5 text-purple-500" />
-                    快速开始
-                  </CardTitle>
-                  <CardDescription>
-                    选择一个模板，快速生成内容
-                  </CardDescription>
-                </CardHeader>
-                <CardContent>
-                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
-                    {contentTemplates.map((template, index) => (
-                      <div 
-                        key={index}
-                        className="border rounded-lg p-3 cursor-pointer hover:bg-gray-50 transition-colors"
-                        onClick={() => {
-                          setPrompt(template.prompt)
-                          setStyle(template.style)
-                          setLength(template.length)
-                        }}
-                      >
-                        <div className="flex items-center gap-2 mb-2">
-                          {template.icon}
-                          <span className="font-medium text-sm">{template.title}</span>
-                        </div>
-                        <p className="text-xs text-gray-600">{template.description}</p>
+          <div className="space-y-6">
+            {/* 快速模板 */}
+            <Card>
+              <CardHeader>
+                <CardTitle className="flex items-center gap-2">
+                  <Sparkles className="h-5 w-5 text-purple-500" />
+                  快速开始
+                </CardTitle>
+                <CardDescription>
+                  选择一个模板，快速生成内容
+                </CardDescription>
+              </CardHeader>
+              <CardContent>
+                <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-4">
+                  {contentTemplates.map((template, index) => (
+                    <div 
+                      key={index}
+                      className="border rounded-lg p-4 cursor-pointer hover:bg-gray-50 transition-colors"
+                      onClick={() => {
+                        setPrompt(template.prompt)
+                        setStyle(template.style)
+                        setLength(template.length)
+                      }}
+                    >
+                      <div className="flex items-center gap-2 mb-3">
+                        {template.icon}
+                        <span className="font-medium">{template.title}</span>
                       </div>
-                    ))}
-                  </div>
-                </CardContent>
-              </Card>
+                      <p className="text-sm text-gray-600 mb-3">{template.description}</p>
+                      <div className="text-xs text-gray-500 bg-gray-100 p-2 rounded">
+                        点击填充模板
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              </CardContent>
+            </Card>
 
               {/* 自定义生成 */}
               <Card>
@@ -251,7 +294,13 @@ export default function ContentCreationPage() {
                     </div>
                   </div>
 
-                  <div className="flex justify-end gap-2">
+                  <div className="flex justify-between items-center">
+                    {showCopySuccess && (
+                      <div className="text-green-600 text-sm flex items-center gap-1">
+                        <CheckCircle className="h-4 w-4" />
+                        内容已复制
+                      </div>
+                    )}
                     <Button 
                       onClick={handleGenerate} 
                       disabled={!prompt.trim() || isGenerating}
@@ -262,38 +311,18 @@ export default function ContentCreationPage() {
                   </div>
                 </CardContent>
               </Card>
-            </div>
+            </Card>
 
-            {/* 右侧生成结果区域 */}
-            <div className="space-y-6">
-              {generatedContent && (
-                <GeneratedContent 
-                  content={generatedContent} 
-                  onCopy={copyToClipboard}
-                  onRegenerate={handleGenerate}
-                  onDownload={downloadContent}
-                  onShare={shareContent}
-                />
-              )}
-              
-              {!generatedContent && (
-                <Card>
-                  <CardHeader>
-                    <CardTitle>生成结果</CardTitle>
-                    <CardDescription>
-                      AI生成的内容将在这里显示
-                    </CardDescription>
-                  </CardHeader>
-                  <CardContent>
-                    <div className="text-center py-8">
-                      <PenTool className="h-12 w-12 mx-auto text-gray-300 mb-4" />
-                      <p className="text-gray-500">等待生成...</p>
-                    </div>
-                  </CardContent>
-                </Card>
-              )}
-
-              {/* 写作技巧 */}
+            {/* 生成结果 */}
+            {generatedContent && (
+              <GeneratedContent 
+                content={generatedContent} 
+                onCopy={copyToClipboard}
+                onRegenerate={handleGenerate}
+                onDownload={downloadContent}
+                onShare={shareContent}
+              />
+            )}
               <Card>
                 <CardHeader>
                   <CardTitle className="text-lg">写作技巧</CardTitle>

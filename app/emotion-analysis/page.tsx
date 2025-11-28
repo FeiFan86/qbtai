@@ -49,38 +49,19 @@ export default function EmotionAnalysisPage() {
             </TabsList>
             
             <TabsContent value="chat" className="space-y-6">
-              <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-                {/* 对话区域 */}
-                <div className="lg:col-span-2">
-                  <ChatEmotionAnalysis onNewMessage={handleNewMessage} />
-                </div>
-                
-                {/* 实时分析结果 */}
-                <div className="space-y-6">
-                  {latestAnalysis ? (
-                    <>
-                      <EmotionAnalysisResult result={latestAnalysis} compact />
-                      <SocialSuggestions result={latestAnalysis} />
-                      <EmotionTrends result={latestAnalysis} />
-                    </>
-                  ) : (
-                    <Card>
-                      <CardHeader>
-                        <CardTitle>实时分析</CardTitle>
-                        <CardDescription>
-                          开始对话后，分析结果将在这里实时显示
-                        </CardDescription>
-                      </CardHeader>
-                      <CardContent>
-                        <div className="text-center py-8">
-                          <Brain className="h-12 w-12 mx-auto text-gray-300 mb-4" />
-                          <p className="text-gray-500">等待对话开始...</p>
-                        </div>
-                      </CardContent>
-                    </Card>
-                  )}
-                </div>
+              {/* 对话区域 */}
+              <div className="mb-6">
+                <ChatEmotionAnalysis onNewMessage={handleNewMessage} />
               </div>
+              
+              {/* 实时分析结果 */}
+              {latestAnalysis && (
+                <div className="space-y-6">
+                  <EmotionAnalysisResult result={latestAnalysis} />
+                  <SocialSuggestions result={latestAnalysis} />
+                  <EmotionTrends result={latestAnalysis} />
+                </div>
+              )}
             </TabsContent>
             
             <TabsContent value="advanced" className="space-y-6">

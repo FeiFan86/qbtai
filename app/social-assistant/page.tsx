@@ -10,7 +10,7 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
 import { Label } from '@/components/ui/label'
 import { Badge } from '@/components/ui/badge'
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select'
-import { MessageCircle, Users, Brain, Lightbulb, CheckCircle, AlertCircle, TrendingUp } from 'lucide-react'
+import { MessageCircle, Users, Brain, Lightbulb, CheckCircle, AlertCircle, TrendingUp, Home, HeadphonesIcon, BookOpen, Stethoscope } from 'lucide-react'
 import { ConversationAnalysis } from '@/components/conversation-analysis'
 import { SocialStrategies } from '@/components/social-strategies'
 
@@ -40,12 +40,21 @@ export default function SocialAssistantPage() {
       
       if (response.ok) {
         const result = await response.json()
-        setAnalysisResult(result.data)
+        console.log('社交分析结果:', result)
+        if (result.success && result.data) {
+          setAnalysisResult(result.data)
+        } else {
+          console.error('API返回错误:', result.error)
+          alert('分析失败：' + (result.error || '未知错误'))
+        }
       } else {
-        console.error('分析失败')
+        const errorText = await response.text()
+        console.error('API请求失败:', response.status, errorText)
+        alert(`请求失败 (${response.status}): ${errorText}`)
       }
     } catch (error) {
       console.error('请求错误:', error)
+      alert('网络错误，请检查连接后重试')
     } finally {
       setIsAnalyzing(false)
     }
@@ -79,6 +88,34 @@ export default function SocialAssistantPage() {
       icon: <AlertCircle className="h-5 w-5 text-orange-500" />,
       scenario: 'conflict',
       example: 'A：你总是不尊重我的意见！\nB：我没有，只是我们的看法不同。'
+    },
+    {
+      title: '家庭关系',
+      description: '改善家庭成员之间的沟通',
+      icon: <Home className="h-5 w-5 text-purple-500" />,
+      scenario: 'family',
+      example: '父母：你怎么又这么晚回来？\n我：公司加班，没办法。'
+    },
+    {
+      title: '客户服务',
+      description: '提升客户服务沟通技巧',
+      icon: <HeadphonesIcon className="h-5 w-5 text-cyan-500" />,
+      scenario: 'service',
+      example: '客户：你们的产品质量太差了！\n客服：非常抱歉给您带来不便，请详细说明问题。'
+    },
+    {
+      title: '教育场景',
+      description: '师生沟通技巧提升',
+      icon: <BookOpen className="h-5 w-5 text-indigo-500" />,
+      scenario: 'education',
+      example: '学生：这个概念太难了，我完全听不懂。\n老师：没关系，我们换个方式解释。'
+    },
+    {
+      title: '医疗沟通',
+      description: '医患沟通技巧优化',
+      icon: <Stethoscope className="h-5 w-5 text-red-500" />,
+      scenario: 'medical',
+      example: '患者：医生，我检查结果怎么样？\n医生：根据检查结果，您的身体状况总体良好。'
     }
   ]
 
@@ -97,41 +134,42 @@ export default function SocialAssistantPage() {
             </p>
           </div>
 
-          <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-            {/* 左侧输入区域 */}
-            <div className="lg:col-span-2 space-y-6">
-              {/* 场景示例 */}
-              <Card>
-                <CardHeader>
-                  <CardTitle className="flex items-center gap-2">
-                    <Lightbulb className="h-5 w-5 text-yellow-500" />
-                    场景示例
-                  </CardTitle>
-                  <CardDescription>
-                    选择一个场景，快速了解如何优化对话
-                  </CardDescription>
-                </CardHeader>
-                <CardContent>
-                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
-                    {conversationExamples.map((example, index) => (
-                      <div 
-                        key={index}
-                        className="border rounded-lg p-3 cursor-pointer hover:bg-gray-50 transition-colors"
-                        onClick={() => {
-                          setConversationText(example.example)
-                          setScenario(example.scenario)
-                        }}
-                      >
-                        <div className="flex items-center gap-2 mb-2">
-                          {example.icon}
-                          <span className="font-medium text-sm">{example.title}</span>
-                        </div>
-                        <p className="text-xs text-gray-600">{example.description}</p>
+          <div className="space-y-6">
+            {/* 场景示例 */}
+            <Card>
+              <CardHeader>
+                <CardTitle className="flex items-center gap-2">
+                  <Lightbulb className="h-5 w-5 text-yellow-500" />
+                  场景示例
+                </CardTitle>
+                <CardDescription>
+                  选择一个场景，快速了解如何优化对话
+                </CardDescription>
+              </CardHeader>
+              <CardContent>
+                <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-4">
+                  {conversationExamples.map((example, index) => (
+                    <div 
+                      key={index}
+                      className="border rounded-lg p-4 cursor-pointer hover:bg-gray-50 transition-colors"
+                      onClick={() => {
+                        setConversationText(example.example)
+                        setScenario(example.scenario)
+                      }}
+                    >
+                      <div className="flex items-center gap-2 mb-3">
+                        {example.icon}
+                        <span className="font-medium">{example.title}</span>
                       </div>
-                    ))}
-                  </div>
-                </CardContent>
-              </Card>
+                      <p className="text-sm text-gray-600 mb-3">{example.description}</p>
+                      <div className="text-xs text-gray-500 bg-gray-100 p-2 rounded">
+                        点击填充示例对话
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              </CardContent>
+            </Card>
 
               {/* 对话分析 */}
               <Card>
@@ -194,45 +232,27 @@ export default function SocialAssistantPage() {
                   </div>
                 </CardContent>
               </Card>
-            </div>
+            </Card>
 
-            {/* 右侧分析结果区域 */}
-            <div className="space-y-6">
-              {analysisResult && (
-                <>
-                  <ConversationAnalysis result={analysisResult} />
-                  <SocialStrategies result={analysisResult} />
-                </>
-              )}
-              
-              {!analysisResult && (
-                <Card>
-                  <CardHeader>
-                    <CardTitle>分析结果</CardTitle>
-                    <CardDescription>
-                      对话分析结果和社交建议将在这里显示
-                    </CardDescription>
-                  </CardHeader>
-                  <CardContent>
-                    <div className="text-center py-8">
-                      <Brain className="h-12 w-12 mx-auto text-gray-300 mb-4" />
-                      <p className="text-gray-500">等待分析...</p>
-                    </div>
-                  </CardContent>
-                </Card>
-              )}
+            {/* 分析结果区域 */}
+            {analysisResult && (
+              <div className="space-y-6">
+                <ConversationAnalysis result={analysisResult} />
+                <SocialStrategies result={analysisResult} />
+              </div>
+            )}
 
-              {/* 社交技巧提示 */}
-              <Card>
-                <CardHeader>
-                  <CardTitle className="text-lg">社交技巧</CardTitle>
-                </CardHeader>
-                <CardContent className="space-y-3">
-                  <div className="flex items-start gap-3">
-                    <CheckCircle className="h-5 w-5 text-green-500 mt-0.5" />
-                    <div>
-                      <p className="text-sm font-medium">积极倾听</p>
-                      <p className="text-xs text-gray-600">给予对方充分的表达空间</p>
+            {/* 社交技巧提示 */}
+            <Card>
+              <CardHeader>
+                <CardTitle className="text-lg">社交技巧</CardTitle>
+              </CardHeader>
+              <CardContent className="space-y-3">
+                <div className="flex items-start gap-3">
+                  <CheckCircle className="h-5 w-5 text-green-500 mt-0.5" />
+                  <div>
+                    <p className="text-sm font-medium">积极倾听</p>
+                    <p className="text-xs text-gray-600">给予对方充分的表达空间</p>
                     </div>
                   </div>
                   
