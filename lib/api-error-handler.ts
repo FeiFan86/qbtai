@@ -272,7 +272,7 @@ export class ApiErrorBoundary extends React.Component<
     if (this.state.hasError && this.state.error) {
       if (this.props.fallback) {
         const FallbackComponent = this.props.fallback
-        return <FallbackComponent error={this.state.error} retry={this.retry} />
+        return React.createElement(FallbackComponent, { error: this.state.error, retry: this.retry })
       }
 
       return (
