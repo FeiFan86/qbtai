@@ -23,7 +23,7 @@ export function Navigation() {
   }, [])
 
   const navItems = [
-    { href: '/emotion-analysis#emotion-analysis-center', label: '情感分析', icon: <Heart className="h-4 w-4" /> },
+    { href: '/emotion-analysis', label: '情感分析', icon: <Heart className="h-4 w-4" /> },
     { href: '/social-assistant', label: '社交助手', icon: <MessageCircle className="h-4 w-4" /> },
     { href: '/emotion-diary', label: '情感日记', icon: <BarChart3 className="h-4 w-4" /> },
     { href: '/content-creation', label: '内容创作', icon: <Sparkles className="h-4 w-4" /> },
@@ -54,20 +54,40 @@ export function Navigation() {
 
         {/* 桌面导航 */}
         <nav className="hidden md:flex items-center space-x-1">
-          {navItems.map((item) => (
-            <Link
-              key={item.href}
-              href={item.href}
-              className={`flex items-center space-x-2 px-4 py-2 rounded-lg text-sm font-medium transition-all duration-200 ${
-                isActive(item.href)
-                  ? 'bg-pink-50 text-pink-700 shadow-sm'
-                  : 'text-foreground/70 hover:text-foreground hover:bg-accent'
-              }`}
-            >
-              {item.icon}
-              <span>{item.label}</span>
-            </Link>
-          ))}
+          {navItems.map((item) => {
+            // 处理情感分析页面的锚点跳转
+            const handleClick = (e: React.MouseEvent) => {
+              if (item.href === '/emotion-analysis') {
+                e.preventDefault()
+                // 如果已经在情感分析页面，直接滚动到锚点
+                if (pathname === '/emotion-analysis') {
+                  const element = document.getElementById('emotion-analysis-center')
+                  if (element) {
+                    element.scrollIntoView({ behavior: 'smooth' })
+                  }
+                } else {
+                  // 否则导航到页面并添加锚点
+                  window.location.href = '/emotion-analysis#emotion-analysis-center'
+                }
+              }
+            }
+            
+            return (
+              <Link
+                key={item.href}
+                href={item.href === '/emotion-analysis' ? '/emotion-analysis#emotion-analysis-center' : item.href}
+                onClick={handleClick}
+                className={`flex items-center space-x-2 px-4 py-2 rounded-lg text-sm font-medium transition-all duration-200 ${
+                  isActive(item.href)
+                    ? 'bg-pink-50 text-pink-700 shadow-sm'
+                    : 'text-foreground/70 hover:text-foreground hover:bg-accent'
+                }`}
+              >
+                {item.icon}
+                <span>{item.label}</span>
+              </Link>
+            )
+          })}
         </nav>
 
         {/* 右侧操作区域 */}
@@ -115,21 +135,41 @@ export function Navigation() {
       {isMobileMenuOpen && (
         <div className="md:hidden border-t border-border/40 bg-background/95 backdrop-blur-md">
           <div className="container py-4 space-y-2">
-            {navItems.map((item) => (
-              <Link
-                key={item.href}
-                href={item.href}
-                className={`flex items-center space-x-3 px-4 py-3 rounded-lg text-base font-medium transition-all ${
-                  isActive(item.href)
-                    ? 'bg-pink-50 text-pink-700'
-                    : 'text-foreground/70 hover:text-foreground hover:bg-accent'
-                }`}
-                onClick={() => setIsMobileMenuOpen(false)}
-              >
-                {item.icon}
-                <span>{item.label}</span>
-              </Link>
-            ))}
+            {navItems.map((item) => {
+              // 处理情感分析页面的锚点跳转（移动端）
+              const handleClick = (e: React.MouseEvent) => {
+                if (item.href === '/emotion-analysis') {
+                  e.preventDefault()
+                  // 如果已经在情感分析页面，直接滚动到锚点
+                  if (pathname === '/emotion-analysis') {
+                    const element = document.getElementById('emotion-analysis-center')
+                    if (element) {
+                      element.scrollIntoView({ behavior: 'smooth' })
+                    }
+                  } else {
+                    // 否则导航到页面并添加锚点
+                    window.location.href = '/emotion-analysis#emotion-analysis-center'
+                  }
+                }
+                setIsMobileMenuOpen(false)
+              }
+              
+              return (
+                <Link
+                  key={item.href}
+                  href={item.href === '/emotion-analysis' ? '/emotion-analysis#emotion-analysis-center' : item.href}
+                  onClick={handleClick}
+                  className={`flex items-center space-x-3 px-4 py-3 rounded-lg text-base font-medium transition-all ${
+                    isActive(item.href)
+                      ? 'bg-pink-50 text-pink-700'
+                      : 'text-foreground/70 hover:text-foreground hover:bg-accent'
+                  }`}
+                >
+                  {item.icon}
+                  <span>{item.label}</span>
+                </Link>
+              )
+            })}
           </div>
         </div>
       )}

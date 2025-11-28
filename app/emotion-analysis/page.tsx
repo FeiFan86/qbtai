@@ -1,6 +1,6 @@
 'use client'
 
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import { Navigation } from '@/components/navigation'
 import { Footer } from '@/components/footer'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
@@ -16,6 +16,20 @@ const EMOTION_ANALYSIS_ID = 'emotion-analysis-center'
 export default function EmotionAnalysisPage() {
   const [activeTab, setActiveTab] = useState('chat')
   const [latestAnalysis, setLatestAnalysis] = useState<any>(null)
+
+  // 处理页面加载时的锚点跳转
+  useEffect(() => {
+    const hash = window.location.hash
+    if (hash === '#emotion-analysis-center') {
+      // 延迟执行以确保页面已完全渲染
+      setTimeout(() => {
+        const element = document.getElementById(EMOTION_ANALYSIS_ID)
+        if (element) {
+          element.scrollIntoView({ behavior: 'smooth' })
+        }
+      }, 100)
+    }
+  }, [])
 
   const handleNewMessage = (message: any) => {
     if (message.analysis) {

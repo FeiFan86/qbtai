@@ -214,33 +214,59 @@ export default function Home() {
           </div>
         </section>
 
-        {/* 开始使用区域 */}
-        <section className="relative container mx-auto px-4 py-20">
-          <div className={`max-w-4xl mx-auto text-center transition-all duration-1000 transform ${isLoaded ? 'scale-100 opacity-100' : 'scale-95 opacity-0'}`}>
-            <h2 className="text-4xl font-bold text-gray-900 mb-6">
-              开启您的情感智能之旅
-            </h2>
-            <p className="text-xl text-gray-600 mb-10">
-              与AI一同探索情感的世界，体验前所未有的智能交流
-            </p>
+      </main>
+      
+      {/* 页脚 */}
+      <footer className="bg-gray-900 text-white">
+        <div className="container mx-auto px-4 py-12">
+          <div className="max-w-6xl mx-auto">
+            <div className="text-center mb-8">
+              <h2 className="text-3xl font-bold mb-4">
+                开启您的情感智能之旅
+              </h2>
+              <p className="text-gray-300 text-lg mb-6">
+                与AI一同探索情感的世界，体验前所未有的智能交流
+              </p>
+              
+              <div className="flex flex-col sm:flex-row gap-4 justify-center">
+                <Link href="/emotion-analysis">
+                  <Button size="lg" className="bg-gradient-to-r from-pink-500 to-purple-500 hover:from-pink-600 hover:to-purple-600 text-white px-8 py-3">
+                    免费试用
+                    <Heart className="ml-2 h-5 w-5" />
+                  </Button>
+                </Link>
+                <Link href="/social-assistant">
+                  <Button size="lg" variant="outline" className="border-white text-white hover:bg-white hover:text-gray-900 px-8 py-3">
+                    查看演示
+                    <Play className="ml-2 h-5 w-5" />
+                  </Button>
+                </Link>
+              </div>
+            </div>
             
-            <div className="flex flex-col sm:flex-row gap-4 justify-center">
-              <Link href="/emotion-analysis">
-                <Button size="lg" className="bg-gradient-to-r from-pink-500 to-purple-500 hover:from-pink-600 hover:to-purple-600 text-white px-8 py-3 text-lg">
-                  免费试用
-                  <Heart className="ml-2 h-5 w-5" />
-                </Button>
-              </Link>
-              <Link href="/social-assistant">
-                <Button size="lg" variant="outline" className="px-8 py-3 text-lg">
-                  查看演示
-                  <Play className="ml-2 h-5 w-5" />
-                </Button>
-              </Link>
+            <div className="border-t border-gray-700 pt-8 mt-8">
+              <div className="flex flex-col md:flex-row justify-between items-center">
+                <div className="text-center md:text-left mb-4 md:mb-0">
+                  <p className="text-gray-400">
+                    © 2024 情感智能分析平台. 保留所有权利.
+                  </p>
+                </div>
+                <div className="flex space-x-6">
+                  <a href="#" className="text-gray-400 hover:text-white transition-colors">
+                    隐私政策
+                  </a>
+                  <a href="#" className="text-gray-400 hover:text-white transition-colors">
+                    服务条款
+                  </a>
+                  <a href="#" className="text-gray-400 hover:text-white transition-colors">
+                    联系我们
+                  </a>
+                </div>
+              </div>
             </div>
           </div>
-        </section>
-      </main>
+        </div>
+      </footer>
     </div>
   )
 }
