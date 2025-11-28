@@ -232,7 +232,6 @@ export default function SocialAssistantPage() {
                   </div>
                 </CardContent>
               </Card>
-            </Card>
 
             {/* 分析结果区域 */}
             {analysisResult && (
@@ -253,27 +252,26 @@ export default function SocialAssistantPage() {
                   <div>
                     <p className="text-sm font-medium">积极倾听</p>
                     <p className="text-xs text-gray-600">给予对方充分的表达空间</p>
-                    </div>
                   </div>
-                  
-                  <div className="flex items-start gap-3">
-                    <TrendingUp className="h-5 w-5 text-blue-500 mt-0.5" />
-                    <div>
-                      <p className="text-sm font-medium">情感共鸣</p>
-                      <p className="text-xs text-gray-600">理解和回应对方的情感</p>
-                    </div>
+                </div>
+                
+                <div className="flex items-start gap-3">
+                  <TrendingUp className="h-5 w-5 text-blue-500 mt-0.5" />
+                  <div>
+                    <p className="text-sm font-medium">情感共鸣</p>
+                    <p className="text-xs text-gray-600">理解和回应对方的情感</p>
                   </div>
-                  
-                  <div className="flex items-start gap-3">
-                    <AlertCircle className="h-5 w-5 text-orange-500 mt-0.5" />
-                    <div>
-                      <p className="text-sm font-medium">避免评判</p>
-                      <p className="text-xs text-gray-600">保持开放和包容的态度</p>
-                    </div>
+                </div>
+                
+                <div className="flex items-start gap-3">
+                  <AlertCircle className="h-5 w-5 text-orange-500 mt-0.5" />
+                  <div>
+                    <p className="text-sm font-medium">避免评判</p>
+                    <p className="text-xs text-gray-600">保持开放和包容的态度</p>
                   </div>
-                </CardContent>
-              </Card>
-            </div>
+                </div>
+              </CardContent>
+            </Card>
           </div>
         </div>
       </main>

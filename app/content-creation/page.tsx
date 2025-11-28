@@ -227,7 +227,7 @@ export default function ContentCreationPage() {
                   ))}
                 </div>
               </CardContent>
-            </Card>
+              </Card>
 
               {/* 自定义生成 */}
               <Card>
@@ -311,7 +311,6 @@ export default function ContentCreationPage() {
                   </div>
                 </CardContent>
               </Card>
-            </Card>
 
             {/* 生成结果 */}
             {generatedContent && (
@@ -323,43 +322,44 @@ export default function ContentCreationPage() {
                 onShare={shareContent}
               />
             )}
-              <Card>
-                <CardHeader>
-                  <CardTitle className="text-lg">写作技巧</CardTitle>
-                </CardHeader>
-                <CardContent className="space-y-3">
-                  <div className="flex items-start gap-3">
-                    <div className="w-6 h-6 rounded-full bg-pink-100 flex items-center justify-center flex-shrink-0 mt-0.5">
-                      <span className="text-xs font-medium text-pink-600">1</span>
-                    </div>
-                    <div>
-                      <p className="text-sm font-medium">明确目标</p>
-                      <p className="text-xs text-gray-600">清楚了解您想表达的情感和目的</p>
-                    </div>
+
+            {/* 写作技巧 */}
+            <Card>
+              <CardHeader>
+                <CardTitle className="text-lg">写作技巧</CardTitle>
+              </CardHeader>
+              <CardContent className="space-y-3">
+                <div className="flex items-start gap-3">
+                  <div className="w-6 h-6 rounded-full bg-pink-100 flex items-center justify-center flex-shrink-0 mt-0.5">
+                    <span className="text-xs font-medium text-pink-600">1</span>
                   </div>
-                  
-                  <div className="flex items-start gap-3">
-                    <div className="w-6 h-6 rounded-full bg-purple-100 flex items-center justify-center flex-shrink-0 mt-0.5">
-                      <span className="text-xs font-medium text-purple-600">2</span>
-                    </div>
-                    <div>
-                      <p className="text-sm font-medium">提供背景</p>
-                      <p className="text-xs text-gray-600">添加背景信息帮助AI更好地理解需求</p>
-                    </div>
+                  <div>
+                    <p className="text-sm font-medium">明确目标</p>
+                    <p className="text-xs text-gray-600">清楚了解您想表达的情感和目的</p>
                   </div>
-                  
-                  <div className="flex items-start gap-3">
-                    <div className="w-6 h-6 rounded-full bg-indigo-100 flex items-center justify-center flex-shrink-0 mt-0.5">
-                      <span className="text-xs font-medium text-indigo-600">3</span>
-                    </div>
-                    <div>
-                      <p className="text-sm font-medium">个性化修改</p>
-                      <p className="text-xs text-gray-600">AI生成后进行适当调整，使内容更贴合您</p>
-                    </div>
+                </div>
+                
+                <div className="flex items-start gap-3">
+                  <div className="w-6 h-6 rounded-full bg-purple-100 flex items-center justify-center flex-shrink-0 mt-0.5">
+                    <span className="text-xs font-medium text-purple-600">2</span>
                   </div>
-                </CardContent>
-              </Card>
-            </div>
+                  <div>
+                    <p className="text-sm font-medium">提供背景</p>
+                    <p className="text-xs text-gray-600">添加背景信息帮助AI更好地理解需求</p>
+                  </div>
+                </div>
+                
+                <div className="flex items-start gap-3">
+                  <div className="w-6 h-6 rounded-full bg-indigo-100 flex items-center justify-center flex-shrink-0 mt-0.5">
+                    <span className="text-xs font-medium text-indigo-600">3</span>
+                  </div>
+                  <div>
+                    <p className="text-sm font-medium">个性化修改</p>
+                    <p className="text-xs text-gray-600">AI生成后进行适当调整，使内容更贴合您</p>
+                  </div>
+                </div>
+              </CardContent>
+            </Card>
           </div>
         </div>
       </main>
