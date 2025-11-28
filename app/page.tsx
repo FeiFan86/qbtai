@@ -20,8 +20,10 @@ export default function Home() {
     data: analysisData, 
     loading: analysisLoading, 
     error: analysisError, 
-    callApi: analyzeConversation 
-  } = useApiCall(async (text: string) => {
+    callApi 
+  } = useApiCall<any>()
+
+  const analyzeConversation = async (text: string) => {
     // 模拟API调用
     await new Promise(resolve => setTimeout(resolve, 2000))
     
@@ -59,13 +61,13 @@ export default function Home() {
         '让我们从不同角度看看这个问题'
       ]
     }
-  })
+  }
 
   const handleAnalyze = async () => {
     if (!conversation.trim()) return
     
     try {
-      const result = await analyzeConversation(conversation)
+      const result = await callApi(() => analyzeConversation(conversation))
       setAnalysisResult(result)
     } catch (error) {
       console.error('分析失败:', error)
