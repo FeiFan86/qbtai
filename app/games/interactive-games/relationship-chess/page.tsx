@@ -229,7 +229,7 @@ export default function RelationshipChessPage() {
   }
 
   // 生成任务
-  const generateTask = (type) => {
+  const generateTask = (type: 'question' | 'challenge' | 'gift') => {
     let task = null
     
     switch (type) {
