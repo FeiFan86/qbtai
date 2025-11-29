@@ -123,7 +123,7 @@ export default function RelationshipChessPage() {
   const [isRolling, setIsRolling] = useState(false)
   const [currentTask, setCurrentTask] = useState<Task | null>(null)
   const [showTaskModal, setShowTaskModal] = useState(false)
-  const [completedTasks, setCompletedTasks] = useState([])
+  const [completedTasks, setCompletedTasks] = useState<Task[]>([])
   const [gameTime, setGameTime] = useState(0)
   const [timerActive, setTimerActive] = useState(false)
   const [winner, setWinner] = useState(null)
