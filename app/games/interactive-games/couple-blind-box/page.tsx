@@ -181,7 +181,7 @@ export default function CoupleBlindBoxPage() {
   const [activeTab, setActiveTab] = useState('daily')
 
   // 获取难度标签颜色
-  const getDifficultyColor = (difficulty) => {
+  const getDifficultyColor = (difficulty: string) => {
     switch (difficulty) {
       case 'easy': return 'bg-green-100 text-green-800'
       case 'medium': return 'bg-yellow-100 text-yellow-800'
@@ -191,7 +191,7 @@ export default function CoupleBlindBoxPage() {
   }
 
   // 获取难度文本
-  const getDifficultyText = (difficulty) => {
+  const getDifficultyText = (difficulty: string) => {
     switch (difficulty) {
       case 'easy': return '简单'
       case 'medium': return '中等'
