@@ -151,13 +151,6 @@ export function ChatEmotionAnalysisEnhanced({
     }
   }
 
-  const handleKeyPress = (e: React.KeyboardEvent) => {
-    if (e.key === 'Enter' && !e.shiftKey && !loading) {
-      e.preventDefault()
-      handleSendMessage()
-    }
-  }
-
   const handleGenerateResult = async () => {
     if (messages.length === 0) return
     
