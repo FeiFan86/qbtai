@@ -362,12 +362,6 @@ class VolcanoAPIService {
   async generateContent(request: ContentGenerationRequest): Promise<ContentGenerationResponse> {
     console.log('Generating content for:', request)
     
-    // 检查API配置，如果API密钥为空则直接返回模拟数据
-    if (!this.apiKey || this.apiKey === '226be07e-95ad-4fec-a564-1963c6e04711' || this.apiKey.includes('your_api_key')) {
-      console.log('API Key is missing or invalid, using mock data')
-      return this.getMockContentGeneration(request)
-    }
-    
     try {
       const stylePrompts = {
         formal: '请使用正式、专业的语调',

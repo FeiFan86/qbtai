@@ -30,27 +30,12 @@ export async function POST(request: NextRequest) {
   } catch (error) {
     console.error('Content generation API error:', error)
     
-    // 在发生错误时返回模拟数据
-    const styleMap: Record<string, string> = {
-      formal: '正式的',
-      casual: '随意的',
-      emotional: '情感化的',
-      professional: '专业的'
-    }
-    
-    const body = await request.json().catch(() => ({}))
-    const { prompt, style } = body
-    
-    return NextResponse.json({
-      success: true,
-      data: {
-        content: `根据您的要求："${prompt || '未提供提示'}"，我为您生成了这段内容。这是一个${styleMap[style || 'casual'] || '中性'}的示例，展示了AI如何根据不同的需求创建个性化的文本内容。在实际应用中，这里将是DeepSeek模型根据您的详细需求生成的高质量内容。`,
-        suggestions: [
-          '可以根据具体受众调整语调',
-          '考虑添加更多具体细节或事例',
-          '可以尝试不同的长度选项'
-        ]
-      }
-    })
+    return NextResponse.json(
+      { 
+        success: false,
+        error: '内容生成失败，请稍后重试'
+      },
+      { status: 500 }
+    )
   }
 }

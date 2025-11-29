@@ -30,9 +30,6 @@ export default function ContentCreationPage() {
     try {
       console.log('开始使用火山引擎API生成内容...')
       
-      // 添加延迟模拟真实生成过程
-      const generationPromise = new Promise(resolve => setTimeout(resolve, 2000))
-      
       const response = await fetch('/api/content/generate', {
         method: 'POST',
         headers: {
@@ -46,54 +43,18 @@ export default function ContentCreationPage() {
         }),
       })
       
-      // 等待生成完成
-      await generationPromise
-      
       const result = await response.json()
       console.log('API生成结果:', result)
       
-      if (response.ok) {
-        if (result.success && result.data) {
-          setGeneratedContent(result.data)
-        } else {
-          console.error('API返回错误:', result.error)
-          // 如果API返回错误，使用模拟数据
-          const mockContent = {
-            content: `根据您的要求："${prompt}"，我为您生成了这段内容。这是一个${style === 'formal' ? '正式' : style === 'emotional' ? '情感化' : '随意'}的${length === 'short' ? '简短' : length === 'long' ? '详细' : '中等长度'}内容，完全符合您的需求。`,
-            suggestions: [
-              '可以尝试添加更多情感细节',
-              '考虑加入具体事例增强说服力',
-              '调整语调以匹配目标受众'
-            ]
-          }
-          setGeneratedContent(mockContent)
-        }
+      if (response.ok && result.success && result.data) {
+        setGeneratedContent(result.data)
       } else {
-        const errorText = await response.text()
-        console.error('API请求失败:', response.status, errorText)
-        // 如果API请求失败，使用模拟数据
-        const mockContent = {
-          content: `基于您的提示："${prompt}"，我为您创作了以下内容。${context ? `考虑到您提供的背景信息："${context}"，` : ''}内容特别关注了相关的细节和情境。`,
-          suggestions: [
-            '可以根据具体受众调整语调和表达方式',
-            '考虑添加更多具体细节或事例以增强说服力',
-            '可以尝试不同的长度选项以适应不同场景'
-          ]
-        }
-        setGeneratedContent(mockContent)
+        console.error('生成失败:', result.error || '未知错误')
+        alert('内容生成失败：' + (result.error || '未知错误，请稍后重试'))
       }
     } catch (error) {
       console.error('请求错误:', error)
-      // 如果发生错误，使用模拟数据
-      const mockContent = {
-        content: `根据您的要求："${prompt}"，我为您生成了这段${style === 'formal' ? '正式' : style === 'emotional' ? '富有情感' : '随意'}的内容。在实际应用中，这里将是AI根据您的详细需求生成的高质量内容。`,
-        suggestions: [
-          '可以根据具体受众调整语调和表达方式',
-          '考虑添加更多具体细节或事例以增强说服力',
-          '根据反馈修改内容，使其更符合您的需求'
-        ]
-      }
-      setGeneratedContent(mockContent)
+      alert('网络错误，请检查连接后重试')
     } finally {
       setIsGenerating(false)
     }

@@ -1,6 +1,6 @@
 'use client'
 
-import { useState } from 'react'
+import { useState, useRef, useEffect } from 'react'
 import { Navigation } from '@/components/navigation'
 import { Footer } from '@/components/footer'
 import { Button } from '@/components/ui/button'
@@ -20,17 +20,28 @@ export default function SocialAssistantPage() {
   const [scenario, setScenario] = useState('casual')
   const [isAnalyzing, setIsAnalyzing] = useState(false)
   const [analysisResult, setAnalysisResult] = useState<any>(null)
+  const [analysisProgress, setAnalysisProgress] = useState(0)
+  const resultRef = useRef<HTMLDivElement>(null)
 
   const handleAnalyze = async () => {
     if (!conversationText.trim()) return
     
     setIsAnalyzing(true)
     setAnalysisResult(null) // 重置之前的分析结果
+    setAnalysisProgress(0)
+    
+    // 模拟分析进度
+    const progressInterval = setInterval(() => {
+      setAnalysisProgress(prev => {
+        if (prev >= 90) {
+          clearInterval(progressInterval)
+          return 90
+        }
+        return prev + 10
+      })
+    }, 200)
     
     try {
-      // 添加延迟模拟真实分析过程
-      const analysisPromise = new Promise(resolve => setTimeout(resolve, 1500))
-      
       const response = await fetch('/api/social/analyze', {
         method: 'POST',
         headers: {
@@ -43,28 +54,36 @@ export default function SocialAssistantPage() {
         }),
       })
       
-      // 等待分析完成
-      await analysisPromise
+      const result = await response.json()
+      console.log('社交分析结果:', result)
       
-      if (response.ok) {
-        const result = await response.json()
-        console.log('社交分析结果:', result)
-        if (result.success && result.data) {
+      if (response.ok && result.success && result.data) {
+        clearInterval(progressInterval)
+        setAnalysisProgress(100)
+        
+        // 短暂延迟后设置结果并跳转
+        setTimeout(() => {
           setAnalysisResult(result.data)
-        } else {
-          console.error('API返回错误:', result.error)
-          alert('分析失败：' + (result.error || '未知错误'))
-        }
+          // 自动滚动到结果区域
+          setTimeout(() => {
+            resultRef.current?.scrollIntoView({ behavior: 'smooth' })
+          }, 100)
+        }, 300)
       } else {
-        const errorText = await response.text()
-        console.error('API请求失败:', response.status, errorText)
-        alert(`请求失败 (${response.status}): ${errorText}`)
+        clearInterval(progressInterval)
+        console.error('API返回错误:', result.error)
+        alert('分析失败：' + (result.error || '未知错误'))
       }
     } catch (error) {
+      clearInterval(progressInterval)
       console.error('请求错误:', error)
       alert('网络错误，请检查连接后重试')
     } finally {
-      setIsAnalyzing(false)
+      // 确保进度条完成
+      setTimeout(() => {
+        setIsAnalyzing(false)
+        setAnalysisProgress(0)
+      }, 2000)
     }
   }
 
@@ -229,6 +248,28 @@ export default function SocialAssistantPage() {
                     />
                   </div>
 
+                  {/* 分析进度条 */}
+                  {isAnalyzing && (
+                    <div className="space-y-2">
+                      <div className="flex justify-between items-center">
+                        <span className="text-sm text-gray-600">正在分析对话内容...</span>
+                        <span className="text-sm font-medium text-purple-600">{analysisProgress}%</span>
+                      </div>
+                      <div className="w-full bg-gray-200 rounded-full h-2 overflow-hidden">
+                        <div 
+                          className="h-full bg-gradient-to-r from-pink-500 to-purple-500 rounded-full transition-all duration-300 ease-out"
+                          style={{ width: `${analysisProgress}%` }}
+                        ></div>
+                      </div>
+                      <div className="text-xs text-gray-500 space-y-1">
+                        {analysisProgress < 30 && <div>📝 正在解析对话内容...</div>}
+                        {analysisProgress >= 30 && analysisProgress < 60 && <div>🔍 正在分析情感倾向...</div>}
+                        {analysisProgress >= 60 && analysisProgress < 90 && <div>🧠 正在生成社交策略...</div>}
+                        {analysisProgress >= 90 && <div>✨ 分析完成，正在生成报告...</div>}
+                      </div>
+                    </div>
+                  )}
+
                   <div className="flex justify-end">
                     <Button 
                       onClick={handleAnalyze} 
@@ -252,7 +293,13 @@ export default function SocialAssistantPage() {
 
             {/* 分析结果区域 */}
             {analysisResult && (
-              <div className="space-y-6">
+              <div ref={resultRef} className="space-y-6 scroll-mt-20">
+                <div className="text-center mb-4">
+                  <div className="inline-flex items-center gap-2 px-4 py-2 bg-green-100 text-green-800 rounded-full">
+                    <CheckCircle className="h-5 w-5" />
+                    <span className="font-medium">分析完成</span>
+                  </div>
+                </div>
                 <ConversationAnalysis result={analysisResult} />
                 <SocialStrategies result={analysisResult} />
               </div>
