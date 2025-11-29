@@ -126,6 +126,8 @@ export default function CollaborativeDoodlePage() {
     if (!canvas) return
     
     const ctx = canvas.getContext('2d')
+    if (!ctx) return
+    
     ctx.lineCap = 'round'
     ctx.lineJoin = 'round'
     
@@ -181,11 +183,15 @@ export default function CollaborativeDoodlePage() {
     setIsDrawing(true)
     
     const canvas = canvasRef.current
+    if (!canvas) return
+    
     const rect = canvas.getBoundingClientRect()
     const x = e.clientX - rect.left
     const y = e.clientY - rect.top
     
     const ctx = canvas.getContext('2d')
+    if (!ctx) return
+    
     ctx.beginPath()
     ctx.moveTo(x, y)
   }
@@ -195,11 +201,15 @@ export default function CollaborativeDoodlePage() {
     if (!isDrawing) return
     
     const canvas = canvasRef.current
+    if (!canvas) return
+    
     const rect = canvas.getBoundingClientRect()
     const x = e.clientX - rect.left
     const y = e.clientY - rect.top
     
     const ctx = canvas.getContext('2d')
+    if (!ctx) return
+    
     ctx.globalCompositeOperation = isEraser ? 'destination-out' : 'source-over'
     ctx.strokeStyle = isEraser ? 'rgba(0,0,0,1)' : currentColor
     ctx.lineWidth = brushSize
@@ -220,7 +230,11 @@ export default function CollaborativeDoodlePage() {
     if (historyStep <= 0) return
     
     const canvas = canvasRef.current
+    if (!canvas) return
+    
     const ctx = canvas.getContext('2d')
+    if (!ctx) return
+    
     const canvasPic = new Image()
     
     canvasPic.src = drawingHistory[historyStep - 1]
@@ -237,7 +251,11 @@ export default function CollaborativeDoodlePage() {
     if (historyStep >= drawingHistory.length - 1) return
     
     const canvas = canvasRef.current
+    if (!canvas) return
+    
     const ctx = canvas.getContext('2d')
+    if (!ctx) return
+    
     const canvasPic = new Image()
     
     canvasPic.src = drawingHistory[historyStep + 1]
@@ -252,7 +270,11 @@ export default function CollaborativeDoodlePage() {
   // 清空画布
   const clearCanvas = () => {
     const canvas = canvasRef.current
+    if (!canvas) return
+    
     const ctx = canvas.getContext('2d')
+    if (!ctx) return
+    
     ctx.fillStyle = 'white'
     ctx.fillRect(0, 0, canvas.width, canvas.height)
     saveCanvasState()
