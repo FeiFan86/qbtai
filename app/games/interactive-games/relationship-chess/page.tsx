@@ -24,7 +24,8 @@ import {
   Award,
   Clock,
   Play,
-  Settings
+  Settings,
+  Trophy
 } from 'lucide-react'
 import Link from 'next/link'
 
