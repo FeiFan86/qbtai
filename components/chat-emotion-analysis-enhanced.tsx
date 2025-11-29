@@ -36,7 +36,6 @@ export function ChatEmotionAnalysisEnhanced({ onNewMessage, showTitle = true }: 
   const [prevMessagesLength, setPrevMessagesLength] = useState(0)
 
   useEffect(() => {
-    // 只有当有新消息时才自动滚动，避免页面打开时自动下滑
     if (messages.length > prevMessagesLength) {
       const scrollTimeout = setTimeout(() => {
         scrollToBottom()
@@ -47,7 +46,6 @@ export function ChatEmotionAnalysisEnhanced({ onNewMessage, showTitle = true }: 
     }
   }, [messages, prevMessagesLength, scrollToBottom])
 
-  // 模拟数据，用于优雅降级
   const mockAnalysisData = {
     overall: {
       sentiment: 'positive',
@@ -81,7 +79,6 @@ export function ChatEmotionAnalysisEnhanced({ onNewMessage, showTitle = true }: 
     setLoading(true)
 
     try {
-      // 简单的API调用实现
       const response = await fetch('/api/emotion/analyze', {
         method: 'POST',
         headers: {
@@ -114,11 +111,9 @@ export function ChatEmotionAnalysisEnhanced({ onNewMessage, showTitle = true }: 
     } catch (error) {
       console.error('分析错误:', error)
       
-      // 优雅降级：使用模拟数据
       const errorMessage = error instanceof Error ? error.message : '分析请求失败，请重试'
       setApiError(errorMessage)
       
-      // 如果API调用失败，使用模拟数据
       const assistantMessage: Message = {
         id: (Date.now() + 1).toString(),
         role: 'assistant',
@@ -140,20 +135,16 @@ export function ChatEmotionAnalysisEnhanced({ onNewMessage, showTitle = true }: 
 
     const { overall, emotions, sentiment, suggestions } = analysis
     
-    // 确保数据安全访问
     const emotionList = emotions || []
     
-    // 从情感数组中找出分数最高的情感作为主要情感
     const primaryEmotion = emotionList.length > 0 
       ? emotionList.reduce((max: any, emotion: any) => 
           (emotion.score || 0) > (max.score || 0) ? emotion : max
         ).type || '未知情感'
       : '未知情感'
     
-    // 使用整体置信度或默认值
     const confidence = (overall?.confidence || 0.75) * 100
     
-    // 使用整体情感倾向或从情感数组推断
     const sentimentType = overall?.sentiment || sentiment || 
       (emotionList.length > 0 
         ? emotionList.some((e: any) => e.type && (e.type.includes('快乐') || e.type.includes('开心'))) 
@@ -208,7 +199,6 @@ export function ChatEmotionAnalysisEnhanced({ onNewMessage, showTitle = true }: 
         summary: `对话分析报告 - ${new Date().toLocaleDateString('zh-CN')}`
       }
       
-      // 简化导出功能，目前仅显示提示信息
       alert(`导出功能暂未实现，格式: ${format}`)
     } catch (error) {
       console.error('导出失败:', error)
@@ -222,14 +212,12 @@ export function ChatEmotionAnalysisEnhanced({ onNewMessage, showTitle = true }: 
         `${msg.role === 'user' ? '用户' : 'AI助手'}: ${msg.content}`
       ).join('\n')
       
-      // 简化分享功能，使用 navigator.share 或复制到剪贴板
       if (navigator.share) {
         await navigator.share({
           title: '情感对话分析报告',
           text: conversationText
         })
       } else {
-        // 降级到复制到剪贴板
         await navigator.clipboard.writeText(conversationText)
         alert('对话内容已复制到剪贴板')
       }
@@ -244,7 +232,6 @@ export function ChatEmotionAnalysisEnhanced({ onNewMessage, showTitle = true }: 
       const lastUserMessage = messages[messages.length - 1]
       if (lastUserMessage.role === 'user') {
         setInputText(lastUserMessage.content)
-        // 使用异步处理避免状态更新冲突
         setTimeout(() => {
           handleSendMessage()
         }, 100)
@@ -254,7 +241,6 @@ export function ChatEmotionAnalysisEnhanced({ onNewMessage, showTitle = true }: 
 
   return (
     <Card className="h-full flex flex-col relative">
-      {/* 加载遮罩层 */}
       <LoadingOverlay show={loading} message="正在分析您的情感..." />
       
       {showTitle && (
@@ -307,7 +293,6 @@ export function ChatEmotionAnalysisEnhanced({ onNewMessage, showTitle = true }: 
       )}
       
       <CardContent className="flex-1 flex flex-col min-h-0">
-        {/* 错误消息 */}
         {apiError && (
           <ErrorMessage 
             error={apiError} 
@@ -316,7 +301,6 @@ export function ChatEmotionAnalysisEnhanced({ onNewMessage, showTitle = true }: 
           />
         )}
         
-        {/* 对话区域 */}
         <div className="flex-1 overflow-y-auto space-y-4 mb-4">
           {messages.length === 0 ? (
             <div className="text-center py-12 text-gray-500">
@@ -370,6 +354,7 @@ export function ChatEmotionAnalysisEnhanced({ onNewMessage, showTitle = true }: 
                 </div>
               ))}
             </div>
+          )}
           
           {loading && (
             <div className="flex gap-3 justify-start">
@@ -388,7 +373,6 @@ export function ChatEmotionAnalysisEnhanced({ onNewMessage, showTitle = true }: 
           <div ref={messagesEndRef} />
         </div>
         
-        {/* 输入区域 */}
         <div className="space-y-2">
           <Textarea
             placeholder="输入您想分享的内容或感受..."
