@@ -8,7 +8,6 @@ import { Badge } from './ui/badge'
 import { Brain, Send, User, Bot, RotateCw, MessageCircle, RefreshCw, Download, Share2 } from 'lucide-react'
 import { EmotionAnalysisResult } from './emotion-analysis-result'
 import { LoadingSpinner, ErrorMessage, LoadingOverlay } from './loading-spinner'
-import { MessageSkeleton } from './loading-skeleton'
 
 interface Message {
   id: string
@@ -81,33 +80,24 @@ export function ChatEmotionAnalysisEnhanced({ onNewMessage, showTitle = true }: 
     setApiError(null)
 
     try {
-      // 使用改进的API调用，包含重试机制
-      const result = await callApi(
-        async () => {
-          const response = await fetch('/api/emotion/analyze', {
-            method: 'POST',
-            headers: {
-              'Content-Type': 'application/json',
-            },
-            body: JSON.stringify({ 
-              input: inputText.trim(),
-              type: 'text',
-              context: messages.filter(m => m.role === 'user').map(m => m.content)
-            }),
-          })
-
-          if (!response.ok) {
-            throw new Error(`HTTP ${response.status}: ${response.statusText}`)
-          }
-
-          return await response.json()
+      // 简单的API调用实现
+      const response = await fetch('/api/emotion/analyze', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
         },
-        {
-          maxRetries: 3,
-          retryDelay: 1000,
-          timeout: 30000
-        }
-      )
+        body: JSON.stringify({ 
+          input: inputText.trim(),
+          type: 'text',
+          context: messages.filter(m => m.role === 'user').map(m => m.content)
+        }),
+      })
+
+      if (!response.ok) {
+        throw new Error(`HTTP ${response.status}: ${response.statusText}`)
+      }
+
+      const result = await response.json()
 
       const assistantMessage: Message = {
         id: (Date.now() + 1).toString(),
@@ -124,7 +114,7 @@ export function ChatEmotionAnalysisEnhanced({ onNewMessage, showTitle = true }: 
       console.error('分析错误:', error)
       
       // 优雅降级：使用模拟数据
-      const errorMessage = ErrorHandler.handleApiError(error)
+      const errorMessage = error instanceof Error ? error.message : '分析请求失败，请重试'
       setApiError(errorMessage)
       
       // 如果API调用失败，使用模拟数据
@@ -206,7 +196,6 @@ export function ChatEmotionAnalysisEnhanced({ onNewMessage, showTitle = true }: 
   const clearChat = () => {
     setMessages([])
     setApiError(null)
-    reset()
   }
 
   const exportConversation = async (format: 'pdf' | 'image' | 'markdown' | 'json') => {
@@ -216,7 +205,8 @@ export function ChatEmotionAnalysisEnhanced({ onNewMessage, showTitle = true }: 
         summary: `对话分析报告 - ${new Date().toLocaleDateString('zh-CN')}`
       }
       
-      await ExportManager.exportAnalysis(conversationData, format)
+      // 简化导出功能，目前仅显示提示信息
+      alert(`导出功能暂未实现，格式: ${format}`)
     } catch (error) {
       console.error('导出失败:', error)
       setApiError('导出失败，请重试')
@@ -229,18 +219,19 @@ export function ChatEmotionAnalysisEnhanced({ onNewMessage, showTitle = true }: 
         `${msg.role === 'user' ? '用户' : 'AI助手'}: ${msg.content}`
       ).join('\n')
       
-      await shareToSocialMedia(conversationText, '情感对话分析报告')
-    } catch (error) {
-      console.error('分享失败:', error)
-      // 降级到复制到剪贴板
-      const conversationText = messages.map(msg => 
-        `${msg.role === 'user' ? '用户' : 'AI助手'}: ${msg.content}`
-      ).join('\n')
-      
-      const success = await copyToClipboard(conversationText)
-      if (success) {
+      // 简化分享功能，使用 navigator.share 或复制到剪贴板
+      if (navigator.share) {
+        await navigator.share({
+          title: '情感对话分析报告',
+          text: conversationText
+        })
+      } else {
+        // 降级到复制到剪贴板
+        await navigator.clipboard.writeText(conversationText)
         alert('对话内容已复制到剪贴板')
       }
+    } catch (error) {
+      console.error('分享失败:', error)
     }
   }
 
