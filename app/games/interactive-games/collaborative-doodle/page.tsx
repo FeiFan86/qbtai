@@ -283,6 +283,8 @@ export default function CollaborativeDoodlePage() {
   // 下载画作
   const downloadDrawing = () => {
     const canvas = canvasRef.current
+    if (!canvas) return
+    
     const link = document.createElement('a')
     link.download = `collaborative-doodle-${selectedTheme.name}-${Date.now()}.png`
     link.href = canvas.toDataURL()
