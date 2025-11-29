@@ -207,19 +207,25 @@ export default function TruthOrDarePage() {
 
   // 计时器
   useEffect(() => {
-    let interval
+    let interval: NodeJS.Timeout | null = null
     if (timerActive && gameStarted) {
       interval = setInterval(() => {
         setGameTime(prevTime => prevTime + 1)
       }, 1000)
     } else if (!timerActive) {
-      clearInterval(interval)
+      if (interval) {
+        clearInterval(interval)
+      }
     }
-    return () => clearInterval(interval)
+    return () => {
+      if (interval) {
+        clearInterval(interval)
+      }
+    }
   }, [timerActive, gameStarted])
 
   // 格式化时间
-  const formatTime = (seconds) => {
+  const formatTime = (seconds: number) => {
     const mins = Math.floor(seconds / 60)
     const secs = seconds % 60
     return `${mins.toString().padStart(2, '0')}:${secs.toString().padStart(2, '0')}`
