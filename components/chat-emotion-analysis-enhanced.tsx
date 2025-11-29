@@ -36,6 +36,7 @@ export function ChatEmotionAnalysisEnhanced({
   const [inputText, setInputText] = useState('')
   const [apiError, setApiError] = useState<string | null>(null)
   const [loading, setLoading] = useState(false)
+  const [isGeneratingAnalysis, setIsGeneratingAnalysis] = useState(false)
   const messagesEndRef = useRef<HTMLDivElement>(null)
 
   const scrollToBottom = useCallback(() => {
@@ -157,7 +158,7 @@ export function ChatEmotionAnalysisEnhanced({
     const userMessages = messages.filter(m => m.role === 'user')
     if (userMessages.length === 0) return
     
-    setLoading(true)
+    setIsGeneratingAnalysis(true)
     setApiError(null)
     
     try {
@@ -211,7 +212,7 @@ export function ChatEmotionAnalysisEnhanced({
       
       setMessages(prev => [...prev, assistantMessage])
     } finally {
-      setLoading(false)
+      setIsGeneratingAnalysis(false)
     }
   }
 
@@ -268,8 +269,8 @@ export function ChatEmotionAnalysisEnhanced({
   }
 
   return (
-    <Card className="h-full flex flex-col relative">
-      <LoadingOverlay show={loading} message="生成中..." />
+      <Card className="h-full flex flex-col relative">
+      <LoadingOverlay show={isGeneratingAnalysis} message="生成情感分析结果中..." />
       
       {showTitle && (
         <CardHeader className="pb-4">
@@ -378,7 +379,7 @@ export function ChatEmotionAnalysisEnhanced({
             </div>
           )}
           
-          {loading && (
+          {loading && !isGeneratingAnalysis && (
             <div className="flex gap-3 justify-start">
               <div className="w-8 h-8 rounded-full bg-pink-100 flex items-center justify-center flex-shrink-0">
                 <Bot className="h-4 w-4 text-pink-600" />
@@ -386,7 +387,7 @@ export function ChatEmotionAnalysisEnhanced({
               <div className="bg-gray-100 rounded-lg p-3">
                 <div className="flex items-center gap-2">
                   <LoadingSpinner size="sm" />
-                  <span className="text-sm">正在分析中...</span>
+                  <span className="text-sm">正在回复中...</span>
                 </div>
               </div>
             </div>
@@ -411,11 +412,11 @@ export function ChatEmotionAnalysisEnhanced({
               <div className="flex justify-center">
                 <Button 
                   onClick={handleGenerateResult} 
-                  disabled={loading}
+                  disabled={isGeneratingAnalysis}
                   variant="pink"
                   className="flex items-center gap-2 px-6"
                 >
-                  {loading ? <LoadingSpinner size="sm" /> : <Brain className="h-4 w-4" />}
+                  {isGeneratingAnalysis ? <LoadingSpinner size="sm" /> : <Brain className="h-4 w-4" />}
                   生成情感分析结果
                 </Button>
               </div>
@@ -439,10 +440,10 @@ export function ChatEmotionAnalysisEnhanced({
                 )}
                 <Button 
                   onClick={handleSendMessage} 
-                  disabled={!inputText.trim() || loading}
+                  disabled={!inputText.trim() || loading || isGeneratingAnalysis}
                   className="flex items-center gap-2"
                 >
-                  {loading ? <LoadingSpinner size="sm" /> : <Send className="h-4 w-4" />}
+                  {loading && !isGeneratingAnalysis ? <LoadingSpinner size="sm" /> : <Send className="h-4 w-4" />}
                   发送
                 </Button>
               </div>

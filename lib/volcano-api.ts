@@ -202,10 +202,38 @@ class VolcanoAPIService {
             // 添加情感的颜色和图标信息
             if (analysisData.emotions && Array.isArray(analysisData.emotions)) {
               analysisData.emotions = analysisData.emotions.map((emotion: any) => ({
-                ...emotion,
+                type: emotion.type,
+                score: emotion.score,
                 color: this.getEmotionColor(emotion.type),
                 icon: this.getEmotionIcon(emotion.type)
               }))
+            }
+            
+            // 确保整体情感倾向字段正确
+            if (analysisData.overall) {
+              // 将sentiment统一处理为英文，前端会转换为中文显示
+              if (analysisData.overall.sentiment === '积极') {
+                analysisData.overall.sentiment = 'positive'
+              } else if (analysisData.overall.sentiment === '消极') {
+                analysisData.overall.sentiment = 'negative'
+              } else {
+                analysisData.overall.sentiment = 'neutral'
+              }
+              
+              // 确保confidence字段是数值类型
+              if (typeof analysisData.overall.confidence !== 'number') {
+                analysisData.overall.confidence = parseFloat(analysisData.overall.confidence) || 0.7
+              }
+            }
+            
+            // 确保keywords是数组
+            if (!analysisData.keywords || !Array.isArray(analysisData.keywords)) {
+              analysisData.keywords = ['情感', '分析', '交流', '沟通']
+            }
+            
+            // 确保summary是字符串
+            if (!analysisData.summary || typeof analysisData.summary !== 'string') {
+              analysisData.summary = '基于AI的情感分析结果，为您提供了详细的情感洞察和建议。'
             }
             
             console.log('Emotion analysis successful')

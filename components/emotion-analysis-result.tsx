@@ -10,7 +10,7 @@ interface Emotion {
   type: string
   score: number
   color: string
-  icon: React.ReactNode
+  icon?: React.ReactNode
 }
 
 interface EmotionAnalysisResultProps {
@@ -67,11 +67,10 @@ export function EmotionAnalysisResult({ result, compact = false }: EmotionAnalys
   }
 
   const getSentimentIcon = (sentiment: string) => {
-    switch (sentiment) {
-      case 'positive':
+    const normalizedSentiment = getSentimentText(sentiment)
+    switch (normalizedSentiment) {
       case '积极':
         return <Laugh className="h-5 w-5 text-green-500" />
-      case 'negative':
       case '消极':
         return <Frown className="h-5 w-5 text-red-500" />
       default:
@@ -80,11 +79,10 @@ export function EmotionAnalysisResult({ result, compact = false }: EmotionAnalys
   }
 
   const getSentimentColor = (sentiment: string) => {
-    switch (sentiment) {
-      case 'positive':
+    const normalizedSentiment = getSentimentText(sentiment)
+    switch (normalizedSentiment) {
       case '积极':
         return 'bg-green-100 text-green-800 border-green-200'
-      case 'negative':
       case '消极':
         return 'bg-red-100 text-red-800 border-red-200'
       default:
@@ -93,11 +91,10 @@ export function EmotionAnalysisResult({ result, compact = false }: EmotionAnalys
   }
 
   const getProgressColor = (sentiment: string) => {
-    switch (sentiment) {
-      case 'positive':
+    const normalizedSentiment = getSentimentText(sentiment)
+    switch (normalizedSentiment) {
       case '积极':
         return 'bg-gradient-to-r from-green-400 to-green-500'
-      case 'negative':
       case '消极':
         return 'bg-gradient-to-r from-red-400 to-red-500'
       default:
@@ -112,8 +109,46 @@ export function EmotionAnalysisResult({ result, compact = false }: EmotionAnalys
     }))
   }
 
-  const sentimentText = result.overall.sentiment === 'positive' ? '积极' : 
-                      result.overall.sentiment === 'negative' ? '消极' : '中性'
+  // 处理不同格式的sentiment值
+  const getSentimentText = (sentiment: string) => {
+    if (sentiment === 'positive' || sentiment === '积极') return '积极'
+    if (sentiment === 'negative' || sentiment === '消极') return '消极'
+    return '中性'
+  }
+  
+  const sentimentText = getSentimentText(result.overall.sentiment)
+  
+  // 确保数值正确显示
+  const confidence = typeof result.overall.confidence === 'number' 
+    ? (result.overall.confidence * 100).toFixed(1) 
+    : parseFloat(result.overall.confidence)?.toFixed(1) || '70.0'
+  
+  // 检查情感数据是否有效
+  const hasValidEmotions = result.emotions && Array.isArray(result.emotions) && result.emotions.length > 0
+  const emotions = hasValidEmotions ? result.emotions : []
+  
+  // 检查关键词是否有效
+  const hasValidKeywords = result.keywords && Array.isArray(result.keywords) && result.keywords.length > 0
+  const keywords = hasValidKeywords ? result.keywords : ['情感', '交流', '沟通']
+  
+  // 检查摘要是否有效
+  const hasValidSummary = result.summary && typeof result.summary === 'string' && result.summary.trim() !== ''
+  const summary = hasValidSummary ? result.summary : '基于AI的情感分析结果，为您提供了详细的情感洞察和建议。'
+  
+  // 获取情感图标
+  const getEmotionIconComponent = (emotionType: string) => {
+    const iconType = result.emotions?.find(e => e.type === emotionType)?.icon
+    if (iconType) {
+      switch (iconType) {
+        case 'Smile': return <Smile className="h-4 w-4" />
+        case 'Frown': return <Frown className="h-4 w-4" />
+        case 'Laugh': return <Laugh className="h-4 w-4" />
+        case 'Meh': return <Meh className="h-4 w-4" />
+        default: return <Heart className="h-4 w-4" />
+      }
+    }
+    return <Heart className="h-4 w-4" />
+  }
 
   return (
     <div ref={resultRef}>
@@ -166,14 +201,14 @@ export function EmotionAnalysisResult({ result, compact = false }: EmotionAnalys
           <div className="space-y-2">
             <div className="flex items-center justify-between text-xs">
               <span className="text-gray-600">分析置信度</span>
-              <span className="font-medium text-gray-700">{(result.overall.confidence * 100).toFixed(1)}%</span>
+              <span className="font-medium text-gray-700">{confidence}%</span>
             </div>
-            <div className="relative bg-gray-200 rounded-full h-2">
-              <div 
-                className={`h-full rounded-full transition-all duration-500 ${getProgressColor(result.overall.sentiment)}`}
-                style={{ width: `${result.overall.confidence * 100}%` }}
-              ></div>
-            </div>
+          <div className="relative bg-gray-200 rounded-full h-2">
+            <div 
+              className={`h-full rounded-full transition-all duration-500 ${getProgressColor(result.overall.sentiment)}`}
+              style={{ width: `${confidence}%` }}
+            ></div>
+          </div>
           </div>
         </div>
 
@@ -187,18 +222,18 @@ export function EmotionAnalysisResult({ result, compact = false }: EmotionAnalys
             <div className="flex items-center gap-2">
               <Smile className="h-4 w-4 text-purple-500" />
               <span className="font-medium">情感细分</span>
-              <Badge variant="secondary" className="ml-2">{(result.emotions || []).length}种情绪</Badge>
+              <Badge variant="secondary" className="ml-2">{emotions.length}种情绪</Badge>
             </div>
             {expandedSections.emotions ? <ChevronUp className="h-4 w-4" /> : <ChevronDown className="h-4 w-4" />}
           </Button>
           
           {expandedSections.emotions && (
             <div className="px-4 pb-4 space-y-3 animate-slide-in-right">
-              {(result.emotions || []).map((emotion, index) => (
+              {emotions.map((emotion, index) => (
                 <div key={index} className="space-y-2">
                   <div className="flex items-center justify-between">
                     <div className="flex items-center gap-2">
-                      {emotion.icon}
+                      {getEmotionIconComponent(emotion.type)}
                       <span className="text-sm font-medium text-gray-700">{emotion.type}</span>
                     </div>
                     <span className="text-sm font-semibold text-gray-600">
@@ -227,7 +262,7 @@ export function EmotionAnalysisResult({ result, compact = false }: EmotionAnalys
             <div className="flex items-center gap-2">
               <Laugh className="h-4 w-4 text-blue-500" />
               <span className="font-medium">关键词提取</span>
-              <Badge variant="secondary" className="ml-2">{(result.keywords || []).length}个关键词</Badge>
+              <Badge variant="secondary" className="ml-2">{keywords.length}个关键词</Badge>
             </div>
             {expandedSections.keywords ? <ChevronUp className="h-4 w-4" /> : <ChevronDown className="h-4 w-4" />}
           </Button>
@@ -235,7 +270,7 @@ export function EmotionAnalysisResult({ result, compact = false }: EmotionAnalys
           {expandedSections.keywords && (
             <div className="px-4 pb-4 animate-slide-in-right">
               <div className="flex flex-wrap gap-2">
-                {(result.keywords || []).map((keyword, index) => (
+                {keywords.map((keyword, index) => (
                   <Badge 
                     key={index} 
                     variant="outline" 
@@ -266,7 +301,7 @@ export function EmotionAnalysisResult({ result, compact = false }: EmotionAnalys
           {expandedSections.summary && (
             <div className="px-4 pb-4 animate-slide-in-right">
               <p className="text-sm text-gray-700 leading-relaxed bg-gradient-to-r from-gray-50 to-blue-50 p-3 rounded-lg border border-gray-100">
-                {result.summary}
+                {summary}
               </p>
             </div>
           )}
