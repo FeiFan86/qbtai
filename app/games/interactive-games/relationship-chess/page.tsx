@@ -285,7 +285,7 @@ export default function RelationshipChessPage() {
   }
 
   // 处理获胜
-  const handleWin = (player) => {
+  const handleWin = (player: number) => {
     setWinner(player)
     setTimerActive(false)
   }
