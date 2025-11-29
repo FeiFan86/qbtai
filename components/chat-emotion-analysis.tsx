@@ -9,7 +9,6 @@ import { Brain, Send, User, Bot, RotateCw, MessageCircle, RefreshCw } from 'luci
 import { EmotionAnalysisResult } from './emotion-analysis-result'
 import { LoadingSpinner, ErrorMessage, LoadingOverlay } from './loading-spinner'
 import { MessageSkeleton } from './loading-skeleton'
-import { useApiCall, ErrorHandler } from '@/lib/loading-utils'
 
 interface Message {
   id: string
