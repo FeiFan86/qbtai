@@ -174,7 +174,7 @@ const monthlyTasks = [
 export default function CoupleBlindBoxPage() {
   const [isUnboxing, setIsUnboxing] = useState(false)
   const [selectedTask, setSelectedTask] = useState(null)
-  const [completedTasks, setCompletedTasks] = useState([])
+  const [completedTasks, setCompletedTasks] = useState<string[]>([])
   const [userPoints, setUserPoints] = useState(120)
   const [currentStreak, setCurrentStreak] = useState(3)
   const [showCompletionMessage, setShowCompletionMessage] = useState(false)
