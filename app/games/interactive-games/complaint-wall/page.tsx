@@ -173,7 +173,7 @@ export default function ComplaintWallPage() {
   }
 
   // 获取心情文本
-  const getMoodText = (mood) => {
+  const getMoodText = (mood: string) => {
     switch (mood) {
       case 'angry':
         return '生气'
