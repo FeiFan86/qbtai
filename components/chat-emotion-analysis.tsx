@@ -206,31 +206,31 @@ export function ChatEmotionAnalysis({ onNewMessage }: ChatEmotionAnalysisProps) 
                   </div>
                 )}
                 
-                  <div className={`max-w-[80%] space-y-3 ${message.role === 'user' ? 'order-2' : 'order-2'}`}>
-                    <div className={`rounded-2xl p-4 transition-all duration-200 ${
-                      message.role === 'user' 
-                        ? 'bg-gradient-to-r from-blue-500 to-purple-500 text-white shadow-lg' 
-                        : 'bg-white border border-gray-200 shadow-sm hover:shadow-md'
-                    }`}>
-                      <p className="text-sm leading-relaxed whitespace-pre-wrap">{message.content}</p>
-                    </div>
-                    
-                    {message.role === 'assistant' && message.analysis && (
-                      <div className="animate-slide-in-right">
-                        <EmotionAnalysisResult result={message.analysis} compact />
-                      </div>
-                    )}
-                    
-                    <div className="flex items-center justify-end">
-                      <p className="text-xs text-gray-400 flex items-center gap-1">
-                        <span className="w-2 h-2 rounded-full bg-green-400"></span>
-                        {message.timestamp.toLocaleTimeString('zh-CN', { 
-                          hour: '2-digit', 
-                          minute: '2-digit' 
-                        })}
-                      </p>
-                    </div>
+                <div className={`max-w-[80%] space-y-3 ${message.role === 'user' ? 'order-2' : 'order-2'}`}>
+                  <div className={`rounded-2xl p-4 transition-all duration-200 ${
+                    message.role === 'user' 
+                      ? 'bg-gradient-to-r from-blue-500 to-purple-500 text-white shadow-lg' 
+                      : 'bg-white border border-gray-200 shadow-sm hover:shadow-md'
+                  }`}>
+                    <p className="text-sm leading-relaxed whitespace-pre-wrap">{message.content}</p>
                   </div>
+                  
+                  {message.role === 'assistant' && message.analysis && (
+                    <div className="animate-slide-in-right">
+                      <EmotionAnalysisResult result={message.analysis} compact />
+                    </div>
+                  )}
+                  
+                  <div className="flex items-center justify-end">
+                    <p className="text-xs text-gray-400 flex items-center gap-1">
+                      <span className="w-2 h-2 rounded-full bg-green-400"></span>
+                      {message.timestamp.toLocaleTimeString('zh-CN', { 
+                        hour: '2-digit', 
+                        minute: '2-digit' 
+                      })}
+                    </p>
+                  </div>
+                </div>
                 
                 {message.role === 'user' && (
                   <div className="w-8 h-8 rounded-full bg-blue-100 flex items-center justify-center flex-shrink-0">

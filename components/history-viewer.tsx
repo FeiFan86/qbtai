@@ -100,7 +100,7 @@ export function HistoryViewer({ isOpen, onClose, onSelectRecord }: HistoryViewer
 
   return (
     <div className="fixed inset-0 z-50 bg-black/50 backdrop-blur-sm flex items-center justify-center p-4" onClick={onClose}>
-      <div className="w-full max-w-4xl max-h-[90vh] bg-white rounded-lg shadow-xl flex flex-col overflow-hidden" onClick={(e) => e.stopPropagation()}>
+      <div className="w-full max-w-4xl max-h-[90vh] bg-white rounded-lg shadow-xl flex flex-col overflow-hidden transform transition-all duration-300" onClick={(e) => e.stopPropagation()} style={{maxWidth: 'min(90vw, 1200px)'}}>
           {/* 头部 */}
           <div className="flex items-center justify-between p-4 md:p-6 border-b bg-gray-50">
             <div>

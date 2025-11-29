@@ -96,7 +96,7 @@ export default function EmotionAnalysisPage() {
                     </CardDescription>
                   </CardHeader>
                   <CardContent>
-                    <ChatEmotionAnalysis onNewMessage={handleNewMessage} />
+                    <ChatEmotionAnalysisEnhanced onNewMessage={handleNewMessage} />
                   </CardContent>
                 </Card>
                 
@@ -123,7 +123,7 @@ export default function EmotionAnalysisPage() {
                     </CardDescription>
                   </CardHeader>
                   <CardContent>
-                    <ChatEmotionAnalysis onNewMessage={handleNewMessage} />
+                    <ChatEmotionAnalysisEnhanced onNewMessage={handleNewMessage} />
                   </CardContent>
                 </Card>
                 
