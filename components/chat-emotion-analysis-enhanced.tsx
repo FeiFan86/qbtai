@@ -1,6 +1,6 @@
 'use client'
 
-import { useState, useRef, useEffect } from 'react'
+import { useState, useRef, useEffect, useCallback } from 'react'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from './ui/card'
 import { Button } from './ui/button'
 import { Textarea } from './ui/textarea'
@@ -29,9 +29,9 @@ export function ChatEmotionAnalysisEnhanced({ onNewMessage, showTitle = true }: 
   const [loading, setLoading] = useState(false)
   const messagesEndRef = useRef<HTMLDivElement>(null)
 
-  const scrollToBottom = () => {
+  const scrollToBottom = useCallback(() => {
     messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' })
-  }
+  }, [])
 
   const [prevMessagesLength, setPrevMessagesLength] = useState(0)
 
@@ -45,7 +45,7 @@ export function ChatEmotionAnalysisEnhanced({ onNewMessage, showTitle = true }: 
       setPrevMessagesLength(messages.length)
       return () => clearTimeout(scrollTimeout)
     }
-  }, [messages, prevMessagesLength])
+  }, [messages, prevMessagesLength, scrollToBottom])
 
   // 模拟数据，用于优雅降级
   const mockAnalysisData = {
@@ -241,6 +241,7 @@ export function ChatEmotionAnalysisEnhanced({ onNewMessage, showTitle = true }: 
       const lastUserMessage = messages[messages.length - 1]
       if (lastUserMessage.role === 'user') {
         setInputText(lastUserMessage.content)
+        // 使用异步处理避免状态更新冲突
         setTimeout(() => {
           handleSendMessage()
         }, 100)
@@ -328,7 +329,7 @@ export function ChatEmotionAnalysisEnhanced({ onNewMessage, showTitle = true }: 
                   </div>
                 )}
                 
-                <div className={`max-w-[80%] space-y-3 ${message.role === 'user' ? 'order-2' : 'order-2'}`}>
+                <div className={`max-w-[80%] space-y-3 ${message.role === 'user' ? 'ml-auto' : ''}`}>
                   <div className={`rounded-2xl p-4 transition-all duration-200 ${
                     message.role === 'user' 
                       ? 'bg-gradient-to-r from-blue-500 to-purple-500 text-white shadow-lg' 

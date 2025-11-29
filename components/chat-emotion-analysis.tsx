@@ -206,7 +206,7 @@ export function ChatEmotionAnalysis({ onNewMessage }: ChatEmotionAnalysisProps) 
                   </div>
                 )}
                 
-                <div className={`max-w-[80%] space-y-3 ${message.role === 'user' ? 'order-2' : 'order-2'}`}>
+                <div className={`max-w-[80%] space-y-3 ${message.role === 'user' ? 'ml-auto' : ''}`}>
                   <div className={`rounded-2xl p-4 transition-all duration-200 ${
                     message.role === 'user' 
                       ? 'bg-gradient-to-r from-blue-500 to-purple-500 text-white shadow-lg' 
