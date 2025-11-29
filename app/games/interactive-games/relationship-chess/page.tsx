@@ -229,8 +229,15 @@ export default function RelationshipChessPage() {
   }
 
   // 生成任务
+  interface Task {
+    type: 'question' | 'challenge' | 'gift'
+    title: string
+    content: string
+    icon: JSX.Element
+  }
+  
   const generateTask = (type: 'question' | 'challenge' | 'gift') => {
-    let task = null
+    let task: Task | null = null
     
     switch (type) {
       case 'question':
