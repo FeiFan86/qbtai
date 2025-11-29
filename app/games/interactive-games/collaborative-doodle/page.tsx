@@ -141,7 +141,7 @@ export default function CollaborativeDoodlePage() {
 
   // 计时器
   useEffect(() => {
-    let interval
+    let interval: NodeJS.Timeout | undefined
     if (timerActive) {
       interval = setInterval(() => {
         setSessionTime(prevTime => prevTime + 1)
