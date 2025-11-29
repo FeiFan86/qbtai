@@ -189,7 +189,7 @@ export default function ComplaintWallPage() {
   }
 
   // 格式化时间戳
-  const formatTimestamp = (date) => {
+  const formatTimestamp = (date: Date) => {
     const now = new Date()
     const diff = now.getTime() - date.getTime()
     const minutes = Math.floor(diff / 60000)
@@ -202,7 +202,7 @@ export default function ComplaintWallPage() {
   }
 
   // 提交吐槽
-  const submitComplaint = () => {
+  const submitComplaint = (): void => {
     if (!complaintTitle.trim() || !newComplaint.trim()) return
 
     setIsSubmitting(true)
@@ -236,7 +236,7 @@ export default function ComplaintWallPage() {
   }
 
   // 过滤吐槽
-  const filteredComplaints = () => {
+  const filteredComplaints = (): any[] => {
     if (activeTab === 'hot') {
       // 按点赞数排序
       return [...complaints].sort((a, b) => b.likes - a.likes)
