@@ -178,7 +178,7 @@ export default function CollaborativeDoodlePage() {
   }
 
   // 开始绘画
-  const startDrawing = (e) => {
+  const startDrawing = (e: React.MouseEvent<HTMLCanvasElement>) => {
     if (!timerActive) setTimerActive(true)
     setIsDrawing(true)
     
@@ -197,7 +197,7 @@ export default function CollaborativeDoodlePage() {
   }
 
   // 绘画中
-  const draw = (e) => {
+  const draw = (e: React.MouseEvent<HTMLCanvasElement>) => {
     if (!isDrawing) return
     
     const canvas = canvasRef.current
