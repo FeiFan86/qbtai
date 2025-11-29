@@ -7,7 +7,7 @@ import { Button } from '@/components/ui/button'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
 import { Badge } from '@/components/ui/badge'
-import { MessageSquare, Mic, Image, Heart, Brain, Zap, CheckCircle, TrendingUp, AlertCircle } from 'lucide-react'
+import { MessageSquare, Mic, Image, Brain, CheckCircle, TrendingUp, AlertCircle } from 'lucide-react'
 import { ChatEmotionAnalysisEnhanced } from '@/components/chat-emotion-analysis-enhanced'
 import { EmotionAnalysisResult } from '@/components/emotion-analysis-result'
 import { SocialSuggestions } from '@/components/social-suggestions'
@@ -81,34 +81,6 @@ export default function EmotionAnalysisPage() {
     }, 500)
   }
 
-  // 情感分析场景示例
-  const emotionScenarios = [
-    {
-      title: '个人情感表达',
-      description: '分享个人情感体验和内心感受',
-      icon: <Heart className="h-5 w-5 text-pink-500" />,
-      example: '今天我感到特别开心，因为完成了重要的项目。'
-    },
-    {
-      title: '关系情感分析',
-      description: '分析人际关系中的情感互动',
-      icon: <Brain className="h-5 w-5 text-blue-500" />,
-      example: '和伴侣最近有些小矛盾，感觉沟通不太顺畅。'
-    },
-    {
-      title: '职场情感表达',
-      description: '工作环境中的情感体验',
-      icon: <Zap className="h-5 w-5 text-yellow-500" />,
-      example: '团队合作很愉快，但最近工作压力有点大。'
-    },
-    {
-      title: '生活情感分享',
-      description: '日常生活中的情感波动',
-      icon: <MessageSquare className="h-5 w-5 text-green-500" />,
-      example: '最近生活很充实，但偶尔会感到一些迷茫。'
-    }
-  ]
-
   const upcomingFeatures = [
     {
       title: '语音情感分析',
@@ -141,42 +113,6 @@ export default function EmotionAnalysisPage() {
           </div>
 
           <div className="space-y-6">
-            {/* 场景示例 */}
-            <Card>
-              <CardHeader>
-                <CardTitle className="flex items-center gap-2">
-                  <Brain className="h-5 w-5 text-purple-500" />
-                  情感分析场景
-                </CardTitle>
-                <CardDescription>
-                  选择一个场景，快速开始情感分析体验
-                </CardDescription>
-              </CardHeader>
-              <CardContent>
-                <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-4">
-                  {emotionScenarios.map((scenario, index) => (
-                    <div 
-                      key={index}
-                      className="border rounded-lg p-4 cursor-pointer hover:bg-gray-50 transition-colors"
-                      onClick={() => {
-                        // 这里可以添加填充示例文本的逻辑
-                        console.log('选择场景:', scenario.title)
-                      }}
-                    >
-                      <div className="flex items-center gap-2 mb-3">
-                        {scenario.icon}
-                        <span className="font-medium">{scenario.title}</span>
-                      </div>
-                      <p className="text-sm text-gray-600 mb-3">{scenario.description}</p>
-                      <div className="text-xs text-gray-500 bg-gray-100 p-2 rounded">
-                        点击开始分析
-                      </div>
-                    </div>
-                  ))}
-                </div>
-              </CardContent>
-            </Card>
-
             {/* 功能标签页 */}
             <Tabs value={activeTab} onValueChange={setActiveTab} className="space-y-6">
               <TabsList className="grid w-full grid-cols-3">
