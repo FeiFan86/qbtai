@@ -65,10 +65,6 @@ export function EmotionAnalysisResult({ result, compact = false }: EmotionAnalys
       alert('导出图片失败，请重试')
     }
   }
-    emotions: true,
-    keywords: true,
-    summary: true
-  })
 
   const getSentimentIcon = (sentiment: string) => {
     switch (sentiment) {
