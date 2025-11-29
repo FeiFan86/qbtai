@@ -159,12 +159,12 @@ export default function ContentCreationPage() {
       length: 'short'
     },
     {
-      title: '演讲稿',
-      description: '生成激励人心的演讲稿',
-      icon: <Mic className="h-5 w-5 text-red-500" />,
-      prompt: '写一篇演讲稿，激励团队追求卓越和成功',
-      style: 'professional',
-      length: 'long'
+      title: '朋友圈',
+      description: '生成适合朋友圈的精彩内容',
+      icon: <MessageSquare className="h-5 w-5 text-red-500" />,
+      prompt: '写一段适合发朋友圈的精彩内容，分享生活点滴',
+      style: 'casual',
+      length: 'short'
     },
     {
       title: '邀请函',

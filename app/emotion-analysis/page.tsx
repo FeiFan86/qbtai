@@ -140,7 +140,20 @@ export default function EmotionAnalysisPage() {
               
               {/* 对话分析标签页 */}
               <TabsContent value="chat" className="space-y-6">
-                <ChatEmotionAnalysisEnhanced onNewMessage={handleNewMessage} showTitle={false} />
+                <Card>
+                  <CardHeader>
+                    <CardTitle className="flex items-center gap-2">
+                      <MessageSquare className="h-5 w-5 text-purple-500" />
+                      对话分析
+                    </CardTitle>
+                    <CardDescription>
+                      输入对话内容，获取智能分析和建议
+                    </CardDescription>
+                  </CardHeader>
+                  <CardContent>
+                    <ChatEmotionAnalysisEnhanced onNewMessage={handleNewMessage} showTitle={false} />
+                  </CardContent>
+                </Card>
                 
                 {/* 实时分析结果 */}
                 {latestAnalysis && (
