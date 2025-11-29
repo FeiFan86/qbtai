@@ -81,10 +81,10 @@ export default function EmotionAnalysisPage() {
                     <CardHeader>
                       <CardTitle className="flex items-center gap-2">
                         <MessageSquare className="h-5 w-5 text-blue-500" />
-                        对话情感分析
+                        情感对话分析
                       </CardTitle>
                       <CardDescription>
-                        与AI进行自然对话，实时分析您的情感状态
+                        与AI进行实时对话，深入分析您的情绪和感受
                       </CardDescription>
                     </CardHeader>
                     <CardContent>

@@ -38,7 +38,10 @@ export function ChatEmotionAnalysisEnhanced({ onNewMessage }: ChatEmotionAnalysi
   }
 
   useEffect(() => {
-    scrollToBottom()
+    // 只有当有消息且不是初始状态时才自动滚动
+    if (messages.length > 0) {
+      scrollToBottom()
+    }
   }, [messages])
 
   // 模拟数据，用于优雅降级
