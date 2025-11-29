@@ -96,7 +96,7 @@ export function ChatEmotionAnalysisEnhanced({
         },
         body: JSON.stringify({ 
           message: inputText.trim(),
-          conversationHistory: messages.filter(m => m.role !== 'system').map(m => ({
+          conversationHistory: messages.map(m => ({
             role: m.role,
             content: m.content
           })).slice(-10) // 只保留最近10条消息作为上下文
