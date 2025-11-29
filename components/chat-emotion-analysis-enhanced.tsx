@@ -88,21 +88,42 @@ export function ChatEmotionAnalysisEnhanced({
     setLoading(true)
 
     try {
-      // 模拟简单的回复，不进行实际分析
-      const responses = [
-        "我理解了您的感受。请继续分享您的想法，我会记录下来。",
-        "谢谢您的分享。还有其他想要表达的吗？",
-        "我正在倾听。请继续，等您觉得说完了，可以点击生成结果按钮。",
-        "我明白了。您的感受很重要，请继续表达。",
-        "感谢您分享这些。请继续，我会帮助您分析。"
-      ]
+      // 基于用户输入内容生成更自然的回复
+      const generateContextualResponse = (userInput: string): string => {
+        const lowerInput = userInput.toLowerCase()
+        
+        // 根据用户输入的情感内容给出相应的回复
+        if (lowerInput.includes('开心') || lowerInput.includes('高兴') || lowerInput.includes('快乐')) {
+          return "听起来您今天心情不错！能感受到您话语中的快乐，这真是太好了。还有什么让您开心的事情想要分享吗？"
+        } 
+        else if (lowerInput.includes('难过') || lowerInput.includes('伤心') || lowerInput.includes('难过') || lowerInput.includes('痛苦')) {
+          return "我能理解您现在的心情，每个人都会经历这样的时刻。感谢您愿意分享这些感受，这本身就是勇敢的表现。请继续说说看，我在这里倾听。"
+        }
+        else if (lowerInput.includes('生气') || lowerInput.includes('愤怒') || lowerInput.includes('不满')) {
+          return "我能感受到您话语中的情绪。生气是很自然的反应，说明这件事对您很重要。请继续告诉我发生了什么，我会认真听。"
+        }
+        else if (lowerInput.includes('工作') || lowerInput.includes('公司') || lowerInput.includes('老板')) {
+          return "工作确实是我们生活中的重要部分，有时候会带来各种挑战。您提到的工作情况听起来很有意思，能详细说说吗？"
+        }
+        else if (lowerInput.includes('家庭') || lowerInput.includes('父母') || lowerInput.includes('孩子')) {
+          return "家庭关系总是复杂而丰富的，既有温暖也可能有挑战。感谢您分享这些关于家庭的想法。还有其他想要表达的吗？"
+        }
+        else {
+          // 普通回复，根据输入长度选择
+          if (userInput.length > 50) {
+            return "感谢您如此详细的分享。我能感受到这些对您很重要。请继续，我会仔细倾听并记录下来。"
+          } else {
+            return "我理解了。请继续分享您的想法和感受，等您觉得说完了，可以点击生成结果按钮，我会为您进行综合分析。"
+          }
+        }
+      }
       
-      const randomResponse = responses[Math.floor(Math.random() * responses.length)]
+      const contextualResponse = generateContextualResponse(inputText.trim())
       
       const assistantMessage: Message = {
         id: (Date.now() + 1).toString(),
         role: 'assistant',
-        content: randomResponse,
+        content: contextualResponse,
         timestamp: new Date()
       }
 
@@ -306,7 +327,7 @@ export function ChatEmotionAnalysisEnhanced({
 
   return (
     <Card className="h-full flex flex-col relative">
-      <LoadingOverlay show={loading} message="正在分析您的情感..." />
+      <LoadingOverlay show={loading} message="生成中..." />
       
       {showTitle && (
         <CardHeader className="pb-4">
