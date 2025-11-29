@@ -22,9 +22,10 @@ interface Message {
 
 interface ChatEmotionAnalysisProps {
   onNewMessage?: (message: Message) => void
+  showTitle?: boolean
 }
 
-export function ChatEmotionAnalysisEnhanced({ onNewMessage }: ChatEmotionAnalysisProps) {
+export function ChatEmotionAnalysisEnhanced({ onNewMessage, showTitle = true }: ChatEmotionAnalysisProps) {
   const [messages, setMessages] = useState<Message[]>([])
   const [inputText, setInputText] = useState('')
   const [apiError, setApiError] = useState<string | null>(null)
@@ -37,12 +38,19 @@ export function ChatEmotionAnalysisEnhanced({ onNewMessage }: ChatEmotionAnalysi
     messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' })
   }
 
+  const [prevMessagesLength, setPrevMessagesLength] = useState(0)
+
   useEffect(() => {
-    // 只有当有消息且不是初始状态时才自动滚动
-    if (messages.length > 0) {
-      scrollToBottom()
+    // 只有当有新消息时才自动滚动，避免页面打开时自动下滑
+    if (messages.length > prevMessagesLength) {
+      const scrollTimeout = setTimeout(() => {
+        scrollToBottom()
+      }, 150)
+      
+      setPrevMessagesLength(messages.length)
+      return () => clearTimeout(scrollTimeout)
     }
-  }, [messages])
+  }, [messages, prevMessagesLength])
 
   // 模拟数据，用于优雅降级
   const mockAnalysisData = {
@@ -258,52 +266,54 @@ export function ChatEmotionAnalysisEnhanced({ onNewMessage }: ChatEmotionAnalysi
       {/* 加载遮罩层 */}
       <LoadingOverlay show={loading} message="正在分析您的情感..." />
       
-      <CardHeader className="pb-4">
-        <div className="flex items-center justify-between">
-          <div className="flex items-center gap-2">
-            <MessageCircle className="h-5 w-5 text-pink-500" />
-            <CardTitle>情感对话分析</CardTitle>
-          </div>
-          
-          <div className="flex items-center gap-2">
-            {messages.length > 0 && (
-              <>
-                <Button 
-                  variant="outline" 
-                  size="sm"
-                  onClick={shareConversation}
-                  className="flex items-center gap-1"
-                >
-                  <Share2 className="h-4 w-4" />
-                  分享
-                </Button>
-                
-                <Button 
-                  variant="outline" 
-                  size="sm"
-                  onClick={() => exportConversation('pdf')}
-                  className="flex items-center gap-1"
-                >
-                  <Download className="h-4 w-4" />
-                  导出
-                </Button>
-              </>
-            )}
+      {showTitle && (
+        <CardHeader className="pb-4">
+          <div className="flex items-center justify-between">
+            <div className="flex items-center gap-2">
+              <MessageCircle className="h-5 w-5 text-pink-500" />
+              <CardTitle>情感对话分析</CardTitle>
+            </div>
             
-            <Button 
-              variant="outline" 
-              size="sm" 
-              onClick={clearChat}
-              disabled={messages.length === 0}
-            >
-              清空对话
-            </Button>
+            <div className="flex items-center gap-2">
+              {messages.length > 0 && (
+                <>
+                  <Button 
+                    variant="outline" 
+                    size="sm"
+                    onClick={shareConversation}
+                    className="flex items-center gap-1"
+                  >
+                    <Share2 className="h-4 w-4" />
+                    分享
+                  </Button>
+                  
+                  <Button 
+                    variant="outline" 
+                    size="sm"
+                    onClick={() => exportConversation('pdf')}
+                    className="flex items-center gap-1"
+                  >
+                    <Download className="h-4 w-4" />
+                    导出
+                  </Button>
+                </>
+              )}
+              
+              <Button 
+                variant="outline" 
+                size="sm" 
+                onClick={clearChat}
+                disabled={messages.length === 0}
+              >
+                清空对话
+              </Button>
+            </div>
           </div>
-        </div>
-        <CardDescription>
-          与AI进行实时对话，深入分析您的情绪和感受
-        </CardDescription>
-      </CardHeader>
+          <CardDescription>
+            与AI进行实时对话，深入分析您的情绪和感受
+          </CardDescription>
+        </CardHeader>
+      )}
       
       <CardContent className="flex-1 flex flex-col min-h-0">
         {/* 错误消息 */}
