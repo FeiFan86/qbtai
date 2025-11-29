@@ -155,7 +155,7 @@ export default function EmotionTreeHolePage() {
       <main className="container mx-auto px-4 py-8">
         <div className="mx-auto max-w-4xl">
           <div className="mb-6">
-            <Link href="/games/interactive-games">
+            <Link href="/games">
               <Button variant="outline" className="mb-4">
                 <ArrowLeft className="h-4 w-4 mr-2" />
                 返回互动游戏

@@ -18,7 +18,10 @@ import {
   Palette,
   TreePine,
   Dice6,
-  Heart
+  Heart,
+  MessageSquare,
+  Mic,
+  Shuffle
 } from 'lucide-react'
 import Link from 'next/link'
 
@@ -29,7 +32,7 @@ export default function GamesPage() {
     setIsLoaded(true)
   }, [])
 
-  const games = [
+  const mainGames = [
     {
       id: 'conversation-challenge',
       title: '情景对话挑战',
@@ -51,45 +54,80 @@ export default function GamesPage() {
       features: ['性格测试', '结果分析', '个性化建议', '分享卡片'],
       difficulty: '简单',
       players: '单人'
-    },
-    {
-      id: 'interactive-games',
-      title: '互动游戏集合',
-      description: '多种创意互动游戏，体验情感交流乐趣',
-      icon: <Gamepad2 className="h-8 w-8 text-pink-500" />,
-      color: 'from-pink-400 to-pink-600',
-      href: '/games/interactive-games',
-      features: ['情感盲盒', '协作涂鸦', '情感树洞', '真心话大冒险'],
-      difficulty: '多样',
-      players: '单人/双人'
     }
   ]
 
-  const miniGames = [
+  const interactiveGames = [
     {
-      icon: <Gift className="h-6 w-6 text-pink-400" />,
-      title: '情感盲盒',
-      description: '每日开启情感主题盲盒'
-    },
-    {
-      icon: <Palette className="h-6 w-6 text-blue-400" />,
-      title: '协作涂鸦',
-      description: '双人绘画猜情感'
-    },
-    {
-      icon: <TreePine className="h-6 w-6 text-green-400" />,
+      id: 'emotion-tree-hole',
       title: '情感树洞',
-      description: '匿名分享情感故事'
+      description: '匿名分享你的情感故事，获得温暖的回应',
+      icon: <TreePine className="h-6 w-6 text-green-500" />,
+      color: 'from-green-400 to-green-600',
+      href: '/games/interactive-games/emotion-tree-hole',
+      features: ['匿名分享', '情感交流', '温暖回应', '支持社区'],
+      difficulty: '简单',
+      players: '单人'
     },
     {
-      icon: <Dice6 className="h-6 w-6 text-purple-400" />,
+      id: 'couple-blind-box',
+      title: '情侣盲盒',
+      description: '每日开启情侣互动主题盲盒，增进感情',
+      icon: <Gift className="h-6 w-6 text-pink-500" />,
+      color: 'from-pink-400 to-pink-600',
+      href: '#', // 暂未实现
+      features: ['每日盲盒', '情侣任务', '感情提升', '惊喜体验'],
+      difficulty: '简单',
+      players: '双人',
+      comingSoon: true
+    },
+    {
+      id: 'collaborative-doodle',
+      title: '协作涂鸦',
+      description: '双人一起绘画，表达情感，增进默契',
+      icon: <Palette className="h-6 w-6 text-blue-500" />,
+      color: 'from-blue-400 to-blue-600',
+      href: '#', // 暂未实现
+      features: ['双人绘画', '情感表达', '创意涂鸦', '默契测试'],
+      difficulty: '中等',
+      players: '双人',
+      comingSoon: true
+    },
+    {
+      id: 'complaint-wall',
+      title: '吐槽墙',
+      description: '匿名吐槽生活烦恼，释放压力',
+      icon: <MessageSquare className="h-6 w-6 text-orange-500" />,
+      color: 'from-orange-400 to-orange-600',
+      href: '#', // 暂未实现
+      features: ['匿名吐槽', '情绪释放', '压力缓解', '共鸣交流'],
+      difficulty: '简单',
+      players: '单人',
+      comingSoon: true
+    },
+    {
+      id: 'relationship-chess',
       title: '关系飞行棋',
-      description: '朋友情侣互动游戏'
+      description: '情侣专属互动棋盘游戏，增进了解',
+      icon: <Dice6 className="h-6 w-6 text-purple-500" />,
+      color: 'from-purple-400 to-purple-600',
+      href: '#', // 暂未实现
+      features: ['互动棋盘', '情侣专属', '增进了解', '趣味挑战'],
+      difficulty: '中等',
+      players: '双人',
+      comingSoon: true
     },
     {
-      icon: <Heart className="h-6 w-6 text-red-400" />,
+      id: 'truth-or-dare',
       title: '真心话大冒险',
-      description: '情感深度探索'
+      description: '情感深度探索游戏，增进亲密关系',
+      icon: <Heart className="h-6 w-6 text-red-500" />,
+      color: 'from-red-400 to-red-600',
+      href: '#', // 暂未实现
+      features: ['真心话', '大冒险', '情感探索', '亲密互动'],
+      difficulty: '多样',
+      players: '多人',
+      comingSoon: true
     }
   ]
 
@@ -141,8 +179,8 @@ export default function GamesPage() {
             
             <TabsContent value="featured" className="space-y-8">
               {/* 主游戏卡片 */}
-              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-                {games.map((game, index) => (
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                {mainGames.map((game, index) => (
                   <Card key={game.id} className={`group hover:shadow-xl transition-all duration-500 transform ${isLoaded ? 'translate-y-0 opacity-100' : 'translate-y-10 opacity-0'}`}
                     style={{ transitionDelay: `${index * 150}ms` }}
                   >
@@ -186,33 +224,60 @@ export default function GamesPage() {
                 ))}
               </div>
 
-              {/* 迷你游戏展示 */}
+              {/* 互动游戏展示 */}
               <Card>
                 <CardHeader>
                   <CardTitle className="flex items-center gap-2">
-                    <Gamepad2 className="h-5 w-5 text-purple-500" />
-                    迷你游戏集合
+                    <Gamepad2 className="h-5 w-5 text-pink-500" />
+                    互动游戏集合
                   </CardTitle>
                   <CardDescription>
                     丰富多样的情感互动小游戏，随时体验情感交流的乐趣
                   </CardDescription>
                 </CardHeader>
                 <CardContent>
-                  <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-4">
-                    {miniGames.map((game, index) => (
-                      <div key={index} className="text-center p-4 border rounded-lg hover:shadow-md transition-shadow cursor-pointer">
-                        <div className="flex justify-center mb-2">{game.icon}</div>
-                        <h3 className="text-sm font-medium">{game.title}</h3>
-                        <p className="text-xs text-gray-500 mt-1">{game.description}</p>
-                      </div>
+                  <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+                    {interactiveGames.map((game, index) => (
+                      <Card key={game.id} className="group hover:shadow-md transition-all">
+                        <div className={`h-1 bg-gradient-to-r ${game.color} rounded-t-lg`}></div>
+                        <CardHeader className="pb-2">
+                          <div className="flex items-center gap-2">
+                            <div className={`p-1.5 rounded-lg bg-gradient-to-br ${game.color} bg-opacity-10`}>
+                              {game.icon}
+                            </div>
+                            <div className="flex-1">
+                              <CardTitle className="text-base flex items-center gap-2">
+                                {game.title}
+                                {game.comingSoon && (
+                                  <Badge variant="secondary" className="text-xs">即将上线</Badge>
+                                )}
+                              </CardTitle>
+                            </div>
+                          </div>
+                        </CardHeader>
+                        <CardContent className="pt-0">
+                          <p className="text-xs text-gray-600 mb-3">{game.description}</p>
+                          <div className="flex flex-wrap gap-1 mb-3">
+                            {game.features.slice(0, 2).map((feature, i) => (
+                              <Badge key={i} variant="outline" className="text-xs">
+                                {feature}
+                              </Badge>
+                            ))}
+                          </div>
+                          {game.comingSoon ? (
+                            <Button variant="outline" className="w-full" disabled>
+                              即将上线
+                            </Button>
+                          ) : (
+                            <Link href={game.href}>
+                              <Button variant="outline" className="w-full">
+                                开始游戏
+                              </Button>
+                            </Link>
+                          )}
+                        </CardContent>
+                      </Card>
                     ))}
-                  </div>
-                  <div className="mt-6 text-center">
-                    <Link href="/games/interactive-games">
-                      <Button variant="outline" className="px-6">
-                        探索全部互动游戏
-                      </Button>
-                    </Link>
                   </div>
                 </CardContent>
               </Card>
@@ -334,35 +399,59 @@ export default function GamesPage() {
             </TabsContent>
             
             <TabsContent value="interactive" className="space-y-6">
-              <Card>
-                <CardHeader>
-                  <CardTitle className="flex items-center gap-2">
-                    <Gamepad2 className="h-6 w-6 text-pink-500" />
-                    互动游戏集合
-                  </CardTitle>
-                  <CardDescription>
-                    多种创意互动游戏，体验情感交流乐趣
-                  </CardDescription>
-                </CardHeader>
-                <CardContent className="space-y-6">
-                  <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-4">
-                    {miniGames.map((game, index) => (
-                      <div key={index} className="text-center p-4 border rounded-lg hover:shadow-md transition-shadow">
-                        <div className="flex justify-center mb-3">{game.icon}</div>
-                        <h3 className="font-medium mb-1">{game.title}</h3>
-                        <p className="text-xs text-gray-500">{game.description}</p>
+              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                {interactiveGames.map((game, index) => (
+                  <Card key={game.id} className={`group hover:shadow-lg transition-all duration-300 transform ${isLoaded ? 'translate-y-0 opacity-100' : 'translate-y-10 opacity-0'}`}
+                    style={{ transitionDelay: `${index * 100}ms` }}
+                  >
+                    <div className={`h-2 bg-gradient-to-r ${game.color} rounded-t-lg`}></div>
+                    <CardHeader className="pb-3">
+                      <div className="flex items-center gap-3">
+                        <div className={`p-2 rounded-lg bg-gradient-to-br ${game.color} bg-opacity-10`}>
+                          {game.icon}
+                        </div>
+                        <div className="flex-1">
+                          <CardTitle className="text-lg flex items-center gap-2">
+                            {game.title}
+                            {game.comingSoon && (
+                              <Badge variant="secondary" className="text-xs">即将上线</Badge>
+                            )}
+                          </CardTitle>
+                          <div className="flex gap-2 mt-1">
+                            <Badge variant="outline" className="text-xs">
+                              {game.difficulty}
+                            </Badge>
+                            <Badge variant="outline" className="text-xs">
+                              {game.players}
+                            </Badge>
+                          </div>
+                        </div>
                       </div>
-                    ))}
-                  </div>
-                  <div className="text-center">
-                    <Link href="/games/interactive-games">
-                      <Button size="lg" className="px-8">
-                        探索全部游戏
-                      </Button>
-                    </Link>
-                  </div>
-                </CardContent>
-              </Card>
+                    </CardHeader>
+                    <CardContent>
+                      <p className="text-sm text-gray-600 mb-4">{game.description}</p>
+                      <div className="flex flex-wrap gap-1 mb-4">
+                        {game.features.slice(0, 3).map((feature, i) => (
+                          <Badge key={i} variant="secondary" className="text-xs">
+                            {feature}
+                          </Badge>
+                        ))}
+                      </div>
+                      {game.comingSoon ? (
+                        <Button variant="outline" className="w-full" disabled>
+                          即将上线
+                        </Button>
+                      ) : (
+                        <Link href={game.href}>
+                          <Button className="w-full group-hover:shadow-md transition-shadow">
+                            开始游戏
+                          </Button>
+                        </Link>
+                      )}
+                    </CardContent>
+                  </Card>
+                ))}
+              </div>
             </TabsContent>
           </Tabs>
 
