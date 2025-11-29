@@ -430,6 +430,7 @@ class VolcanoAPIService {
       '厌恶': '#6B7280',    // 灰色
       '期待': '#EC4899', // 粉色
       '信任': '#06B6D4',      // 青色
+      '平静': '#84CC16',   // 浅绿色
       // 英文映射（兼容性）
       happiness: '#10B981',
       sadness: '#3B82F6',
@@ -438,7 +439,8 @@ class VolcanoAPIService {
       surprise: '#F59E0B',
       disgust: '#6B7280',
       anticipation: '#EC4899',
-      trust: '#06B6D4'
+      trust: '#06B6D4',
+      calm: '#84CC16'
     }
     
     return colorMap[emotionType.toLowerCase()] || '#6B7280'
@@ -458,6 +460,7 @@ class VolcanoAPIService {
       '厌恶': 'ThumbsDown',
       '期待': 'Clock',
       '信任': 'Heart',
+      '平静': 'Leaf',
       // 英文映射（兼容性）
       happiness: 'Smile',
       sadness: 'Frown',
@@ -466,7 +469,8 @@ class VolcanoAPIService {
       surprise: 'Eye',
       disgust: 'ThumbsDown',
       anticipation: 'Clock',
-      trust: 'Heart'
+      trust: 'Heart',
+      calm: 'Leaf'
     }
     
     return iconMap[emotionType.toLowerCase()] || 'Meh'
@@ -476,14 +480,17 @@ class VolcanoAPIService {
    * 获取模拟的情感分析数据（用于开发测试）
    */
   private getMockEmotionAnalysis(input?: string): EmotionAnalysisResponse {
-    // 根据输入内容简单判断情感倾向
+    // 根据输入内容详细判断情感倾向
     const isPositive = input && (
       input.includes('开心') || 
       input.includes('高兴') || 
       input.includes('快乐') || 
       input.includes('好') ||
       input.includes('顺利') ||
-      input.includes('成功')
+      input.includes('成功') ||
+      input.includes('满意') ||
+      input.includes('幸福') ||
+      input.includes('爱')
     )
     
     const isNegative = input && (
@@ -491,7 +498,11 @@ class VolcanoAPIService {
       input.includes('悲伤') || 
       input.includes('生气') || 
       input.includes('糟糕') ||
-      input.includes('失败')
+      input.includes('失败') ||
+      input.includes('失望') ||
+      input.includes('痛苦') ||
+      input.includes('烦恼') ||
+      input.includes('讨厌')
     )
 
     // 基于输入生成不同的模拟数据
@@ -500,19 +511,19 @@ class VolcanoAPIService {
         success: true,
         data: {
           emotions: [
-            { type: '快乐', score: 0.75, color: this.getEmotionColor('快乐') },
-            { type: '期待', score: 0.55, color: this.getEmotionColor('期待') },
-            { type: '信任', score: 0.40, color: this.getEmotionColor('信任') },
-            { type: '惊讶', score: 0.20, color: this.getEmotionColor('惊讶') },
+            { type: '快乐', score: 0.85, color: this.getEmotionColor('快乐') },
+            { type: '期待', score: 0.65, color: this.getEmotionColor('期待') },
+            { type: '信任', score: 0.55, color: this.getEmotionColor('信任') },
+            { type: '平静', score: 0.45, color: this.getEmotionColor('平静') },
+            { type: '惊讶', score: 0.25, color: this.getEmotionColor('惊讶') },
             { type: '悲伤', score: 0.05, color: this.getEmotionColor('悲伤') },
-            { type: '愤怒', score: 0.02, color: this.getEmotionColor('愤怒') },
           ],
           overall: {
             sentiment: 'positive',
-            confidence: 0.85
+            confidence: 0.88
           },
-          keywords: ['开心', '满足', '积极', '美好'],
-          summary: '这段文字表达了明显的积极情感，显示出快乐和满足感，对未来抱有期待。'
+          keywords: ['开心', '满足', '积极', '美好', '成功', '幸福'],
+          summary: '这段文字表达了强烈的积极情感，充满了快乐和满足感，显示出对生活的积极态度和对未来的美好期待。'
         }
       }
     } else if (isNegative) {
@@ -520,40 +531,40 @@ class VolcanoAPIService {
         success: true,
         data: {
           emotions: [
-            { type: '悲伤', score: 0.65, color: this.getEmotionColor('悲伤') },
-            { type: '愤怒', score: 0.45, color: this.getEmotionColor('愤怒') },
-            { type: '恐惧', score: 0.25, color: this.getEmotionColor('恐惧') },
-            { type: '厌恶', score: 0.20, color: this.getEmotionColor('厌恶') },
+            { type: '悲伤', score: 0.75, color: this.getEmotionColor('悲伤') },
+            { type: '愤怒', score: 0.55, color: this.getEmotionColor('愤怒') },
+            { type: '恐惧', score: 0.35, color: this.getEmotionColor('恐惧') },
+            { type: '厌恶', score: 0.30, color: this.getEmotionColor('厌恶') },
+            { type: '平静', score: 0.15, color: this.getEmotionColor('平静') },
             { type: '快乐', score: 0.05, color: this.getEmotionColor('快乐') },
-            { type: '期待', score: 0.02, color: this.getEmotionColor('期待') },
           ],
           overall: {
             sentiment: 'negative',
-            confidence: 0.80
+            confidence: 0.82
           },
-          keywords: ['难过', '失望', '挫折', '不安'],
-          summary: '这段文字表达了负面情感，主要是悲伤和不满，可能是因为遇到了挫折或不如意的事情。'
+          keywords: ['难过', '失望', '挫折', '不安', '压力', '困扰'],
+          summary: '这段文字表达了明显的负面情感，主要是悲伤和不满，可能源于生活中的挫折或人际关系的困扰，需要关注和疏导。'
         }
       }
     } else {
-      // 默认中性偏积极
+      // 默认中性偏积极，提供更丰富的数据
       return {
         success: true,
         data: {
           emotions: [
+            { type: '平静', score: 0.62, color: this.getEmotionColor('平静') },
             { type: '信任', score: 0.50, color: this.getEmotionColor('信任') },
             { type: '期待', score: 0.45, color: this.getEmotionColor('期待') },
             { type: '快乐', score: 0.35, color: this.getEmotionColor('快乐') },
             { type: '惊讶', score: 0.20, color: this.getEmotionColor('惊讶') },
             { type: '悲伤', score: 0.15, color: this.getEmotionColor('悲伤') },
-            { type: '愤怒', score: 0.05, color: this.getEmotionColor('愤怒') },
           ],
           overall: {
             sentiment: 'neutral',
-            confidence: 0.75
+            confidence: 0.702
           },
-          keywords: ['平静', '思考', '观察', '理性'],
-          summary: '这段文字表达了相对中性的情感，带有一些思考和观察的成分，整体比较平和。'
+          keywords: ['平静', '思考', '观察', '理性', '日常', '生活'],
+          summary: '这段文字表达了相对中性的情感，以平静和理性为主，带有适度的期待和快乐，整体呈现出一种观察和思考的状态，适合进行深入的情感分析。'
         }
       }
     }

@@ -25,7 +25,12 @@ export default function SocialAssistantPage() {
     if (!conversationText.trim()) return
     
     setIsAnalyzing(true)
+    setAnalysisResult(null) // 重置之前的分析结果
+    
     try {
+      // 添加延迟模拟真实分析过程
+      const analysisPromise = new Promise(resolve => setTimeout(resolve, 1500))
+      
       const response = await fetch('/api/social/analyze', {
         method: 'POST',
         headers: {
@@ -37,6 +42,9 @@ export default function SocialAssistantPage() {
           scenario
         }),
       })
+      
+      // 等待分析完成
+      await analysisPromise
       
       if (response.ok) {
         const result = await response.json()
@@ -226,8 +234,17 @@ export default function SocialAssistantPage() {
                       onClick={handleAnalyze} 
                       disabled={!conversationText.trim() || isAnalyzing}
                       variant="pink"
+                      className="relative"
                     >
-                      {isAnalyzing ? '分析中...' : '分析对话'}
+                      {isAnalyzing ? (
+                        <>
+                          <div className="animate-spin h-4 w-4 mr-2 border-2 border-white border-t-transparent rounded-full"></div>
+                          分析中...
+                          <div className="absolute inset-0 bg-gradient-to-r from-pink-400 to-purple-400 rounded-md opacity-20 animate-pulse"></div>
+                        </>
+                      ) : (
+                        '分析对话'
+                      )}
                     </Button>
                   </div>
                 </CardContent>

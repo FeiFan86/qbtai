@@ -319,13 +319,15 @@ export function ChatEmotionAnalysisEnhanced({ onNewMessage, showTitle = true }: 
         {/* 对话区域 */}
         <div className="flex-1 overflow-y-auto space-y-4 mb-4">
           {messages.length === 0 ? (
-            <div className="text-center py-8 text-gray-500">
+            <div className="text-center py-12 text-gray-500">
               <Brain className="h-12 w-12 mx-auto mb-4 text-gray-300" />
-              <p>开始对话，让我来分析您的情感</p>
+              <p className="text-lg">开始对话，让我来分析您的情感</p>
+              <p className="text-sm text-gray-400 mt-2">输入您的感受或想法，AI将为您提供专业的情感分析</p>
             </div>
           ) : (
-            messages.map((message) => (
-              <div key={message.id} className={`flex gap-3 ${message.role === 'user' ? 'justify-end' : 'justify-start'}`}>
+            <div className="pt-4 space-y-4">
+              {messages.map((message) => (
+                <div key={message.id} className={`flex gap-3 ${message.role === 'user' ? 'justify-end' : 'justify-start'}`}>
                 {message.role === 'assistant' && (
                   <div className="w-8 h-8 rounded-full bg-pink-100 flex items-center justify-center flex-shrink-0">
                     <Bot className="h-4 w-4 text-pink-600" />
