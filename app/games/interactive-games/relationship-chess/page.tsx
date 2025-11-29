@@ -126,7 +126,7 @@ export default function RelationshipChessPage() {
   const [completedTasks, setCompletedTasks] = useState<Task[]>([])
   const [gameTime, setGameTime] = useState(0)
   const [timerActive, setTimerActive] = useState(false)
-  const [winner, setWinner] = useState(null)
+  const [winner, setWinner] = useState<number | null>(null)
 
   // 计时器
   useEffect(() => {
