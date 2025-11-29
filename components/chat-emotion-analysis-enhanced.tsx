@@ -142,60 +142,17 @@ export function ChatEmotionAnalysisEnhanced({
     }
   }
 
-  const generateResponseMessage = (analysis: any) => {
-    if (!analysis) {
-      return "🧠 您的描述很清晰，让我来分析一下。 我检测到您的主要情感是\"快乐\"，置信度为85.0%。"
-    }
 
-    const { overall, emotions, sentiment, suggestions } = analysis
-    
-    const emotionList = emotions || []
-    
-    const primaryEmotion = emotionList.length > 0 
-      ? emotionList.reduce((max: any, emotion: any) => 
-          (emotion.score || 0) > (max.score || 0) ? emotion : max
-        ).type || '未知情感'
-      : '未知情感'
-    
-    const confidence = (overall?.confidence || 0.75) * 100
-    
-    const sentimentType = overall?.sentiment || sentiment || 
-      (emotionList.length > 0 
-        ? emotionList.some((e: any) => e.type && (e.type.includes('快乐') || e.type.includes('开心'))) 
-          ? 'positive' 
-          : emotionList.some((e: any) => e.type && (e.type.includes('悲伤') || e.type.includes('愤怒'))) 
-            ? 'negative' 
-            : 'neutral'
-        : 'neutral')
-    
-    const responses = {
-      positive: [
-        "感受到您积极的心态！",
-        "听起来您心情不错，继续保持！",
-        "积极的情绪很有感染力！"
-      ],
-      negative: [
-        "我能理解您的感受，情绪需要被关注。",
-        "感谢您分享这些感受，情绪波动是正常的。",
-        "我感受到您的心情，希望这些分析能帮到您。"
-      ],
-      neutral: [
-        "感谢您分享这些内容。",
-        "您的描述很清晰，让我来分析一下。",
-        "这是一个很好的分享，让我来深入理解。"
-      ]
-    }
 
-    const sentimentKey = sentimentType === 'positive' ? 'positive' : 
-                        sentimentType === 'negative' ? 'negative' : 'neutral'
-    
-    const randomResponse = responses[sentimentKey][Math.floor(Math.random() * responses[sentimentKey].length)]
-    
-    return `🧠 ${randomResponse} 我检测到您的主要情感是"${primaryEmotion}"，置信度为${confidence.toFixed(1)}%。`
+  const handleKeyPress = (e: React.KeyboardEvent) => {
+    if (e.key === 'Enter' && !e.shiftKey && !loading) {
+      e.preventDefault()
+      handleSendMessage()
+    }
   }
 
   const handleKeyPress = (e: React.KeyboardEvent) => {
-    if (e.key === 'Enter' && !e.shiftKey) {
+    if (e.key === 'Enter' && !e.shiftKey && !loading) {
       e.preventDefault()
       handleSendMessage()
     }

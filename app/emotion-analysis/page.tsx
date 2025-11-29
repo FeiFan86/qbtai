@@ -18,26 +18,39 @@ export default function EmotionAnalysisPage() {
   const [isAnalyzing, setIsAnalyzing] = useState(false)
   const [analysisProgress, setAnalysisProgress] = useState(0)
   const resultRef = useRef<HTMLDivElement>(null)
+  const progressIntervalRef = useRef<NodeJS.Timeout | null>(null)
+
+  // 组件卸载时清理定时器
+  useEffect(() => {
+    return () => {
+      if (progressIntervalRef.current) {
+        clearInterval(progressIntervalRef.current)
+      }
+    }
+  }, [])
 
   const handleNewMessage = (message: any) => {
-    if (message.analysis) {
-      setLatestAnalysis(message.analysis)
-      // 自动滚动到结果区域
-      setTimeout(() => {
-        resultRef.current?.scrollIntoView({ behavior: 'smooth' })
-      }, 100)
-    }
+    // 新实现中不在消息中包含分析结果，所以这里不需要处理
+    // 所有分析结果都通过 handleAnalysisComplete 回调处理
   }
 
   const handleAnalysisStart = () => {
     setIsAnalyzing(true)
     setAnalysisProgress(0)
     
+    // 清除之前的定时器
+    if (progressIntervalRef.current) {
+      clearInterval(progressIntervalRef.current)
+    }
+    
     // 模拟分析进度
-    const progressInterval = setInterval(() => {
+    progressIntervalRef.current = setInterval(() => {
       setAnalysisProgress(prev => {
         if (prev >= 90) {
-          clearInterval(progressInterval)
+          if (progressIntervalRef.current) {
+            clearInterval(progressIntervalRef.current)
+            progressIntervalRef.current = null
+          }
           return 90
         }
         return prev + 10
@@ -46,7 +59,10 @@ export default function EmotionAnalysisPage() {
     
     // 2秒后完成进度
     setTimeout(() => {
-      clearInterval(progressInterval)
+      if (progressIntervalRef.current) {
+        clearInterval(progressIntervalRef.current)
+        progressIntervalRef.current = null
+      }
       setAnalysisProgress(100)
       setTimeout(() => setIsAnalyzing(false), 1000)
     }, 2000)
