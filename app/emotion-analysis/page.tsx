@@ -1,6 +1,6 @@
 'use client'
 
-import { useState } from 'react'
+import { useState, useRef } from 'react'
 import { Navigation } from '@/components/navigation'
 import { Footer } from '@/components/footer'
 import { Button } from '@/components/ui/button'
@@ -15,11 +15,54 @@ import { SocialSuggestions } from '@/components/social-suggestions'
 export default function EmotionAnalysisPage() {
   const [activeTab, setActiveTab] = useState('chat')
   const [latestAnalysis, setLatestAnalysis] = useState<any>(null)
+  const [isAnalyzing, setIsAnalyzing] = useState(false)
+  const [analysisProgress, setAnalysisProgress] = useState(0)
+  const resultRef = useRef<HTMLDivElement>(null)
 
   const handleNewMessage = (message: any) => {
     if (message.analysis) {
       setLatestAnalysis(message.analysis)
+      // 自动滚动到结果区域
+      setTimeout(() => {
+        resultRef.current?.scrollIntoView({ behavior: 'smooth' })
+      }, 100)
     }
+  }
+
+  const handleAnalysisStart = () => {
+    setIsAnalyzing(true)
+    setAnalysisProgress(0)
+    
+    // 模拟分析进度
+    const progressInterval = setInterval(() => {
+      setAnalysisProgress(prev => {
+        if (prev >= 90) {
+          clearInterval(progressInterval)
+          return 90
+        }
+        return prev + 10
+      })
+    }, 200)
+    
+    // 2秒后完成进度
+    setTimeout(() => {
+      clearInterval(progressInterval)
+      setAnalysisProgress(100)
+      setTimeout(() => setIsAnalyzing(false), 1000)
+    }, 2000)
+  }
+
+  const handleAnalysisComplete = (analysis: any) => {
+    setAnalysisProgress(100)
+    setLatestAnalysis(analysis)
+    setTimeout(() => {
+      setIsAnalyzing(false)
+      setAnalysisProgress(0)
+      // 自动滚动到结果区域
+      setTimeout(() => {
+        resultRef.current?.scrollIntoView({ behavior: 'smooth' })
+      }, 100)
+    }, 500)
   }
 
   // 情感分析场景示例
@@ -151,13 +194,50 @@ export default function EmotionAnalysisPage() {
                     </CardDescription>
                   </CardHeader>
                   <CardContent>
-                    <ChatEmotionAnalysisEnhanced onNewMessage={handleNewMessage} showTitle={false} />
+                    <ChatEmotionAnalysisEnhanced 
+                      onNewMessage={handleNewMessage} 
+                      onAnalysisStart={handleAnalysisStart}
+                      onAnalysisComplete={handleAnalysisComplete}
+                      showTitle={false} 
+                    />
                   </CardContent>
                 </Card>
+
+                {/* 分析进度条 */}
+                {isAnalyzing && (
+                  <Card>
+                    <CardContent className="pt-6">
+                      <div className="space-y-2">
+                        <div className="flex justify-between items-center">
+                          <span className="text-sm text-gray-600">正在分析您的情感...</span>
+                          <span className="text-sm font-medium text-purple-600">{analysisProgress}%</span>
+                        </div>
+                        <div className="w-full bg-gray-200 rounded-full h-2 overflow-hidden">
+                          <div 
+                            className="h-full bg-gradient-to-r from-pink-500 to-purple-500 rounded-full transition-all duration-300 ease-out"
+                            style={{ width: `${analysisProgress}%` }}
+                          ></div>
+                        </div>
+                        <div className="text-xs text-gray-500 space-y-1">
+                          {analysisProgress < 30 && <div>🧠 正在解析您的情感表达...</div>}
+                          {analysisProgress >= 30 && analysisProgress < 60 && <div>💭 正在分析情感倾向...</div>}
+                          {analysisProgress >= 60 && analysisProgress < 90 && <div>📊 正在生成情感报告...</div>}
+                          {analysisProgress >= 90 && <div>✨ 分析完成，正在生成建议...</div>}
+                        </div>
+                      </div>
+                    </CardContent>
+                  </Card>
+                )}
                 
                 {/* 实时分析结果 */}
                 {latestAnalysis && (
-                  <div className="space-y-4">
+                  <div ref={resultRef} className="space-y-4 scroll-mt-20">
+                    <div className="text-center mb-4">
+                      <div className="inline-flex items-center gap-2 px-4 py-2 bg-green-100 text-green-800 rounded-full">
+                        <CheckCircle className="h-5 w-5" />
+                        <span className="font-medium">分析完成</span>
+                      </div>
+                    </div>
                     <EmotionAnalysisResult result={latestAnalysis} />
                     <SocialSuggestions result={latestAnalysis} />
                   </div>

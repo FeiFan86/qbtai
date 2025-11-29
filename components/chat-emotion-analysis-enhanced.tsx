@@ -19,10 +19,19 @@ interface Message {
 
 interface ChatEmotionAnalysisProps {
   onNewMessage?: (message: Message) => void
+  onAnalysisStart?: () => void
+  onAnalysisComplete?: (analysis: any) => void
+  onGenerateResult?: (messages: Message[]) => void
   showTitle?: boolean
 }
 
-export function ChatEmotionAnalysisEnhanced({ onNewMessage, showTitle = true }: ChatEmotionAnalysisProps) {
+export function ChatEmotionAnalysisEnhanced({ 
+  onNewMessage, 
+  onAnalysisStart,
+  onAnalysisComplete,
+  onGenerateResult,
+  showTitle = true 
+}: ChatEmotionAnalysisProps) {
   const [messages, setMessages] = useState<Message[]>([])
   const [inputText, setInputText] = useState('')
   const [apiError, setApiError] = useState<string | null>(null)
@@ -79,45 +88,40 @@ export function ChatEmotionAnalysisEnhanced({ onNewMessage, showTitle = true }: 
     setLoading(true)
 
     try {
-      const response = await fetch('/api/emotion/analyze', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({ 
-          input: inputText.trim(),
-          type: 'text',
-          context: messages.filter(m => m.role === 'user').map(m => m.content)
-        }),
-      })
-
-      if (!response.ok) {
-        throw new Error(`HTTP ${response.status}: ${response.statusText}`)
-      }
-
-      const result = await response.json()
-
+      // 模拟简单的回复，不进行实际分析
+      const responses = [
+        "我理解了您的感受。请继续分享您的想法，我会记录下来。",
+        "谢谢您的分享。还有其他想要表达的吗？",
+        "我正在倾听。请继续，等您觉得说完了，可以点击生成结果按钮。",
+        "我明白了。您的感受很重要，请继续表达。",
+        "感谢您分享这些。请继续，我会帮助您分析。"
+      ]
+      
+      const randomResponse = responses[Math.floor(Math.random() * responses.length)]
+      
       const assistantMessage: Message = {
         id: (Date.now() + 1).toString(),
         role: 'assistant',
-        content: generateResponseMessage(result.data || result),
-        timestamp: new Date(),
-        analysis: result.data || result
+        content: randomResponse,
+        timestamp: new Date()
       }
 
+      // 模拟API延迟
+      await new Promise(resolve => setTimeout(resolve, 800))
+      
       setMessages(prev => [...prev, assistantMessage])
       onNewMessage?.(assistantMessage)
 
     } catch (error) {
-      console.error('分析错误:', error)
+      console.error('发送消息错误:', error)
       
-      const errorMessage = error instanceof Error ? error.message : '分析请求失败，请重试'
+      const errorMessage = error instanceof Error ? error.message : '发送失败，请重试'
       setApiError(errorMessage)
       
       const assistantMessage: Message = {
         id: (Date.now() + 1).toString(),
         role: 'assistant',
-        content: `抱歉，分析过程中出现了错误：${errorMessage}。请稍后重试或联系客服。`,
+        content: `抱歉，发送过程中出现了错误：${errorMessage}。请稍后重试。`,
         timestamp: new Date()
       }
       
@@ -183,6 +187,68 @@ export function ChatEmotionAnalysisEnhanced({ onNewMessage, showTitle = true }: 
     if (e.key === 'Enter' && !e.shiftKey) {
       e.preventDefault()
       handleSendMessage()
+    }
+  }
+
+  const handleGenerateResult = async () => {
+    if (messages.length === 0) return
+    
+    const userMessages = messages.filter(m => m.role === 'user')
+    if (userMessages.length === 0) return
+    
+    setLoading(true)
+    setApiError(null)
+    
+    try {
+      const response = await fetch('/api/emotion/generate-result', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ 
+          messages: userMessages,
+        }),
+      })
+
+      if (!response.ok) {
+        throw new Error(`HTTP ${response.status}: ${response.statusText}`)
+      }
+
+      const result = await response.json()
+      
+      if (result.success && result.data) {
+        const assistantMessage: Message = {
+          id: (Date.now() + 1).toString(),
+          role: 'assistant',
+          content: '基于您的所有对话，我已经生成了综合的情感分析结果。请查看下方的详细报告。',
+          timestamp: new Date(),
+          analysis: result.data
+        }
+
+        setMessages(prev => [...prev, assistantMessage])
+        onNewMessage?.(assistantMessage)
+        onGenerateResult?.(messages)
+        onAnalysisComplete?.(result.data)
+      } else {
+        throw new Error(result.error || '生成结果失败')
+      }
+
+    } catch (error) {
+      console.error('生成结果错误:', error)
+      
+      const errorMessage = error instanceof Error ? error.message : '生成结果失败，请重试'
+      setApiError(errorMessage)
+      
+      const assistantMessage: Message = {
+        id: (Date.now() + 1).toString(),
+        role: 'assistant',
+        content: `抱歉，生成结果时出现了错误：${errorMessage}。请稍后重试。`,
+        timestamp: new Date()
+      }
+      
+      setMessages(prev => [...prev, assistantMessage])
+    } finally {
+      setLoading(false)
     }
   }
 
@@ -382,30 +448,47 @@ export function ChatEmotionAnalysisEnhanced({ onNewMessage, showTitle = true }: 
             className="resize-none"
             disabled={loading}
           />
-          <div className="flex justify-between items-center">
-            <Badge variant="outline" className="text-xs">
-              {messages.length} 条消息
-            </Badge>
-            <div className="flex gap-2">
-              {apiError && (
+          <div className="flex flex-col gap-3">
+            {/* 生成结果按钮 */}
+            {messages.length > 0 && (
+              <div className="flex justify-center">
                 <Button 
-                  variant="outline" 
-                  size="sm" 
-                  onClick={handleRetry}
-                  className="flex items-center gap-1"
+                  onClick={handleGenerateResult} 
+                  disabled={loading}
+                  variant="pink"
+                  className="flex items-center gap-2 px-6"
                 >
-                  <RefreshCw className="h-4 w-4" />
-                  重试
+                  {loading ? <LoadingSpinner size="sm" /> : <Brain className="h-4 w-4" />}
+                  生成情感分析结果
                 </Button>
-              )}
-              <Button 
-                onClick={handleSendMessage} 
-                disabled={!inputText.trim() || loading}
-                className="flex items-center gap-2"
-              >
-                {loading ? <LoadingSpinner size="sm" /> : <Send className="h-4 w-4" />}
-                发送
-              </Button>
+              </div>
+            )}
+            
+            <div className="flex justify-between items-center">
+              <Badge variant="outline" className="text-xs">
+                {messages.length} 条消息
+              </Badge>
+              <div className="flex gap-2">
+                {apiError && (
+                  <Button 
+                    variant="outline" 
+                    size="sm" 
+                    onClick={handleRetry}
+                    className="flex items-center gap-1"
+                  >
+                    <RefreshCw className="h-4 w-4" />
+                    重试
+                  </Button>
+                )}
+                <Button 
+                  onClick={handleSendMessage} 
+                  disabled={!inputText.trim() || loading}
+                  className="flex items-center gap-2"
+                >
+                  {loading ? <LoadingSpinner size="sm" /> : <Send className="h-4 w-4" />}
+                  发送
+                </Button>
+              </div>
             </div>
           </div>
         </div>

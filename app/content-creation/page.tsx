@@ -1,6 +1,6 @@
 'use client'
 
-import { useState } from 'react'
+import { useState, useRef } from 'react'
 import { Navigation } from '@/components/navigation'
 import { Footer } from '@/components/footer'
 import { Button } from '@/components/ui/button'
@@ -20,12 +20,26 @@ export default function ContentCreationPage() {
   const [length, setLength] = useState('medium')
   const [isGenerating, setIsGenerating] = useState(false)
   const [generatedContent, setGeneratedContent] = useState<any>(null)
+  const [generationProgress, setGenerationProgress] = useState(0)
+  const resultRef = useRef<HTMLDivElement>(null)
 
   const handleGenerate = async () => {
     if (!prompt.trim()) return
     
     setIsGenerating(true)
     setGeneratedContent(null) // 重置之前的内容
+    setGenerationProgress(0)
+    
+    // 模拟生成进度
+    const progressInterval = setInterval(() => {
+      setGenerationProgress(prev => {
+        if (prev >= 90) {
+          clearInterval(progressInterval)
+          return 90
+        }
+        return prev + 10
+      })
+    }, 200)
     
     try {
       console.log('开始使用火山引擎API生成内容...')
@@ -47,16 +61,33 @@ export default function ContentCreationPage() {
       console.log('API生成结果:', result)
       
       if (response.ok && result.success && result.data) {
-        setGeneratedContent(result.data)
+        clearInterval(progressInterval)
+        setGenerationProgress(100)
+        
+        // 短暂延迟后设置结果并跳转
+        setTimeout(() => {
+          setGeneratedContent(result.data)
+          // 自动滚动到结果区域
+          setTimeout(() => {
+            resultRef.current?.scrollIntoView({ behavior: 'smooth' })
+          }, 100)
+        }, 300)
       } else {
+        clearInterval(progressInterval)
         console.error('生成失败:', result.error || '未知错误')
-        alert('内容生成失败：' + (result.error || '未知错误，请稍后重试'))
+        const errorMessage = result.error || '生成失败，请稍后重试'
+        alert('内容生成失败：' + errorMessage)
       }
     } catch (error) {
+      clearInterval(progressInterval)
       console.error('请求错误:', error)
       alert('网络错误，请检查连接后重试')
     } finally {
-      setIsGenerating(false)
+      // 确保进度条完成
+      setTimeout(() => {
+        setIsGenerating(false)
+        setGenerationProgress(0)
+      }, 2000)
     }
   }
 
@@ -314,15 +345,49 @@ export default function ContentCreationPage() {
                 </CardContent>
               </Card>
 
+              {/* 生成进度条 */}
+              {isGenerating && (
+                <Card>
+                  <CardContent className="pt-6">
+                    <div className="space-y-2">
+                      <div className="flex justify-between items-center">
+                        <span className="text-sm text-gray-600">正在为您生成内容...</span>
+                        <span className="text-sm font-medium text-purple-600">{generationProgress}%</span>
+                      </div>
+                      <div className="w-full bg-gray-200 rounded-full h-2 overflow-hidden">
+                        <div 
+                          className="h-full bg-gradient-to-r from-pink-500 to-purple-500 rounded-full transition-all duration-300 ease-out"
+                          style={{ width: `${generationProgress}%` }}
+                        ></div>
+                      </div>
+                      <div className="text-xs text-gray-500 space-y-1">
+                        {generationProgress < 30 && <div>💭 正在理解您的需求...</div>}
+                        {generationProgress >= 30 && generationProgress < 60 && <div>🎨 正在构思内容框架...</div>}
+                        {generationProgress >= 60 && generationProgress < 90 && <div>✍️ 正在生成精彩内容...</div>}
+                        {generationProgress >= 90 && <div>✨ 内容完成，正在优化格式...</div>}
+                      </div>
+                    </div>
+                  </CardContent>
+                </Card>
+              )}
+
             {/* 生成结果 */}
             {generatedContent && (
-              <GeneratedContent 
-                content={generatedContent} 
-                onCopy={copyToClipboard}
-                onRegenerate={handleGenerate}
-                onDownload={downloadContent}
-                onShare={shareContent}
-              />
+              <div ref={resultRef} className="space-y-4 scroll-mt-20">
+                <div className="text-center mb-4">
+                  <div className="inline-flex items-center gap-2 px-4 py-2 bg-green-100 text-green-800 rounded-full">
+                    <CheckCircle className="h-5 w-5" />
+                    <span className="font-medium">生成完成</span>
+                  </div>
+                </div>
+                <GeneratedContent 
+                  content={generatedContent} 
+                  onCopy={copyToClipboard}
+                  onRegenerate={handleGenerate}
+                  onDownload={downloadContent}
+                  onShare={shareContent}
+                />
+              </div>
             )}
 
             {/* 写作技巧 */}

@@ -1,10 +1,10 @@
 'use client'
 
-import { useState } from 'react'
+import { useState, useRef } from 'react'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from './ui/card'
 import { Badge } from './ui/badge'
 import { Button } from './ui/button'
-import { Heart, Frown, Meh, Smile, Laugh, ChevronDown, ChevronUp, Info } from 'lucide-react'
+import { Heart, Frown, Meh, Smile, Laugh, ChevronDown, ChevronUp, Info, Download } from 'lucide-react'
 
 interface Emotion {
   type: string
@@ -28,6 +28,43 @@ interface EmotionAnalysisResultProps {
 
 export function EmotionAnalysisResult({ result, compact = false }: EmotionAnalysisResultProps) {
   const [expandedSections, setExpandedSections] = useState({
+    emotions: false,
+    keywords: false,
+    summary: false
+  })
+  const resultRef = useRef<HTMLDivElement>(null)
+  
+  const exportToImage = async () => {
+    if (!resultRef.current) return
+    
+    try {
+      // 使用html2canvas库将内容转换为图片
+      const html2canvas = (await import('html2canvas')).default
+      const canvas = await html2canvas(resultRef.current, {
+        backgroundColor: '#ffffff',
+        scale: 2, // 提高图片质量
+        logging: false,
+        useCORS: true
+      })
+      
+      // 转换为图片并下载
+      canvas.toBlob((blob) => {
+        if (blob) {
+          const url = URL.createObjectURL(blob)
+          const a = document.createElement('a')
+          a.href = url
+          a.download = `情感分析报告_${new Date().toLocaleDateString('zh-CN').replace(/\//g, '-')}.png`
+          document.body.appendChild(a)
+          a.click()
+          document.body.removeChild(a)
+          URL.revokeObjectURL(url)
+        }
+      }, 'image/png')
+    } catch (error) {
+      console.error('导出图片失败:', error)
+      alert('导出图片失败，请重试')
+    }
+  }
     emotions: true,
     keywords: true,
     summary: true
@@ -83,8 +120,35 @@ export function EmotionAnalysisResult({ result, compact = false }: EmotionAnalys
                       result.overall.sentiment === 'negative' ? '消极' : '中性'
 
   return (
-    <Card className="card-hover animate-fade-in-up">
-      <CardHeader className="pb-4">
+    <div ref={resultRef}>
+      <Card className="card-hover animate-fade-in-up">
+        <CardHeader className="pb-4">
+          <div className="flex items-center justify-between">
+            <CardTitle className="flex items-center gap-3">
+              <div className="relative">
+                <Heart className="h-6 w-6 text-pink-500" />
+                <div className="absolute -inset-1 bg-pink-100 rounded-full opacity-0 group-hover:opacity-100 transition-opacity -z-10"></div>
+              </div>
+              <span>情感分析结果</span>
+            </CardTitle>
+            <div className="flex items-center gap-2">
+              <Badge variant="outline" className="flex items-center gap-1">
+                <Info className="h-3 w-3" />
+                AI分析
+              </Badge>
+              {!compact && (
+                <Button 
+                  variant="outline" 
+                  size="sm" 
+                  onClick={exportToImage}
+                  className="flex items-center gap-1"
+                >
+                  <Download className="h-4 w-4" />
+                  导出图片
+                </Button>
+              )}
+            </div>
+          </div>
         <div className="flex items-center justify-between">
           <CardTitle className="flex items-center gap-3">
             <div className="relative">
@@ -98,9 +162,10 @@ export function EmotionAnalysisResult({ result, compact = false }: EmotionAnalys
             AI分析
           </Badge>
         </div>
-        <CardDescription className="text-sm">
-          基于您输入内容的深度情感分析
-        </CardDescription>
+          <CardDescription className="text-sm">
+            基于您输入内容的深度情感分析
+          </CardDescription>
+        </div>
       </CardHeader>
       
       <CardContent className="space-y-6">
@@ -224,7 +289,8 @@ export function EmotionAnalysisResult({ result, compact = false }: EmotionAnalys
             </div>
           )}
         </div>
-      </CardContent>
-    </Card>
+        </CardContent>
+      </Card>
+    </div>
   )
 }
