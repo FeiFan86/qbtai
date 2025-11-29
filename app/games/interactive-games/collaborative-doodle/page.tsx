@@ -153,7 +153,7 @@ export default function CollaborativeDoodlePage() {
   }, [timerActive, sessionTime])
 
   // 格式化时间
-  const formatTime = (seconds) => {
+  const formatTime = (seconds: number) => {
     const mins = Math.floor(seconds / 60)
     const secs = seconds % 60
     return `${mins.toString().padStart(2, '0')}:${secs.toString().padStart(2, '0')}`
