@@ -111,10 +111,7 @@ export function ChatEmotionAnalysisEnhanced({ onNewMessage, showTitle = true }: 
       setMessages(prev => [...prev, assistantMessage])
       onNewMessage?.(assistantMessage)
 
-    } finally {
-      setLoading(false)
-    }
-  } catch (error) {
+    } catch (error) {
       console.error('分析错误:', error)
       
       // 优雅降级：使用模拟数据
@@ -131,6 +128,8 @@ export function ChatEmotionAnalysisEnhanced({ onNewMessage, showTitle = true }: 
       }
       
       setMessages(prev => [...prev, assistantMessage])
+    } finally {
+      setLoading(false)
     }
   }
 
