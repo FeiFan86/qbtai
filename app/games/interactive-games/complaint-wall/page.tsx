@@ -471,7 +471,7 @@ export default function ComplaintWallPage() {
                             共鸣回应
                           </h4>
                           <div className="space-y-3">
-                            {complaint.replies.map((reply) => (
+                            {complaint.replies.map((reply: any) => (
                               <div key={reply.id} className="bg-gray-50 p-3 rounded-lg">
                                 <div className="flex items-center gap-2 mb-2">
                                   <div className="w-6 h-6 rounded-full bg-orange-100 flex items-center justify-center">
