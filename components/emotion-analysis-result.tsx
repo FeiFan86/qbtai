@@ -2,7 +2,7 @@
 
 import { useState } from 'react'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from './ui/card'
-import { Badge } from '@/components/ui/badge'
+import { Badge } from './ui/badge'
 import { Progress } from './ui/progress'
 import { Button } from './ui/button'
 import { Heart, Frown, Meh, Smile, Laugh, ChevronDown, ChevronUp, Info } from 'lucide-react'
