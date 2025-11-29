@@ -30,6 +30,20 @@ import {
 } from 'lucide-react'
 import Link from 'next/link'
 
+// 任务类型定义
+interface Task {
+  id: string
+  category: string
+  title: string
+  description: string
+  difficulty: string
+  timeNeeded: string
+  points: number
+  icon: JSX.Element
+  completed: boolean
+  tips: string
+}
+
 // 情侣盲盒任务数据
 const coupleTasks = [
   {
@@ -173,7 +187,7 @@ const monthlyTasks = [
 
 export default function CoupleBlindBoxPage() {
   const [isUnboxing, setIsUnboxing] = useState(false)
-  const [selectedTask, setSelectedTask] = useState(null)
+  const [selectedTask, setSelectedTask] = useState<Task | null>(null)
   const [completedTasks, setCompletedTasks] = useState<string[]>([])
   const [userPoints, setUserPoints] = useState(120)
   const [currentStreak, setCurrentStreak] = useState(3)
