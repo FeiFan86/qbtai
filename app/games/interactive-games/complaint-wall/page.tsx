@@ -242,7 +242,7 @@ export default function ComplaintWallPage() {
       return [...complaints].sort((a, b) => b.likes - a.likes)
     } else if (activeTab === 'latest') {
       // 按时间排序
-      return [...complaints].sort((a, b) => b.timestamp - a.timestamp)
+      return [...complaints].sort((a, b) => b.timestamp.getTime() - a.timestamp.getTime())
     } else {
       // 按分类筛选
       return complaints.filter(complaint => complaint.category === activeTab)
