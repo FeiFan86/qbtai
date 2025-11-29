@@ -78,6 +78,7 @@ export function ChatEmotionAnalysisEnhanced({ onNewMessage, showTitle = true }: 
     setMessages(prev => [...prev, userMessage])
     setInputText('')
     setApiError(null)
+    setLoading(true)
 
     try {
       // 简单的API调用实现
@@ -110,7 +111,10 @@ export function ChatEmotionAnalysisEnhanced({ onNewMessage, showTitle = true }: 
       setMessages(prev => [...prev, assistantMessage])
       onNewMessage?.(assistantMessage)
 
-    } catch (error) {
+    } finally {
+      setLoading(false)
+    }
+  } catch (error) {
       console.error('分析错误:', error)
       
       // 优雅降级：使用模拟数据
