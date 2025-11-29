@@ -130,7 +130,7 @@ export default function RelationshipChessPage() {
 
   // 计时器
   useEffect(() => {
-    let interval
+    let interval: NodeJS.Timeout | null = null
     if (timerActive && !winner) {
       interval = setInterval(() => {
         setGameTime(prevTime => prevTime + 1)
