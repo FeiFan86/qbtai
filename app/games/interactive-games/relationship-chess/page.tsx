@@ -200,7 +200,7 @@ export default function RelationshipChessPage() {
             // 检查当前格子类型
             const currentSpace = boardSpaces[newPosition]
             if (currentSpace.type !== 'normal' && currentSpace.type !== 'start' && currentSpace.type !== 'finish') {
-              generateTask(currentSpace.type)
+              generateTask(currentSpace.type as 'question' | 'challenge' | 'gift')
             } else {
               // 普通格子，切换玩家
               switchPlayer()
@@ -217,7 +217,7 @@ export default function RelationshipChessPage() {
             // 检查当前格子类型
             const currentSpace = boardSpaces[newPosition]
             if (currentSpace.type !== 'normal' && currentSpace.type !== 'start' && currentSpace.type !== 'finish') {
-              generateTask(currentSpace.type)
+              generateTask(currentSpace.type as 'question' | 'challenge' | 'gift')
             } else {
               // 普通格子，切换玩家
               switchPlayer()
