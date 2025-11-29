@@ -141,14 +141,14 @@ export function EmotionAnalysisResult({ result, compact = false }: EmotionAnalys
             <div className="flex items-center gap-2">
               <Smile className="h-4 w-4 text-purple-500" />
               <span className="font-medium">情感细分</span>
-              <Badge variant="secondary" className="ml-2">{result.emotions.length}种情绪</Badge>
+              <Badge variant="secondary" className="ml-2">{(result.emotions || []).length}种情绪</Badge>
             </div>
             {expandedSections.emotions ? <ChevronUp className="h-4 w-4" /> : <ChevronDown className="h-4 w-4" />}
           </Button>
           
           {expandedSections.emotions && (
             <div className="px-4 pb-4 space-y-3 animate-slide-in-right">
-              {result.emotions.map((emotion, index) => (
+              {(result.emotions || []).map((emotion, index) => (
                 <div key={index} className="space-y-2">
                   <div className="flex items-center justify-between">
                     <div className="flex items-center gap-2">
@@ -181,15 +181,15 @@ export function EmotionAnalysisResult({ result, compact = false }: EmotionAnalys
             <div className="flex items-center gap-2">
               <Laugh className="h-4 w-4 text-blue-500" />
               <span className="font-medium">关键词提取</span>
-              <Badge variant="secondary" className="ml-2">{result.keywords.length}个关键词</Badge>
+              <Badge variant="secondary" className="ml-2">{(result.keywords || []).length}个关键词</Badge>
             </div>
             {expandedSections.keywords ? <ChevronUp className="h-4 w-4" /> : <ChevronDown className="h-4 w-4" />}
           </Button>
           
-          {expandedSections.keywords && (
+              {expandedSections.keywords && (
             <div className="px-4 pb-4 animate-slide-in-right">
               <div className="flex flex-wrap gap-2">
-                {result.keywords.map((keyword, index) => (
+                {(result.keywords || []).map((keyword, index) => (
                   <Badge 
                     key={index} 
                     variant="outline" 
