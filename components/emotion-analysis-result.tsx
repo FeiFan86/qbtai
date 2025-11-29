@@ -145,24 +145,10 @@ export function EmotionAnalysisResult({ result, compact = false }: EmotionAnalys
               )}
             </div>
           </div>
-        <div className="flex items-center justify-between">
-          <CardTitle className="flex items-center gap-3">
-            <div className="relative">
-              <Heart className="h-6 w-6 text-pink-500" />
-              <div className="absolute -inset-1 bg-pink-100 rounded-full opacity-0 group-hover:opacity-100 transition-opacity -z-10"></div>
-            </div>
-            <span>情感分析结果</span>
-          </CardTitle>
-          <Badge variant="outline" className="flex items-center gap-1">
-            <Info className="h-3 w-3" />
-            AI分析
-          </Badge>
-        </div>
           <CardDescription className="text-sm">
             基于您输入内容的深度情感分析
           </CardDescription>
-        </div>
-      </CardHeader>
+        </CardHeader>
       
       <CardContent className="space-y-6">
         {/* 整体情感倾向 */}
@@ -246,7 +232,7 @@ export function EmotionAnalysisResult({ result, compact = false }: EmotionAnalys
             {expandedSections.keywords ? <ChevronUp className="h-4 w-4" /> : <ChevronDown className="h-4 w-4" />}
           </Button>
           
-              {expandedSections.keywords && (
+          {expandedSections.keywords && (
             <div className="px-4 pb-4 animate-slide-in-right">
               <div className="flex flex-wrap gap-2">
                 {(result.keywords || []).map((keyword, index) => (
