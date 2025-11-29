@@ -9,8 +9,6 @@ import { Brain, Send, User, Bot, RotateCw, MessageCircle, RefreshCw, Download, S
 import { EmotionAnalysisResult } from './emotion-analysis-result'
 import { LoadingSpinner, ErrorMessage, LoadingOverlay } from './loading-spinner'
 import { MessageSkeleton } from './loading-skeleton'
-import { useApiCall, ErrorHandler, generateMockData } from '@/lib/loading-utils'
-import { ExportManager, copyToClipboard, shareToSocialMedia } from '@/lib/export-utils'
 
 interface Message {
   id: string
@@ -29,10 +27,8 @@ export function ChatEmotionAnalysisEnhanced({ onNewMessage, showTitle = true }: 
   const [messages, setMessages] = useState<Message[]>([])
   const [inputText, setInputText] = useState('')
   const [apiError, setApiError] = useState<string | null>(null)
+  const [loading, setLoading] = useState(false)
   const messagesEndRef = useRef<HTMLDivElement>(null)
-  
-  // 使用改进的API调用钩子
-  const { loading, error, callApi, reset } = useApiCall<any>()
 
   const scrollToBottom = () => {
     messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' })
