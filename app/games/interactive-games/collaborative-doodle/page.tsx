@@ -102,7 +102,7 @@ export default function CollaborativeDoodlePage() {
   const [isDrawing, setIsDrawing] = useState(false)
   const [currentColor, setCurrentColor] = useState('#000000')
   const [brushSize, setBrushSize] = useState(5)
-  const [drawingHistory, setDrawingHistory] = useState([])
+  const [drawingHistory, setDrawingHistory] = useState<string[]>([])
   const [historyStep, setHistoryStep] = useState(-1)
   const [selectedTheme, setSelectedTheme] = useState(emotionThemes[0])
   const [currentPrompt, setCurrentPrompt] = useState('')
