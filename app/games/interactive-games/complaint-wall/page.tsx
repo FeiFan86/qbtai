@@ -157,7 +157,7 @@ export default function ComplaintWallPage() {
   const [selectedMood, setSelectedMood] = useState('frustrated')
 
   // 获取心情图标
-  const getMoodIcon = (mood) => {
+  const getMoodIcon = (mood: string) => {
     switch (mood) {
       case 'angry':
         return <Frown className="h-5 w-5 text-red-500" />
