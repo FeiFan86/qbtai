@@ -136,9 +136,15 @@ export default function RelationshipChessPage() {
         setGameTime(prevTime => prevTime + 1)
       }, 1000)
     } else if (!timerActive) {
-      clearInterval(interval)
+      if (interval) {
+        clearInterval(interval)
+      }
     }
-    return () => clearInterval(interval)
+    return () => {
+      if (interval) {
+        clearInterval(interval)
+      }
+    }
   }, [timerActive, winner])
 
   // 格式化时间
