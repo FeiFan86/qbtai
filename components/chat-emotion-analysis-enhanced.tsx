@@ -88,50 +88,40 @@ export function ChatEmotionAnalysisEnhanced({
     setLoading(true)
 
     try {
-      // 基于用户输入内容生成更自然的回复
-      const generateContextualResponse = (userInput: string): string => {
-        const lowerInput = userInput.toLowerCase()
-        
-        // 根据用户输入的情感内容给出相应的回复
-        if (lowerInput.includes('开心') || lowerInput.includes('高兴') || lowerInput.includes('快乐')) {
-          return "听起来您今天心情不错！能感受到您话语中的快乐，这真是太好了。还有什么让您开心的事情想要分享吗？"
-        } 
-        else if (lowerInput.includes('难过') || lowerInput.includes('伤心') || lowerInput.includes('难过') || lowerInput.includes('痛苦')) {
-          return "我能理解您现在的心情，每个人都会经历这样的时刻。感谢您愿意分享这些感受，这本身就是勇敢的表现。请继续说说看，我在这里倾听。"
-        }
-        else if (lowerInput.includes('生气') || lowerInput.includes('愤怒') || lowerInput.includes('不满')) {
-          return "我能感受到您话语中的情绪。生气是很自然的反应，说明这件事对您很重要。请继续告诉我发生了什么，我会认真听。"
-        }
-        else if (lowerInput.includes('工作') || lowerInput.includes('公司') || lowerInput.includes('老板')) {
-          return "工作确实是我们生活中的重要部分，有时候会带来各种挑战。您提到的工作情况听起来很有意思，能详细说说吗？"
-        }
-        else if (lowerInput.includes('家庭') || lowerInput.includes('父母') || lowerInput.includes('孩子')) {
-          return "家庭关系总是复杂而丰富的，既有温暖也可能有挑战。感谢您分享这些关于家庭的想法。还有其他想要表达的吗？"
-        }
-        else {
-          // 普通回复，根据输入长度选择
-          if (userInput.length > 50) {
-            return "感谢您如此详细的分享。我能感受到这些对您很重要。请继续，我会仔细倾听并记录下来。"
-          } else {
-            return "我理解了。请继续分享您的想法和感受，等您觉得说完了，可以点击生成结果按钮，我会为您进行综合分析。"
-          }
-        }
-      }
-      
-      const contextualResponse = generateContextualResponse(inputText.trim())
-      
-      const assistantMessage: Message = {
-        id: (Date.now() + 1).toString(),
-        role: 'assistant',
-        content: contextualResponse,
-        timestamp: new Date()
+      // 调用火山引擎API获取AI回复
+      const response = await fetch('/api/chat/emotion', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ 
+          message: inputText.trim(),
+          conversationHistory: messages.filter(m => m.role !== 'system').map(m => ({
+            role: m.role,
+            content: m.content
+          })).slice(-10) // 只保留最近10条消息作为上下文
+        }),
+      })
+
+      if (!response.ok) {
+        throw new Error(`HTTP ${response.status}: ${response.statusText}`)
       }
 
-      // 模拟API延迟
-      await new Promise(resolve => setTimeout(resolve, 800))
+      const result = await response.json()
       
-      setMessages(prev => [...prev, assistantMessage])
-      onNewMessage?.(assistantMessage)
+      if (result.success && result.data) {
+        const assistantMessage: Message = {
+          id: (Date.now() + 1).toString(),
+          role: 'assistant',
+          content: result.data.content || '我理解了您的感受。请继续分享您的想法。',
+          timestamp: new Date()
+        }
+
+        setMessages(prev => [...prev, assistantMessage])
+        onNewMessage?.(assistantMessage)
+      } else {
+        throw new Error(result.error || '获取AI回复失败')
+      }
 
     } catch (error) {
       console.error('发送消息错误:', error)
@@ -142,7 +132,7 @@ export function ChatEmotionAnalysisEnhanced({
       const assistantMessage: Message = {
         id: (Date.now() + 1).toString(),
         role: 'assistant',
-        content: `抱歉，发送过程中出现了错误：${errorMessage}。请稍后重试。`,
+        content: `抱歉，AI回复获取失败：${errorMessage}。请稍后重试。`,
         timestamp: new Date()
       }
       
@@ -238,18 +228,20 @@ export function ChatEmotionAnalysisEnhanced({
       const result = await response.json()
       
       if (result.success && result.data) {
+        // 生成结果不在对话框内显示，而是通过回调传递给父组件
+        onGenerateResult?.(messages)
+        onAnalysisComplete?.(result.data)
+        
+        // 添加一个简单的确认消息到对话框
         const assistantMessage: Message = {
           id: (Date.now() + 1).toString(),
           role: 'assistant',
-          content: '基于您的所有对话，我已经生成了综合的情感分析结果。请查看下方的详细报告。',
-          timestamp: new Date(),
-          analysis: result.data
+          content: '分析已完成！请查看下方的详细情感分析结果。',
+          timestamp: new Date()
         }
 
         setMessages(prev => [...prev, assistantMessage])
         onNewMessage?.(assistantMessage)
-        onGenerateResult?.(messages)
-        onAnalysisComplete?.(result.data)
       } else {
         throw new Error(result.error || '生成结果失败')
       }
@@ -412,12 +404,6 @@ export function ChatEmotionAnalysisEnhanced({
                     }`}>
                       <p className="text-sm leading-relaxed whitespace-pre-wrap">{message.content}</p>
                     </div>
-                    
-                    {message.role === 'assistant' && message.analysis && (
-                      <div className="animate-slide-in-right">
-                        <EmotionAnalysisResult result={message.analysis} compact />
-                      </div>
-                    )}
                     
                     <div className="flex items-center justify-end">
                       <p className="text-xs text-gray-400 flex items-center gap-1">
