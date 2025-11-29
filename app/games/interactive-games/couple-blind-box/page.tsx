@@ -413,7 +413,7 @@ export default function CoupleBlindBoxPage() {
                     <CheckCircle className="h-5 w-5 text-green-600" />
                     <div>
                       <p className="text-green-800 font-medium">任务完成！</p>
-                      <p className="text-green-600 text-sm">获得 {selectedTask.points} 积分，继续努力吧！</p>
+                      <p className="text-green-600 text-sm">获得 {selectedTask?.points || 0} 积分，继续努力吧！</p>
                     </div>
                   </div>
                 </div>
