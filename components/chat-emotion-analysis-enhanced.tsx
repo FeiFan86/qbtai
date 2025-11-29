@@ -117,9 +117,8 @@ export function ChatEmotionAnalysisEnhanced({ onNewMessage, showTitle = true }: 
       const assistantMessage: Message = {
         id: (Date.now() + 1).toString(),
         role: 'assistant',
-        content: generateResponseMessage(mockAnalysisData),
-        timestamp: new Date(),
-        analysis: mockAnalysisData
+        content: `抱歉，分析过程中出现了错误：${errorMessage}。请稍后重试或联系客服。`,
+        timestamp: new Date()
       }
       
       setMessages(prev => [...prev, assistantMessage])

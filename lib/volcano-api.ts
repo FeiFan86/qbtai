@@ -154,12 +154,6 @@ class VolcanoAPIService {
   async analyzeEmotion(request: EmotionAnalysisRequest): Promise<EmotionAnalysisResponse> {
     console.log('Analyzing emotion for:', { input: request.input, type: request.type })
     
-    // 检查API配置，如果API密钥为空则直接返回模拟数据
-    if (!this.apiKey || this.apiKey === '226be07e-95ad-4fec-a564-1963c6e04711' || this.apiKey.includes('your_api_key')) {
-      console.log('API Key is missing or invalid, using mock data')
-      return this.getMockEmotionAnalysis(request.input)
-    }
-    
     try {
       const systemPrompt = `你是一个专业的情感分析专家。请分析用户输入内容的情感，并以JSON格式返回结果。
       
@@ -239,19 +233,24 @@ class VolcanoAPIService {
             console.error('JSON extraction also failed:', extractError)
           }
           
-          // 如果JSON解析失败，返回模拟数据
-          console.log('JSON parsing failed, using mock data')
-          return this.getMockEmotionAnalysis(request.input)
+          // 如果JSON解析失败，返回错误
+          return {
+            success: false,
+            error: 'API响应解析失败，请稍后重试'
+          }
         }
       } else {
-        console.log('No valid response from API, using mock data')
-        return this.getMockEmotionAnalysis(request.input)
+        return {
+          success: false,
+          error: 'API未返回有效响应，请稍后重试'
+        }
       }
     } catch (error) {
       console.error('Emotion analysis error:', error)
-      // 在发生错误时返回模拟数据
-      console.log('API call failed, using mock data')
-      return this.getMockEmotionAnalysis(request.input)
+      return {
+        success: false,
+        error: '情感分析失败：' + (error instanceof Error ? error.message : '未知错误')
+      }
     }
   }
 
@@ -263,12 +262,6 @@ class VolcanoAPIService {
       conversationLength: request.conversation.length,
       scenario: request.scenario 
     })
-    
-    // 检查API配置，如果API密钥为空则直接返回模拟数据
-    if (!this.apiKey || this.apiKey === '226be07e-95ad-4fec-a564-1963c6e04711' || this.apiKey.includes('your_api_key')) {
-      console.log('API Key is missing or invalid, using mock data')
-      return this.getMockSocialAnalysis(request)
-    }
     
     try {
       const systemPrompt = `你是一个专业的社交沟通专家。请分析以下对话内容，并以严格的JSON格式返回分析结果。
@@ -340,19 +333,24 @@ class VolcanoAPIService {
             console.error('JSON extraction also failed:', extractError)
           }
           
-          // 如果JSON解析失败，返回模拟数据
-          console.log('JSON parsing failed, using mock data')
-          return this.getMockSocialAnalysis(request)
+          // 如果JSON解析失败，返回错误
+          return {
+            success: false,
+            error: 'API响应解析失败，请稍后重试'
+          }
         }
       } else {
-        console.log('No valid response from API, using mock data')
-        return this.getMockSocialAnalysis(request)
+        return {
+          success: false,
+          error: 'API未返回有效响应，请稍后重试'
+        }
       }
     } catch (error) {
       console.error('Social conversation analysis error:', error)
-      // 在发生错误时返回模拟数据
-      console.log('API call failed, using mock data')
-      return this.getMockSocialAnalysis(request)
+      return {
+        success: false,
+        error: '社交对话分析失败：' + (error instanceof Error ? error.message : '未知错误')
+      }
     }
   }
 

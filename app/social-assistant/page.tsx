@@ -72,7 +72,8 @@ export default function SocialAssistantPage() {
       } else {
         clearInterval(progressInterval)
         console.error('API返回错误:', result.error)
-        alert('分析失败：' + (result.error || '未知错误'))
+        const errorMessage = result.error || '分析失败，请稍后重试'
+        alert(errorMessage)
       }
     } catch (error) {
       clearInterval(progressInterval)
@@ -206,7 +207,7 @@ export default function SocialAssistantPage() {
                     对话分析
                   </CardTitle>
                   <CardDescription>
-                    输入对话内容，获取智能分析和建议
+                    输入对话内容，获取专业的社交分析和个性化改进建议
                   </CardDescription>
                 </CardHeader>
                 <CardContent className="space-y-4">
@@ -221,6 +222,10 @@ export default function SocialAssistantPage() {
                         <SelectItem value="professional">职场沟通</SelectItem>
                         <SelectItem value="romantic">亲密关系</SelectItem>
                         <SelectItem value="conflict">冲突处理</SelectItem>
+                        <SelectItem value="family">家庭关系</SelectItem>
+                        <SelectItem value="service">客户服务</SelectItem>
+                        <SelectItem value="education">教育场景</SelectItem>
+                        <SelectItem value="medical">医疗沟通</SelectItem>
                       </SelectContent>
                     </Select>
                   </div>
