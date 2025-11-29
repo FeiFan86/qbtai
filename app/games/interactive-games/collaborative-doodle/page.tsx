@@ -98,7 +98,7 @@ const emotionThemes = [
 ]
 
 export default function CollaborativeDoodlePage() {
-  const canvasRef = useRef(null)
+  const canvasRef = useRef<HTMLCanvasElement>(null)
   const [isDrawing, setIsDrawing] = useState(false)
   const [currentColor, setCurrentColor] = useState('#000000')
   const [brushSize, setBrushSize] = useState(5)
