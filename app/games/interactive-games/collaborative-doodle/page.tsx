@@ -827,18 +827,6 @@ const TemplateDialog = ({
   )
 }
 
-  {
-    id: 'love',
-    name: '爱',
-    color: '#FF69B4',
-    prompts: [
-      '画出你们第一次见面的场景',
-      '创作一个代表你们爱情的符号',
-      '画出一起度过的美好时光',
-      '用色彩表达爱的感觉'
-    ]
-  }
-
 // 模板选择对话框
 const TemplateDialog = ({ 
   isOpen, 
