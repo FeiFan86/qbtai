@@ -1,6 +1,26 @@
 'use client'
 
 import { useState, useEffect } from 'react'
+
+// 安全的 localStorage 访问函数
+const safeLocalStorage = {
+  getItem: (key: string) => {
+    if (typeof window !== 'undefined') {
+      return localStorage.getItem(key)
+    }
+    return null
+  },
+  setItem: (key: string, value: string) => {
+    if (typeof window !== 'undefined') {
+      localStorage.setItem(key, value)
+    }
+  },
+  removeItem: (key: string) => {
+    if (typeof window !== 'undefined') {
+      localStorage.removeItem(key)
+    }
+  }
+}
 import { Navigation } from '@/components/navigation'
 import { Footer } from '@/components/footer'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
@@ -160,7 +180,7 @@ export default function TruthOrDarePage() {
 
   useEffect(() => {
     // 加载保存的数据
-    const savedStats = localStorage.getItem('truthOrDareStats')
+    const savedStats = safeLocalStorage.getItem('truthOrDareStats')
     if (savedStats) {
       try {
         setGameStats(JSON.parse(savedStats))
@@ -169,7 +189,7 @@ export default function TruthOrDarePage() {
       }
     }
 
-    const savedCards = localStorage.getItem('customTruthOrDareCards')
+    const savedCards = safeLocalStorage.getItem('customTruthOrDareCards')
     if (savedCards) {
       try {
         setCustomCards(JSON.parse(savedCards))
@@ -178,7 +198,7 @@ export default function TruthOrDarePage() {
       }
     }
 
-    const savedHistory = localStorage.getItem('truthOrDareHistory')
+    const savedHistory = safeLocalStorage.getItem('truthOrDareHistory')
     if (savedHistory) {
       try {
         setHistory(JSON.parse(savedHistory))
@@ -225,7 +245,7 @@ export default function TruthOrDarePage() {
     }
     setGameStats(newStats)
     setCurrentStreak(prev => prev + 1)
-    localStorage.setItem('truthOrDareStats', JSON.stringify(newStats))
+    safeLocalStorage.setItem('truthOrDareStats', JSON.stringify(newStats))
     
     // 添加到历史记录
     const newHistoryItem = {
@@ -235,7 +255,7 @@ export default function TruthOrDarePage() {
     }
     const updatedHistory = [newHistoryItem, ...history].slice(0, 20) // 保留最近20条
     setHistory(updatedHistory)
-    localStorage.setItem('truthOrDareHistory', JSON.stringify(updatedHistory))
+    safeLocalStorage.setItem('truthOrDareHistory', JSON.stringify(updatedHistory))
     
     if (soundEnabled) {
       playSound('reveal')
@@ -272,7 +292,7 @@ export default function TruthOrDarePage() {
     
     const updatedCards = [...customCards, newCard]
     setCustomCards(updatedCards)
-    localStorage.setItem('customTruthOrDareCards', JSON.stringify(updatedCards))
+    safeLocalStorage.setItem('customTruthOrDareCards', JSON.stringify(updatedCards))
     
     // 重置表单
     setNewCardContent('')

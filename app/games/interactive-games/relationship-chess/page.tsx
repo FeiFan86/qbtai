@@ -1,6 +1,26 @@
 'use client'
 
 import { useState, useEffect } from 'react'
+
+// 安全的 localStorage 访问函数
+const safeLocalStorage = {
+  getItem: (key: string) => {
+    if (typeof window !== 'undefined') {
+      return localStorage.getItem(key)
+    }
+    return null
+  },
+  setItem: (key: string, value: string) => {
+    if (typeof window !== 'undefined') {
+      localStorage.setItem(key, value)
+    }
+  },
+  removeItem: (key: string) => {
+    if (typeof window !== 'undefined') {
+      localStorage.removeItem(key)
+    }
+  }
+}
 import { Navigation } from '@/components/navigation'
 import { Footer } from '@/components/footer'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
@@ -185,7 +205,7 @@ export default function RelationshipChessPage() {
 
   // 加载游戏历史
   useEffect(() => {
-    const savedHistory = localStorage.getItem('relationshipChessHistory')
+    const savedHistory = safeLocalStorage.getItem('relationshipChessHistory')
     if (savedHistory) {
       try {
         setGameHistory(JSON.parse(savedHistory))
@@ -234,13 +254,13 @@ export default function RelationshipChessPage() {
       player1Name,
       player2Name
     }
-    localStorage.setItem('relationshipChessSave', JSON.stringify(gameState))
+    safeLocalStorage.setItem('relationshipChessSave', JSON.stringify(gameState))
     alert('游戏已保存！')
   }
 
   // 加载游戏
   const loadGame = () => {
-    const savedGame = localStorage.getItem('relationshipChessSave')
+    const savedGame = safeLocalStorage.getItem('relationshipChessSave')
     if (savedGame) {
       try {
         const gameState = JSON.parse(savedGame)
@@ -418,7 +438,7 @@ export default function RelationshipChessPage() {
     
     const updatedHistory = [record, ...gameHistory].slice(0, 10) // 保留最近10条记录
     setGameHistory(updatedHistory)
-    localStorage.setItem('relationshipChessHistory', JSON.stringify(updatedHistory))
+    safeLocalStorage.setItem('relationshipChessHistory', JSON.stringify(updatedHistory))
   }
 
   // 重置游戏
@@ -515,7 +535,7 @@ export default function RelationshipChessPage() {
                     <Play className="h-4 w-4 mr-2" />
                     开始游戏
                   </Button>
-                  {localStorage.getItem('relationshipChessSave') && (
+                  {safeLocalStorage.getItem('relationshipChessSave') && (
                     <Button onClick={loadGame} variant="outline">
                       <Save className="h-4 w-4 mr-2" />
                       加载游戏

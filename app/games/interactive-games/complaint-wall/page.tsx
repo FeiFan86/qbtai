@@ -1,6 +1,26 @@
 'use client'
 
 import { useState, useEffect } from 'react'
+
+// 安全的 localStorage 访问函数
+const safeLocalStorage = {
+  getItem: (key: string) => {
+    if (typeof window !== 'undefined') {
+      return localStorage.getItem(key)
+    }
+    return null
+  },
+  setItem: (key: string, value: string) => {
+    if (typeof window !== 'undefined') {
+      localStorage.setItem(key, value)
+    }
+  },
+  removeItem: (key: string) => {
+    if (typeof window !== 'undefined') {
+      localStorage.removeItem(key)
+    }
+  }
+}
 import { Navigation } from '@/components/navigation'
 import { Footer } from '@/components/footer'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
@@ -180,7 +200,7 @@ export default function ComplaintWallPage() {
   // 初始化数据
   useEffect(() => {
     // 加载保存的吐槽
-    const savedComplaints = localStorage.getItem('complaintWallData')
+    const savedComplaints = safeLocalStorage.getItem('complaintWallData')
     if (savedComplaints) {
       try {
         const parsedComplaints = JSON.parse(savedComplaints)
@@ -259,13 +279,13 @@ export default function ComplaintWallPage() {
     ]
     
     setComplaints(mockComplaints)
-    localStorage.setItem('complaintWallData', JSON.stringify(mockComplaints))
+    safeLocalStorage.setItem('complaintWallData', JSON.stringify(mockComplaints))
   }
 
   // 保存吐槽数据
   const saveComplaints = (updatedComplaints: Complaint[]) => {
     setComplaints(updatedComplaints)
-    localStorage.setItem('complaintWallData', JSON.stringify(updatedComplaints))
+    safeLocalStorage.setItem('complaintWallData', JSON.stringify(updatedComplaints))
   }
 
   // 格式化时间

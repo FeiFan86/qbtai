@@ -1,6 +1,26 @@
 'use client'
 
 import { useState, useEffect } from 'react'
+
+// 安全的 localStorage 访问函数
+const safeLocalStorage = {
+  getItem: (key: string) => {
+    if (typeof window !== 'undefined') {
+      return localStorage.getItem(key)
+    }
+    return null
+  },
+  setItem: (key: string, value: string) => {
+    if (typeof window !== 'undefined') {
+      localStorage.setItem(key, value)
+    }
+  },
+  removeItem: (key: string) => {
+    if (typeof window !== 'undefined') {
+      localStorage.removeItem(key)
+    }
+  }
+}
 import { Navigation } from '@/components/navigation'
 import { Footer } from '@/components/footer'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
@@ -308,7 +328,7 @@ export default function CoupleBlindBoxPage() {
 
   // 加载用户数据
   useEffect(() => {
-    const savedUserData = localStorage.getItem('coupleBlindBoxUserData')
+    const savedUserData = safeLocalStorage.getItem('coupleBlindBoxUserData')
     if (savedUserData) {
       try {
         const parsedData = JSON.parse(savedUserData)
@@ -337,7 +357,7 @@ export default function CoupleBlindBoxPage() {
     }
 
     // 加载任务历史
-    const savedHistory = localStorage.getItem('coupleBlindBoxHistory')
+    const savedHistory = safeLocalStorage.getItem('coupleBlindBoxHistory')
     if (savedHistory) {
       try {
         setTaskHistory(JSON.parse(savedHistory))
@@ -350,7 +370,7 @@ export default function CoupleBlindBoxPage() {
   // 保存用户数据
   const saveUserData = (newUserData: UserData) => {
     setUserData(newUserData)
-    localStorage.setItem('coupleBlindBoxUserData', JSON.stringify(newUserData))
+    safeLocalStorage.setItem('coupleBlindBoxUserData', JSON.stringify(newUserData))
   }
 
   // 获取难度标签颜色
@@ -578,7 +598,7 @@ export default function CoupleBlindBoxPage() {
       }
       const updatedHistory = [newHistoryEntry, ...taskHistory].slice(0, 50) // 保留最近50条
       setTaskHistory(updatedHistory)
-      localStorage.setItem('coupleBlindBoxHistory', JSON.stringify(updatedHistory))
+      safeLocalStorage.setItem('coupleBlindBoxHistory', JSON.stringify(updatedHistory))
       
       setShowCompletionMessage(true)
       

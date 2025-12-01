@@ -1,6 +1,26 @@
 'use client'
 
 import { useState, useEffect } from 'react'
+
+// 安全的 localStorage 访问函数
+const safeLocalStorage = {
+  getItem: (key: string) => {
+    if (typeof window !== 'undefined') {
+      return localStorage.getItem(key)
+    }
+    return null
+  },
+  setItem: (key: string, value: string) => {
+    if (typeof window !== 'undefined') {
+      localStorage.setItem(key, value)
+    }
+  },
+  removeItem: (key: string) => {
+    if (typeof window !== 'undefined') {
+      localStorage.removeItem(key)
+    }
+  }
+}
 import { Navigation } from '@/components/navigation'
 import { Footer } from '@/components/footer'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
@@ -99,7 +119,7 @@ export default function EmotionTreeHolePage() {
   
   // 从本地存储加载数据
   useEffect(() => {
-    const savedPosts = localStorage.getItem('emotionTreeHolePosts')
+    const savedPosts = safeLocalStorage.getItem('emotionTreeHolePosts')
     if (savedPosts) {
       const parsedPosts = JSON.parse(savedPosts)
       // 将字符串时间戳转换为Date对象
@@ -116,7 +136,7 @@ export default function EmotionTreeHolePage() {
   
   // 保存数据到本地存储
   const savePostsToLocalStorage = (updatedPosts: Post[]) => {
-    localStorage.setItem('emotionTreeHolePosts', JSON.stringify(updatedPosts))
+    safeLocalStorage.setItem('emotionTreeHolePosts', JSON.stringify(updatedPosts))
   }
   const [newPostContent, setNewPostContent] = useState('')
   const [selectedEmotion, setSelectedEmotion] = useState('neutral')

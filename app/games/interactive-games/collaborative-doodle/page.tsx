@@ -1,6 +1,26 @@
 'use client'
 
 import { useState, useEffect, useRef, useCallback } from 'react'
+
+// 安全的 localStorage 访问函数
+const safeLocalStorage = {
+  getItem: (key: string) => {
+    if (typeof window !== 'undefined') {
+      return localStorage.getItem(key)
+    }
+    return null
+  },
+  setItem: (key: string, value: string) => {
+    if (typeof window !== 'undefined') {
+      localStorage.setItem(key, value)
+    }
+  },
+  removeItem: (key: string) => {
+    if (typeof window !== 'undefined') {
+      localStorage.removeItem(key)
+    }
+  }
+}
 import { Navigation } from '@/components/navigation'
 import { Footer } from '@/components/footer'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
@@ -335,7 +355,7 @@ export default function CollaborativeDoodlePage() {
 
   useEffect(() => {
     // 加载历史记录
-    const savedHistory = localStorage.getItem('doodleHistory')
+    const savedHistory = safeLocalStorage.getItem('doodleHistory')
     if (savedHistory) {
       try {
         setDoodleHistory(JSON.parse(savedHistory))
@@ -458,7 +478,7 @@ export default function CollaborativeDoodlePage() {
       
       const updatedHistory = [newDoodle, ...doodleHistory].slice(0, 10) // 保留最近10个作品
       setDoodleHistory(updatedHistory)
-      localStorage.setItem('doodleHistory', JSON.stringify(updatedHistory))
+      safeLocalStorage.setItem('doodleHistory', JSON.stringify(updatedHistory))
     }
   }
 
