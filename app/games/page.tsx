@@ -40,7 +40,7 @@ import {
   Filter,
   Search,
   Eye,
-  TrendingUp2,
+  TrendingUp,
   Share2,
   Bookmark,
   MoreHorizontal,
