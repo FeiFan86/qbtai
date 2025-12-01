@@ -744,6 +744,7 @@ const emotionThemes = [
       '画出阳光和彩虹'
     ]
   }
+]
 
 // 模板选择对话框
 const TemplateDialog = ({ 
