@@ -27,8 +27,29 @@ import {
 } from 'lucide-react'
 import Link from 'next/link'
 
+// 定义回复接口
+interface Reply {
+  id: string
+  content: string
+  timestamp: Date
+  likes: number
+}
+
+// 定义帖子接口
+interface Post {
+  id: string
+  emotionType: string
+  emotionLabel: string
+  content: string
+  timestamp: Date
+  likes: number
+  replies: number
+  mood: number
+  repliesList: Reply[]
+}
+
 // 模拟情感树洞数据
-const mockTreeHolePosts = [
+const mockTreeHolePosts: Post[] = [
   {
     id: 'post_001',
     emotionType: 'sadness',
@@ -74,7 +95,7 @@ const mockTreeHolePosts = [
 ]
 
 export default function EmotionTreeHolePage() {
-  const [posts, setPosts] = useState<any[]>([])
+  const [posts, setPosts] = useState<Post[]>([])
   
   // 从本地存储加载数据
   useEffect(() => {
@@ -82,7 +103,7 @@ export default function EmotionTreeHolePage() {
     if (savedPosts) {
       const parsedPosts = JSON.parse(savedPosts)
       // 将字符串时间戳转换为Date对象
-      const postsWithDates = parsedPosts.map((post: any) => ({
+      const postsWithDates = parsedPosts.map((post: any): Post => ({
         ...post,
         timestamp: new Date(post.timestamp)
       }))
@@ -94,7 +115,7 @@ export default function EmotionTreeHolePage() {
   }, [])
   
   // 保存数据到本地存储
-  const savePostsToLocalStorage = (updatedPosts: any[]) => {
+  const savePostsToLocalStorage = (updatedPosts: Post[]) => {
     localStorage.setItem('emotionTreeHolePosts', JSON.stringify(updatedPosts))
   }
   const [newPostContent, setNewPostContent] = useState('')
@@ -303,7 +324,7 @@ export default function EmotionTreeHolePage() {
               
               {/* 帖子列表 */}
               <div className="space-y-6">
-                {filteredPosts.map((post) => (
+                {filteredPosts.map((post: Post) => (
                   <Card key={post.id} className="overflow-hidden">
                     <CardHeader className="pb-3">
                       <div className="flex items-center justify-between">
@@ -354,7 +375,7 @@ export default function EmotionTreeHolePage() {
                             温暖回应
                           </h4>
                           <div className="space-y-3">
-                            {post.repliesList.map((reply) => (
+                            {post.repliesList.map((reply: Reply) => (
                               <div key={reply.id} className="bg-gray-50 p-3 rounded-lg">
                                 <div className="flex items-center gap-2 mb-2">
                                   <div className="w-6 h-6 rounded-full bg-green-100 flex items-center justify-center">
