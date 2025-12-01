@@ -47,7 +47,6 @@ import {
   User,
   UserPlus,
   Copy,
-  Link,
   QrCode,
   Bell,
   BellOff,
