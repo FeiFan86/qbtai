@@ -178,7 +178,7 @@ function formatTime(seconds: number): string {
   return `${minutes.toString().padStart(2, '0')}:${remainingSeconds.toString().padStart(2, '0')}`
 }
 
-import { Footer } from '@/components/footer' from '@/components/footer'
+import { Footer } from '@/components/footer'
 
 // 模板选择对话框
 const TemplateDialog = ({ 
