@@ -34,7 +34,6 @@ import {
   Volume2,
   Award,
   Target,
-  Zap,
   Crown,
   CheckCircle,
   RefreshCw,
