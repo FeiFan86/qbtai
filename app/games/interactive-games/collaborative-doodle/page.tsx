@@ -265,8 +265,9 @@ function formatTime(seconds: number): string {
   const minutes = Math.floor(seconds / 60)
   const remainingSeconds = seconds % 60
   return `${minutes.toString().padStart(2, '0')}:${remainingSeconds.toString().padStart(2, '0')}`
-} from '@/components/footer'
-import { Card, CardContent, CardDescription, CardHeader, CardTitle }
+}
+
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card' from '@/components/ui/card'
 
 // 模板选择对话框
 const TemplateDialog = ({ 
