@@ -74,7 +74,29 @@ const mockTreeHolePosts = [
 ]
 
 export default function EmotionTreeHolePage() {
-  const [posts, setPosts] = useState(mockTreeHolePosts)
+  const [posts, setPosts] = useState<any[]>([])
+  
+  // 从本地存储加载数据
+  useEffect(() => {
+    const savedPosts = localStorage.getItem('emotionTreeHolePosts')
+    if (savedPosts) {
+      const parsedPosts = JSON.parse(savedPosts)
+      // 将字符串时间戳转换为Date对象
+      const postsWithDates = parsedPosts.map((post: any) => ({
+        ...post,
+        timestamp: new Date(post.timestamp)
+      }))
+      setPosts(postsWithDates)
+    } else {
+      // 如果没有保存的数据，使用模拟数据
+      setPosts(mockTreeHolePosts)
+    }
+  }, [])
+  
+  // 保存数据到本地存储
+  const savePostsToLocalStorage = (updatedPosts: any[]) => {
+    localStorage.setItem('emotionTreeHolePosts', JSON.stringify(updatedPosts))
+  }
   const [newPostContent, setNewPostContent] = useState('')
   const [selectedEmotion, setSelectedEmotion] = useState('neutral')
   const [isSubmitting, setIsSubmitting] = useState(false)
@@ -94,32 +116,34 @@ export default function EmotionTreeHolePage() {
 
     setIsSubmitting(true)
     
-    // 模拟提交过程
-    setTimeout(() => {
-      const selectedEmotionOption = emotionOptions.find(opt => opt.value === selectedEmotion)
-      const newPost = {
-        id: `post_${Date.now()}`,
-        emotionType: selectedEmotion,
-        emotionLabel: selectedEmotionOption?.label || '平静',
-        content: newPostContent.trim(),
-        timestamp: new Date(),
-        likes: 0,
-        replies: 0,
-        mood: 5,
-        repliesList: []
-      }
-      
-      setPosts(prev => [newPost, ...prev])
-      setNewPostContent('')
-      setSelectedEmotion('neutral')
-      setIsSubmitting(false)
-      setShowSubmitSuccess(true)
-      
-      // 3秒后隐藏成功提示
+      // 模拟提交过程
       setTimeout(() => {
-        setShowSubmitSuccess(false)
-      }, 3000)
-    }, 1000)
+        const selectedEmotionOption = emotionOptions.find(opt => opt.value === selectedEmotion)
+        const newPost = {
+          id: `post_${Date.now()}`,
+          emotionType: selectedEmotion,
+          emotionLabel: selectedEmotionOption?.label || '平静',
+          content: newPostContent.trim(),
+          timestamp: new Date(),
+          likes: 0,
+          replies: 0,
+          mood: 5,
+          repliesList: []
+        }
+        
+        const updatedPosts = [newPost, ...posts]
+        setPosts(updatedPosts)
+        savePostsToLocalStorage(updatedPosts)
+        setNewPostContent('')
+        setSelectedEmotion('neutral')
+        setIsSubmitting(false)
+        setShowSubmitSuccess(true)
+        
+        // 3秒后隐藏成功提示
+        setTimeout(() => {
+          setShowSubmitSuccess(false)
+        }, 3000)
+      }, 1000)
   }
 
   const formatTimestamp = (date: Date) => {

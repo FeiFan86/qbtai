@@ -147,7 +147,29 @@ const mockComplaints = [
 ]
 
 export default function ComplaintWallPage() {
-  const [complaints, setComplaints] = useState(mockComplaints)
+  const [complaints, setComplaints] = useState<any[]>([])
+  
+  // 从本地存储加载数据
+  useEffect(() => {
+    const savedComplaints = localStorage.getItem('complaintWallPosts')
+    if (savedComplaints) {
+      const parsedComplaints = JSON.parse(savedComplaints)
+      // 将字符串时间戳转换为Date对象
+      const complaintsWithDates = parsedComplaints.map((complaint: any) => ({
+        ...complaint,
+        timestamp: new Date(complaint.timestamp)
+      }))
+      setComplaints(complaintsWithDates)
+    } else {
+      // 如果没有保存的数据，使用模拟数据
+      setComplaints(mockComplaints)
+    }
+  }, [])
+  
+  // 保存数据到本地存储
+  const saveComplaintsToLocalStorage = (updatedComplaints: any[]) => {
+    localStorage.setItem('complaintWallPosts', JSON.stringify(updatedComplaints))
+  }
   const [newComplaint, setNewComplaint] = useState('')
   const [complaintTitle, setComplaintTitle] = useState('')
   const [selectedCategory, setSelectedCategory] = useState('work')
@@ -207,32 +229,34 @@ export default function ComplaintWallPage() {
 
     setIsSubmitting(true)
     
-    // 模拟提交过程
-    setTimeout(() => {
-      const categoryInfo = complaintCategories.find(cat => cat.id === selectedCategory)
-      const newPost = {
-        id: `complaint_${Date.now()}`,
-        category: selectedCategory,
-        title: complaintTitle.trim(),
-        content: newComplaint.trim(),
-        mood: selectedMood,
-        timestamp: new Date(),
-        likes: 0,
-        comments: 0,
-        replies: []
-      }
-      
-      setComplaints(prev => [newPost, ...prev])
-      setComplaintTitle('')
-      setNewComplaint('')
-      setIsSubmitting(false)
-      setShowSubmitSuccess(true)
-      
-      // 3秒后隐藏成功提示
+      // 模拟提交过程
       setTimeout(() => {
-        setShowSubmitSuccess(false)
-      }, 3000)
-    }, 1000)
+        const categoryInfo = complaintCategories.find(cat => cat.id === selectedCategory)
+        const newPost = {
+          id: `complaint_${Date.now()}`,
+          category: selectedCategory,
+          title: complaintTitle.trim(),
+          content: newComplaint.trim(),
+          mood: selectedMood,
+          timestamp: new Date(),
+          likes: 0,
+          comments: 0,
+          replies: []
+        }
+        
+        const updatedComplaints = [newPost, ...complaints]
+        setComplaints(updatedComplaints)
+        saveComplaintsToLocalStorage(updatedComplaints)
+        setComplaintTitle('')
+        setNewComplaint('')
+        setIsSubmitting(false)
+        setShowSubmitSuccess(true)
+        
+        // 3秒后隐藏成功提示
+        setTimeout(() => {
+          setShowSubmitSuccess(false)
+        }, 3000)
+      }, 1000)
   }
 
   // 过滤吐槽

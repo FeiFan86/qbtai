@@ -509,35 +509,104 @@ export default function RelationshipChessPage() {
               
               {/* 右侧游戏棋盘 */}
               <div className="lg:col-span-2">
-                <Card>
+                <Card className="bg-gradient-to-br from-purple-50 to-pink-50 border-2 border-purple-100">
                   <CardHeader>
-                    <CardTitle className="flex items-center gap-2">
-                      <Settings className="h-5 w-5 text-purple-500" />
-                      游戏棋盘
+                    <CardTitle className="flex items-center gap-2 text-center justify-center">
+                      <Settings className="h-6 w-6 text-purple-600" />
+                      <span className="text-xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-purple-600 to-pink-600">
+                        恋爱飞行棋地图
+                      </span>
                     </CardTitle>
+                    <CardDescription className="text-center">
+                      两人一起探索爱的旅程，每个格子都有特别的惊喜
+                    </CardDescription>
                   </CardHeader>
                   <CardContent>
-                    <div className="grid grid-cols-6 gap-1">
-                      {boardSpaces.map((space) => (
-                        <div
-                          key={space.id}
-                          className={`aspect-square rounded-lg flex flex-col items-center justify-center text-xs font-medium ${space.color} relative ${
-                            space.id === player1Position ? 'ring-2 ring-blue-500' : ''
-                          } ${
-                            space.id === player2Position ? 'ring-2 ring-pink-500' : ''
-                          }`}
-                        >
-                          {space.label && <span className="text-xs">{space.label}</span>}
-                          
-                          {/* 玩家标记 */}
-                          {space.id === player1Position && (
-                            <div className="absolute top-0 right-0 w-3 h-3 rounded-full bg-blue-500 border-2 border-white"></div>
-                          )}
-                          {space.id === player2Position && (
-                            <div className="absolute bottom-0 left-0 w-3 h-3 rounded-full bg-pink-500 border-2 border-white"></div>
-                          )}
+                    <div className="relative bg-white p-4 rounded-xl shadow-lg border-2 border-purple-200">
+                      {/* 起点终点指示 */}
+                      <div className="flex justify-between items-center mb-4">
+                        <div className="text-center">
+                          <div className="w-12 h-12 bg-green-400 rounded-full flex items-center justify-center mx-auto mb-1 border-2 border-green-600">
+                            <span className="text-white font-bold">起</span>
+                          </div>
+                          <span className="text-xs font-medium text-gray-600">起点</span>
                         </div>
-                      ))}
+                        <div className="text-center">
+                          <div className="w-12 h-12 bg-yellow-400 rounded-full flex items-center justify-center mx-auto mb-1 border-2 border-yellow-600">
+                            <span className="text-white font-bold">终</span>
+                          </div>
+                          <span className="text-xs font-medium text-gray-600">终点</span>
+                        </div>
+                      </div>
+                      
+                      {/* 游戏棋盘 */}
+                      <div className="grid grid-cols-6 gap-2">
+                        {boardSpaces.map((space) => (
+                          <div
+                            key={space.id}
+                            className={`aspect-square rounded-lg flex flex-col items-center justify-center text-xs font-medium relative transition-all duration-300 hover:scale-105 hover:shadow-md ${
+                              space.color
+                            } ${
+                              space.id === player1Position ? 'ring-4 ring-blue-500 shadow-lg transform scale-110' : ''
+                            } ${
+                              space.id === player2Position ? 'ring-4 ring-pink-500 shadow-lg transform scale-110' : ''
+                            }`}
+                          >
+                            {/* 格子编号 */}
+                            <div className="absolute top-1 left-1 text-[10px] text-gray-700 font-bold">
+                              {space.id}
+                            </div>
+                            
+                            {/* 格子内容 */}
+                            {space.label && (
+                              <div className="text-center">
+                                <span className="text-xs font-bold">{space.label}</span>
+                                {space.type === 'question' && (
+                                  <MessageCircle className="h-3 w-3 mx-auto mt-1 text-blue-600" />
+                                )}
+                                {space.type === 'challenge' && (
+                                  <Sparkles className="h-3 w-3 mx-auto mt-1 text-red-600" />
+                                )}
+                                {space.type === 'gift' && (
+                                  <Gift className="h-3 w-3 mx-auto mt-1 text-purple-600" />
+                                )}
+                              </div>
+                            )}
+                            
+                            {/* 玩家标记 */}
+                            {space.id === player1Position && (
+                              <div className="absolute top-0 right-0 w-4 h-4 rounded-full bg-blue-500 border-2 border-white shadow-lg animate-pulse">
+                                <span className="text-[8px] text-white font-bold absolute inset-0 flex items-center justify-center">1</span>
+                              </div>
+                            )}
+                            {space.id === player2Position && (
+                              <div className="absolute bottom-0 left-0 w-4 h-4 rounded-full bg-pink-500 border-2 border-white shadow-lg animate-pulse">
+                                <span className="text-[8px] text-white font-bold absolute inset-0 flex items-center justify-center">2</span>
+                              </div>
+                            )}
+                          </div>
+                        ))}
+                      </div>
+                      
+                      {/* 图例说明 */}
+                      <div className="mt-4 grid grid-cols-4 gap-2 text-xs">
+                        <div className="flex items-center gap-1">
+                          <div className="w-3 h-3 bg-blue-300 rounded"></div>
+                          <span>真心话</span>
+                        </div>
+                        <div className="flex items-center gap-1">
+                          <div className="w-3 h-3 bg-red-300 rounded"></div>
+                          <span>大冒险</span>
+                        </div>
+                        <div className="flex items-center gap-1">
+                          <div className="w-3 h-3 bg-purple-300 rounded"></div>
+                          <span>甜蜜任务</span>
+                        </div>
+                        <div className="flex items-center gap-1">
+                          <div className="w-3 h-3 bg-yellow-400 rounded"></div>
+                          <span>终点</span>
+                        </div>
+                      </div>
                     </div>
                   </CardContent>
                 </Card>

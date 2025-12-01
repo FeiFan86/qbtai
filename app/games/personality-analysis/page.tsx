@@ -110,6 +110,83 @@ const testQuestions = [
       { text: '独处充电和个人时间', dimension: 'solitude', value: 5 },
       { text: '平衡社交和独处时间', dimension: 'balanced', value: 4 }
     ]
+  },
+  {
+    id: 'q009',
+    type: '情感表达',
+    question: '当你收到意外的礼物时，你的第一反应是？',
+    options: [
+      { text: '立即表达感谢和喜悦', dimension: 'expressive', value: 5 },
+      { text: '思考礼物的意义和用心', dimension: 'reflective', value: 4 },
+      { text: '感到不好意思或不知所措', dimension: 'reserved', value: 3 },
+      { text: '考虑如何回礼或回报', dimension: 'reciprocal', value: 4 }
+    ]
+  },
+  {
+    id: 'q010',
+    type: '情感气质',
+    question: '面对重要决定时，你更依赖？',
+    options: [
+      { text: '内心的直觉和感觉', dimension: 'intuitive', value: 5 },
+      { text: '逻辑分析和事实依据', dimension: 'logical', value: 5 },
+      { text: '他人的建议和意见', dimension: 'collaborative', value: 3 },
+      { text: '过去的经验和教训', dimension: 'experiential', value: 4 }
+    ]
+  },
+  {
+    id: 'q011',
+    type: '社交能量',
+    question: '在团队合作中，你通常扮演什么角色？',
+    options: [
+      { text: '协调者和组织者', dimension: 'coordinator', value: 5 },
+      { text: '创意提供者和灵感来源', dimension: 'creative', value: 4 },
+      { text: '执行者和实干家', dimension: 'executor', value: 4 },
+      { text: '观察者和支持者', dimension: 'supporter', value: 3 }
+    ]
+  },
+  {
+    id: 'q012',
+    type: '情感表达',
+    question: '当你感到快乐时，你倾向于？',
+    options: [
+      { text: '立即与朋友分享喜悦', dimension: 'sharing', value: 5 },
+      { text: '独自享受这份美好', dimension: 'savoring', value: 4 },
+      { text: '通过创作表达情感', dimension: 'creative-expression', value: 3 },
+      { text: '将快乐转化为行动力', dimension: 'action-oriented', value: 4 }
+    ]
+  },
+  {
+    id: 'q013',
+    type: '情感气质',
+    question: '面对陌生环境，你的第一反应是？',
+    options: [
+      { text: '主动探索和适应', dimension: 'adaptive', value: 5 },
+      { text: '观察和熟悉环境', dimension: 'observant', value: 4 },
+      { text: '感到紧张和不安', dimension: 'anxious', value: 2 },
+      { text: '寻找熟悉的人或事物', dimension: 'security-seeking', value: 3 }
+    ]
+  },
+  {
+    id: 'q014',
+    type: '社交能量',
+    question: '你如何维持长期友谊？',
+    options: [
+      { text: '定期联系和见面', dimension: 'consistent', value: 5 },
+      { text: '深度交流和心灵沟通', dimension: 'deep', value: 4 },
+      { text: '通过共同兴趣和活动', dimension: 'shared-interests', value: 4 },
+      { text: '在需要时互相支持', dimension: 'supportive', value: 3 }
+    ]
+  },
+  {
+    id: 'q015',
+    type: '情感表达',
+    question: '当你感到被误解时，你会？',
+    options: [
+      { text: '立即澄清和解释', dimension: 'clarifying', value: 5 },
+      { text: '感到受伤但选择沉默', dimension: 'withdrawn', value: 3 },
+      { text: '通过行动证明自己', dimension: 'proving', value: 4 },
+      { text: '寻求第三方帮助沟通', dimension: 'mediating', value: 4 }
+    ]
   }
 ]
 

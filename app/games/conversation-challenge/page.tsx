@@ -64,6 +64,76 @@ const challenges = [
       { id: 'd', text: '立即生气，指责他不够重视友谊', score: 2, explanation: '愤怒反应反映了自我中心，缺乏对朋友处境的理解' }
     ],
     emotionType: '情感表达'
+  },
+  {
+    id: 'scene_004',
+    category: '家庭',
+    difficulty: '中等',
+    scenario: '你的父母因为你的职业选择产生分歧，父亲支持你的决定，母亲却强烈反对，家庭气氛紧张。',
+    question: '你会如何处理这种家庭矛盾？',
+    options: [
+      { id: 'a', text: '分别与父母沟通，理解他们的担忧并表达自己的想法', score: 10, explanation: '分别沟通能更好地理解各方立场，避免直接冲突' },
+      { id: 'b', text: '组织家庭会议，让大家一起讨论这个决定', score: 8, explanation: '集体讨论能让所有人表达意见，但可能加剧矛盾' },
+      { id: 'c', text: '坚持自己的决定，认为这是自己的人生选择', score: 5, explanation: '坚持自我是必要的，但可能伤害家庭关系' },
+      { id: 'd', text: '暂时妥协，等父母情绪平复后再沟通', score: 7, explanation: '暂时妥协能缓解冲突，但需要后续沟通解决问题' }
+    ],
+    emotionType: '冲突解决'
+  },
+  {
+    id: 'scene_005',
+    category: '社交',
+    difficulty: '困难',
+    scenario: '在一次聚会上，你发现朋友正在谈论另一位朋友的隐私，而这位朋友就在现场但没注意到。',
+    question: '你会如何应对这种情况？',
+    options: [
+      { id: 'a', text: '巧妙地转移话题，避免伤害任何人', score: 10, explanation: '巧妙转移既能保护隐私又能维护社交和谐' },
+      { id: 'b', text: '私下提醒说话的朋友注意场合', score: 8, explanation: '私下提醒比较得体，但可能无法立即制止' },
+      { id: 'c', text: '直接打断，指出这样讨论别人隐私不合适', score: 4, explanation: '直接制止可能引起尴尬，破坏聚会氛围' },
+      { id: 'd', text: '假装没听到，希望话题自然结束', score: 3, explanation: '回避可能让问题继续发展，缺乏责任感' }
+    ],
+    emotionType: '社交智慧'
+  },
+  {
+    id: 'scene_006',
+    category: '职场',
+    difficulty: '中等',
+    scenario: '你的团队成员在项目中犯了错误，导致项目延误，但团队整体氛围紧张，没人愿意承担责任。',
+    question: '作为团队成员，你会怎么做？',
+    options: [
+      { id: 'a', text: '主动承担责任，并组织团队讨论解决方案', score: 10, explanation: '主动承担责任展现了领导力和团队精神' },
+      { id: 'b', text: '私下鼓励犯错同事主动承认错误', score: 7, explanation: '鼓励他人承担责任是好的，但可能不够直接' },
+      { id: 'c', text: '向领导汇报情况，但不指出具体责任人', score: 5, explanation: '汇报是必要的，但可能被视为推卸责任' },
+      { id: 'd', text: '保持沉默，等待问题自行解决', score: 2, explanation: '消极回避可能让问题恶化，缺乏主动性' }
+    ],
+    emotionType: '责任感'
+  },
+  {
+    id: 'scene_007',
+    category: '恋爱',
+    difficulty: '困难',
+    scenario: '你的伴侣忘记了你重要的纪念日，当你表达失望时，他却说"工作太忙，这种事情没必要这么在意"。',
+    question: '你会如何回应这种态度？',
+    options: [
+      { id: 'a', text: '平静地解释为什么这个纪念日对你很重要', score: 10, explanation: '理性沟通能帮助对方理解你的感受' },
+      { id: 'b', text: '表达你的受伤感受，并希望得到理解', score: 8, explanation: '表达真实感受是必要的，但需要控制情绪' },
+      { id: 'c', text: '用同样的冷漠态度回应，让对方感受你的失望', score: 3, explanation: '以牙还牙可能加剧矛盾，不利于关系发展' },
+      { id: 'd', text: '暂时不提，等对方主动意识到问题', score: 4, explanation: '等待可能让问题积累，缺乏及时沟通' }
+    ],
+    emotionType: '情感表达'
+  },
+  {
+    id: 'scene_008',
+    category: '自我成长',
+    difficulty: '简单',
+    scenario: '你一直想学习一项新技能，但总是因为各种理由拖延，现在感到挫败和焦虑。',
+    question: '你会如何应对这种拖延和焦虑？',
+    options: [
+      { id: 'a', text: '制定具体的小目标，逐步开始行动', score: 10, explanation: '分解目标是克服拖延的有效方法' },
+      { id: 'b', text: '寻求朋友或专业人士的帮助和支持', score: 8, explanation: '寻求支持能提供动力和指导' },
+      { id: 'c', text: '告诉自己"没时间"，继续拖延', score: 2, explanation: '消极自我对话会加剧拖延和焦虑' },
+      { id: 'd', text: '设定不切实际的高目标来激励自己', score: 4, explanation: '过高目标可能增加压力，反而导致放弃' }
+    ],
+    emotionType: '自我调节'
   }
 ]
 
