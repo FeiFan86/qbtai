@@ -1,6 +1,6 @@
 'use client'
 
-import { useState, useEffect, useRef }
+import { useState, useEffect, useRef } from 'react'
 
 // 模板选择对话框
 const TemplateDialog = ({ 
