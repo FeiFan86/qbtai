@@ -437,7 +437,7 @@ export default function TruthOrDarePage() {
                       ].map(level => (
                         <button
                           key={level.id}
-                          onClick={() => setDifficulty(level.id)}
+                          onClick={() => setDifficulty(level.id as 'easy' | 'medium' | 'hard')}
                           className={`p-2 rounded-lg border text-center transition-colors ${
                             difficulty === level.id 
                               ? level.color 
