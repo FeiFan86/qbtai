@@ -176,8 +176,9 @@ function formatTime(seconds: number): string {
   const minutes = Math.floor(seconds / 60)
   const remainingSeconds = seconds % 60
   return `${minutes.toString().padStart(2, '0')}:${remainingSeconds.toString().padStart(2, '0')}`
-} from '@/components/navigation'
-import { Footer }
+}
+
+import { Footer } from '@/components/footer' from '@/components/footer'
 
 // 模板选择对话框
 const TemplateDialog = ({ 
