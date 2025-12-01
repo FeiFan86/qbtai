@@ -431,9 +431,9 @@ export default function TruthOrDarePage() {
                     <label className="text-sm font-medium mb-2 block">游戏难度</label>
                     <div className="grid grid-cols-3 gap-2">
                       {[
-                        { id: 'easy', name: '简单', color: 'bg-green-100 text-green-800 border-green-200' },
-                        { id: 'medium', name: '中等', color: 'bg-yellow-100 text-yellow-800 border-yellow-200' },
-                        { id: 'hard', name: '困难', color: 'bg-red-100 text-red-800 border-red-200' }
+                        { id: 'easy' as const, name: '简单', color: 'bg-green-100 text-green-800 border-green-200' },
+                        { id: 'medium' as const, name: '中等', color: 'bg-yellow-100 text-yellow-800 border-yellow-200' },
+                        { id: 'hard' as const, name: '困难', color: 'bg-red-100 text-red-800 border-red-200' }
                       ].map(level => (
                         <button
                           key={level.id}
