@@ -202,7 +202,7 @@ export default function TruthOrDarePage() {
   const [totalPlayers, setTotalPlayers] = useState(2)
   const [difficulty, setDifficulty] = useState<'easy' | 'medium' | 'hard'>('medium') // easy, medium, hard
   const [currentTask, setCurrentTask] = useState<Task | null>(null)
-  const [taskType, setTaskType] = useState('truth') // truth, dare
+  const [taskType, setTaskType] = useState<'truth' | 'dare' | 'winner'>('truth') // truth, dare, winner
   const [showTaskModal, setShowTaskModal] = useState(false)
   const [isSpinning, setIsSpinning] = useState(false)
   const [completedTasks, setCompletedTasks] = useState<Task[]>([])
@@ -352,7 +352,7 @@ export default function TruthOrDarePage() {
   }
 
   // 处理获胜
-  const handleWin = (player) => {
+  const handleWin = (player: number) => {
     setTimerActive(false)
     setCurrentTask({
       type: 'winner',
