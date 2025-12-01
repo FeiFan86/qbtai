@@ -33,7 +33,8 @@ import {
   SkipForward,
   Volume2,
   VolumeX,
-  Zap
+  Zap,
+  CheckCircle
 } from 'lucide-react'
 import Link from 'next/link'
 
