@@ -218,7 +218,6 @@ import {
   Stomach,
   Bone,
   Tooth,
-  Eye,
   Ear,
   Nose,
   Mouth,
