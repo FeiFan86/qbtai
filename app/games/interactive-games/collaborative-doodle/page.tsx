@@ -267,7 +267,7 @@ function formatTime(seconds: number): string {
   return `${minutes.toString().padStart(2, '0')}:${remainingSeconds.toString().padStart(2, '0')}`
 }
 
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card' from '@/components/ui/card'
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
 
 // 模板选择对话框
 const TemplateDialog = ({ 
@@ -354,8 +354,9 @@ function formatTime(seconds: number): string {
   const minutes = Math.floor(seconds / 60)
   const remainingSeconds = seconds % 60
   return `${minutes.toString().padStart(2, '0')}:${remainingSeconds.toString().padStart(2, '0')}`
-} from '@/components/ui/card'
-import { Button }
+}
+
+import { Button } from '@/components/ui/button'
 
 // 模板选择对话框
 const TemplateDialog = ({ 
@@ -442,8 +443,9 @@ function formatTime(seconds: number): string {
   const minutes = Math.floor(seconds / 60)
   const remainingSeconds = seconds % 60
   return `${minutes.toString().padStart(2, '0')}:${remainingSeconds.toString().padStart(2, '0')}`
-} from '@/components/ui/button'
-import { Badge }
+}
+
+import { Badge } from '@/components/ui/badge'
 
 // 模板选择对话框
 const TemplateDialog = ({ 
@@ -530,8 +532,9 @@ function formatTime(seconds: number): string {
   const minutes = Math.floor(seconds / 60)
   const remainingSeconds = seconds % 60
   return `${minutes.toString().padStart(2, '0')}:${remainingSeconds.toString().padStart(2, '0')}`
-} from '@/components/ui/badge'
-import { Tabs, TabsContent, TabsList, TabsTrigger }
+}
+
+import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
 
 // 模板选择对话框
 const TemplateDialog = ({ 
@@ -618,7 +621,8 @@ function formatTime(seconds: number): string {
   const minutes = Math.floor(seconds / 60)
   const remainingSeconds = seconds % 60
   return `${minutes.toString().padStart(2, '0')}:${remainingSeconds.toString().padStart(2, '0')}`
-} from '@/components/ui/tabs'
+}
+
 import { 
   ArrowLeft,
   Palette,
@@ -636,7 +640,7 @@ import {
   Sparkles,
   Send,
   Trophy
-}
+} from 'lucide-react' from 'lucide-react'
 
 // 模板选择对话框
 const TemplateDialog = ({ 
