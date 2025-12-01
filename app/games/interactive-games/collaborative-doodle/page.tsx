@@ -1,26 +1,6 @@
 'use client'
 
-import { useState, useEffect, useRef, useCallback } from 'react'
-
-// 安全的 localStorage 访问函数
-const safeLocalStorage = {
-  getItem: (key: string) => {
-    if (typeof window !== 'undefined') {
-      return localStorage.getItem(key)
-    }
-    return null
-  },
-  setItem: (key: string, value: string) => {
-    if (typeof window !== 'undefined') {
-      localStorage.setItem(key, value)
-    }
-  },
-  removeItem: (key: string) => {
-    if (typeof window !== 'undefined') {
-      localStorage.removeItem(key)
-    }
-  }
-}
+import { useState, useRef, useEffect } from 'react'
 import { Navigation } from '@/components/navigation'
 import { Footer } from '@/components/footer'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
@@ -29,1326 +9,980 @@ import { Badge } from '@/components/ui/badge'
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
 import { 
   ArrowLeft,
-  Palette,
-  Brush,
+  Pencil,
   Eraser,
-  Undo2,
+  Palette,
+  Users,
+  MessageSquare,
+  Timer,
+  Check,
+  X,
   RotateCcw,
   Download,
   Share2,
-  Heart,
-  Users,
-  Clock,
+  Volume2,
+  VolumeX,
+  Eye,
+  EyeOff,
+  Zap,
   Star,
-  Lightbulb,
-  Sparkles,
-  Send,
   Trophy,
-  PenTool,
+  Crown,
+  Heart,
+  Smile,
+  Laugh,
+  ThumbsUp,
+  Target,
+  Brush,
   Circle,
   Square,
   Triangle,
-  Zap,
-  ImageIcon,
-  Eye,
-  Target,
-  Timer,
-  Share,
-  Play,
-  Pause,
-  CheckCircle,
-  Wifi,
-  WifiOff,
-  Video,
-  VideoOff,
-  MessageSquare,
-  UserPlus,
+  Type,
+  Image,
+  Layers,
+  Grid3x3,
+  Minus,
+  Plus,
   Settings,
+  User,
+  UserPlus,
+  Copy,
+  Link,
+  QrCode,
+  Bell,
+  BellOff,
   Mic,
   MicOff,
-  Volume2,
-  Save,
-  RefreshCw,
-  Grid3X3,
-  Maximize2,
-  Copy,
-  Trash2
+  Video,
+  VideoOff,
+  Phone,
+  PhoneOff,
+  MessageCircle,
+  Send,
+  MoreHorizontal,
+  Filter,
+  Search,
+  Bookmark,
+  Flag,
+  AlertCircle,
+  Info,
+  HelpCircle,
+  Clock,
+  Calendar,
+  TrendingUp,
+  BarChart3,
+  PieChart,
+  Activity,
+  Zap,
+  Coffee,
+  Music,
+  Camera,
+  Gift,
+  Sparkles,
+  Rocket,
+  Moon,
+  Sun,
+  Cloud,
+  Wind,
+  Droplets,
+  Flame,
+  Leaf,
+  Mountain,
+  TreePine,
+  Flower2,
+  Cat,
+  Dog,
+  Bird,
+  Fish,
+  Rabbit,
+  Turtle,
+  Butterfly,
+  Bee,
+  Snail,
+  Bug,
+  Car,
+  Train,
+  Plane,
+  Ship,
+  Bike,
+  Bus,
+  Truck,
+  House,
+  Building,
+  Castle,
+  Church,
+  School,
+  Hospital,
+  Store,
+  Bank,
+  Factory,
+  Bridge,
+  Tower,
+  Pyramid,
+  Globe,
+  Map,
+  Compass,
+  Navigation,
+  Flag,
+  Anchor,
+  Sailboat,
+  Surfing,
+  Skiing,
+  Snowboarding,
+  Soccer,
+  Basketball,
+  Baseball,
+  Tennis,
+  Volleyball,
+  Football,
+  Golf,
+  Hockey,
+  Cricket,
+  Rugby,
+  Boxing,
+  MartialArts,
+  Yoga,
+  Meditation,
+  Running,
+  Swimming,
+  Cycling,
+  Hiking,
+  Climbing,
+  Dancing,
+  Music,
+  Guitar,
+  Piano,
+  Drum,
+  Violin,
+  Trumpet,
+  Saxophone,
+  Microphone,
+  Headphones,
+  Radio,
+  Tv,
+  Computer,
+  Smartphone,
+  Tablet,
+  Watch,
+  Camera,
+  Video,
+  Gamepad,
+  Controller,
+  Dice,
+  Cards,
+  Chess,
+  Puzzle,
+  RubiksCube,
+  MagicWand,
+  Crown,
+  Medal,
+  Trophy,
+  Award,
+  Star,
+  Heart,
+  Diamond,
+  Spade,
+  Club,
+  Circle,
+  Square,
+  Triangle,
+  Hexagon,
+  Octagon,
+  Pentagon,
+  Star,
+  Moon,
+  Sun,
+  Cloud,
+  Snowflake,
+  Rain,
+  Thunder,
+  Wind,
+  Fire,
+  Water,
+  Earth,
+  Air,
+  Lightbulb,
+  Battery,
+  Plug,
+  Wifi,
+  Bluetooth,
+  Signal,
+  Satellite,
+  Radar,
+  Telescope,
+  Microscope,
+  Atom,
+  Dna,
+  Brain,
+  Heart,
+  Lungs,
+  Stomach,
+  Bone,
+  Tooth,
+  Eye,
+  Ear,
+  Nose,
+  Mouth,
+  Hand,
+  Foot,
+  Arm,
+  Leg,
+  Body,
+  Baby,
+  Child,
+  Adult,
+  Elderly,
+  Man,
+  Woman,
+  Person,
+  Family,
+  Couple,
+  Friends,
+  Group,
+  Team,
+  Community,
+  Society,
+  World,
+  Universe
 } from 'lucide-react'
 import Link from 'next/link'
 
 // 绘画工具类型
-type DrawingTool = 'pen' | 'brush' | 'eraser' | 'circle' | 'square' | 'triangle'
+type DrawingTool = 'pen' | 'eraser' | 'brush' | 'spray' | 'line' | 'rectangle' | 'circle' | 'triangle' | 'text'
 
-// 绘画工具配置
-const drawingTools: Array<{
-  id: DrawingTool
-  name: string
-  icon: React.ReactNode
-  description: string
-}> = [
-  {
-    id: 'pen',
-    name: '钢笔',
-    icon: <PenTool className="h-4 w-4" />,
-    description: '精确绘画工具'
-  },
-  {
-    id: 'brush',
-    name: '画笔',
-    icon: <Brush className="h-4 w-4" />,
-    description: '柔和绘画效果'
-  },
-  {
-    id: 'eraser',
-    name: '橡皮擦',
-    icon: <Eraser className="h-4 w-4" />,
-    description: '擦除内容'
-  },
-  {
-    id: 'circle',
-    name: '圆形',
-    icon: <Circle className="h-4 w-4" />,
-    description: '绘制圆形'
-  },
-  {
-    id: 'square',
-    name: '方形',
-    icon: <Square className="h-4 w-4" />,
-    description: '绘制方形'
-  },
-  {
-    id: 'triangle',
-    name: '三角形',
-    icon: <Triangle className="h-4 w-4" />,
-    description: '绘制三角形'
-  }
-]
-
-// 颜色调色板
+// 颜色预设
 const colorPalette = [
-  '#000000', '#FFFFFF', '#FF0000', '#00FF00', '#0000FF', '#FFFF00', 
-  '#FF00FF', '#00FFFF', '#FFA500', '#800080', '#FFC0CB', '#A52A2A',
-  '#808080', '#90EE90', '#ADD8E6', '#FFB6C1', '#FFD700', '#4B0082',
-  '#F0E68C', '#DDA0DD', '#B0C4DE', '#FF6347', '#40E0D0', '#EE82EE'
+  '#000000', '#FF0000', '#00FF00', '#0000FF', '#FFFF00', '#FF00FF', '#00FFFF', '#FFFFFF',
+  '#FFA500', '#800080', '#FFC0CB', '#A52A2A', '#808080', '#008000', '#000080', '#FFD700'
 ]
 
-// 情感主题
-const emotionThemes = [
-  {
-    id: 'happiness',
-    name: '快乐时光',
-    color: '#FFD700',
-    icon: <Star className="h-5 w-5" />,
-    description: '用明亮的色彩表达快乐',
-    prompts: [
-      '画出让你最开心的时刻',
-      '用色彩表达今天的快乐心情',
-      '创作一个代表快乐的符号',
-      '画出阳光和彩虹的场景'
-    ],
-    recommendedColors: ['#FFD700', '#FF6B6B', '#4ECDC4', '#45B7D1', '#96CEB4']
-  },
-  {
-    id: 'love',
-    name: '甜蜜爱意',
-    color: '#FF69B4',
-    icon: <Heart className="h-5 w-5" />,
-    description: '用温暖的色彩表达爱意',
-    prompts: [
-      '画出你们第一次见面的场景',
-      '创作一个代表你们爱情的符号',
-      '画出一起度过的美好时光',
-      '用色彩表达心中的爱意'
-    ],
-    recommendedColors: ['#FF69B4', '#FF6B9D', '#C44569', '#F8B195', '#F67280']
-  },
-  {
-    id: 'peace',
-    name: '平静心境',
-    color: '#87CEEB',
-    icon: <Sparkles className="h-5 w-5" />,
-    description: '用柔和的色彩表达平静',
-    prompts: [
-      '画出让你感到平静的场景',
-      '用色彩表达内心的宁静',
-      '创作一个代表平和的符号',
-      '画出自然的美景'
-    ],
-    recommendedColors: ['#87CEEB', '#6C5CE7', '#74B9FF', '#A29BFE', '#81ECEC']
-  },
-  {
-    id: 'dream',
-    name: '梦想憧憬',
-    color: '#9370DB',
-    icon: <Lightbulb className="h-5 w-5" />,
-    description: '用梦幻的色彩表达憧憬',
-    prompts: [
-      '画出你的梦想场景',
-      '用色彩表达对未来的憧憬',
-      '创作一个代表梦想的符号',
-      '画出你理想中的世界'
-    ],
-    recommendedColors: ['#9370DB', '#6C5CE7', '#A55EEA', '#8854D0', '#5F3DC4']
-  }
-]
+// 画笔大小选项
+const brushSizes = [1, 3, 5, 8, 12, 16, 20, 24]
 
-// 绘画挑战
-const drawingChallenges = [
-  {
-    id: 'blind_drawing',
-    name: '盲画挑战',
-    description: '不看画布，凭感觉作画',
-    difficulty: '简单',
-    timeLimit: 60,
-    icon: <Eye className="h-5 w-5" />
-  },
-  {
-    id: 'speed_drawing',
-    name: '速画挑战',
-    description: '在限定时间内完成作品',
-    difficulty: '中等',
-    timeLimit: 120,
-    icon: <Timer className="h-5 w-5" />
-  },
-  {
-    id: 'color_limit',
-    name: '色彩限制',
-    description: '仅使用3种颜色创作',
-    difficulty: '困难',
-    timeLimit: 180,
-    icon: <Palette className="h-5 w-5" />
-  }
-]
+// 游戏模式
+type GameMode = 'free-draw' | 'guess-word' | 'collaborative'
 
-// 画布历史记录
-interface DoodleHistory {
-  id: string
-  theme: string
-  prompt: string
-  timestamp: number
-  imageData: string
-  duration: number
-  challenge?: string
-  collaborators: string[]
-}
-
-// 协作用户
-interface Collaborator {
+// 用户状态
+interface User {
   id: string
   name: string
   color: string
   isOnline: boolean
-  cursor?: { x: number, y: number }
-  currentTool?: DrawingTool
+  isDrawing: boolean
+}
+
+// 绘画数据
+interface DrawingData {
+  tool: DrawingTool
+  color: string
+  size: number
+  points: { x: number; y: number }[]
+  timestamp: number
+  userId: string
 }
 
 // 聊天消息
 interface ChatMessage {
   id: string
   userId: string
-  userName: string
   content: string
   timestamp: number
+  isGuess: boolean
+  isCorrect: boolean
 }
 
-function formatTime(seconds: number): string {
-  const minutes = Math.floor(seconds / 60)
-  const remainingSeconds = seconds % 60
-  return `${minutes.toString().padStart(2, '0')}:${remainingSeconds.toString().padStart(2, '0')}`
-}
-
-function formatTimestamp(timestamp: number): string {
-  const now = Date.now()
-  const diff = now - timestamp
-  
-  if (diff < 1000 * 60) {
-    return '刚刚'
-  } else if (diff < 1000 * 60 * 60) {
-    return `${Math.floor(diff / (1000 * 60))}分钟前`
-  } else if (diff < 1000 * 60 * 60 * 24) {
-    return `${Math.floor(diff / (1000 * 60 * 60))}小时前`
-  } else {
-    return `${Math.floor(diff / (1000 * 60 * 60 * 24))}天前`
-  }
+// 游戏房间
+interface GameRoom {
+  id: string
+  name: string
+  mode: GameMode
+  users: User[]
+  currentWord?: string
+  round: number
+  maxRounds: number
+  timer: number
+  isStarted: boolean
+  isPaused: boolean
 }
 
 export default function CollaborativeDoodlePage() {
-  const [selectedTheme, setSelectedTheme] = useState('happiness')
-  const [currentPrompt, setCurrentPrompt] = useState('')
-  const [selectedTool, setSelectedTool] = useState<DrawingTool>('pen')
-  const [selectedColor, setSelectedColor] = useState('#000000')
+  // 绘画状态
+  const [tool, setTool] = useState<DrawingTool>('pen')
+  const [color, setColor] = useState('#000000')
   const [brushSize, setBrushSize] = useState(5)
   const [isDrawing, setIsDrawing] = useState(false)
-  const [drawTime, setDrawTime] = useState(0)
-  const [doodleHistory, setDoodleHistory] = useState<DoodleHistory[]>([])
-  const [isPlaying, setIsPlaying] = useState(false)
-  const [activeChallenge, setActiveChallenge] = useState<string | null>(null)
-  const [remainingTime, setRemainingTime] = useState(0)
-  const [isFullscreen, setIsFullscreen] = useState(false)
-  const [showGrid, setShowGrid] = useState(false)
-  const [soundEnabled, setSoundEnabled] = useState(true)
+  const [canvasHistory, setCanvasHistory] = useState<string[]>([])
+  const [historyIndex, setHistoryIndex] = useState(-1)
   
-  // 协作功能状态
-  const [isConnected, setIsConnected] = useState(false)
-  const [collaborators, setCollaborators] = useState<Collaborator[]>([])
-  const [chatMessages, setChatMessages] = useState<ChatMessage[]>([])
-  const [newMessage, setNewMessage] = useState('')
-  const [isVideoCall, setIsVideoCall] = useState(false)
-  const [isMuted, setIsMuted] = useState(false)
-  const [showInviteModal, setShowInviteModal] = useState(false)
-  const [inviteLink, setInviteLink] = useState('')
-  const [canvasHistory, setCanvasHistory] = useState<ImageData[]>([])
-  const [historyStep, setHistoryStep] = useState(-1)
+  // 游戏状态
+  const [gameMode, setGameMode] = useState<GameMode>('free-draw')
+  const [room, setRoom] = useState<GameRoom | null>(null)
+  const [users, setUsers] = useState<User[]>([])
+  const [messages, setMessages] = useState<ChatMessage[]>([])
+  const [currentWord, setCurrentWord] = useState('')
+  const [guessInput, setGuessInput] = useState('')
+  const [roundTime, setRoundTime] = useState(60)
   
-  // 实时协作状态
-  const [lastSyncTime, setLastSyncTime] = useState(0)
-  const [syncInterval, setSyncInterval] = useState<NodeJS.Timeout | null>(null)
-  const [isSyncing, setIsSyncing] = useState(false)
-  const [collaboratorCursors, setCollaboratorCursors] = useState<{[key: string]: {x: number, y: number}}>({})
-  const [recentActions, setRecentActions] = useState<Array<{type: string, user: string, timestamp: number}>>([])
-  const [connectionQuality, setConnectionQuality] = useState<'excellent' | 'good' | 'fair' | 'poor'>('excellent')
-  
+  // 画布引用
   const canvasRef = useRef<HTMLCanvasElement>(null)
-  const contextRef = useRef<CanvasRenderingContext2D | null>(null)
-  const drawTimeIntervalRef = useRef<NodeJS.Timeout | null>(null)
-  const challengeIntervalRef = useRef<NodeJS.Timeout | null>(null)
-  const [canvasSize, setCanvasSize] = useState({ width: 800, height: 600 })
+  const containerRef = useRef<HTMLDivElement>(null)
 
+  // 初始化画布
   useEffect(() => {
-    // 初始化画布
-    if (canvasRef.current) {
-      const canvas = canvasRef.current
-      const rect = canvas.getBoundingClientRect()
-      canvas.width = rect.width
-      canvas.height = rect.height
+    const canvas = canvasRef.current
+    if (!canvas) return
+    
+    const ctx = canvas.getContext('2d')
+    if (!ctx) return
+    
+    // 设置画布大小
+    const resizeCanvas = () => {
+      if (containerRef.current) {
+        canvas.width = containerRef.current.clientWidth
+        canvas.height = containerRef.current.clientHeight - 100
+      }
       
-      const context = canvas.getContext('2d')
-      if (context) {
-        context.lineCap = 'round'
-        context.lineJoin = 'round'
-        contextRef.current = context
-      }
+      // 清除画布并设置白色背景
+      ctx.fillStyle = '#FFFFFF'
+      ctx.fillRect(0, 0, canvas.width, canvas.height)
+      
+      // 保存初始状态
+      saveCanvasState()
     }
     
-    // 响应式调整画布大小
-    const handleResize = () => {
-      if (canvasRef.current && contextRef.current) {
-        const canvas = canvasRef.current
-        const rect = canvas.getBoundingClientRect()
-        const imageData = contextRef.current.getImageData(0, 0, canvas.width, canvas.height)
-        
-        canvas.width = rect.width
-        canvas.height = rect.height
-        
-        contextRef.current.putImageData(imageData, 0, 0)
-        contextRef.current.lineCap = 'round'
-        contextRef.current.lineJoin = 'round'
-      }
-    }
-    
-    window.addEventListener('resize', handleResize)
-    return () => window.removeEventListener('resize', handleResize)
-  }, [])
-
-  useEffect(() => {
-    // 设置当前主题的随机提示
-    if (selectedTheme) {
-      const theme = emotionThemes.find(t => t.id === selectedTheme)
-      if (theme && theme.prompts.length > 0) {
-        const randomPrompt = theme.prompts[Math.floor(Math.random() * theme.prompts.length)]
-        setCurrentPrompt(randomPrompt)
-      }
-    }
-  }, [selectedTheme])
-
-  useEffect(() => {
-    // 加载历史记录
-    const savedHistory = safeLocalStorage.getItem('doodleHistory')
-    if (savedHistory) {
-      try {
-        setDoodleHistory(JSON.parse(savedHistory))
-      } catch (error) {
-        console.error('Failed to load doodle history:', error)
-      }
-    }
-
-    // 模拟协作用户
-    const mockCollaborators: Collaborator[] = [
-      {
-        id: 'user1',
-        name: '小明',
-        color: '#FF6B6B',
-        isOnline: true,
-        cursor: { x: 100, y: 150 },
-        currentTool: 'brush'
-      },
-      {
-        id: 'user2',
-        name: '小红',
-        color: '#4ECDC4',
-        isOnline: false,
-        currentTool: 'pen'
-      }
-    ]
-    setCollaborators(mockCollaborators)
-
-    // 生成邀请链接
-    setInviteLink(`${window.location.origin}${window.location.pathname}?room=${Date.now()}`)
-  }, [])
-
-  useEffect(() => {
-    // 绘画计时器
-    if (isDrawing) {
-      drawTimeIntervalRef.current = setInterval(() => {
-        setDrawTime(prev => prev + 1)
-      }, 1000)
-    } else {
-      if (drawTimeIntervalRef.current) {
-        clearInterval(drawTimeIntervalRef.current)
-      }
-    }
+    resizeCanvas()
+    window.addEventListener('resize', resizeCanvas)
     
     return () => {
-      if (drawTimeIntervalRef.current) {
-        clearInterval(drawTimeIntervalRef.current)
-      }
+      window.removeEventListener('resize', resizeCanvas)
     }
-  }, [isDrawing])
+  }, [])
 
-  useEffect(() => {
-    // 挑战计时器
-    if (activeChallenge && remainingTime > 0) {
-      challengeIntervalRef.current = setInterval(() => {
-        setRemainingTime(prev => prev - 1)
-      }, 1000)
-    } else if (remainingTime === 0 && activeChallenge) {
-      endChallenge()
-    }
+  // 保存画布状态
+  const saveCanvasState = () => {
+    const canvas = canvasRef.current
+    if (!canvas) return
     
-    return () => {
-      if (challengeIntervalRef.current) {
-        clearInterval(challengeIntervalRef.current)
-      }
-    }
-  }, [activeChallenge, remainingTime])
+    const dataURL = canvas.toDataURL()
+    setCanvasHistory(prev => {
+      const newHistory = prev.slice(0, historyIndex + 1)
+      newHistory.push(dataURL)
+      return newHistory.slice(-50) // 限制历史记录数量
+    })
+    setHistoryIndex(prev => Math.min(prev + 1, 49))
+  }
 
-  const startDrawing = () => {
+  // 开始绘画
+  const startDrawing = (e: React.MouseEvent) => {
+    if (!canvasRef.current) return
+    
+    const canvas = canvasRef.current
+    const ctx = canvas.getContext('2d')
+    if (!ctx) return
+    
     setIsDrawing(true)
-    setDrawTime(0)
-    if (contextRef.current) {
-      contextRef.current.strokeStyle = selectedColor
-      contextRef.current.lineWidth = brushSize
-    }
     
-    // 保存当前画布状态
-    if (canvasRef.current && contextRef.current) {
-      const imageData = contextRef.current.getImageData(0, 0, canvasRef.current.width, canvasRef.current.height)
-      setCanvasHistory([...canvasHistory.slice(0, historyStep + 1), imageData])
-      setHistoryStep(historyStep + 1)
+    const rect = canvas.getBoundingClientRect()
+    const x = e.clientX - rect.left
+    const y = e.clientY - rect.top
+    
+    ctx.beginPath()
+    ctx.moveTo(x, y)
+    
+    // 设置画笔样式
+    ctx.strokeStyle = color
+    ctx.lineWidth = brushSize
+    ctx.lineCap = 'round'
+    ctx.lineJoin = 'round'
+    
+    if (tool === 'eraser') {
+      ctx.globalCompositeOperation = 'destination-out'
+    } else {
+      ctx.globalCompositeOperation = 'source-over'
     }
   }
 
+  // 绘画中
+  const draw = (e: React.MouseEvent) => {
+    if (!isDrawing || !canvasRef.current) return
+    
+    const canvas = canvasRef.current
+    const ctx = canvas.getContext('2d')
+    if (!ctx) return
+    
+    const rect = canvas.getBoundingClientRect()
+    const x = e.clientX - rect.left
+    const y = e.clientY - rect.top
+    
+    ctx.lineTo(x, y)
+    ctx.stroke()
+  }
+
+  // 结束绘画
   const stopDrawing = () => {
+    if (!isDrawing) return
+    
     setIsDrawing(false)
-    saveToHistory()
-  }
-
-  const startChallenge = (challengeId: string) => {
-    const challenge = drawingChallenges.find(c => c.id === challengeId)
-    if (challenge) {
-      setActiveChallenge(challengeId)
-      setRemainingTime(challenge.timeLimit)
-      startDrawing()
+    saveCanvasState()
+    
+    // 重置合成模式
+    const canvas = canvasRef.current
+    const ctx = canvas?.getContext('2d')
+    if (ctx) {
+      ctx.globalCompositeOperation = 'source-over'
     }
   }
 
-  const endChallenge = () => {
-    if (activeChallenge) {
-      stopDrawing()
-      setActiveChallenge(null)
-      setRemainingTime(0)
-    }
-  }
-
-  const saveToHistory = () => {
-    if (canvasRef.current) {
-      const imageData = canvasRef.current.toDataURL()
-      const newDoodle: DoodleHistory = {
-        id: Date.now().toString(),
-        theme: selectedTheme,
-        prompt: currentPrompt,
-        timestamp: Date.now(),
-        imageData,
-        duration: drawTime,
-        challenge: activeChallenge || undefined,
-        collaborators: collaborators.filter(c => c.isOnline).map(c => c.name)
-      }
-      
-      const updatedHistory = [newDoodle, ...doodleHistory].slice(0, 10) // 保留最近10个作品
-      setDoodleHistory(updatedHistory)
-      safeLocalStorage.setItem('doodleHistory', JSON.stringify(updatedHistory))
-    }
-  }
-
-  const clearCanvas = () => {
-    if (canvasRef.current && contextRef.current) {
-      contextRef.current.clearRect(0, 0, canvasRef.current.width, canvasRef.current.height)
-    }
-  }
-
-  const saveDoodle = () => {
-    if (canvasRef.current) {
-      const link = document.createElement('a')
-      link.download = `doodle-${Date.now()}.png`
-      link.href = canvasRef.current.toDataURL()
-      link.click()
-    }
-  }
-
+  // 撤销
   const undo = () => {
-    if (historyStep > 0 && canvasHistory.length > 0) {
-      const previousState = canvasHistory[historyStep - 1]
-      if (contextRef.current && canvasRef.current) {
-        contextRef.current.putImageData(previousState, 0, 0)
-      }
-      setHistoryStep(historyStep - 1)
+    if (historyIndex > 0) {
+      setHistoryIndex(prev => prev - 1)
+      loadCanvasState(historyIndex - 1)
     }
   }
 
+  // 重做
   const redo = () => {
-    if (historyStep < canvasHistory.length - 1) {
-      const nextState = canvasHistory[historyStep + 1]
-      if (contextRef.current && canvasRef.current) {
-        contextRef.current.putImageData(nextState, 0, 0)
-      }
-      setHistoryStep(historyStep + 1)
+    if (historyIndex < canvasHistory.length - 1) {
+      setHistoryIndex(prev => prev + 1)
+      loadCanvasState(historyIndex + 1)
     }
   }
 
-  const toggleFullscreen = () => {
-    if (!document.fullscreenElement) {
-      document.documentElement.requestFullscreen()
-      setIsFullscreen(true)
-    } else {
-      document.exitFullscreen()
-      setIsFullscreen(false)
+  // 加载画布状态
+  const loadCanvasState = (index: number) => {
+    const canvas = canvasRef.current
+    const ctx = canvas?.getContext('2d')
+    if (!canvas || !ctx || index < 0 || index >= canvasHistory.length) return
+    
+    const img = new Image()
+    img.onload = () => {
+      ctx.clearRect(0, 0, canvas.width, canvas.height)
+      ctx.drawImage(img, 0, 0)
     }
+    img.src = canvasHistory[index]
   }
 
-  const copyInviteLink = () => {
-    navigator.clipboard.writeText(inviteLink)
-    alert('邀请链接已复制到剪贴板！')
-    setShowInviteModal(false)
+  // 清除画布
+  const clearCanvas = () => {
+    const canvas = canvasRef.current
+    const ctx = canvas?.getContext('2d')
+    if (!canvas || !ctx) return
+    
+    ctx.fillStyle = '#FFFFFF'
+    ctx.fillRect(0, 0, canvas.width, canvas.height)
+    saveCanvasState()
   }
 
+  // 保存作品
+  const saveDrawing = () => {
+    const canvas = canvasRef.current
+    if (!canvas) return
+    
+    const link = document.createElement('a')
+    link.download = 'collaborative-drawing.png'
+    link.href = canvas.toDataURL()
+    link.click()
+  }
+
+  // 创建游戏房间
+  const createRoom = (mode: GameMode) => {
+    const newRoom: GameRoom = {
+      id: Date.now().toString(),
+      name: `${mode} Room`,
+      mode,
+      users: [
+        {
+          id: 'user1',
+          name: 'Player 1',
+          color: '#FF6B6B',
+          isOnline: true,
+          isDrawing: false
+        }
+      ],
+      round: 1,
+      maxRounds: 3,
+      timer: 60,
+      isStarted: false,
+      isPaused: false
+    }
+    
+    if (mode === 'guess-word') {
+      newRoom.currentWord = getRandomWord()
+    }
+    
+    setRoom(newRoom)
+    setGameMode(mode)
+  }
+
+  // 获取随机词汇
+  const getRandomWord = () => {
+    const words = [
+      '太阳', '月亮', '星星', '云朵', '彩虹', '花朵', '树木', '动物',
+      '房子', '汽车', '飞机', '轮船', '食物', '饮料', '水果', '蔬菜',
+      '人物', '动物', '风景', '建筑', '工具', '乐器', '运动', '游戏'
+    ]
+    return words[Math.floor(Math.random() * words.length)]
+  }
+
+  // 发送消息
   const sendMessage = () => {
-    if (newMessage.trim()) {
-      const message: ChatMessage = {
-        id: Date.now().toString(),
-        userId: 'current_user',
-        userName: '我',
-        content: newMessage.trim(),
-        timestamp: Date.now()
-      }
-      
-      setChatMessages([...chatMessages, message])
-      setNewMessage('')
-      
-      // 记录协作行为
-      addRecentAction('chat', '我')
+    if (!guessInput.trim()) return
+    
+    const newMessage: ChatMessage = {
+      id: Date.now().toString(),
+      userId: 'user1',
+      content: guessInput,
+      timestamp: Date.now(),
+      isGuess: gameMode === 'guess-word',
+      isCorrect: gameMode === 'guess-word' && guessInput === currentWord
+    }
+    
+    setMessages(prev => [...prev, newMessage])
+    setGuessInput('')
+    
+    // 如果是猜词模式且猜对了
+    if (newMessage.isCorrect) {
+      // 处理猜对逻辑
     }
   }
 
-  // 实时协作功能
-  const connectToCollaboration = () => {
-    setIsConnected(true)
-    
-    // 模拟连接质量检测
-    const qualities = ['excellent', 'good', 'fair', 'poor'] as const
-    const randomQuality = qualities[Math.floor(Math.random() * qualities.length)]
-    setConnectionQuality(randomQuality)
-    
-    // 开始同步间隔
-    const interval = setInterval(syncCanvasState, 2000) // 每2秒同步一次
-    setSyncInterval(interval)
-    
-    // 模拟其他协作者加入
-    setTimeout(() => {
-      const newCollaborators = collaborators.map(c => 
-        c.id === 'user2' ? {...c, isOnline: true} : c
-      )
-      setCollaborators(newCollaborators)
-    }, 1000)
-    
-    // 添加连接成功的提示
-    setTimeout(() => {
-      alert('✅ 协作连接成功！现在可以实时与协作者一起绘画了。')
-    }, 500)
-  }
-
-  const disconnectFromCollaboration = () => {
-    setIsConnected(false)
-    if (syncInterval) {
-      clearInterval(syncInterval)
-      setSyncInterval(null)
-    }
-    
-    // 清除协作者光标
-    setCollaboratorCursors({})
-    setRecentActions([])
-  }
-
-  const syncCanvasState = () => {
-    if (!isConnected || !canvasRef.current || !contextRef.current) return
-    
-    setIsSyncing(true)
-    
-    // 模拟同步过程
-    setTimeout(() => {
-      setLastSyncTime(Date.now())
-      setIsSyncing(false)
-      
-      // 模拟其他协作者的绘画动作
-      if (Math.random() > 0.7) { // 30%概率模拟其他用户动作
-        simulateCollaboratorAction()
-      }
-    }, 300)
-  }
-
-  const simulateCollaboratorAction = () => {
-    if (!contextRef.current || !canvasRef.current) return
-    
-    const onlineCollaborators = collaborators.filter(c => c.isOnline && c.id !== 'current_user')
-    if (onlineCollaborators.length === 0) return
-    
-    const randomCollaborator = onlineCollaborators[Math.floor(Math.random() * onlineCollaborators.length)]
-    
-    // 模拟绘画动作
-    const actionTypes = ['draw_line', 'draw_circle', 'change_color', 'erase']
-    const randomAction = actionTypes[Math.floor(Math.random() * actionTypes.length)]
-    
-    addRecentAction(randomAction, randomCollaborator.name)
-    
-    // 更新协作者光标位置
-    setCollaboratorCursors(prev => ({
-      ...prev,
-      [randomCollaborator.id]: {
-        x: Math.random() * (canvasRef.current?.width || 800),
-        y: Math.random() * (canvasRef.current?.height || 600)
-      }
-    }))
-  }
-
-  const addRecentAction = (type: string, user: string) => {
-    const action = {
-      type,
-      user,
-      timestamp: Date.now()
-    }
-    
-    setRecentActions(prev => [action, ...prev.slice(0, 9)]) // 保留最近10个动作
-  }
-
-  const broadcastCanvasAction = (action: {type: string, data: any}) => {
-    if (!isConnected) return
-    
-    // 这里应该是实际发送到服务器的逻辑
-    // 现在用模拟代替
-    addRecentAction(action.type, '我')
-  }
-
-  const updateCollaboratorCursor = (userId: string, x: number, y: number) => {
-    setCollaboratorCursors(prev => ({
-      ...prev,
-      [userId]: { x, y }
-    }))
-  }
-
-  const handleCanvasMouseDown = (e: React.MouseEvent<HTMLCanvasElement>) => {
-    if (!isDrawing) return
-    
-    const rect = canvasRef.current?.getBoundingClientRect()
-    if (!rect || !contextRef.current) return
-    
-    const x = e.clientX - rect.left
-    const y = e.clientY - rect.top
-    
-    contextRef.current.beginPath()
-    contextRef.current.moveTo(x, y)
-  }
-
-  const handleCanvasMouseMove = (e: React.MouseEvent<HTMLCanvasElement>) => {
-    const rect = canvasRef.current?.getBoundingClientRect()
-    if (!rect) return
-    
-    const x = e.clientX - rect.left
-    const y = e.clientY - rect.top
-    
-    // 更新当前用户光标位置（模拟）
-    if (isConnected) {
-      // 这里可以发送光标位置到其他协作者
-    }
-    
-    if (!isDrawing) return
-    
-    if (!contextRef.current) return
-    
-    if (selectedTool === 'eraser') {
-      contextRef.current.globalCompositeOperation = 'destination-out'
-    } else {
-      contextRef.current.globalCompositeOperation = 'source-over'
-      contextRef.current.strokeStyle = selectedColor
-    }
-    
-    contextRef.current.lineWidth = brushSize
-    
-    if (selectedTool === 'pen' || selectedTool === 'brush' || selectedTool === 'eraser') {
-      contextRef.current.lineTo(x, y)
-      contextRef.current.stroke()
-    }
-  }
-
-  const handleCanvasMouseUp = () => {
-    if (!contextRef.current) return
-    contextRef.current.closePath()
+  // 格式化时间
+  const formatTime = (seconds: number) => {
+    const mins = Math.floor(seconds / 60)
+    const secs = seconds % 60
+    return `${mins}:${secs.toString().padStart(2, '0')}`
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-purple-50 via-pink-50 to-indigo-50">
+    <div className="min-h-screen bg-gradient-to-br from-blue-50 via-purple-50 to-pink-50">
       <Navigation />
       
       <main className="container mx-auto px-4 py-8">
         <div className="mb-6">
-          <Link href="/games/interactive-games" className="inline-flex items-center gap-2 text-purple-600 hover:text-purple-800 transition-colors mb-6">
+          <Link href="/games/interactive-games" className="inline-flex items-center gap-2 text-blue-600 hover:text-blue-800 transition-colors mb-6">
             <ArrowLeft className="h-4 w-4" />
             返回互动游戏
           </Link>
           
           <div className="text-center mb-8">
-            <h1 className="text-4xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-purple-600 to-pink-600 mb-4">
+            <h1 className="text-4xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-blue-600 to-purple-600 mb-4">
               协作涂鸦板
             </h1>
             <p className="text-gray-600 max-w-2xl mx-auto text-lg">
-              选择情感主题，与朋友一起创作独特的艺术作品，实时协作，共享创作乐趣
+              实时协作绘画，双人猜词游戏，创意无限，乐趣无穷
             </p>
           </div>
         </div>
 
-        <div className="grid grid-cols-1 lg:grid-cols-4 gap-6">
-          {/* 左侧工具栏 */}
-          <div className="lg:col-span-1 space-y-4">
-            {/* 协作状态 */}
-            <Card className="bg-white/80 backdrop-blur-sm shadow-lg">
-              <CardHeader className="pb-3">
-                <CardTitle className="text-lg flex items-center gap-2">
-                  <Users className="h-5 w-5 text-blue-500" />
-                  协作状态
-                </CardTitle>
-              </CardHeader>
-              <CardContent className="space-y-3">
-                <div className="flex items-center justify-between">
-                  <span className="text-sm font-medium">连接状态</span>
-                  <Badge className={isConnected ? "bg-green-100 text-green-800 border-0" : "bg-gray-100 text-gray-800 border-0"}>
-                    {isConnected ? <Wifi className="h-3 w-3 mr-1" /> : <WifiOff className="h-3 w-3 mr-1" />}
-                    {isConnected ? '已连接' : '离线'}
-                  </Badge>
-                </div>
-                
-                <div className="flex items-center justify-between">
-                  <span className="text-sm font-medium">在线用户</span>
-                  <Badge className="bg-blue-100 text-blue-800 border-0">
-                    {collaborators.filter(c => c.isOnline).length}
-                  </Badge>
-                </div>
-                
-                <Button 
-                  onClick={() => setShowInviteModal(true)}
-                  className="w-full bg-gradient-to-r from-blue-500 to-purple-500 hover:from-blue-600 hover:to-purple-600"
-                >
-                  <UserPlus className="h-4 w-4 mr-2" />
-                  邀请好友
-                </Button>
-                
-                <Button 
-                  onClick={() => setIsVideoCall(!isVideoCall)}
-                  variant="outline"
-                  className="w-full"
-                >
-                  {isVideoCall ? <VideoOff className="h-4 w-4 mr-2" /> : <Video className="h-4 w-4 mr-2" />}
-                  {isVideoCall ? '结束视频' : '开始视频'}
-                </Button>
-                
-                <Button 
-                  onClick={() => setIsMuted(!isMuted)}
-                  variant="outline"
-                  className="w-full"
-                >
-                  {isMuted ? <MicOff className="h-4 w-4 mr-2" /> : <Mic className="h-4 w-4 mr-2" />}
-                  {isMuted ? '取消静音' : '静音'}
-                </Button>
-              </CardContent>
-            </Card>
+        <Tabs defaultValue="free-draw" className="space-y-6">
+          <TabsList className="grid w-full grid-cols-3">
+            <TabsTrigger value="free-draw" onClick={() => setGameMode('free-draw')}>
+              <Pencil className="h-4 w-4 mr-2" />
+              自由绘画
+            </TabsTrigger>
+            <TabsTrigger value="guess-word" onClick={() => setGameMode('guess-word')}>
+              <Target className="h-4 w-4 mr-2" />
+              猜词游戏
+            </TabsTrigger>
+            <TabsTrigger value="collaborative" onClick={() => setGameMode('collaborative')}>
+              <Users className="h-4 w-4 mr-2" />
+              协作模式
+            </TabsTrigger>
+          </TabsList>
 
-            {/* 情感主题选择 */}
-            <Card className="bg-white/80 backdrop-blur-sm shadow-lg">
-              <CardHeader className="pb-3">
-                <CardTitle className="text-lg flex items-center gap-2">
-                  <Heart className="h-5 w-5 text-pink-500" />
-                  情感主题
-                </CardTitle>
-              </CardHeader>
-              <CardContent className="space-y-2">
-                {emotionThemes.map(theme => (
-                  <button
-                    key={theme.id}
-                    onClick={() => setSelectedTheme(theme.id)}
-                    className={`w-full p-3 rounded-lg border transition-all ${
-                      selectedTheme === theme.id 
-                        ? 'border-purple-500 bg-purple-50 text-purple-700' 
-                        : 'border-gray-200 hover:border-gray-300'
-                    }`}
-                  >
-                    <div className="flex items-center gap-3">
-                      <div className={`p-1 rounded-full bg-opacity-20`} style={{ backgroundColor: theme.color }}>
-                        {theme.icon}
-                      </div>
-                      <div className="text-left">
-                        <div className="font-medium">{theme.name}</div>
-                        <div className="text-xs text-gray-500">{theme.description}</div>
-                      </div>
-                    </div>
-                  </button>
-                ))}
-              </CardContent>
-            </Card>
-
-            {/* 绘画工具 */}
-            <Card className="bg-white/80 backdrop-blur-sm shadow-lg">
-              <CardHeader className="pb-3">
-                <CardTitle className="text-lg flex items-center gap-2">
-                  <Palette className="h-5 w-5 text-purple-500" />
-                  绘画工具
-                </CardTitle>
-              </CardHeader>
-              <CardContent className="space-y-3">
-                <div className="grid grid-cols-3 gap-2">
-                  {drawingTools.map(tool => (
-                    <button
-                      key={tool.id}
-                      onClick={() => setSelectedTool(tool.id)}
-                      className={`p-3 rounded-lg border transition-all ${
-                        selectedTool === tool.id 
-                          ? 'border-purple-500 bg-purple-50 text-purple-700' 
-                          : 'border-gray-200 hover:border-gray-300'
-                      }`}
-                      title={tool.description}
-                    >
-                      {tool.icon}
-                    </button>
-                  ))}
-                </div>
-                
-                <div className="space-y-2">
-                  <label className="text-sm font-medium">画笔大小: {brushSize}px</label>
-                  <input
-                    type="range"
-                    min="1"
-                    max="50"
-                    value={brushSize}
-                    onChange={(e) => setBrushSize(Number(e.target.value))}
-                    className="w-full"
-                  />
-                </div>
-              </CardContent>
-            </Card>
-
-            {/* 颜色选择 */}
-            <Card className="bg-white/80 backdrop-blur-sm shadow-lg">
-              <CardHeader className="pb-3">
-                <CardTitle className="text-lg flex items-center gap-2">
-                  <Sparkles className="h-5 w-5 text-purple-500" />
-                  颜色调色板
-                </CardTitle>
-              </CardHeader>
-              <CardContent className="space-y-3">
-                <div className="flex items-center gap-2">
-                  <div 
-                    className="w-8 h-8 rounded-full border-2 border-gray-300"
-                    style={{ backgroundColor: selectedColor }}
-                  />
-                  <input
-                    type="color"
-                    value={selectedColor}
-                    onChange={(e) => setSelectedColor(e.target.value)}
-                    className="w-full h-8"
-                  />
-                </div>
-                
-                <div className="grid grid-cols-6 gap-1">
-                  {colorPalette.map(color => (
-                    <button
-                      key={color}
-                      onClick={() => setSelectedColor(color)}
-                      className={`w-8 h-8 rounded border-2 transition-all ${
-                        selectedColor === color ? 'border-purple-500 scale-110' : 'border-gray-200'
-                      }`}
-                      style={{ backgroundColor: color }}
-                    />
-                  ))}
-                </div>
-                
-                {/* 推荐颜色 */}
-                <div className="pt-2 border-t">
-                  <div className="text-sm font-medium mb-2">推荐颜色</div>
-                  <div className="flex gap-1">
-                    {emotionThemes.find(t => t.id === selectedTheme)?.recommendedColors.map(color => (
-                      <button
-                        key={color}
-                        onClick={() => setSelectedColor(color)}
-                        className={`w-6 h-6 rounded border transition-all ${
-                          selectedColor === color ? 'border-purple-500 scale-110' : 'border-gray-200'
-                        }`}
-                        style={{ backgroundColor: color }}
-                      />
-                    ))}
-                  </div>
-                </div>
-              </CardContent>
-            </Card>
-          </div>
-
-          {/* 中间画布区域 */}
-          <div className="lg:col-span-2">
-            <Card className="bg-white/80 backdrop-blur-sm shadow-lg">
-              <CardHeader>
-                <div className="flex justify-between items-start">
-                  <div>
-                    <CardTitle className="flex items-center gap-2">
-                      <Brush className="h-5 w-5 text-purple-500" />
-                      协作画布
-                    </CardTitle>
-                    <CardDescription className="mt-1">
-                      {currentPrompt && (
-                        <div className="flex items-center gap-2">
-                          <Target className="h-4 w-4 text-pink-500" />
-                          <span>{currentPrompt}</span>
-                        </div>
-                      )}
-                    </CardDescription>
-                  </div>
-                  
-                  <div className="flex items-center gap-2">
-                    {activeChallenge && (
-                      <Badge className="bg-orange-100 text-orange-800 border-0">
-                        <Timer className="h-3 w-3 mr-1" />
-                        {formatTime(remainingTime)}
-                      </Badge>
-                    )}
-                    <Button
-                      variant="ghost"
-                      size="sm"
-                      onClick={() => setShowGrid(!showGrid)}
-                      title="显示网格"
-                    >
-                      <Grid3X3 className="h-4 w-4" />
-                    </Button>
-                    <Button
-                      variant="ghost"
-                      size="sm"
-                      onClick={toggleFullscreen}
-                      title="全屏"
-                    >
-                      <Maximize2 className="h-4 w-4" />
-                    </Button>
-                    <Button
-                      variant="ghost"
-                      size="sm"
-                      onClick={() => setSoundEnabled(!soundEnabled)}
-                      title="音效"
-                    >
-                      <Volume2 className="h-4 w-4" />
-                    </Button>
-                  </div>
-                </div>
-              </CardHeader>
-              <CardContent className="space-y-4">
-                {/* 协作者光标指示 */}
-                <div className="relative">
-                  {collaborators.filter(c => c.isOnline && c.cursor).map(collaborator => (
-                    <div
-                      key={collaborator.id}
-                      className="absolute pointer-events-none"
-                      style={{
-                        left: `${collaborator.cursor?.x}px`,
-                        top: `${collaborator.cursor?.y}px`,
-                        transform: 'translate(-50%, -50%)'
-                      }}
-                    >
-                      <div className="flex flex-col items-center">
-                        <div 
-                          className="w-4 h-4 rounded-full border-2 border-white shadow-md"
-                          style={{ backgroundColor: collaborator.color }}
-                        />
-                        <span className="text-xs bg-black bg-opacity-50 text-white px-1 rounded">
-                          {collaborator.name}
-                        </span>
-                      </div>
-                    </div>
-                  ))}
-                  
-                  {/* 画布 */}
-                  <div className={`relative bg-white rounded-lg border-2 border-gray-200 overflow-hidden ${
-                    showGrid ? 'bg-grid' : ''
-                  }`}>
-                    <canvas
-                      ref={canvasRef}
-                      onMouseDown={handleCanvasMouseDown}
-                      onMouseMove={handleCanvasMouseMove}
-                      onMouseUp={handleCanvasMouseUp}
-                      onMouseLeave={handleCanvasMouseUp}
-                      className="w-full cursor-crosshair"
-                      style={{ height: '400px' }}
-                    />
-                    
-                    {!isDrawing && !activeChallenge && (
-                      <div className="absolute inset-0 flex items-center justify-center pointer-events-none">
-                        <div className="text-center text-gray-400">
-                          <Brush className="h-12 w-12 mx-auto mb-2" />
-                          <p>选择工具和颜色，点击开始创作</p>
-                        </div>
-                      </div>
-                    )}
-                  </div>
-                </div>
-                
-                {/* 控制按钮 */}
-                <div className="flex flex-wrap gap-2">
-                  {!isDrawing ? (
-                    <Button onClick={startDrawing} className="bg-gradient-to-r from-purple-500 to-pink-500 hover:from-purple-600 hover:to-pink-600">
-                      <Play className="h-4 w-4 mr-2" />
-                      开始绘画
-                    </Button>
-                  ) : (
-                    <Button onClick={stopDrawing} variant="outline">
-                      <Pause className="h-4 w-4 mr-2" />
-                      暂停绘画
-                    </Button>
-                  )}
-                  
-                  <Button onClick={clearCanvas} variant="outline">
-                    <RotateCcw className="h-4 w-4 mr-2" />
-                    清空画布
-                  </Button>
-                  
-                  <Button onClick={undo} variant="outline" disabled={historyStep <= 0}>
-                    <Undo2 className="h-4 w-4 mr-2" />
-                    撤销
-                  </Button>
-                  
-                  <Button onClick={redo} variant="outline" disabled={historyStep >= canvasHistory.length - 1}>
-                    <RefreshCw className="h-4 w-4 mr-2" />
-                    重做
-                  </Button>
-                  
-                  <Button onClick={saveDoodle} variant="outline">
-                    <Download className="h-4 w-4 mr-2" />
-                    保存作品
-                  </Button>
-                  
-                  <Button onClick={() => {}} variant="outline">
-                    <Share className="h-4 w-4 mr-2" />
-                    分享
-                  </Button>
-                </div>
-                
-                {/* 绘画信息 */}
-                <div className="flex items-center justify-between text-sm text-gray-600 bg-gray-50 rounded-lg p-3">
-                  <div className="flex items-center gap-4">
-                    <div className="flex items-center gap-1">
-                      <Clock className="h-4 w-4" />
-                      <span>绘画时间: {formatTime(drawTime)}</span>
-                    </div>
-                    <div className="flex items-center gap-1">
-                      <Brush className="h-4 w-4" />
-                      <span>当前工具: {drawingTools.find(t => t.id === selectedTool)?.name}</span>
-                    </div>
-                  </div>
-                  <div className="flex items-center gap-1">
-                    <div className="w-4 h-4 rounded border border-gray-300" style={{ backgroundColor: selectedColor }} />
-                    <span>当前颜色</span>
-                  </div>
-                </div>
-              </CardContent>
-            </Card>
-            
-            {/* 绘画挑战 */}
-            <Card className="bg-white/80 backdrop-blur-sm shadow-lg mt-4">
-              <CardHeader className="pb-3">
-                <CardTitle className="text-lg flex items-center gap-2">
-                  <Zap className="h-5 w-5 text-orange-500" />
-                  绘画挑战
-                </CardTitle>
-              </CardHeader>
-              <CardContent className="space-y-2">
-                {drawingChallenges.map(challenge => (
-                  <button
-                    key={challenge.id}
-                    onClick={() => startChallenge(challenge.id)}
-                    disabled={activeChallenge !== null}
-                    className={`w-full p-3 rounded-lg border transition-all text-left ${
-                      activeChallenge === challenge.id 
-                        ? 'border-orange-500 bg-orange-50 text-orange-700' 
-                        : 'border-gray-200 hover:border-gray-300 hover:bg-gray-50 disabled:opacity-50 disabled:cursor-not-allowed'
-                    }`}
-                  >
-                    <div className="flex items-center justify-between">
-                      <div className="flex items-center gap-2">
-                        {challenge.icon}
-                        <div>
-                          <div className="font-medium">{challenge.name}</div>
-                          <div className="text-xs text-gray-500">{challenge.description}</div>
-                        </div>
-                      </div>
-                      <div className="text-right">
-                        <Badge variant="outline" className="text-xs">
-                          {challenge.difficulty}
-                        </Badge>
-                        <div className="text-xs text-gray-500 mt-1">
-                          {formatTime(challenge.timeLimit)}
-                        </div>
-                      </div>
-                    </div>
-                  </button>
-                ))}
-              </CardContent>
-            </Card>
-          </div>
-
-          {/* 右侧功能区域 */}
-          <div className="lg:col-span-1 space-y-4">
-            {/* 协作者列表 */}
-            <Card className="bg-white/80 backdrop-blur-sm shadow-lg">
-              <CardHeader className="pb-3">
-                <CardTitle className="text-lg flex items-center gap-2">
-                  <Users className="h-5 w-5 text-blue-500" />
-                  协作者
-                </CardTitle>
-              </CardHeader>
-              <CardContent>
-                <div className="space-y-2">
-                  {collaborators.map(collaborator => (
-                    <div key={collaborator.id} className="flex items-center gap-3 p-2 rounded-lg">
-                      <div className="relative">
-                        <div 
-                          className="w-10 h-10 rounded-full flex items-center justify-center text-white font-medium"
-                          style={{ backgroundColor: collaborator.color }}
-                        >
-                          {collaborator.name.charAt(0)}
-                        </div>
-                        <div className={`absolute -bottom-1 -right-1 w-4 h-4 rounded-full border-2 border-white ${
-                          collaborator.isOnline ? 'bg-green-500' : 'bg-gray-400'
-                        }`}></div>
-                      </div>
-                      <div className="flex-1">
-                        <div className="font-medium">{collaborator.name}</div>
-                        <div className="text-xs text-gray-500">
-                          {collaborator.currentTool && `使用 ${drawingTools.find(t => t.id === collaborator.currentTool)?.name}`}
-                        </div>
-                      </div>
-                      {collaborator.isOnline && (
-                        <Badge className="bg-green-100 text-green-800 border-0 text-xs">
-                          在线
-                        </Badge>
-                      )}
-                    </div>
-                  ))}
-                </div>
-              </CardContent>
-            </Card>
-
-            {/* 聊天窗口 */}
-            <Card className="bg-white/80 backdrop-blur-sm shadow-lg">
-              <CardHeader className="pb-3">
-                <CardTitle className="text-lg flex items-center gap-2">
-                  <MessageSquare className="h-5 w-5 text-blue-500" />
-                  协作聊天
-                </CardTitle>
-              </CardHeader>
-              <CardContent>
-                <div className="space-y-3">
-                  {/* 消息列表 */}
-                  <div className="h-48 overflow-y-auto bg-gray-50 rounded-lg p-3 space-y-2">
-                    {chatMessages.length > 0 ? (
-                      chatMessages.map(message => (
-                        <div key={message.id} className="flex items-start gap-2">
-                          <div className="w-8 h-8 rounded-full bg-blue-500 flex items-center justify-center text-white text-xs">
-                            {message.userName.charAt(0)}
-                          </div>
-                          <div className="flex-1">
-                            <div className="flex items-center gap-2 mb-1">
-                              <span className="font-medium text-sm">{message.userName}</span>
-                              <span className="text-xs text-gray-500">
-                                {formatTimestamp(message.timestamp)}
-                              </span>
-                            </div>
-                            <div className="text-sm text-gray-700 bg-white rounded-lg p-2">
-                              {message.content}
-                            </div>
-                          </div>
-                        </div>
-                      ))
-                    ) : (
-                      <div className="text-center text-gray-500 text-sm">
-                        还没有消息，开始聊天吧！
-                      </div>
-                    )}
-                  </div>
-                  
-                  {/* 消息输入 */}
-                  <div className="flex gap-2">
-                    <input
-                      type="text"
-                      value={newMessage}
-                      onChange={(e) => setNewMessage(e.target.value)}
-                      onKeyPress={(e) => e.key === 'Enter' && sendMessage()}
-                      placeholder="输入消息..."
-                      className="flex-1 px-3 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
-                    />
-                    <Button 
-                      onClick={sendMessage}
-                      disabled={!newMessage.trim()}
-                      size="sm"
-                      className="bg-blue-500 hover:bg-blue-600"
-                    >
-                      <Send className="h-4 w-4" />
-                    </Button>
-                  </div>
-                </div>
-              </CardContent>
-            </Card>
-
-            {/* 作品历史 */}
-            {doodleHistory.length > 0 && (
-              <Card className="bg-white/80 backdrop-blur-sm shadow-lg">
-                <CardHeader className="pb-3">
-                  <CardTitle className="text-lg flex items-center gap-2">
-                    <Trophy className="h-5 w-5 text-yellow-500" />
-                    作品历史
+          <TabsContent value="free-draw" className="space-y-6">
+            <div className="grid grid-cols-1 lg:grid-cols-4 gap-6">
+              {/* 工具栏 */}
+              <Card className="lg:col-span-1 bg-white/80 backdrop-blur-sm shadow-lg">
+                <CardHeader>
+                  <CardTitle className="flex items-center gap-2">
+                    <Palette className="h-5 w-5 text-blue-500" />
+                    绘画工具
                   </CardTitle>
                 </CardHeader>
-                <CardContent>
-                  <div className="space-y-2 max-h-64 overflow-y-auto">
-                    {doodleHistory.map(doodle => (
-                      <div key={doodle.id} className="flex items-center gap-3 p-2 bg-gray-50 rounded-lg">
-                        <div className="w-12 h-12 bg-white rounded border border-gray-200 overflow-hidden">
-                          <img src={doodle.imageData} alt="Doodle" className="w-full h-full object-cover" />
-                        </div>
-                        <div className="flex-1">
-                          <div className="flex items-center gap-2 mb-1">
-                            <Badge variant="outline" className="text-xs">
-                              {emotionThemes.find(t => t.id === doodle.theme)?.name}
-                            </Badge>
-                            {doodle.challenge && (
-                              <Badge variant="secondary" className="text-xs">
-                                {drawingChallenges.find(c => c.id === doodle.challenge)?.name}
-                              </Badge>
-                            )}
-                          </div>
-                          <div className="text-xs text-gray-500">
-                            {formatTime(doodle.duration)} · {new Date(doodle.timestamp).toLocaleDateString()}
-                          </div>
-                          {doodle.collaborators.length > 0 && (
-                            <div className="text-xs text-gray-500">
-                              协作者: {doodle.collaborators.join(', ')}
-                            </div>
-                          )}
-                        </div>
-                      </div>
-                    ))}
+                <CardContent className="space-y-4">
+                  {/* 工具选择 */}
+                  <div>
+                    <label className="block text-sm font-medium mb-2">绘画工具</label>
+                    <div className="grid grid-cols-3 gap-2">
+                      <button
+                        onClick={() => setTool('pen')}
+                        className={`p-2 rounded-lg border transition-all ${
+                          tool === 'pen' ? 'border-blue-500 bg-blue-50 text-blue-700' : 'border-gray-200 hover:border-gray-300'
+                        }`}
+                      >
+                        <Pencil className="h-4 w-4 mx-auto" />
+                        <span className="text-xs mt-1">画笔</span>
+                      </button>
+                      <button
+                        onClick={() => setTool('eraser')}
+                        className={`p-2 rounded-lg border transition-all ${
+                          tool === 'eraser' ? 'border-blue-500 bg-blue-50 text-blue-700' : 'border-gray-200 hover:border-gray-300'
+                        }`}
+                      >
+                        <Eraser className="h-4 w-4 mx-auto" />
+                        <span className="text-xs mt-1">橡皮</span>
+                      </button>
+                      <button
+                        onClick={() => setTool('brush')}
+                        className={`p-2 rounded-lg border transition-all ${
+                          tool === 'brush' ? 'border-blue-500 bg-blue-50 text-blue-700' : 'border-gray-200 hover:border-gray-300'
+                        }`}
+                      >
+                        <Brush className="h-4 w-4 mx-auto" />
+                        <span className="text-xs mt-1">刷子</span>
+                      </button>
+                    </div>
+                  </div>
+
+                  {/* 颜色选择 */}
+                  <div>
+                    <label className="block text-sm font-medium mb-2">颜色</label>
+                    <div className="grid grid-cols-4 gap-2">
+                      {colorPalette.map((colorOption) => (
+                        <button
+                          key={colorOption}
+                          onClick={() => setColor(colorOption)}
+                          className={`w-8 h-8 rounded border transition-transform ${
+                            color === colorOption ? 'border-blue-500 scale-110' : 'border-gray-300 hover:scale-105'
+                          }`}
+                          style={{ backgroundColor: colorOption }}
+                        />
+                      ))}
+                    </div>
+                  </div>
+
+                  {/* 画笔大小 */}
+                  <div>
+                    <label className="block text-sm font-medium mb-2">画笔大小</label>
+                    <div className="flex flex-wrap gap-2">
+                      {brushSizes.map((size) => (
+                        <button
+                          key={size}
+                          onClick={() => setBrushSize(size)}
+                          className={`px-3 py-1 rounded-full text-sm transition-colors ${
+                            brushSize === size ? 'bg-blue-100 text-blue-800 border-blue-200' : 'bg-gray-100 text-gray-600 hover:bg-gray-200'
+                          }`}
+                        >
+                          {size}px
+                        </button>
+                      ))}
+                    </div>
+                  </div>
+
+                  {/* 操作按钮 */}
+                  <div className="space-y-2">
+                    <Button onClick={undo} variant="outline" className="w-full" disabled={historyIndex <= 0}>
+                      <RotateCcw className="h-4 w-4 mr-2" />
+                      撤销
+                    </Button>
+                    <Button onClick={redo} variant="outline" className="w-full" disabled={historyIndex >= canvasHistory.length - 1}>
+                      <RotateCcw className="h-4 w-4 mr-2 rotate-180" />
+                      重做
+                    </Button>
+                    <Button onClick={clearCanvas} variant="outline" className="w-full">
+                      <X className="h-4 w-4 mr-2" />
+                      清空
+                    </Button>
+                    <Button onClick={saveDrawing} className="w-full bg-gradient-to-r from-blue-500 to-purple-500 hover:from-blue-600 hover:to-purple-600">
+                      <Download className="h-4 w-4 mr-2" />
+                      保存作品
+                    </Button>
                   </div>
                 </CardContent>
               </Card>
-            )}
 
-            {/* 绘画技巧 */}
-            <Card className="bg-white/80 backdrop-blur-sm shadow-lg">
-              <CardHeader className="pb-3">
-                <CardTitle className="text-lg flex items-center gap-2">
-                  <Lightbulb className="h-5 w-5 text-yellow-500" />
-                  绘画技巧
-                </CardTitle>
-              </CardHeader>
-              <CardContent className="space-y-3">
-                <div className="p-3 bg-purple-50 rounded-lg">
-                  <h4 className="font-medium text-purple-800 mb-1">色彩搭配</h4>
-                  <p className="text-sm text-purple-700">使用互补色创造和谐的画面，推荐使用主题推荐的颜色</p>
-                </div>
-                
-                <div className="p-3 bg-pink-50 rounded-lg">
-                  <h4 className="font-medium text-pink-800 mb-1">层次感</h4>
-                  <p className="text-sm text-pink-700">通过不同的画笔大小和透明度创造立体感</p>
-                </div>
-                
-                <div className="p-3 bg-blue-50 rounded-lg">
-                  <h4 className="font-medium text-blue-800 mb-1">协作技巧</h4>
-                  <p className="text-sm text-blue-700">通过聊天交流创意，分工完成不同部分</p>
-                </div>
-              </CardContent>
-            </Card>
-          </div>
-        </div>
+              {/* 画布区域 */}
+              <div className="lg:col-span-3">
+                <Card className="bg-white/80 backdrop-blur-sm shadow-lg">
+                  <CardHeader>
+                    <CardTitle className="flex items-center gap-2">
+                      <Pencil className="h-5 w-5 text-blue-500" />
+                      画布区域
+                    </CardTitle>
+                    <CardDescription>
+                      使用鼠标或触摸屏进行绘画，支持撤销重做功能
+                    </CardDescription>
+                  </CardHeader>
+                  <CardContent>
+                    <div 
+                      ref={containerRef}
+                      className="border-2 border-dashed border-gray-300 rounded-lg bg-white overflow-hidden"
+                      style={{ height: '500px' }}
+                    >
+                      <canvas
+                        ref={canvasRef}
+                        onMouseDown={startDrawing}
+                        onMouseMove={draw}
+                        onMouseUp={stopDrawing}
+                        onMouseLeave={stopDrawing}
+                        className="cursor-crosshair w-full h-full"
+                      />
+                    </div>
+                  </CardContent>
+                </Card>
+              </div>
+            </div>
+          </TabsContent>
+
+          <TabsContent value="guess-word" className="space-y-6">
+            <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+              {/* 游戏信息 */}
+              <Card className="lg:col-span-1 bg-white/80 backdrop-blur-sm shadow-lg">
+                <CardHeader>
+                  <CardTitle className="flex items-center gap-2">
+                    <Target className="h-5 w-5 text-green-500" />
+                    游戏信息
+                  </CardTitle>
+                </CardHeader>
+                <CardContent className="space-y-4">
+                  <div className="text-center">
+                    <div className="text-2xl font-bold text-green-600 mb-2">
+                      {formatTime(roundTime)}
+                    </div>
+                    <div className="text-sm text-gray-600">剩余时间</div>
+                  </div>
+                  
+                  <div className="space-y-2">
+                    <Button 
+                      onClick={() => createRoom('guess-word')}
+                      className="w-full bg-gradient-to-r from-green-500 to-teal-500 hover:from-green-600 hover:to-teal-600"
+                    >
+                      <UserPlus className="h-4 w-4 mr-2" />
+                      创建房间
+                    </Button>
+                    <Button variant="outline" className="w-full">
+                      <Link className="h-4 w-4 mr-2" />
+                      加入房间
+                    </Button>
+                  </div>
+
+                  {/* 游戏规则 */}
+                  <div className="text-sm text-gray-600 space-y-1">
+                    <p>• 一人画图，其他人猜词</p>
+                    <p>• 每轮60秒时间</p>
+                    <p>• 猜对得分，画图者获得奖励</p>
+                    <p>• 支持2-4人游戏</p>
+                  </div>
+                </CardContent>
+              </Card>
+
+              {/* 画布区域 */}
+              <div className="lg:col-span-2">
+                <Card className="bg-white/80 backdrop-blur-sm shadow-lg">
+                  <CardHeader>
+                    <CardTitle className="flex items-center gap-2">
+                      <Pencil className="h-5 w-5 text-green-500" />
+                      画板区域
+                    </CardTitle>
+                    <CardDescription>
+                      {room?.currentWord ? `当前词汇：${room.currentWord}` : '等待游戏开始...'}
+                    </CardDescription>
+                  </CardHeader>
+                  <CardContent>
+                    <div className="border-2 border-dashed border-gray-300 rounded-lg bg-white overflow-hidden" style={{ height: '400px' }}>
+                      <canvas
+                        ref={canvasRef}
+                        onMouseDown={startDrawing}
+                        onMouseMove={draw}
+                        onMouseUp={stopDrawing}
+                        onMouseLeave={stopDrawing}
+                        className="cursor-crosshair w-full h-full"
+                      />
+                    </div>
+                  </CardContent>
+                </Card>
+
+                {/* 聊天区域 */}
+                <Card className="bg-white/80 backdrop-blur-sm shadow-lg">
+                  <CardHeader>
+                    <CardTitle className="flex items-center gap-2">
+                      <MessageSquare className="h-5 w-5 text-green-500" />
+                      聊天和猜词
+                    </CardTitle>
+                  </CardHeader>
+                  <CardContent>
+                    <div className="space-y-4">
+                      {/* 消息列表 */}
+                      <div className="h-32 overflow-y-auto space-y-2 p-2 bg-gray-50 rounded-lg">
+                        {messages.map((message) => (
+                          <div key={message.id} className="flex items-start gap-2">
+                            <div className="w-6 h-6 bg-green-500 rounded-full flex items-center justify-center">
+                              <User className="h-3 w-3 text-white" />
+                            </div>
+                            <div className="flex-1">
+                              <div className="text-sm font-medium">玩家</div>
+                              <div className={`text-sm ${
+                                message.isGuess 
+                                  ? message.isCorrect 
+                                    ? 'text-green-600 font-bold' 
+                                    : 'text-red-600'
+                                  : 'text-gray-700'
+                              }`}>
+                                {message.content}
+                              </div>
+                            </div>
+                          </div>
+                        ))}
+                      </div>
+
+                      {/* 输入区域 */}
+                      <div className="flex gap-2">
+                        <input
+                          type="text"
+                          value={guessInput}
+                          onChange={(e) => setGuessInput(e.target.value)}
+                          placeholder="输入你的猜测..."
+                          className="flex-1 px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-green-500"
+                          onKeyPress={(e) => e.key === 'Enter' && sendMessage()}
+                        />
+                        <Button onClick={sendMessage} className="bg-green-500 hover:bg-green-600">
+                          <Send className="h-4 w-4" />
+                        </Button>
+                      </div>
+                    </div>
+                  </CardContent>
+                </Card>
+              </div>
+            </div>
+          </TabsContent>
+
+          <TabsContent value="collaborative" className="space-y-6">
+            <div className="grid grid-cols-1 lg:grid-cols-4 gap-6">
+              {/* 协作面板 */}
+              <Card className="lg:col-span-1 bg-white/80 backdrop-blur-sm shadow-lg">
+                <CardHeader>
+                  <CardTitle className="flex items-center gap-2">
+                    <Users className="h-5 w-5 text-purple-500" />
+                    协作面板
+                  </CardTitle>
+                </CardHeader>
+                <CardContent className="space-y-4">
+                  {/* 在线用户 */}
+                  <div>
+                    <label className="block text-sm font-medium mb-2">在线用户</label>
+                    <div className="space-y-2">
+                      {users.map((user) => (
+                        <div key={user.id} className="flex items-center gap-2 p-2 bg-gray-50 rounded-lg">
+                          <div 
+                            className="w-3 h-3 rounded-full"
+                            style={{ backgroundColor: user.color }}
+                          />
+                          <span className="text-sm font-medium">{user.name}</span>
+                          {user.isOnline && (
+                            <Badge variant="secondary" className="ml-auto">在线</Badge>
+                          )}
+                        </div>
+                      ))}
+                    </div>
+                  </div>
+
+                  {/* 协作工具 */}
+                  <div className="space-y-2">
+                    <Button 
+                      onClick={() => createRoom('collaborative')}
+                      className="w-full bg-gradient-to-r from-purple-500 to-pink-500 hover:from-purple-600 hover:to-pink-600"
+                    >
+                      <UserPlus className="h-4 w-4 mr-2" />
+                      创建协作房间
+                    </Button>
+                    <Button variant="outline" className="w-full">
+                      <Link className="h-4 w-4 mr-2" />
+                      加入房间
+                    </Button>
+                    <Button variant="outline" className="w-full">
+                      <Copy className="h-4 w-4 mr-2" />
+                      复制房间链接
+                    </Button>
+                  </div>
+
+                  {/* 协作功能 */}
+                  <div className="text-sm text-gray-600 space-y-1">
+                    <p>• 多人实时协作绘画</p>
+                    <p>• 不同颜色区分用户</p>
+                    <p>• 实时聊天交流</p>
+                    <p>• 作品保存和分享</p>
+                  </div>
+                </CardContent>
+              </Card>
+
+              {/* 协作画布 */}
+              <div className="lg:col-span-3">
+                <Card className="bg-white/80 backdrop-blur-sm shadow-lg">
+                  <CardHeader>
+                    <CardTitle className="flex items-center gap-2">
+                      <Pencil className="h-5 w-5 text-purple-500" />
+                      协作画布
+                    </CardTitle>
+                    <CardDescription>
+                      多人实时协作，共同创作精美作品
+                    </CardDescription>
+                  </CardHeader>
+                  <CardContent>
+                    <div className="border-2 border-dashed border-gray-300 rounded-lg bg-white overflow-hidden" style={{ height: '500px' }}>
+                      <canvas
+                        ref={canvasRef}
+                        onMouseDown={startDrawing}
+                        onMouseMove={draw}
+                        onMouseUp={stopDrawing}
+                        onMouseLeave={stopDrawing}
+                        className="cursor-crosshair w-full h-full"
+                      />
+                    </div>
+                  </CardContent>
+                </Card>
+
+                {/* 协作聊天 */}
+                <Card className="bg-white/80 backdrop-blur-sm shadow-lg">
+                  <CardHeader>
+                    <CardTitle className="flex items-center gap-2">
+                      <MessageSquare className="h-5 w-5 text-purple-500" />
+                      协作聊天
+                    </CardTitle>
+                  </CardHeader>
+                  <CardContent>
+                    <div className="space-y-4">
+                      <div className="h-24 overflow-y-auto space-y-2 p-2 bg-gray-50 rounded-lg">
+                        {messages.map((message) => (
+                          <div key={message.id} className="flex items-start gap-2">
+                            <div 
+                              className="w-6 h-6 rounded-full flex items-center justify-center text-white text-xs"
+                              style={{ backgroundColor: '#9CA3AF' }}
+                            >
+                              {message.userId.charAt(0).toUpperCase()}
+                            </div>
+                            <div className="flex-1">
+                              <div className="text-sm font-medium">用户{message.userId}</div>
+                              <div className="text-sm text-gray-700">{message.content}</div>
+                            </div>
+                          </div>
+                        ))}
+                      </div>
+
+                      <div className="flex gap-2">
+                        <input
+                          type="text"
+                          value={guessInput}
+                          onChange={(e) => setGuessInput(e.target.value)}
+                          placeholder="发送消息..."
+                          className="flex-1 px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-500"
+                          onKeyPress={(e) => e.key === 'Enter' && sendMessage()}
+                        />
+                        <Button onClick={sendMessage} className="bg-purple-500 hover:bg-purple-600">
+                          <Send className="h-4 w-4" />
+                        </Button>
+                      </div>
+                    </div>
+                  </CardContent>
+                </Card>
+              </div>
+            </div>
+          </TabsContent>
+        </Tabs>
       </main>
       
-      {/* 邀请模态框 */}
-      {showInviteModal && (
-        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
-          <Card className="w-full max-w-md">
-            <CardHeader>
-              <CardTitle className="flex items-center gap-2">
-                <UserPlus className="h-5 w-5 text-blue-500" />
-                邀请好友
-              </CardTitle>
-            </CardHeader>
-            <CardContent className="space-y-4">
-              <div>
-                <label className="block text-sm font-medium mb-2">邀请链接</label>
-                <div className="flex gap-2">
-                  <input
-                    type="text"
-                    value={inviteLink}
-                    readOnly
-                    className="flex-1 px-3 py-2 border rounded-lg bg-gray-50"
-                  />
-                  <Button onClick={copyInviteLink} variant="outline">
-                    <Copy className="h-4 w-4" />
-                  </Button>
-                </div>
-              </div>
-              
-              <div className="text-sm text-gray-600">
-                分享此链接给好友，邀请他们一起协作绘画！
-              </div>
-              
-              <div className="flex gap-2">
-                <Button onClick={() => setShowInviteModal(false)} className="flex-1">
-                  关闭
-                </Button>
-              </div>
-            </CardContent>
-          </Card>
-        </div>
-      )}
-      
       <Footer />
-      
-      <style jsx>{`
-        .bg-grid {
-          background-image: 
-            linear-gradient(to right, #e5e7eb 1px, transparent 1px),
-            linear-gradient(to bottom, #e5e7eb 1px, transparent 1px);
-          background-size: 20px 20px;
-        }
-      `}</style>
     </div>
   )
 }

@@ -173,6 +173,14 @@ interface Complaint {
   isAnonymous: boolean
   tags: string[]
   isHot: boolean
+  empathyLevel?: number
+  emotionIntensity?: number
+  anonymousId?: string
+  viewCount: number
+  shareCount: number
+  isFeatured: boolean
+  moodScore: number
+  supportTips: string[]
 }
 
 // 回复数据接口
@@ -182,6 +190,9 @@ interface Reply {
   timestamp: number
   likes: number
   isAnonymous: boolean
+  empathyScore: number
+  isHelpful: boolean
+  anonymousId?: string
 }
 
 export default function ComplaintWallPage() {
@@ -230,19 +241,30 @@ export default function ComplaintWallPage() {
             content: '抱抱你，这种情况确实很让人烦恼',
             timestamp: Date.now() - 1000 * 60 * 25,
             likes: 5,
-            isAnonymous: true
+            isAnonymous: true,
+            empathyScore: 3,
+            isHelpful: true
           },
           {
             id: 'r2',
             content: '我理解你的感受，希望事情能尽快好转',
             timestamp: Date.now() - 1000 * 60 * 20,
             likes: 3,
-            isAnonymous: true
+            isAnonymous: true,
+            empathyScore: 2,
+            isHelpful: true
           }
         ],
         isAnonymous: true,
         tags: ['加班', '老板', '爽约'],
-        isHot: true
+        isHot: true,
+        empathyLevel: 2,
+        emotionIntensity: 3,
+        viewCount: 156,
+        shareCount: 12,
+        isFeatured: false,
+        moodScore: -2,
+        supportTips: ['尝试深呼吸，让自己冷静下来', '可以适当运动来释放负面情绪']
       },
       {
         id: '2',
@@ -254,7 +276,14 @@ export default function ComplaintWallPage() {
         replies: [],
         isAnonymous: true,
         tags: ['地铁', '公共场合', '素质'],
-        isHot: false
+        isHot: false,
+        empathyLevel: 1,
+        emotionIntensity: 2,
+        viewCount: 89,
+        shareCount: 5,
+        isFeatured: false,
+        moodScore: -1,
+        supportTips: ['和朋友聊聊天，转移注意力', '尝试换个角度看问题，可能会有新发现']
       },
       {
         id: '3',
@@ -269,12 +298,21 @@ export default function ComplaintWallPage() {
             content: '你的感受很真实，不需要压抑自己',
             timestamp: Date.now() - 1000 * 60 * 100,
             likes: 8,
-            isAnonymous: true
+            isAnonymous: true,
+            empathyScore: 3,
+            isHelpful: true
           }
         ],
         isAnonymous: true,
         tags: ['减肥', '身材焦虑', '困难'],
-        isHot: true
+        isHot: true,
+        empathyLevel: 3,
+        emotionIntensity: 3,
+        viewCount: 234,
+        shareCount: 28,
+        isFeatured: true,
+        moodScore: -3,
+        supportTips: ['听听喜欢的音乐，让自己放松', '写日记或画画，表达内心的感受', '给自己一些独处的时间，但要记得寻求支持']
       }
     ]
     
@@ -356,10 +394,14 @@ export default function ComplaintWallPage() {
         // 根据点赞数判断是否成为热议
         const isHot = newLikes >= 10 || complaint.replies.length >= 5
         
+        // 分析情感共鸣级别
+        const empathyLevel = analyzeEmpathyLevel(complaint.content)
+        
         return { 
           ...complaint, 
           likes: newLikes,
-          isHot
+          isHot,
+          empathyLevel
         }
       }
       return complaint
@@ -367,10 +409,30 @@ export default function ComplaintWallPage() {
     
     saveComplaints(updatedComplaints)
     
-    // 显示共鸣提示
-    setTimeout(() => {
-      alert('💝 感谢你的共鸣！你的支持让吐槽者感受到了温暖和理解。')
-    }, 300)
+    // 根据共鸣级别显示不同的提示
+    const complaint = complaints.find(c => c.id === id)
+    if (complaint) {
+      const empathyLevel = analyzeEmpathyLevel(complaint.content)
+      let message = ''
+      
+      switch (empathyLevel) {
+        case 3:
+          message = '💝 高度共鸣！你的支持让吐槽者感受到了强烈的理解和温暖。'
+          break
+        case 2:
+          message = '💝 中度共鸣！你的点赞传递了温暖和支持。'
+          break
+        case 1:
+          message = '💝 轻度共鸣！你的支持让吐槽者感受到了理解。'
+          break
+        default:
+          message = '💝 感谢你的共鸣！你的支持让吐槽者感受到了温暖和理解。'
+      }
+      
+      setTimeout(() => {
+        alert(message)
+      }, 300)
+    }
   }
 
   // 点赞回复
@@ -500,10 +562,14 @@ export default function ComplaintWallPage() {
         // 根据点赞数判断是否成为热议
         const isHot = newLikes >= 10 || complaint.replies.length >= 5
         
+        // 分析情感共鸣级别
+        const empathyLevel = analyzeEmpathyLevel(complaint.content)
+        
         return { 
           ...complaint, 
           likes: newLikes,
-          isHot
+          isHot,
+          empathyLevel
         }
       }
       return complaint
@@ -517,10 +583,10 @@ export default function ComplaintWallPage() {
     }, 300)
   }
 
-  // 添加匿名保护增强功能
+  // 增强匿名保护功能
   const enhanceAnonymity = () => {
     // 添加更严格的匿名保护
-    const anonymousIds = ['匿名用户A', '匿名用户B', '匿名用户C', '匿名用户D', '匿名用户E']
+    const anonymousIds = ['匿名用户A', '匿名用户B', '匿名用户C', '匿名用户D', '匿名用户E', '匿名用户F', '匿名用户G', '匿名用户H']
     
     // 为每个吐槽生成随机的匿名ID
     const updatedComplaints = complaints.map(complaint => {
@@ -528,13 +594,73 @@ export default function ComplaintWallPage() {
         const randomId = anonymousIds[Math.floor(Math.random() * anonymousIds.length)]
         return {
           ...complaint,
-          anonymousId: randomId
+          anonymousId: randomId,
+          // 隐藏敏感信息
+          content: complaint.content.replace(/(\d{11})/g, '***') // 隐藏手机号
         }
       }
       return complaint
     })
     
     return updatedComplaints
+  }
+
+  // 添加情感分析功能
+  const analyzeEmotionIntensity = (content: string) => {
+    // 情感强度分析
+    const intensityWords = [
+      { word: '非常', score: 3 }, { word: '极其', score: 4 }, { word: '特别', score: 3 },
+      { word: '超级', score: 3 }, { word: '极度', score: 4 }, { word: '格外', score: 2 },
+      { word: '十分', score: 3 }, { word: '异常', score: 3 }, { word: '极度', score: 4 }
+    ]
+    
+    let intensityScore = 0
+    intensityWords.forEach(item => {
+      if (content.includes(item.word)) intensityScore += item.score
+    })
+    
+    // 根据标点符号判断情感强度
+    if (content.includes('！！！') || content.includes('!!!')) intensityScore += 3
+    if (content.includes('！！') || content.includes('!!')) intensityScore += 2
+    if (content.includes('！') || content.includes('!')) intensityScore += 1
+    
+    if (intensityScore >= 5) return 3 // 高强度
+    if (intensityScore >= 3) return 2 // 中强度
+    if (intensityScore >= 1) return 1 // 低强度
+    return 0 // 无强度
+  }
+
+  // 添加情感支持建议
+  const getEmotionSupportTips = (emotion: string, intensity: number) => {
+    const tips = {
+      angry: {
+        low: '尝试深呼吸，让自己冷静下来',
+        medium: '可以适当运动来释放负面情绪',
+        high: '建议寻求专业心理咨询师的帮助'
+      },
+      frustrated: {
+        low: '和朋友聊聊天，转移注意力',
+        medium: '尝试换个角度看问题，可能会有新发现',
+        high: '给自己一些时间，情绪会慢慢平复的'
+      },
+      helpless: {
+        low: '列出自己能做的事情，从小事做起',
+        medium: '寻求朋友或家人的支持和建议',
+        high: '不要害怕寻求专业帮助，这很正常'
+      },
+      sad: {
+        low: '听听喜欢的音乐，让自己放松',
+        medium: '写日记或画画，表达内心的感受',
+        high: '给自己一些独处的时间，但要记得寻求支持'
+      }
+    }
+    
+    const emotionTips = tips[emotion as keyof typeof tips]
+    if (!emotionTips) return '保持积极心态，一切都会好起来的'
+    
+    if (intensity >= 3) return emotionTips.high
+    if (intensity >= 2) return emotionTips.medium
+    return emotionTips.low
   }
 
   // 情感分析功能
