@@ -346,14 +346,31 @@ export default function ComplaintWallPage() {
     return []
   }
 
-  // 点赞
+  // 点赞 - 使用情感共鸣功能
   const likeComplaint = (id: string) => {
-    const updatedComplaints = complaints.map(complaint => 
-      complaint.id === id 
-        ? { ...complaint, likes: complaint.likes + 1 }
-        : complaint
-    )
+    const updatedComplaints = complaints.map(complaint => {
+      if (complaint.id === id) {
+        // 增加点赞数
+        const newLikes = complaint.likes + 1
+        
+        // 根据点赞数判断是否成为热议
+        const isHot = newLikes >= 10 || complaint.replies.length >= 5
+        
+        return { 
+          ...complaint, 
+          likes: newLikes,
+          isHot
+        }
+      }
+      return complaint
+    })
+    
     saveComplaints(updatedComplaints)
+    
+    // 显示共鸣提示
+    setTimeout(() => {
+      alert('💝 感谢你的共鸣！你的支持让吐槽者感受到了温暖和理解。')
+    }, 300)
   }
 
   // 点赞回复
@@ -386,9 +403,14 @@ export default function ComplaintWallPage() {
     
     const updatedComplaints = complaints.map(complaint => {
       if (complaint.id === complaintId) {
+        // 检查是否需要升级为热议
+        const newReplies = [...complaint.replies, newReplyData]
+        const isHot = complaint.likes >= 10 || newReplies.length >= 5
+        
         return { 
           ...complaint, 
-          replies: [...complaint.replies, newReplyData]
+          replies: newReplies,
+          isHot
         }
       }
       return complaint
@@ -397,6 +419,31 @@ export default function ComplaintWallPage() {
     saveComplaints(updatedComplaints)
     setNewReply('')
     setShowReplyForm(null)
+    
+    // 显示回复成功提示
+    setTimeout(() => {
+      alert('💬 你的回复已发布！感谢你的温暖回应。')
+    }, 500)
+  }
+
+  // 分析回复的情感共鸣级别
+  const analyzeEmpathyLevel = (content: string): number => {
+    const empathyWords = [
+      '理解', '感受', '体会', '共情', '同理',
+      '支持', '鼓励', '温暖', '关心', '陪伴',
+      '帮助', '安慰', '倾听', '尊重', '接纳'
+    ]
+    
+    let empathyScore = 0
+    empathyWords.forEach(word => {
+      if (content.includes(word)) empathyScore += 1
+    })
+    
+    // 根据情感词数量分级
+    if (empathyScore >= 3) return 3 // 高度共鸣
+    if (empathyScore >= 2) return 2 // 中度共鸣
+    if (empathyScore >= 1) return 1 // 轻度共鸣
+    return 0 // 无共鸣
   }
 
   // 获取筛选后的吐槽
@@ -441,6 +488,72 @@ export default function ComplaintWallPage() {
       navigator.clipboard.writeText(text)
       alert('吐槽内容已复制到剪贴板！')
     }
+  }
+
+  // 添加情感共鸣功能
+  const addEmpathy = (complaintId: string) => {
+    const updatedComplaints = complaints.map(complaint => {
+      if (complaint.id === complaintId) {
+        // 增加点赞数
+        const newLikes = complaint.likes + 1
+        
+        // 根据点赞数判断是否成为热议
+        const isHot = newLikes >= 10 || complaint.replies.length >= 5
+        
+        return { 
+          ...complaint, 
+          likes: newLikes,
+          isHot
+        }
+      }
+      return complaint
+    })
+    
+    saveComplaints(updatedComplaints)
+    
+    // 显示共鸣提示
+    setTimeout(() => {
+      alert('💝 感谢你的共鸣！你的支持让吐槽者感受到了温暖和理解。')
+    }, 300)
+  }
+
+  // 添加匿名保护增强功能
+  const enhanceAnonymity = () => {
+    // 添加更严格的匿名保护
+    const anonymousIds = ['匿名用户A', '匿名用户B', '匿名用户C', '匿名用户D', '匿名用户E']
+    
+    // 为每个吐槽生成随机的匿名ID
+    const updatedComplaints = complaints.map(complaint => {
+      if (complaint.isAnonymous) {
+        const randomId = anonymousIds[Math.floor(Math.random() * anonymousIds.length)]
+        return {
+          ...complaint,
+          anonymousId: randomId
+        }
+      }
+      return complaint
+    })
+    
+    return updatedComplaints
+  }
+
+  // 情感分析功能
+  const analyzeEmotion = (content: string) => {
+    // 简单的情感关键词分析
+    const positiveWords = ['开心', '喜欢', '爱', '温暖', '感动', '感恩', '幸福']
+    const negativeWords = ['生气', '愤怒', '难过', '痛苦', '失望', '讨厌', '恨']
+    
+    let emotionScore = 0
+    
+    positiveWords.forEach(word => {
+      if (content.includes(word)) emotionScore += 1
+    })
+    
+    negativeWords.forEach(word => {
+      if (content.includes(word)) emotionScore -= 1
+    })
+    
+    return emotionScore
   }
 
   // 举报吐槽

@@ -150,31 +150,31 @@ export default function Home() {
               <p className="text-xl text-gray-600">从分析到创作，全方位满足您的情感表达需求</p>
             </div>
             
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-8 mb-16">
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 mb-16">
               {features.map((feature, index) => (
                 <div 
                   key={index} 
-                  className={`group relative rounded-2xl overflow-hidden transition-all duration-500 transform ${isLoaded ? 'translate-y-0 opacity-100' : 'translate-y-10 opacity-0'}`}
+                  className={`group relative rounded-2xl overflow-hidden transition-all duration-500 transform card-hover ${isLoaded ? 'translate-y-0 opacity-100' : 'translate-y-10 opacity-0'}`}
                   style={{ transitionDelay: `${index * 100}ms` }}
                 >
                   <Link href={feature.href} className="block h-full">
-                    <div className={`${feature.bgClass} h-48 flex items-center justify-center relative overflow-hidden ${feature.hoverClass} hover:shadow-xl transition-all duration-300`}>
+                    <div className={`${feature.bgClass} h-32 sm:h-40 md:h-48 flex items-center justify-center relative overflow-hidden ${feature.hoverClass} hover:shadow-xl transition-all duration-300`}>
                       <div className="absolute inset-0 bg-black opacity-0 group-hover:opacity-10 transition-opacity duration-300"></div>
                       {feature.icon}
                     </div>
                     
-                    <CardContent className="p-6 bg-white">
-                      <h3 className="text-2xl font-bold text-gray-900 mb-3">{feature.title}</h3>
-                      <p className="text-gray-600 mb-4">{feature.description}</p>
+                    <CardContent className="p-4 sm:p-6 bg-white">
+                      <h3 className="text-lg sm:text-xl md:text-2xl font-bold text-gray-900 mb-2 sm:mb-3">{feature.title}</h3>
+                      <p className="text-sm sm:text-base text-gray-600 mb-3 sm:mb-4 responsive-text">{feature.description}</p>
                       
                       <div className="flex items-center justify-between">
                         <div className="text-center">
-                          <div className="text-2xl font-bold text-gray-900">{feature.stats.number}</div>
-                          <div className="text-sm text-gray-500">{feature.stats.label}</div>
+                          <div className="text-lg sm:text-xl md:text-2xl font-bold text-gray-900">{feature.stats.number}</div>
+                          <div className="text-xs sm:text-sm text-gray-500">{feature.stats.label}</div>
                         </div>
-                        <div className="flex items-center text-pink-600 group-hover:text-pink-700 transition-colors">
+                        <div className="flex items-center text-pink-600 group-hover:text-pink-700 transition-colors text-sm sm:text-base">
                           <span className="mr-1">立即体验</span>
-                          <ArrowRight className="h-4 w-4 group-hover:translate-x-1 transition-transform" />
+                          <ArrowRight className="h-3 w-3 sm:h-4 sm:w-4 group-hover:translate-x-1 transition-transform" />
                         </div>
                       </div>
                     </CardContent>

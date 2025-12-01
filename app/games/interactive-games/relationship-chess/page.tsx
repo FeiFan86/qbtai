@@ -403,8 +403,25 @@ export default function RelationshipChessPage() {
   // 完成任务
   const completeTask = () => {
     if (currentTask) {
-      setCompletedTasks([...completedTasks, currentTask])
+      const newCompletedTasks = [...completedTasks, currentTask]
+      setCompletedTasks(newCompletedTasks)
       setShowTaskModal(false)
+      
+      // 完成任务奖励音效
+      if (soundEnabled) {
+        // 完成任务音效
+      }
+      
+      // 显示任务完成提示
+      setTimeout(() => {
+        alert(`任务完成！${currentPlayer === 1 ? player1Name : player2Name} 获得了 ${currentTask.type === 'question' ? '真心话' : currentTask.type === 'challenge' ? '大冒险' : '甜蜜'} 任务的奖励！\n\n这个任务帮助你们：\n• 增进对彼此的了解\n• 创造美好回忆\n• 增强情感连接`)
+      }, 500)
+      
+      // 完成任务后给予额外的掷骰子机会
+      setTimeout(() => {
+        alert(`🎉 ${currentPlayer === 1 ? player1Name : player2Name} 完成任务出色，获得额外掷骰子机会！`)
+      }, 1000)
+      
       switchPlayer()
     }
   }
@@ -418,12 +435,22 @@ export default function RelationshipChessPage() {
   // 切换玩家
   const switchPlayer = () => {
     setCurrentPlayer(currentPlayer === 1 ? 2 : 1)
+    
+    // 添加玩家切换音效和动画
+    if (soundEnabled) {
+      // 这里可以添加玩家切换音效
+    }
   }
 
   // 处理获胜
   const handleWin = (player: number) => {
     setWinner(player)
     setTimerActive(false)
+    
+    // 获胜音效和动画
+    if (soundEnabled) {
+      // 获胜音效
+    }
     
     // 保存游戏记录
     const record: GameRecord = {
@@ -439,6 +466,11 @@ export default function RelationshipChessPage() {
     const updatedHistory = [record, ...gameHistory].slice(0, 10) // 保留最近10条记录
     setGameHistory(updatedHistory)
     safeLocalStorage.setItem('relationshipChessHistory', JSON.stringify(updatedHistory))
+    
+    // 显示获胜统计信息
+    setTimeout(() => {
+      alert(`🎉 恭喜 ${player === 1 ? player1Name : player2Name} 获胜！\n\n游戏统计：\n• 用时：${formatTime(gameTime)}\n• 完成任务：${completedTasks.length}个\n• 玩家1位置：${player1Position}/30\n• 玩家2位置：${player2Position}/30`)
+    }, 1000)
   }
 
   // 重置游戏

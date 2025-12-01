@@ -300,6 +300,14 @@ export default function CollaborativeDoodlePage() {
   const [canvasHistory, setCanvasHistory] = useState<ImageData[]>([])
   const [historyStep, setHistoryStep] = useState(-1)
   
+  // 实时协作状态
+  const [lastSyncTime, setLastSyncTime] = useState(0)
+  const [syncInterval, setSyncInterval] = useState<NodeJS.Timeout | null>(null)
+  const [isSyncing, setIsSyncing] = useState(false)
+  const [collaboratorCursors, setCollaboratorCursors] = useState<{[key: string]: {x: number, y: number}}>({})
+  const [recentActions, setRecentActions] = useState<Array<{type: string, user: string, timestamp: number}>>([])
+  const [connectionQuality, setConnectionQuality] = useState<'excellent' | 'good' | 'fair' | 'poor'>('excellent')
+  
   const canvasRef = useRef<HTMLCanvasElement>(null)
   const contextRef = useRef<CanvasRenderingContext2D | null>(null)
   const drawTimeIntervalRef = useRef<NodeJS.Timeout | null>(null)
@@ -545,7 +553,115 @@ export default function CollaborativeDoodlePage() {
       
       setChatMessages([...chatMessages, message])
       setNewMessage('')
+      
+      // 记录协作行为
+      addRecentAction('chat', '我')
     }
+  }
+
+  // 实时协作功能
+  const connectToCollaboration = () => {
+    setIsConnected(true)
+    
+    // 模拟连接质量检测
+    const qualities = ['excellent', 'good', 'fair', 'poor'] as const
+    const randomQuality = qualities[Math.floor(Math.random() * qualities.length)]
+    setConnectionQuality(randomQuality)
+    
+    // 开始同步间隔
+    const interval = setInterval(syncCanvasState, 2000) // 每2秒同步一次
+    setSyncInterval(interval)
+    
+    // 模拟其他协作者加入
+    setTimeout(() => {
+      const newCollaborators = collaborators.map(c => 
+        c.id === 'user2' ? {...c, isOnline: true} : c
+      )
+      setCollaborators(newCollaborators)
+    }, 1000)
+    
+    // 添加连接成功的提示
+    setTimeout(() => {
+      alert('✅ 协作连接成功！现在可以实时与协作者一起绘画了。')
+    }, 500)
+  }
+
+  const disconnectFromCollaboration = () => {
+    setIsConnected(false)
+    if (syncInterval) {
+      clearInterval(syncInterval)
+      setSyncInterval(null)
+    }
+    
+    // 清除协作者光标
+    setCollaboratorCursors({})
+    setRecentActions([])
+  }
+
+  const syncCanvasState = () => {
+    if (!isConnected || !canvasRef.current || !contextRef.current) return
+    
+    setIsSyncing(true)
+    
+    // 模拟同步过程
+    setTimeout(() => {
+      setLastSyncTime(Date.now())
+      setIsSyncing(false)
+      
+      // 模拟其他协作者的绘画动作
+      if (Math.random() > 0.7) { // 30%概率模拟其他用户动作
+        simulateCollaboratorAction()
+      }
+    }, 300)
+  }
+
+  const simulateCollaboratorAction = () => {
+    if (!contextRef.current || !canvasRef.current) return
+    
+    const onlineCollaborators = collaborators.filter(c => c.isOnline && c.id !== 'current_user')
+    if (onlineCollaborators.length === 0) return
+    
+    const randomCollaborator = onlineCollaborators[Math.floor(Math.random() * onlineCollaborators.length)]
+    
+    // 模拟绘画动作
+    const actionTypes = ['draw_line', 'draw_circle', 'change_color', 'erase']
+    const randomAction = actionTypes[Math.floor(Math.random() * actionTypes.length)]
+    
+    addRecentAction(randomAction, randomCollaborator.name)
+    
+    // 更新协作者光标位置
+    setCollaboratorCursors(prev => ({
+      ...prev,
+      [randomCollaborator.id]: {
+        x: Math.random() * (canvasRef.current?.width || 800),
+        y: Math.random() * (canvasRef.current?.height || 600)
+      }
+    }))
+  }
+
+  const addRecentAction = (type: string, user: string) => {
+    const action = {
+      type,
+      user,
+      timestamp: Date.now()
+    }
+    
+    setRecentActions(prev => [action, ...prev.slice(0, 9)]) // 保留最近10个动作
+  }
+
+  const broadcastCanvasAction = (action: {type: string, data: any}) => {
+    if (!isConnected) return
+    
+    // 这里应该是实际发送到服务器的逻辑
+    // 现在用模拟代替
+    addRecentAction(action.type, '我')
+  }
+
+  const updateCollaboratorCursor = (userId: string, x: number, y: number) => {
+    setCollaboratorCursors(prev => ({
+      ...prev,
+      [userId]: { x, y }
+    }))
   }
 
   const handleCanvasMouseDown = (e: React.MouseEvent<HTMLCanvasElement>) => {

@@ -177,6 +177,26 @@ export default function TruthOrDarePage() {
   const [newCardDifficulty, setNewCardDifficulty] = useState<'easy' | 'medium' | 'hard'>('easy')
   const [currentStreak, setCurrentStreak] = useState(0)
   const [history, setHistory] = useState<Array<{type: 'truth' | 'dare', content: string, timestamp: number}>>([])
+  
+  // 多人游戏增强功能
+  const [players, setPlayers] = useState([
+    { id: 1, name: '玩家1', score: 0, isActive: true, avatar: '👤' },
+    { id: 2, name: '玩家2', score: 0, isActive: true, avatar: '👤' },
+    { id: 3, name: '玩家3', score: 0, isActive: false, avatar: '👤' },
+    { id: 4, name: '玩家4', score: 0, isActive: false, avatar: '👤' }
+  ])
+  const [currentPlayer, setCurrentPlayer] = useState<number>(1)
+  const [playerTurnOrder, setPlayerTurnOrder] = useState<number[]>([1, 2])
+  const [currentTurnIndex, setCurrentTurnIndex] = useState(0)
+  const [teamMode, setTeamMode] = useState<'individual' | 'teams'>('individual')
+  const [teams, setTeams] = useState([
+    { id: 1, name: '红队', players: [1], score: 0, color: '#FF6B6B' },
+    { id: 2, name: '蓝队', players: [2], score: 0, color: '#4ECDC4' }
+  ])
+  const [gameRound, setGameRound] = useState(1)
+  const [maxRounds, setMaxRounds] = useState(10)
+  const [gamePhase, setGamePhase] = useState<'setup' | 'playing' | 'results'>('setup')
+  const [showPlayerManager, setShowPlayerManager] = useState(false)
 
   useEffect(() => {
     // 加载保存的数据

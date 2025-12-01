@@ -329,13 +329,17 @@ export default function CoupleBlindBoxPage() {
   // 加载用户数据
   useEffect(() => {
     const savedUserData = safeLocalStorage.getItem('coupleBlindBoxUserData')
+    const today = new Date().toDateString()
+    
     if (savedUserData) {
       try {
         const parsedData = JSON.parse(savedUserData)
+        let showResetMessage = false
+        
         // 检查是否是新的一天
-        const today = new Date().toDateString()
         if (parsedData.lastOpenDate !== today) {
           // 新的一天，重置免费开启次数
+          const previousDay = parsedData.lastOpenDate
           parsedData.dailyFreeOpens = 1
           parsedData.lastOpenDate = today
           
@@ -346,14 +350,46 @@ export default function CoupleBlindBoxPage() {
           
           if (diffDays === 1) {
             parsedData.currentStreak += 1
+            
+            // 连续完成奖励
+            if (parsedData.currentStreak % 7 === 0) {
+              parsedData.points += 50 // 每周连续奖励
+              showResetMessage = `🎉 恭喜！你已经连续${parsedData.currentStreak}天完成任务！获得50积分奖励！`
+            } else if (parsedData.currentStreak % 30 === 0) {
+              parsedData.points += 200 // 每月连续奖励
+              showResetMessage = `🎉 太棒了！连续${parsedData.currentStreak}天！获得200积分奖励！`
+            }
           } else if (diffDays > 1) {
             parsedData.currentStreak = 1
           }
+          
+          // 显示每日重置消息
+          setTimeout(() => {
+            if (showResetMessage) {
+              alert(showResetMessage)
+            } else {
+              alert(`🎊 新的一天开始啦！\n\n每日免费开启次数已重置为1次。\n\n昨天${previousDay}你完成了${parsedData.lastCompletedTasksCount || 0}个任务，继续加油！`)
+            }
+          }, 1000)
         }
+        
         setUserData(parsedData)
       } catch (error) {
         console.error('Failed to load user data:', error)
       }
+    } else {
+      // 首次使用，初始化数据
+      const initialData: UserData = {
+        dailyFreeOpens: 1,
+        lastOpenDate: today,
+        points: 120,
+        currentStreak: 0,
+        completedTasks: [],
+        unlockedAchievements: [],
+        totalTasksCompleted: 0
+      }
+      setUserData(initialData)
+      safeLocalStorage.setItem('coupleBlindBoxUserData', JSON.stringify(initialData))
     }
 
     // 加载任务历史
@@ -496,14 +532,15 @@ export default function CoupleBlindBoxPage() {
         const availableTasks = getTaskList().filter(task => !userData.completedTasks.includes(task.id))
         
         if (availableTasks.length > 0) {
-          // 稀有度权重：common(50%), rare(30%), epic(15%), legendary(5%)
+          // 稀有度权重：common(40%), rare(35%), epic(20%), legendary(5%)
+          // 提高稀有任务的概率，让用户更有成就感
           const random = Math.random()
           let filteredTasks = availableTasks.filter(task => task.rarity === 'common')
           
-          if (random > 0.5) {
+          if (random > 0.4) {
             filteredTasks = availableTasks.filter(task => task.rarity === 'rare')
           }
-          if (random > 0.8) {
+          if (random > 0.75) {
             filteredTasks = availableTasks.filter(task => task.rarity === 'epic')
           }
           if (random > 0.95) {
@@ -515,7 +552,17 @@ export default function CoupleBlindBoxPage() {
           }
           
           const randomIndex = Math.floor(Math.random() * filteredTasks.length)
-          setSelectedTask(filteredTasks[randomIndex])
+          const selectedTask = filteredTasks[randomIndex]
+          setSelectedTask(selectedTask)
+          
+          // 显示稀有度提示
+          setTimeout(() => {
+            if (selectedTask.rarity === 'legendary') {
+              alert(`🎉 恭喜！你获得了传说中的任务！\n\n这是极其稀有的任务，完成它将获得丰厚的奖励！`)
+            } else if (selectedTask.rarity === 'epic') {
+              alert(`✨ 太棒了！你获得了史诗任务！\n\n这是非常难得的任务，好好享受吧！`)
+            }
+          }, 1000)
         }
         
         setIsUnboxing(false)
@@ -577,13 +624,21 @@ export default function CoupleBlindBoxPage() {
   // 完成任务
   const completeTask = () => {
     if (selectedTask) {
+      const today = new Date().toDateString()
       const newCompletedTasks = [...userData.completedTasks, selectedTask.id]
+      
+      // 统计今天的完成数量
+      const todayTasks = taskHistory.filter(entry => 
+        new Date(entry.completedDate).toDateString() === today
+      )
+      
       const newUserData = {
         ...userData,
         completedTasks: newCompletedTasks,
         points: userData.points + selectedTask.points,
         totalTasksCompleted: userData.totalTasksCompleted + 1,
-        lastCompletedDate: new Date().toISOString()
+        lastCompletedDate: new Date().toISOString(),
+        lastCompletedTasksCount: todayTasks.length + 1
       }
       
       // 检查成就
@@ -594,7 +649,9 @@ export default function CoupleBlindBoxPage() {
       const newHistoryEntry = {
         taskId: selectedTask.id,
         completedDate: new Date().toISOString(),
-        title: selectedTask.title
+        title: selectedTask.title,
+        points: selectedTask.points,
+        rarity: selectedTask.rarity
       }
       const updatedHistory = [newHistoryEntry, ...taskHistory].slice(0, 50) // 保留最近50条
       setTaskHistory(updatedHistory)
@@ -605,7 +662,7 @@ export default function CoupleBlindBoxPage() {
       // 显示成就解锁消息
       if (newlyUnlocked.length > 0) {
         setTimeout(() => {
-          alert(`🎉 恭喜解锁新成就: ${newlyUnlocked.map(id => achievements.find(a => a.id === id)?.name).join(', ')}`)
+          alert(`🎉 恭喜解锁新成就: ${newlyUnlocked.map(id => achievements.find(a => a.id === id)?.name).join(', ')}\n\n这些成就将帮助你更好地维护感情关系！`)
         }, 1000)
       }
       
@@ -614,6 +671,11 @@ export default function CoupleBlindBoxPage() {
         setShowCompletionMessage(false)
         setSelectedTask(null)
       }, 3000)
+      
+      // 显示完成奖励信息
+      setTimeout(() => {
+        alert(`✅ 任务完成！\n\n你获得了：\n• ${selectedTask.points} 积分\n• 新的感情体验\n• 美好回忆\n\n继续努力，解锁更多成就！`)
+      }, 500)
     }
   }
 
@@ -851,7 +913,12 @@ export default function CoupleBlindBoxPage() {
               </div>
               
               <div className="text-sm text-gray-500">
-                明天 {new Date(new Date().setDate(new Date().getDate() + 1)).toLocaleTimeString()} 免费次数将重置
+                明天 {new Date(new Date().setDate(new Date().getDate() + 1)).toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'})} 免费次数将重置
+                {userData.currentStreak > 0 && (
+                  <div className="mt-1 text-green-600">
+                    当前连续{userData.currentStreak}天完成任务！
+                  </div>
+                )}
               </div>
             </CardContent>
           </Card>
