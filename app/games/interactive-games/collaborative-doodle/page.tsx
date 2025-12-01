@@ -89,7 +89,7 @@ function formatTime(seconds: number): string {
   return `${minutes.toString().padStart(2, '0')}:${remainingSeconds.toString().padStart(2, '0')}`
 }
 
-import { Navigation }
+import { Navigation } from '@/components/navigation' from '@/components/navigation'
 
 // 模板选择对话框
 const TemplateDialog = ({ 
