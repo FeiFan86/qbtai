@@ -30,7 +30,8 @@ import {
   Volume2,
   VolumeX,
   Eye,
-  EyeOff
+  EyeOff,
+  Lightbulb
 } from 'lucide-react'
 import Link from 'next/link'
 
