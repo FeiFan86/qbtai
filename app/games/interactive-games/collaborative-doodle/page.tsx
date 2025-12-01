@@ -106,7 +106,6 @@ import {
   Hospital,
   Store,
   Factory,
-  Tower,
   Pyramid,
   Globe,
   Map,
