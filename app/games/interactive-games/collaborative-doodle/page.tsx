@@ -640,7 +640,7 @@ import {
   Sparkles,
   Send,
   Trophy
-} from 'lucide-react' from 'lucide-react'
+} from 'lucide-react'
 
 // 模板选择对话框
 const TemplateDialog = ({ 
@@ -727,7 +727,8 @@ function formatTime(seconds: number): string {
   const minutes = Math.floor(seconds / 60)
   const remainingSeconds = seconds % 60
   return `${minutes.toString().padStart(2, '0')}:${remainingSeconds.toString().padStart(2, '0')}`
-} from 'lucide-react'
+}
+
 import Link from 'next/link'
 
 // 情感主题和提示词
