@@ -26,7 +26,19 @@ import {
   MapPin,
   Sun,
   Moon,
-  CheckCircle
+  CheckCircle,
+  Lock,
+  Unlock,
+  TrendingUp,
+  Zap,
+  Crown,
+  Diamond,
+  RefreshCw,
+  Share2,
+  Download,
+  History,
+  Target,
+  Flame
 } from 'lucide-react'
 import Link from 'next/link'
 
@@ -36,16 +48,40 @@ interface Task {
   category: string
   title: string
   description: string
-  difficulty: string
+  difficulty: 'easy' | 'medium' | 'hard'
   timeNeeded: string
   points: number
   icon: JSX.Element
   completed: boolean
   tips: string
+  rarity: 'common' | 'rare' | 'epic' | 'legendary'
 }
 
+// 用户数据接口
+interface UserData {
+  dailyFreeOpens: number
+  lastOpenDate: string
+  points: number
+  currentStreak: number
+  completedTasks: string[]
+  unlockedAchievements: string[]
+  totalTasksCompleted: number
+  partnerName?: string
+  relationshipStartDate?: string
+}
+
+// 成就系统
+const achievements = [
+  { id: 'first_task', name: '初次体验', description: '完成第一个任务', icon: <Star className="h-4 w-4" />, points: 10 },
+  { id: 'week_streak', name: '一周坚持', description: '连续一周完成任务', icon: <Flame className="h-4 w-4" />, points: 50 },
+  { id: 'month_streak', name: '一月坚持', description: '连续一个月完成任务', icon: <Zap className="h-4 w-4" />, points: 200 },
+  { id: 'tasks_10', name: '任务达人', description: '完成10个任务', icon: <Award className="h-4 w-4" />, points: 30 },
+  { id: 'points_100', name: '积分大户', description: '累计获得100积分', icon: <Crown className="h-4 w-4" />, points: 40 },
+  { id: 'all_categories', name: '全能情侣', description: '完成所有类别的任务', icon: <Diamond className="h-4 w-4" />, points: 100 }
+]
+
 // 情侣盲盒任务数据
-const coupleTasks = [
+const coupleTasks: Task[] = [
   {
     id: 'daily_001',
     category: 'communication',
@@ -56,7 +92,8 @@ const coupleTasks = [
     points: 10,
     icon: <MessageCircle className="h-6 w-6 text-blue-500" />,
     completed: false,
-    tips: '尝试使用"我"语句表达感受，避免评判和指责'
+    tips: '尝试使用"我"语句表达感受，避免评判和指责',
+    rarity: 'common'
   },
   {
     id: 'daily_002',
@@ -68,7 +105,8 @@ const coupleTasks = [
     points: 20,
     icon: <Camera className="h-6 w-6 text-purple-500" />,
     completed: false,
-    tips: '分享当时的心情和感受，重温那些美好的瞬间'
+    tips: '分享当时的心情和感受，重温那些美好的瞬间',
+    rarity: 'rare'
   },
   {
     id: 'daily_003',
@@ -80,7 +118,8 @@ const coupleTasks = [
     points: 25,
     icon: <Gift className="h-6 w-6 text-pink-500" />,
     completed: false,
-    tips: '可以是一张手写卡片、对方喜爱的小零食或一杯热饮'
+    tips: '可以是一张手写卡片、对方喜爱的小零食或一杯热饮',
+    rarity: 'rare'
   },
   {
     id: 'daily_004',
@@ -92,7 +131,8 @@ const coupleTasks = [
     points: 15,
     icon: <Music className="h-6 w-6 text-green-500" />,
     completed: false,
-    tips: '分享这首歌对你们的意义，一起哼唱或跳舞'
+    tips: '分享这首歌对你们的意义，一起哼唱或跳舞',
+    rarity: 'common'
   },
   {
     id: 'daily_005',
@@ -104,7 +144,8 @@ const coupleTasks = [
     points: 30,
     icon: <Coffee className="h-6 w-6 text-amber-600" />,
     completed: false,
-    tips: '尝试新品类，聊聊彼此的梦想和计划'
+    tips: '尝试新品类，聊聊彼此的梦想和计划',
+    rarity: 'rare'
   },
   {
     id: 'daily_006',
@@ -116,7 +157,8 @@ const coupleTasks = [
     points: 40,
     icon: <Book className="h-6 w-6 text-indigo-500" />,
     completed: false,
-    tips: '保持耐心，互相鼓励，享受学习过程中的互动'
+    tips: '保持耐心，互相鼓励，享受学习过程中的互动',
+    rarity: 'epic'
   },
   {
     id: 'daily_007',
@@ -128,7 +170,8 @@ const coupleTasks = [
     points: 30,
     icon: <Utensils className="h-6 w-6 text-orange-500" />,
     completed: false,
-    tips: '分工合作，一人主厨一人帮厨，边做边聊'
+    tips: '分工合作，一人主厨一人帮厨，边做边聊',
+    rarity: 'rare'
   },
   {
     id: 'daily_008',
@@ -140,14 +183,42 @@ const coupleTasks = [
     points: 35,
     icon: <MapPin className="h-6 w-6 text-teal-500" />,
     completed: false,
-    tips: '可以是一条小路、一个公园或一个有趣的街区'
+    tips: '可以是一条小路、一个公园或一个有趣的街区',
+    rarity: 'epic'
+  },
+  {
+    id: 'daily_009',
+    category: 'communication',
+    title: '深度对话之夜',
+    description: '选择一个有深度的话题，进行一次真诚的对话',
+    difficulty: 'hard',
+    timeNeeded: '45分钟',
+    points: 35,
+    icon: <Heart className="h-6 w-6 text-red-500" />,
+    completed: false,
+    tips: '选择安静的环境，保持开放心态，避免打断',
+    rarity: 'epic'
+  },
+  {
+    id: 'daily_010',
+    category: 'surprise',
+    title: '爱的信件',
+    description: '手写一封给对方的信，表达内心的感受',
+    difficulty: 'easy',
+    timeNeeded: '20分钟',
+    points: 20,
+    icon: <Heart className="h-6 w-6 text-pink-500" />,
+    completed: false,
+    tips: '不必文采飞扬，真诚最重要',
+    rarity: 'rare'
   }
 ]
 
 // 周度特殊任务
-const weeklyTasks = [
+const weeklyTasks: Task[] = [
   {
     id: 'weekly_001',
+    category: 'special',
     title: '时光胶囊',
     description: '写下对彼此的期望和承诺，封存在一个盒子里，约定一年后打开',
     difficulty: 'hard',
@@ -155,10 +226,12 @@ const weeklyTasks = [
     points: 50,
     icon: <Clock className="h-6 w-6 text-blue-500" />,
     completed: false,
-    tips: '真诚表达，不要害怕展现脆弱的一面'
+    tips: '真诚表达，不要害怕展现脆弱的一面',
+    rarity: 'legendary'
   },
   {
     id: 'weekly_002',
+    category: 'special',
     title: '感恩日记',
     description: '连续七天，每天写下三件感谢对方的事情',
     difficulty: 'medium',
@@ -166,14 +239,29 @@ const weeklyTasks = [
     points: 45,
     icon: <Heart className="h-6 w-6 text-red-500" />,
     completed: false,
-    tips: '小事也可以，比如"谢谢你今天帮我倒水"'
+    tips: '小事也可以，比如"谢谢你今天帮我倒水"',
+    rarity: 'epic'
+  },
+  {
+    id: 'weekly_003',
+    category: 'special',
+    title: '关系体检',
+    description: '一起评估你们的关系状态，讨论改善空间',
+    difficulty: 'hard',
+    timeNeeded: '1小时',
+    points: 55,
+    icon: <Target className="h-6 w-6 text-purple-500" />,
+    completed: false,
+    tips: '诚实但温和，关注如何改进而非指责',
+    rarity: 'legendary'
   }
 ]
 
 // 月度挑战任务
-const monthlyTasks = [
+const monthlyTasks: Task[] = [
   {
     id: 'monthly_001',
+    category: 'special',
     title: '关系深度对话',
     description: '就一个重要话题进行深度对话，如未来规划、价值观等',
     difficulty: 'hard',
@@ -181,26 +269,96 @@ const monthlyTasks = [
     points: 60,
     icon: <Users className="h-6 w-6 text-purple-500" />,
     completed: false,
-    tips: '选择轻松的环境，提前思考，保持开放心态'
+    tips: '选择轻松的环境，提前思考，保持开放心态',
+    rarity: 'legendary'
+  },
+  {
+    id: 'monthly_002',
+    category: 'special',
+    title: '创意纪念日',
+    description: '创造一个专属于你们的纪念日和庆祝方式',
+    difficulty: 'hard',
+    timeNeeded: '2小时',
+    points: 65,
+    icon: <Sparkles className="h-6 w-6 text-yellow-500" />,
+    completed: false,
+    tips: '可以是对你们有特殊意义的日子或事件',
+    rarity: 'legendary'
   }
 ]
 
 export default function CoupleBlindBoxPage() {
   const [isUnboxing, setIsUnboxing] = useState(false)
   const [selectedTask, setSelectedTask] = useState<Task | null>(null)
-  const [completedTasks, setCompletedTasks] = useState<string[]>([])
-  const [userPoints, setUserPoints] = useState(120)
-  const [currentStreak, setCurrentStreak] = useState(3)
+  const [userData, setUserData] = useState<UserData>({
+    dailyFreeOpens: 1,
+    lastOpenDate: new Date().toDateString(),
+    points: 120,
+    currentStreak: 3,
+    completedTasks: [],
+    unlockedAchievements: [],
+    totalTasksCompleted: 0
+  })
   const [showCompletionMessage, setShowCompletionMessage] = useState(false)
   const [activeTab, setActiveTab] = useState('daily')
+  const [showAchievements, setShowAchievements] = useState(false)
+  const [showHistory, setShowHistory] = useState(false)
+  const [taskHistory, setTaskHistory] = useState<Array<{taskId: string, completedDate: string, title: string}>>([])
+
+  // 加载用户数据
+  useEffect(() => {
+    const savedUserData = localStorage.getItem('coupleBlindBoxUserData')
+    if (savedUserData) {
+      try {
+        const parsedData = JSON.parse(savedUserData)
+        // 检查是否是新的一天
+        const today = new Date().toDateString()
+        if (parsedData.lastOpenDate !== today) {
+          // 新的一天，重置免费开启次数
+          parsedData.dailyFreeOpens = 1
+          parsedData.lastOpenDate = today
+          
+          // 检查是否连续完成
+          const lastCompletedDate = new Date(parsedData.lastCompletedDate || '')
+          const todayDate = new Date()
+          const diffDays = Math.floor((todayDate.getTime() - lastCompletedDate.getTime()) / (1000 * 60 * 60 * 24))
+          
+          if (diffDays === 1) {
+            parsedData.currentStreak += 1
+          } else if (diffDays > 1) {
+            parsedData.currentStreak = 1
+          }
+        }
+        setUserData(parsedData)
+      } catch (error) {
+        console.error('Failed to load user data:', error)
+      }
+    }
+
+    // 加载任务历史
+    const savedHistory = localStorage.getItem('coupleBlindBoxHistory')
+    if (savedHistory) {
+      try {
+        setTaskHistory(JSON.parse(savedHistory))
+      } catch (error) {
+        console.error('Failed to load task history:', error)
+      }
+    }
+  }, [])
+
+  // 保存用户数据
+  const saveUserData = (newUserData: UserData) => {
+    setUserData(newUserData)
+    localStorage.setItem('coupleBlindBoxUserData', JSON.stringify(newUserData))
+  }
 
   // 获取难度标签颜色
   const getDifficultyColor = (difficulty: string) => {
     switch (difficulty) {
-      case 'easy': return 'bg-green-100 text-green-800'
-      case 'medium': return 'bg-yellow-100 text-yellow-800'
-      case 'hard': return 'bg-red-100 text-red-800'
-      default: return 'bg-gray-100 text-gray-800'
+      case 'easy': return 'bg-green-100 text-green-800 border-green-200'
+      case 'medium': return 'bg-yellow-100 text-yellow-800 border-yellow-200'
+      case 'hard': return 'bg-red-100 text-red-800 border-red-200'
+      default: return 'bg-gray-100 text-gray-800 border-gray-200'
     }
   }
 
@@ -214,28 +372,221 @@ export default function CoupleBlindBoxPage() {
     }
   }
 
+  // 获取稀有度颜色
+  const getRarityColor = (rarity: string) => {
+    switch (rarity) {
+      case 'common': return 'bg-gray-100 text-gray-800 border-gray-200'
+      case 'rare': return 'bg-blue-100 text-blue-800 border-blue-200'
+      case 'epic': return 'bg-purple-100 text-purple-800 border-purple-200'
+      case 'legendary': return 'bg-yellow-100 text-yellow-800 border-yellow-200'
+      default: return 'bg-gray-100 text-gray-800 border-gray-200'
+    }
+  }
+
+  // 获取稀有度文本
+  const getRarityText = (rarity: string) => {
+    switch (rarity) {
+      case 'common': return '普通'
+      case 'rare': return '稀有'
+      case 'epic': return '史诗'
+      case 'legendary': return '传说'
+      default: return '未知'
+    }
+  }
+
+  // 获取稀有度图标
+  const getRarityIcon = (rarity: string) => {
+    switch (rarity) {
+      case 'common': return null
+      case 'rare': return <Diamond className="h-3 w-3" />
+      case 'epic': return <Zap className="h-3 w-3" />
+      case 'legendary': return <Crown className="h-3 w-3" />
+      default: return null
+    }
+  }
+
+  // 检查成就解锁
+  const checkAchievements = (newUserData: UserData) => {
+    const newlyUnlocked = []
+    
+    // 检查各种成就条件
+    if (newUserData.totalTasksCompleted >= 1 && !newUserData.unlockedAchievements.includes('first_task')) {
+      newlyUnlocked.push('first_task')
+    }
+    
+    if (newUserData.currentStreak >= 7 && !newUserData.unlockedAchievements.includes('week_streak')) {
+      newlyUnlocked.push('week_streak')
+    }
+    
+    if (newUserData.currentStreak >= 30 && !newUserData.unlockedAchievements.includes('month_streak')) {
+      newlyUnlocked.push('month_streak')
+    }
+    
+    if (newUserData.totalTasksCompleted >= 10 && !newUserData.unlockedAchievements.includes('tasks_10')) {
+      newlyUnlocked.push('tasks_10')
+    }
+    
+    if (newUserData.points >= 100 && !newUserData.unlockedAchievements.includes('points_100')) {
+      newlyUnlocked.push('points_100')
+    }
+    
+    // 检查是否完成所有类别的任务
+    const completedCategories = new Set()
+    newUserData.completedTasks.forEach(taskId => {
+      const task = [...coupleTasks, ...weeklyTasks, ...monthlyTasks].find(t => t.id === taskId)
+      if (task) {
+        completedCategories.add(task.category)
+      }
+    })
+    
+    if (completedCategories.size >= 5 && !newUserData.unlockedAchievements.includes('all_categories')) {
+      newlyUnlocked.push('all_categories')
+    }
+    
+    if (newlyUnlocked.length > 0) {
+      const updatedUserData = {
+        ...newUserData,
+        unlockedAchievements: [...newUserData.unlockedAchievements, ...newlyUnlocked]
+      }
+      
+      // 计算成就奖励积分
+      const achievementPoints = newlyUnlocked.reduce((total, achievementId) => {
+        const achievement = achievements.find(a => a.id === achievementId)
+        return total + (achievement?.points || 0)
+      }, 0)
+      
+      updatedUserData.points += achievementPoints
+      
+      return { userData: updatedUserData, newlyUnlocked }
+    }
+    
+    return { userData: newUserData, newlyUnlocked: [] }
+  }
+
   // 打开盲盒
   const openBlindBox = () => {
-    setIsUnboxing(true)
-    
-    // 模拟开盲盒动画
-    setTimeout(() => {
-      // 随机选择一个未完成的每日任务
-      const availableTasks = coupleTasks.filter(task => !completedTasks.includes(task.id))
-      if (availableTasks.length > 0) {
-        const randomIndex = Math.floor(Math.random() * availableTasks.length)
-        setSelectedTask(availableTasks[randomIndex])
-      }
-      setIsUnboxing(false)
-    }, 2000)
+    // 检查是否有免费开启次数
+    if (userData.dailyFreeOpens > 0) {
+      setIsUnboxing(true)
+      
+      // 模拟开盲盒动画
+      setTimeout(() => {
+        // 根据稀有度权重随机选择一个任务
+        const availableTasks = getTaskList().filter(task => !userData.completedTasks.includes(task.id))
+        
+        if (availableTasks.length > 0) {
+          // 稀有度权重：common(50%), rare(30%), epic(15%), legendary(5%)
+          const random = Math.random()
+          let filteredTasks = availableTasks.filter(task => task.rarity === 'common')
+          
+          if (random > 0.5) {
+            filteredTasks = availableTasks.filter(task => task.rarity === 'rare')
+          }
+          if (random > 0.8) {
+            filteredTasks = availableTasks.filter(task => task.rarity === 'epic')
+          }
+          if (random > 0.95) {
+            filteredTasks = availableTasks.filter(task => task.rarity === 'legendary')
+          }
+          
+          if (filteredTasks.length === 0) {
+            filteredTasks = availableTasks
+          }
+          
+          const randomIndex = Math.floor(Math.random() * filteredTasks.length)
+          setSelectedTask(filteredTasks[randomIndex])
+        }
+        
+        setIsUnboxing(false)
+        
+        // 更新免费开启次数
+        const newUserData = {
+          ...userData,
+          dailyFreeOpens: userData.dailyFreeOpens - 1
+        }
+        saveUserData(newUserData)
+      }, 2000)
+    }
+  }
+
+  // 使用积分开启盲盒
+  const openBlindBoxWithPoints = () => {
+    if (userData.points >= 20) {
+      setIsUnboxing(true)
+      
+      setTimeout(() => {
+        // 使用积分开启时，稀有度权重提高
+        const availableTasks = getTaskList().filter(task => !userData.completedTasks.includes(task.id))
+        
+        if (availableTasks.length > 0) {
+          // 稀有度权重：common(20%), rare(35%), epic(30%), legendary(15%)
+          const random = Math.random()
+          let filteredTasks = availableTasks.filter(task => task.rarity === 'rare')
+          
+          if (random > 0.35) {
+            filteredTasks = availableTasks.filter(task => task.rarity === 'epic')
+          }
+          if (random > 0.65) {
+            filteredTasks = availableTasks.filter(task => task.rarity === 'legendary')
+          }
+          if (random <= 0.2) {
+            filteredTasks = availableTasks.filter(task => task.rarity === 'common')
+          }
+          
+          if (filteredTasks.length === 0) {
+            filteredTasks = availableTasks
+          }
+          
+          const randomIndex = Math.floor(Math.random() * filteredTasks.length)
+          setSelectedTask(filteredTasks[randomIndex])
+        }
+        
+        setIsUnboxing(false)
+        
+        // 扣除积分
+        const newUserData = {
+          ...userData,
+          points: userData.points - 20
+        }
+        saveUserData(newUserData)
+      }, 2000)
+    }
   }
 
   // 完成任务
   const completeTask = () => {
     if (selectedTask) {
-      setCompletedTasks([...completedTasks, selectedTask.id])
-      setUserPoints(userPoints + selectedTask.points)
+      const newCompletedTasks = [...userData.completedTasks, selectedTask.id]
+      const newUserData = {
+        ...userData,
+        completedTasks: newCompletedTasks,
+        points: userData.points + selectedTask.points,
+        totalTasksCompleted: userData.totalTasksCompleted + 1,
+        lastCompletedDate: new Date().toISOString()
+      }
+      
+      // 检查成就
+      const { userData: updatedUserData, newlyUnlocked } = checkAchievements(newUserData)
+      saveUserData(updatedUserData)
+      
+      // 添加到任务历史
+      const newHistoryEntry = {
+        taskId: selectedTask.id,
+        completedDate: new Date().toISOString(),
+        title: selectedTask.title
+      }
+      const updatedHistory = [newHistoryEntry, ...taskHistory].slice(0, 50) // 保留最近50条
+      setTaskHistory(updatedHistory)
+      localStorage.setItem('coupleBlindBoxHistory', JSON.stringify(updatedHistory))
+      
       setShowCompletionMessage(true)
+      
+      // 显示成就解锁消息
+      if (newlyUnlocked.length > 0) {
+        setTimeout(() => {
+          alert(`🎉 恭喜解锁新成就: ${newlyUnlocked.map(id => achievements.find(a => a.id === id)?.name).join(', ')}`)
+        }, 1000)
+      }
       
       // 3秒后隐藏完成消息
       setTimeout(() => {
@@ -255,6 +606,21 @@ export default function CoupleBlindBoxPage() {
     }
   }
 
+  // 分享结果
+  const shareResult = () => {
+    const text = `我们在情侣盲盒完成了${userData.totalTasksCompleted}个任务，当前连续${userData.currentStreak}天！`
+    
+    if (navigator.share) {
+      navigator.share({
+        title: '情侣盲盒成就',
+        text: text
+      })
+    } else {
+      navigator.clipboard.writeText(text)
+      alert('成就已复制到剪贴板！')
+    }
+  }
+
   return (
     <div className="min-h-screen bg-gradient-to-br from-pink-50 via-purple-50 to-indigo-50">
       <Navigation />
@@ -262,29 +628,24 @@ export default function CoupleBlindBoxPage() {
       <main className="container mx-auto px-4 py-8">
         <div className="mx-auto max-w-4xl">
           <div className="mb-6">
-            <Link href="/games">
-              <Button variant="outline" className="mb-4">
-                <ArrowLeft className="h-4 w-4 mr-2" />
-                返回互动游戏
-              </Button>
+            <Link href="/games/interactive-games" className="inline-flex items-center gap-2 text-pink-600 hover:text-pink-800 transition-colors mb-6">
+              <ArrowLeft className="h-4 w-4" />
+              返回互动游戏
             </Link>
           </div>
           
           {/* 页面标题 */}
           <div className="text-center mb-8">
-            <h1 className="text-4xl font-bold tracking-tight mb-4">
+            <h1 className="text-4xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-pink-600 to-purple-600 mb-4">
               情侣盲盒
-              <span className="text-transparent bg-clip-text bg-gradient-to-r from-pink-500 to-purple-500 block md:inline">
-                增进感情
-              </span>
             </h1>
-            <p className="text-lg text-gray-600 max-w-2xl mx-auto">
+            <p className="text-gray-600 max-w-2xl mx-auto text-lg">
               每日开启情侣互动任务，让感情升温，创造美好回忆
             </p>
           </div>
 
           {/* 用户状态 */}
-          <Card className="mb-8">
+          <Card className="mb-8 bg-white/80 backdrop-blur-sm shadow-lg">
             <CardHeader>
               <CardTitle className="flex items-center gap-2">
                 <Award className="h-5 w-5 text-yellow-500" />
@@ -294,263 +655,345 @@ export default function CoupleBlindBoxPage() {
             <CardContent>
               <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
                 <div className="text-center">
-                  <div className="text-2xl font-bold text-purple-600">{userPoints}</div>
+                  <div className="text-2xl font-bold text-purple-600">{userData.points}</div>
                   <div className="text-sm text-gray-500">积分</div>
                 </div>
                 <div className="text-center">
-                  <div className="text-2xl font-bold text-pink-600">{completedTasks.length}</div>
-                  <div className="text-sm text-gray-500">已完成任务</div>
-                </div>
-                <div className="text-center">
-                  <div className="text-2xl font-bold text-red-600">{currentStreak}</div>
+                  <div className="text-2xl font-bold text-pink-600">{userData.currentStreak}</div>
                   <div className="text-sm text-gray-500">连续天数</div>
                 </div>
                 <div className="text-center">
-                  <div className="text-2xl font-bold text-blue-600">
-                    {userPoints >= 100 ? '甜蜜' : userPoints >= 50 ? '温馨' : '新手'}
-                  </div>
-                  <div className="text-sm text-gray-500">情侣等级</div>
+                  <div className="text-2xl font-bold text-blue-600">{userData.totalTasksCompleted}</div>
+                  <div className="text-sm text-gray-500">完成任务</div>
                 </div>
+                <div className="text-center">
+                  <div className="text-2xl font-bold text-green-600">{userData.unlockedAchievements.length}</div>
+                  <div className="text-sm text-gray-500">成就解锁</div>
+                </div>
+              </div>
+              
+              <div className="flex flex-wrap gap-3 mt-4">
+                <Button 
+                  onClick={() => setShowAchievements(!showAchievements)}
+                  variant="outline"
+                  className="flex items-center gap-2"
+                >
+                  <Trophy className="h-4 w-4" />
+                  查看成就
+                </Button>
+                <Button 
+                  onClick={() => setShowHistory(!showHistory)}
+                  variant="outline"
+                  className="flex items-center gap-2"
+                >
+                  <History className="h-4 w-4" />
+                  任务历史
+                </Button>
+                <Button 
+                  onClick={shareResult}
+                  variant="outline"
+                  className="flex items-center gap-2"
+                >
+                  <Share2 className="h-4 w-4" />
+                  分享成就
+                </Button>
               </div>
             </CardContent>
           </Card>
 
-          {/* 盲盒区域 */}
-          <Card className="mb-8">
-            <CardHeader>
-              <CardTitle className="flex items-center gap-2">
-                <Gift className="h-5 w-5 text-pink-500" />
-                今日盲盒
-              </CardTitle>
-              <CardDescription>
-                每天可以开启一个情侣互动任务盲盒，完成即可获得积分奖励
-              </CardDescription>
-            </CardHeader>
-            <CardContent>
-              {!selectedTask ? (
-                <div className="text-center">
-                  {isUnboxing ? (
-                    <div className="flex flex-col items-center justify-center py-12">
-                      <div className="relative w-32 h-32 mb-4">
-                        <div className="absolute inset-0 bg-pink-200 rounded-full animate-pulse"></div>
-                        <Gift className="absolute inset-0 m-auto h-16 w-16 text-pink-600 animate-bounce" />
+          {/* 成就展示 */}
+          {showAchievements && (
+            <Card className="mb-8 bg-white/80 backdrop-blur-sm shadow-lg">
+              <CardHeader>
+                <CardTitle className="flex items-center gap-2">
+                  <Trophy className="h-5 w-5 text-yellow-500" />
+                  成就系统
+                </CardTitle>
+              </CardHeader>
+              <CardContent>
+                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+                  {achievements.map(achievement => {
+                    const isUnlocked = userData.unlockedAchievements.includes(achievement.id)
+                    return (
+                      <div 
+                        key={achievement.id} 
+                        className={`p-4 rounded-lg border ${isUnlocked ? 'bg-yellow-50 border-yellow-200' : 'bg-gray-50 border-gray-200 opacity-60'}`}
+                      >
+                        <div className="flex items-start gap-3">
+                          <div className={`p-2 rounded-full ${isUnlocked ? 'bg-yellow-200 text-yellow-700' : 'bg-gray-200 text-gray-500'}`}>
+                            {achievement.icon}
+                          </div>
+                          <div className="flex-1">
+                            <h3 className={`font-medium ${isUnlocked ? 'text-yellow-800' : 'text-gray-600'}`}>
+                              {achievement.name}
+                            </h3>
+                            <p className={`text-sm mt-1 ${isUnlocked ? 'text-yellow-700' : 'text-gray-500'}`}>
+                              {achievement.description}
+                            </p>
+                            <div className="flex items-center gap-1 mt-2">
+                              <Star className="h-3 w-3 text-yellow-500" />
+                              <span className="text-xs">{achievement.points} 积分</span>
+                            </div>
+                          </div>
+                        </div>
+                        {isUnlocked && <CheckCircle className="h-5 w-5 text-green-500" />}
                       </div>
-                      <p className="text-lg font-medium text-gray-700">正在开启盲盒...</p>
-                      <p className="text-sm text-gray-500 mt-2">期待今日的情侣任务</p>
-                    </div>
+                    )
+                  })}
+                </div>
+              </CardContent>
+            </Card>
+          )}
+
+          {/* 任务历史 */}
+          {showHistory && (
+            <Card className="mb-8 bg-white/80 backdrop-blur-sm shadow-lg">
+              <CardHeader>
+                <CardTitle className="flex items-center gap-2">
+                  <History className="h-5 w-5 text-blue-500" />
+                  任务历史
+                </CardTitle>
+              </CardHeader>
+              <CardContent>
+                <div className="space-y-2 max-h-64 overflow-y-auto">
+                  {taskHistory.length > 0 ? (
+                    taskHistory.map((entry, index) => (
+                      <div key={index} className="p-3 bg-gray-50 rounded-lg flex justify-between items-center">
+                        <div>
+                          <div className="font-medium">{entry.title}</div>
+                          <div className="text-sm text-gray-600">
+                            {new Date(entry.completedDate).toLocaleDateString()}
+                          </div>
+                        </div>
+                        <CheckCircle className="h-5 w-5 text-green-500" />
+                      </div>
+                    ))
                   ) : (
-                    <div className="flex flex-col items-center justify-center py-12">
-                      <div className="relative w-32 h-32 mb-4 cursor-pointer group" onClick={openBlindBox}>
-                        <div className="absolute inset-0 bg-gradient-to-br from-pink-200 to-purple-200 rounded-full group-hover:from-pink-300 group-hover:to-purple-300 transition-all duration-300 shadow-lg"></div>
-                        <Gift className="absolute inset-0 m-auto h-16 w-16 text-pink-600" />
-                        <Sparkles className="absolute -top-2 -right-2 h-6 w-6 text-yellow-500" />
-                      </div>
-                      <Button onClick={openBlindBox} className="mt-4 px-8 bg-gradient-to-r from-pink-500 to-purple-500 hover:from-pink-600 hover:to-purple-600">
-                        <Gift className="h-4 w-4 mr-2" />
-                        开启今日盲盒
-                      </Button>
-                      <p className="text-sm text-gray-500 mt-2">每日限开一次，获得情侣互动任务</p>
+                    <div className="text-center py-8 text-gray-500">
+                      还没有完成的任务，快去开启盲盒吧！
                     </div>
                   )}
                 </div>
-              ) : (
-                <div className="space-y-6">
-                  <div className="bg-gradient-to-r from-pink-50 to-purple-50 p-6 rounded-lg">
-                    <div className="flex items-center gap-4 mb-4">
-                      <div className="p-3 bg-white rounded-full shadow-sm">
-                        {selectedTask.icon}
-                      </div>
-                      <div className="flex-1">
-                        <h3 className="text-xl font-semibold mb-1">{selectedTask.title}</h3>
-                        <div className="flex flex-wrap gap-2 mb-2">
-                          <Badge className={getDifficultyColor(selectedTask.difficulty)}>
-                            {getDifficultyText(selectedTask.difficulty)}
-                          </Badge>
-                          <Badge variant="outline">
-                            <Clock className="h-3 w-3 mr-1" />
-                            {selectedTask.timeNeeded}
-                          </Badge>
-                          <Badge variant="outline">
-                            <Star className="h-3 w-3 mr-1" />
-                            {selectedTask.points} 积分
-                          </Badge>
-                        </div>
-                      </div>
-                    </div>
-                    
-                    <p className="text-gray-700 mb-4 leading-relaxed">
-                      {selectedTask.description}
-                    </p>
-                    
-                    {selectedTask.tips && (
-                      <div className="bg-blue-50 border border-blue-200 p-3 rounded-lg">
-                        <div className="flex items-start gap-2">
-                          <Sparkles className="h-5 w-5 text-blue-500 mt-0.5 flex-shrink-0" />
-                          <div>
-                            <p className="text-sm font-medium text-blue-700">小贴士</p>
-                            <p className="text-sm text-blue-600">{selectedTask.tips}</p>
-                          </div>
-                        </div>
-                      </div>
-                    )}
-                  </div>
-                  
-                  <div className="flex justify-center">
-                    <Button 
-                      onClick={completeTask} 
-                      className="px-8 bg-gradient-to-r from-green-500 to-teal-500 hover:from-green-600 hover:to-teal-600"
-                    >
-                      <CheckCircle className="h-4 w-4 mr-2" />
-                      完成任务
-                    </Button>
-                  </div>
+              </CardContent>
+            </Card>
+          )}
+
+          {/* 盲盒开启区域 */}
+          <Card className="mb-8 bg-white/80 backdrop-blur-sm shadow-lg">
+            <CardHeader className="text-center">
+              <CardTitle className="text-2xl flex items-center justify-center gap-2">
+                <Gift className="h-6 w-6 text-pink-500" />
+                每日盲盒
+              </CardTitle>
+              <CardDescription>
+                每日免费开启一次，或使用20积分额外开启
+              </CardDescription>
+            </CardHeader>
+            <CardContent className="text-center space-y-6">
+              <div className="flex justify-center items-center gap-4">
+                <div className="text-center">
+                  <div className="text-2xl font-bold text-purple-600">{userData.dailyFreeOpens}</div>
+                  <div className="text-sm text-gray-600">今日免费次数</div>
                 </div>
-              )}
+                <div className="text-gray-400">/</div>
+                <div className="text-center">
+                  <div className="text-2xl font-bold text-orange-600">1</div>
+                  <div className="text-sm text-gray-600">每日上限</div>
+                </div>
+              </div>
               
-              {showCompletionMessage && (
-                <div className="mt-6 bg-green-50 border border-green-200 p-4 rounded-lg">
-                  <div className="flex items-center gap-2">
-                    <CheckCircle className="h-5 w-5 text-green-600" />
-                    <div>
-                      <p className="text-green-800 font-medium">任务完成！</p>
-                      <p className="text-green-600 text-sm">获得 {selectedTask?.points || 0} 积分，继续努力吧！</p>
-                    </div>
-                  </div>
-                </div>
-              )}
+              <div className="flex justify-center gap-4">
+                {userData.dailyFreeOpens > 0 ? (
+                  <Button 
+                    onClick={openBlindBox}
+                    disabled={isUnboxing}
+                    className="bg-gradient-to-r from-pink-500 to-purple-500 hover:from-pink-600 hover:to-purple-600 px-8 py-3"
+                  >
+                    <Unlock className="h-5 w-5 mr-2" />
+                    免费开启
+                  </Button>
+                ) : (
+                  <Button disabled className="bg-gray-300 text-gray-500 px-8 py-3">
+                    <Lock className="h-5 w-5 mr-2" />
+                    今日免费次数已用完
+                  </Button>
+                )}
+                
+                <Button 
+                  onClick={openBlindBoxWithPoints}
+                  disabled={isUnboxing || userData.points < 20}
+                  variant="outline"
+                >
+                  <Diamond className="h-5 w-5 mr-2" />
+                  积分开启 (20)
+                </Button>
+              </div>
+              
+              <div className="text-sm text-gray-500">
+                明天 {new Date(new Date().setDate(new Date().getDate() + 1)).toLocaleTimeString()} 免费次数将重置
+              </div>
             </CardContent>
           </Card>
 
-          {/* 任务历史和浏览 */}
-          <Card>
+          {/* 任务分类标签 */}
+          <Tabs value={activeTab} onValueChange={setActiveTab} className="mb-8">
+            <TabsList className="grid w-full grid-cols-3 bg-white/80 backdrop-blur-sm">
+              <TabsTrigger value="daily" className="data-[state=active]:bg-purple-100 data-[state=active]:text-purple-700">
+                日常任务
+              </TabsTrigger>
+              <TabsTrigger value="weekly" className="data-[state=active]:bg-purple-100 data-[state=active]:text-purple-700">
+                周度任务
+              </TabsTrigger>
+              <TabsTrigger value="monthly" className="data-[state=active]:bg-purple-100 data-[state=active]:text-purple-700">
+                月度挑战
+              </TabsTrigger>
+            </TabsList>
+          </Tabs>
+
+          {/* 当前任务展示 */}
+          {selectedTask && (
+            <Card className="mb-8 bg-white/80 backdrop-blur-sm shadow-lg border-2 border-purple-200">
+              <CardHeader>
+                <div className="flex items-center justify-between">
+                  <CardTitle className="flex items-center gap-2">
+                    {selectedTask.icon}
+                    {selectedTask.title}
+                  </CardTitle>
+                  <div className="flex items-center gap-2">
+                    <Badge className={getRarityColor(selectedTask.rarity)}>
+                      {getRarityIcon(selectedTask.rarity)}
+                      {getRarityText(selectedTask.rarity)}
+                    </Badge>
+                    <Badge className={getDifficultyColor(selectedTask.difficulty)}>
+                      {getDifficultyText(selectedTask.difficulty)}
+                    </Badge>
+                  </div>
+                </div>
+              </CardHeader>
+              <CardContent className="space-y-4">
+                <p className="text-gray-700">{selectedTask.description}</p>
+                
+                <div className="grid grid-cols-2 md:grid-cols-3 gap-4 text-sm">
+                  <div className="flex items-center gap-2">
+                    <Clock className="h-4 w-4 text-gray-500" />
+                    <span>{selectedTask.timeNeeded}</span>
+                  </div>
+                  <div className="flex items-center gap-2">
+                    <Star className="h-4 w-4 text-yellow-500" />
+                    <span>{selectedTask.points} 积分</span>
+                  </div>
+                  <div className="flex items-center gap-2">
+                    <Target className="h-4 w-4 text-blue-500" />
+                    <span>{getDifficultyText(selectedTask.difficulty)}</span>
+                  </div>
+                </div>
+                
+                <div className="bg-blue-50 p-3 rounded-lg">
+                  <div className="flex items-center gap-2 mb-1">
+                    <Sparkles className="h-4 w-4 text-blue-500" />
+                    <span className="font-medium text-blue-800">小贴士</span>
+                  </div>
+                  <p className="text-sm text-blue-700">{selectedTask.tips}</p>
+                </div>
+                
+                <Button 
+                  onClick={completeTask}
+                  className="w-full bg-gradient-to-r from-green-500 to-teal-500 hover:from-green-600 hover:to-teal-600"
+                >
+                  <CheckCircle className="h-4 w-4 mr-2" />
+                  完成任务
+                </Button>
+              </CardContent>
+            </Card>
+          )}
+
+          {/* 任务列表 */}
+          <Card className="bg-white/80 backdrop-blur-sm shadow-lg">
             <CardHeader>
-              <CardTitle className="flex items-center gap-2">
-                <Calendar className="h-5 w-5 text-blue-500" />
-                任务库
-              </CardTitle>
+              <CardTitle>任务列表</CardTitle>
               <CardDescription>
-                浏览所有可用的情侣互动任务，选择你们喜欢的挑战
+                已完成 {userData.completedTasks.filter(id => getTaskList().some(task => task.id === id)).length} / {getTaskList().length}
               </CardDescription>
             </CardHeader>
             <CardContent>
-              <Tabs value={activeTab} onValueChange={setActiveTab}>
-                <TabsList className="grid w-full grid-cols-3">
-                  <TabsTrigger value="daily" className="flex items-center gap-2">
-                    <Sun className="h-4 w-4" />
-                    每日任务
-                  </TabsTrigger>
-                  <TabsTrigger value="weekly" className="flex items-center gap-2">
-                    <Calendar className="h-4 w-4" />
-                    周度任务
-                  </TabsTrigger>
-                  <TabsTrigger value="monthly" className="flex items-center gap-2">
-                    <Moon className="h-4 w-4" />
-                    月度任务
-                  </TabsTrigger>
-                </TabsList>
-                
-                <TabsContent value="daily" className="mt-6">
-                  <div className="space-y-4">
-                    {getTaskList().map((task) => (
-                      <div key={task.id} className="border rounded-lg p-4 hover:shadow-md transition-shadow">
-                        <div className="flex items-center gap-4">
-                          <div className="p-2 bg-gray-50 rounded-lg">
-                            {task.icon}
-                          </div>
+              <div className="space-y-4">
+                {getTaskList().map((task) => {
+                  const isCompleted = userData.completedTasks.includes(task.id)
+                  return (
+                    <div 
+                      key={task.id} 
+                      className={`p-4 rounded-lg border ${isCompleted ? 'bg-green-50 border-green-200' : 'bg-white border-gray-200'}`}
+                    >
+                      <div className="flex items-start justify-between">
+                        <div className="flex items-start gap-3 flex-1">
+                          <div className="mt-1">{task.icon}</div>
                           <div className="flex-1">
-                            <h3 className="font-medium mb-1">{task.title}</h3>
-                            <p className="text-sm text-gray-600 mb-2">{task.description}</p>
-                            <div className="flex flex-wrap gap-2">
-                              <Badge className={getDifficultyColor(task.difficulty)}>
+                            <h3 className={`font-medium ${isCompleted ? 'text-green-800 line-through' : 'text-gray-800'}`}>
+                              {task.title}
+                            </h3>
+                            <p className={`text-sm mt-1 ${isCompleted ? 'text-green-600' : 'text-gray-600'}`}>
+                              {task.description}
+                            </p>
+                            <div className="flex items-center gap-4 mt-2 text-xs">
+                              <div className="flex items-center gap-1">
+                                <Clock className="h-3 w-3 text-gray-500" />
+                                <span>{task.timeNeeded}</span>
+                              </div>
+                              <div className="flex items-center gap-1">
+                                <Star className="h-3 w-3 text-yellow-500" />
+                                <span>{task.points} 积分</span>
+                              </div>
+                              <Badge className={`text-xs ${getDifficultyColor(task.difficulty)}`}>
                                 {getDifficultyText(task.difficulty)}
                               </Badge>
-                              <Badge variant="outline">
-                                <Clock className="h-3 w-3 mr-1" />
-                                {task.timeNeeded}
-                              </Badge>
-                              <Badge variant="outline">
-                                <Star className="h-3 w-3 mr-1" />
-                                {task.points} 积分
-                              </Badge>
-                              {completedTasks.includes(task.id) && (
-                                <Badge className="bg-green-100 text-green-800">
-                                  <CheckCircle className="h-3 w-3 mr-1" />
-                                  已完成
-                                </Badge>
-                              )}
-                            </div>
-                          </div>
-                        </div>
-                      </div>
-                    ))}
-                  </div>
-                </TabsContent>
-                
-                <TabsContent value="weekly" className="mt-6">
-                  <div className="space-y-4">
-                    {weeklyTasks.map((task) => (
-                      <div key={task.id} className="border rounded-lg p-4 hover:shadow-md transition-shadow">
-                        <div className="flex items-center gap-4">
-                          <div className="p-2 bg-gray-50 rounded-lg">
-                            {task.icon}
-                          </div>
-                          <div className="flex-1">
-                            <h3 className="font-medium mb-1">{task.title}</h3>
-                            <p className="text-sm text-gray-600 mb-2">{task.description}</p>
-                            <div className="flex flex-wrap gap-2">
-                              <Badge className={getDifficultyColor(task.difficulty)}>
-                                {getDifficultyText(task.difficulty)}
-                              </Badge>
-                              <Badge variant="outline">
-                                <Clock className="h-3 w-3 mr-1" />
-                                {task.timeNeeded}
-                              </Badge>
-                              <Badge variant="outline">
-                                <Star className="h-3 w-3 mr-1" />
-                                {task.points} 积分
+                              <Badge className={`text-xs ${getRarityColor(task.rarity)}`}>
+                                {getRarityIcon(task.rarity)}
+                                {getRarityText(task.rarity)}
                               </Badge>
                             </div>
                           </div>
                         </div>
+                        {isCompleted && (
+                          <CheckCircle className="h-5 w-5 text-green-500 ml-2" />
+                        )}
                       </div>
-                    ))}
-                  </div>
-                </TabsContent>
-                
-                <TabsContent value="monthly" className="mt-6">
-                  <div className="space-y-4">
-                    {monthlyTasks.map((task) => (
-                      <div key={task.id} className="border rounded-lg p-4 hover:shadow-md transition-shadow">
-                        <div className="flex items-center gap-4">
-                          <div className="p-2 bg-gray-50 rounded-lg">
-                            {task.icon}
-                          </div>
-                          <div className="flex-1">
-                            <h3 className="font-medium mb-1">{task.title}</h3>
-                            <p className="text-sm text-gray-600 mb-2">{task.description}</p>
-                            <div className="flex flex-wrap gap-2">
-                              <Badge className={getDifficultyColor(task.difficulty)}>
-                                {getDifficultyText(task.difficulty)}
-                              </Badge>
-                              <Badge variant="outline">
-                                <Clock className="h-3 w-3 mr-1" />
-                                {task.timeNeeded}
-                              </Badge>
-                              <Badge variant="outline">
-                                <Star className="h-3 w-3 mr-1" />
-                                {task.points} 积分
-                              </Badge>
-                            </div>
-                          </div>
-                        </div>
-                      </div>
-                    ))}
-                  </div>
-                </TabsContent>
-              </Tabs>
+                    </div>
+                  )
+                })}
+              </div>
             </CardContent>
           </Card>
         </div>
+        
+        {/* 开盲盒动画 */}
+        {isUnboxing && (
+          <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
+            <div className="bg-white p-8 rounded-xl text-center">
+              <div className="mb-4">
+                <Gift className="h-16 w-16 text-pink-500 animate-bounce mx-auto" />
+              </div>
+              <h3 className="text-xl font-semibold mb-2">开启盲盒中...</h3>
+              <div className="flex justify-center gap-2">
+                <div className="w-3 h-3 bg-pink-500 rounded-full animate-pulse"></div>
+                <div className="w-3 h-3 bg-purple-500 rounded-full animate-pulse" style={{ animationDelay: '0.2s' }}></div>
+                <div className="w-3 h-3 bg-indigo-500 rounded-full animate-pulse" style={{ animationDelay: '0.4s' }}></div>
+              </div>
+            </div>
+          </div>
+        )}
+        
+        {/* 完成任务消息 */}
+        {showCompletionMessage && (
+          <div className="fixed top-4 right-4 bg-green-100 border border-green-200 text-green-800 p-4 rounded-lg shadow-lg z-50">
+            <div className="flex items-center gap-2">
+              <CheckCircle className="h-5 w-5" />
+              <div>
+                <div className="font-medium">任务完成！</div>
+                <div className="text-sm">获得 {selectedTask?.points} 积分</div>
+              </div>
+            </div>
+          </div>
+        )}
       </main>
       
       <Footer />

@@ -36,7 +36,23 @@ import {
   Share,
   Play,
   Pause,
-  CheckCircle
+  CheckCircle,
+  Wifi,
+  WifiOff,
+  Video,
+  VideoOff,
+  MessageSquare,
+  UserPlus,
+  Settings,
+  Mic,
+  MicOff,
+  Volume2,
+  Save,
+  RefreshCw,
+  Grid3X3,
+  Maximize2,
+  Copy,
+  Trash2
 } from 'lucide-react'
 import Link from 'next/link'
 
@@ -193,12 +209,47 @@ interface DoodleHistory {
   imageData: string
   duration: number
   challenge?: string
+  collaborators: string[]
+}
+
+// 协作用户
+interface Collaborator {
+  id: string
+  name: string
+  color: string
+  isOnline: boolean
+  cursor?: { x: number, y: number }
+  currentTool?: DrawingTool
+}
+
+// 聊天消息
+interface ChatMessage {
+  id: string
+  userId: string
+  userName: string
+  content: string
+  timestamp: number
 }
 
 function formatTime(seconds: number): string {
   const minutes = Math.floor(seconds / 60)
   const remainingSeconds = seconds % 60
   return `${minutes.toString().padStart(2, '0')}:${remainingSeconds.toString().padStart(2, '0')}`
+}
+
+function formatTimestamp(timestamp: number): string {
+  const now = Date.now()
+  const diff = now - timestamp
+  
+  if (diff < 1000 * 60) {
+    return '刚刚'
+  } else if (diff < 1000 * 60 * 60) {
+    return `${Math.floor(diff / (1000 * 60))}分钟前`
+  } else if (diff < 1000 * 60 * 60 * 24) {
+    return `${Math.floor(diff / (1000 * 60 * 60))}小时前`
+  } else {
+    return `${Math.floor(diff / (1000 * 60 * 60 * 24))}天前`
+  }
 }
 
 export default function CollaborativeDoodlePage() {
@@ -213,6 +264,21 @@ export default function CollaborativeDoodlePage() {
   const [isPlaying, setIsPlaying] = useState(false)
   const [activeChallenge, setActiveChallenge] = useState<string | null>(null)
   const [remainingTime, setRemainingTime] = useState(0)
+  const [isFullscreen, setIsFullscreen] = useState(false)
+  const [showGrid, setShowGrid] = useState(false)
+  const [soundEnabled, setSoundEnabled] = useState(true)
+  
+  // 协作功能状态
+  const [isConnected, setIsConnected] = useState(false)
+  const [collaborators, setCollaborators] = useState<Collaborator[]>([])
+  const [chatMessages, setChatMessages] = useState<ChatMessage[]>([])
+  const [newMessage, setNewMessage] = useState('')
+  const [isVideoCall, setIsVideoCall] = useState(false)
+  const [isMuted, setIsMuted] = useState(false)
+  const [showInviteModal, setShowInviteModal] = useState(false)
+  const [inviteLink, setInviteLink] = useState('')
+  const [canvasHistory, setCanvasHistory] = useState<ImageData[]>([])
+  const [historyStep, setHistoryStep] = useState(-1)
   
   const canvasRef = useRef<HTMLCanvasElement>(null)
   const contextRef = useRef<CanvasRenderingContext2D | null>(null)
@@ -277,6 +343,29 @@ export default function CollaborativeDoodlePage() {
         console.error('Failed to load doodle history:', error)
       }
     }
+
+    // 模拟协作用户
+    const mockCollaborators: Collaborator[] = [
+      {
+        id: 'user1',
+        name: '小明',
+        color: '#FF6B6B',
+        isOnline: true,
+        cursor: { x: 100, y: 150 },
+        currentTool: 'brush'
+      },
+      {
+        id: 'user2',
+        name: '小红',
+        color: '#4ECDC4',
+        isOnline: false,
+        currentTool: 'pen'
+      }
+    ]
+    setCollaborators(mockCollaborators)
+
+    // 生成邀请链接
+    setInviteLink(`${window.location.origin}${window.location.pathname}?room=${Date.now()}`)
   }, [])
 
   useEffect(() => {
@@ -322,6 +411,13 @@ export default function CollaborativeDoodlePage() {
       contextRef.current.strokeStyle = selectedColor
       contextRef.current.lineWidth = brushSize
     }
+    
+    // 保存当前画布状态
+    if (canvasRef.current && contextRef.current) {
+      const imageData = contextRef.current.getImageData(0, 0, canvasRef.current.width, canvasRef.current.height)
+      setCanvasHistory([...canvasHistory.slice(0, historyStep + 1), imageData])
+      setHistoryStep(historyStep + 1)
+    }
   }
 
   const stopDrawing = () => {
@@ -356,7 +452,8 @@ export default function CollaborativeDoodlePage() {
         timestamp: Date.now(),
         imageData,
         duration: drawTime,
-        challenge: activeChallenge || undefined
+        challenge: activeChallenge || undefined,
+        collaborators: collaborators.filter(c => c.isOnline).map(c => c.name)
       }
       
       const updatedHistory = [newDoodle, ...doodleHistory].slice(0, 10) // 保留最近10个作品
@@ -380,6 +477,57 @@ export default function CollaborativeDoodlePage() {
     }
   }
 
+  const undo = () => {
+    if (historyStep > 0 && canvasHistory.length > 0) {
+      const previousState = canvasHistory[historyStep - 1]
+      if (contextRef.current && canvasRef.current) {
+        contextRef.current.putImageData(previousState, 0, 0)
+      }
+      setHistoryStep(historyStep - 1)
+    }
+  }
+
+  const redo = () => {
+    if (historyStep < canvasHistory.length - 1) {
+      const nextState = canvasHistory[historyStep + 1]
+      if (contextRef.current && canvasRef.current) {
+        contextRef.current.putImageData(nextState, 0, 0)
+      }
+      setHistoryStep(historyStep + 1)
+    }
+  }
+
+  const toggleFullscreen = () => {
+    if (!document.fullscreenElement) {
+      document.documentElement.requestFullscreen()
+      setIsFullscreen(true)
+    } else {
+      document.exitFullscreen()
+      setIsFullscreen(false)
+    }
+  }
+
+  const copyInviteLink = () => {
+    navigator.clipboard.writeText(inviteLink)
+    alert('邀请链接已复制到剪贴板！')
+    setShowInviteModal(false)
+  }
+
+  const sendMessage = () => {
+    if (newMessage.trim()) {
+      const message: ChatMessage = {
+        id: Date.now().toString(),
+        userId: 'current_user',
+        userName: '我',
+        content: newMessage.trim(),
+        timestamp: Date.now()
+      }
+      
+      setChatMessages([...chatMessages, message])
+      setNewMessage('')
+    }
+  }
+
   const handleCanvasMouseDown = (e: React.MouseEvent<HTMLCanvasElement>) => {
     if (!isDrawing) return
     
@@ -394,13 +542,20 @@ export default function CollaborativeDoodlePage() {
   }
 
   const handleCanvasMouseMove = (e: React.MouseEvent<HTMLCanvasElement>) => {
-    if (!isDrawing) return
-    
     const rect = canvasRef.current?.getBoundingClientRect()
-    if (!rect || !contextRef.current) return
+    if (!rect) return
     
     const x = e.clientX - rect.left
     const y = e.clientY - rect.top
+    
+    // 更新当前用户光标位置（模拟）
+    if (isConnected) {
+      // 这里可以发送光标位置到其他协作者
+    }
+    
+    if (!isDrawing) return
+    
+    if (!contextRef.current) return
     
     if (selectedTool === 'eraser') {
       contextRef.current.globalCompositeOperation = 'destination-out'
@@ -422,14 +577,6 @@ export default function CollaborativeDoodlePage() {
     contextRef.current.closePath()
   }
 
-  const undo = () => {
-    // 实现撤销功能
-    if (canvasRef.current && contextRef.current) {
-      const imageData = contextRef.current.getImageData(0, 0, canvasRef.current.width, canvasRef.current.height)
-      // 这里可以添加撤销逻辑
-    }
-  }
-
   return (
     <div className="min-h-screen bg-gradient-to-br from-purple-50 via-pink-50 to-indigo-50">
       <Navigation />
@@ -446,7 +593,7 @@ export default function CollaborativeDoodlePage() {
               协作涂鸦板
             </h1>
             <p className="text-gray-600 max-w-2xl mx-auto text-lg">
-              选择情感主题，用色彩表达内心世界，与伴侣一起创作独特的艺术作品
+              选择情感主题，与朋友一起创作独特的艺术作品，实时协作，共享创作乐趣
             </p>
           </div>
         </div>
@@ -454,6 +601,58 @@ export default function CollaborativeDoodlePage() {
         <div className="grid grid-cols-1 lg:grid-cols-4 gap-6">
           {/* 左侧工具栏 */}
           <div className="lg:col-span-1 space-y-4">
+            {/* 协作状态 */}
+            <Card className="bg-white/80 backdrop-blur-sm shadow-lg">
+              <CardHeader className="pb-3">
+                <CardTitle className="text-lg flex items-center gap-2">
+                  <Users className="h-5 w-5 text-blue-500" />
+                  协作状态
+                </CardTitle>
+              </CardHeader>
+              <CardContent className="space-y-3">
+                <div className="flex items-center justify-between">
+                  <span className="text-sm font-medium">连接状态</span>
+                  <Badge className={isConnected ? "bg-green-100 text-green-800 border-0" : "bg-gray-100 text-gray-800 border-0"}>
+                    {isConnected ? <Wifi className="h-3 w-3 mr-1" /> : <WifiOff className="h-3 w-3 mr-1" />}
+                    {isConnected ? '已连接' : '离线'}
+                  </Badge>
+                </div>
+                
+                <div className="flex items-center justify-between">
+                  <span className="text-sm font-medium">在线用户</span>
+                  <Badge className="bg-blue-100 text-blue-800 border-0">
+                    {collaborators.filter(c => c.isOnline).length}
+                  </Badge>
+                </div>
+                
+                <Button 
+                  onClick={() => setShowInviteModal(true)}
+                  className="w-full bg-gradient-to-r from-blue-500 to-purple-500 hover:from-blue-600 hover:to-purple-600"
+                >
+                  <UserPlus className="h-4 w-4 mr-2" />
+                  邀请好友
+                </Button>
+                
+                <Button 
+                  onClick={() => setIsVideoCall(!isVideoCall)}
+                  variant="outline"
+                  className="w-full"
+                >
+                  {isVideoCall ? <VideoOff className="h-4 w-4 mr-2" /> : <Video className="h-4 w-4 mr-2" />}
+                  {isVideoCall ? '结束视频' : '开始视频'}
+                </Button>
+                
+                <Button 
+                  onClick={() => setIsMuted(!isMuted)}
+                  variant="outline"
+                  className="w-full"
+                >
+                  {isMuted ? <MicOff className="h-4 w-4 mr-2" /> : <Mic className="h-4 w-4 mr-2" />}
+                  {isMuted ? '取消静音' : '静音'}
+                </Button>
+              </CardContent>
+            </Card>
+
             {/* 情感主题选择 */}
             <Card className="bg-white/80 backdrop-blur-sm shadow-lg">
               <CardHeader className="pb-3">
@@ -469,8 +668,8 @@ export default function CollaborativeDoodlePage() {
                     onClick={() => setSelectedTheme(theme.id)}
                     className={`w-full p-3 rounded-lg border transition-all ${
                       selectedTheme === theme.id 
-                        ? 'border-purple-500 bg-purple-50 text-purple-700 shadow-sm' 
-                        : 'border-gray-200 hover:border-gray-300 hover:bg-gray-50'
+                        ? 'border-purple-500 bg-purple-50 text-purple-700' 
+                        : 'border-gray-200 hover:border-gray-300'
                     }`}
                   >
                     <div className="flex items-center gap-3">
@@ -590,7 +789,7 @@ export default function CollaborativeDoodlePage() {
                   <div>
                     <CardTitle className="flex items-center gap-2">
                       <Brush className="h-5 w-5 text-purple-500" />
-                      画布
+                      协作画布
                     </CardTitle>
                     <CardDescription className="mt-1">
                       {currentPrompt && (
@@ -602,35 +801,88 @@ export default function CollaborativeDoodlePage() {
                     </CardDescription>
                   </div>
                   
-                  {activeChallenge && (
-                    <Badge className="bg-orange-100 text-orange-800 border-0">
-                      <Timer className="h-3 w-3 mr-1" />
-                      {formatTime(remainingTime)}
-                    </Badge>
-                  )}
+                  <div className="flex items-center gap-2">
+                    {activeChallenge && (
+                      <Badge className="bg-orange-100 text-orange-800 border-0">
+                        <Timer className="h-3 w-3 mr-1" />
+                        {formatTime(remainingTime)}
+                      </Badge>
+                    )}
+                    <Button
+                      variant="ghost"
+                      size="sm"
+                      onClick={() => setShowGrid(!showGrid)}
+                      title="显示网格"
+                    >
+                      <Grid3X3 className="h-4 w-4" />
+                    </Button>
+                    <Button
+                      variant="ghost"
+                      size="sm"
+                      onClick={toggleFullscreen}
+                      title="全屏"
+                    >
+                      <Maximize2 className="h-4 w-4" />
+                    </Button>
+                    <Button
+                      variant="ghost"
+                      size="sm"
+                      onClick={() => setSoundEnabled(!soundEnabled)}
+                      title="音效"
+                    >
+                      <Volume2 className="h-4 w-4" />
+                    </Button>
+                  </div>
                 </div>
               </CardHeader>
               <CardContent className="space-y-4">
-                {/* 画布 */}
-                <div className="relative bg-white rounded-lg border-2 border-gray-200 overflow-hidden">
-                  <canvas
-                    ref={canvasRef}
-                    onMouseDown={handleCanvasMouseDown}
-                    onMouseMove={handleCanvasMouseMove}
-                    onMouseUp={handleCanvasMouseUp}
-                    onMouseLeave={handleCanvasMouseUp}
-                    className="w-full cursor-crosshair"
-                    style={{ height: '400px' }}
-                  />
-                  
-                  {!isDrawing && !activeChallenge && (
-                    <div className="absolute inset-0 flex items-center justify-center pointer-events-none">
-                      <div className="text-center text-gray-400">
-                        <Brush className="h-12 w-12 mx-auto mb-2" />
-                        <p>选择工具和颜色，点击开始创作</p>
+                {/* 协作者光标指示 */}
+                <div className="relative">
+                  {collaborators.filter(c => c.isOnline && c.cursor).map(collaborator => (
+                    <div
+                      key={collaborator.id}
+                      className="absolute pointer-events-none"
+                      style={{
+                        left: `${collaborator.cursor?.x}px`,
+                        top: `${collaborator.cursor?.y}px`,
+                        transform: 'translate(-50%, -50%)'
+                      }}
+                    >
+                      <div className="flex flex-col items-center">
+                        <div 
+                          className="w-4 h-4 rounded-full border-2 border-white shadow-md"
+                          style={{ backgroundColor: collaborator.color }}
+                        />
+                        <span className="text-xs bg-black bg-opacity-50 text-white px-1 rounded">
+                          {collaborator.name}
+                        </span>
                       </div>
                     </div>
-                  )}
+                  ))}
+                  
+                  {/* 画布 */}
+                  <div className={`relative bg-white rounded-lg border-2 border-gray-200 overflow-hidden ${
+                    showGrid ? 'bg-grid' : ''
+                  }`}>
+                    <canvas
+                      ref={canvasRef}
+                      onMouseDown={handleCanvasMouseDown}
+                      onMouseMove={handleCanvasMouseMove}
+                      onMouseUp={handleCanvasMouseUp}
+                      onMouseLeave={handleCanvasMouseUp}
+                      className="w-full cursor-crosshair"
+                      style={{ height: '400px' }}
+                    />
+                    
+                    {!isDrawing && !activeChallenge && (
+                      <div className="absolute inset-0 flex items-center justify-center pointer-events-none">
+                        <div className="text-center text-gray-400">
+                          <Brush className="h-12 w-12 mx-auto mb-2" />
+                          <p>选择工具和颜色，点击开始创作</p>
+                        </div>
+                      </div>
+                    )}
+                  </div>
                 </div>
                 
                 {/* 控制按钮 */}
@@ -652,9 +904,14 @@ export default function CollaborativeDoodlePage() {
                     清空画布
                   </Button>
                   
-                  <Button onClick={undo} variant="outline" disabled={!isDrawing}>
+                  <Button onClick={undo} variant="outline" disabled={historyStep <= 0}>
                     <Undo2 className="h-4 w-4 mr-2" />
                     撤销
+                  </Button>
+                  
+                  <Button onClick={redo} variant="outline" disabled={historyStep >= canvasHistory.length - 1}>
+                    <RefreshCw className="h-4 w-4 mr-2" />
+                    重做
                   </Button>
                   
                   <Button onClick={saveDoodle} variant="outline">
@@ -687,12 +944,9 @@ export default function CollaborativeDoodlePage() {
                 </div>
               </CardContent>
             </Card>
-          </div>
-
-          {/* 右侧功能区域 */}
-          <div className="lg:col-span-1 space-y-4">
+            
             {/* 绘画挑战 */}
-            <Card className="bg-white/80 backdrop-blur-sm shadow-lg">
+            <Card className="bg-white/80 backdrop-blur-sm shadow-lg mt-4">
               <CardHeader className="pb-3">
                 <CardTitle className="text-lg flex items-center gap-2">
                   <Zap className="h-5 w-5 text-orange-500" />
@@ -732,29 +986,107 @@ export default function CollaborativeDoodlePage() {
                 ))}
               </CardContent>
             </Card>
+          </div>
 
-            {/* 绘画技巧 */}
+          {/* 右侧功能区域 */}
+          <div className="lg:col-span-1 space-y-4">
+            {/* 协作者列表 */}
             <Card className="bg-white/80 backdrop-blur-sm shadow-lg">
               <CardHeader className="pb-3">
                 <CardTitle className="text-lg flex items-center gap-2">
-                  <Lightbulb className="h-5 w-5 text-yellow-500" />
-                  绘画技巧
+                  <Users className="h-5 w-5 text-blue-500" />
+                  协作者
                 </CardTitle>
               </CardHeader>
-              <CardContent className="space-y-3">
-                <div className="p-3 bg-purple-50 rounded-lg">
-                  <h4 className="font-medium text-purple-800 mb-1">色彩搭配</h4>
-                  <p className="text-sm text-purple-700">使用互补色创造和谐的画面，推荐使用主题推荐的颜色</p>
+              <CardContent>
+                <div className="space-y-2">
+                  {collaborators.map(collaborator => (
+                    <div key={collaborator.id} className="flex items-center gap-3 p-2 rounded-lg">
+                      <div className="relative">
+                        <div 
+                          className="w-10 h-10 rounded-full flex items-center justify-center text-white font-medium"
+                          style={{ backgroundColor: collaborator.color }}
+                        >
+                          {collaborator.name.charAt(0)}
+                        </div>
+                        <div className={`absolute -bottom-1 -right-1 w-4 h-4 rounded-full border-2 border-white ${
+                          collaborator.isOnline ? 'bg-green-500' : 'bg-gray-400'
+                        }`}></div>
+                      </div>
+                      <div className="flex-1">
+                        <div className="font-medium">{collaborator.name}</div>
+                        <div className="text-xs text-gray-500">
+                          {collaborator.currentTool && `使用 ${drawingTools.find(t => t.id === collaborator.currentTool)?.name}`}
+                        </div>
+                      </div>
+                      {collaborator.isOnline && (
+                        <Badge className="bg-green-100 text-green-800 border-0 text-xs">
+                          在线
+                        </Badge>
+                      )}
+                    </div>
+                  ))}
                 </div>
-                
-                <div className="p-3 bg-pink-50 rounded-lg">
-                  <h4 className="font-medium text-pink-800 mb-1">层次感</h4>
-                  <p className="text-sm text-pink-700">通过不同的画笔大小和透明度创造立体感</p>
-                </div>
-                
-                <div className="p-3 bg-blue-50 rounded-lg">
-                  <h4 className="font-medium text-blue-800 mb-1">情感表达</h4>
-                  <p className="text-sm text-blue-700">用色彩和形状表达内心的真实感受</p>
+              </CardContent>
+            </Card>
+
+            {/* 聊天窗口 */}
+            <Card className="bg-white/80 backdrop-blur-sm shadow-lg">
+              <CardHeader className="pb-3">
+                <CardTitle className="text-lg flex items-center gap-2">
+                  <MessageSquare className="h-5 w-5 text-blue-500" />
+                  协作聊天
+                </CardTitle>
+              </CardHeader>
+              <CardContent>
+                <div className="space-y-3">
+                  {/* 消息列表 */}
+                  <div className="h-48 overflow-y-auto bg-gray-50 rounded-lg p-3 space-y-2">
+                    {chatMessages.length > 0 ? (
+                      chatMessages.map(message => (
+                        <div key={message.id} className="flex items-start gap-2">
+                          <div className="w-8 h-8 rounded-full bg-blue-500 flex items-center justify-center text-white text-xs">
+                            {message.userName.charAt(0)}
+                          </div>
+                          <div className="flex-1">
+                            <div className="flex items-center gap-2 mb-1">
+                              <span className="font-medium text-sm">{message.userName}</span>
+                              <span className="text-xs text-gray-500">
+                                {formatTimestamp(message.timestamp)}
+                              </span>
+                            </div>
+                            <div className="text-sm text-gray-700 bg-white rounded-lg p-2">
+                              {message.content}
+                            </div>
+                          </div>
+                        </div>
+                      ))
+                    ) : (
+                      <div className="text-center text-gray-500 text-sm">
+                        还没有消息，开始聊天吧！
+                      </div>
+                    )}
+                  </div>
+                  
+                  {/* 消息输入 */}
+                  <div className="flex gap-2">
+                    <input
+                      type="text"
+                      value={newMessage}
+                      onChange={(e) => setNewMessage(e.target.value)}
+                      onKeyPress={(e) => e.key === 'Enter' && sendMessage()}
+                      placeholder="输入消息..."
+                      className="flex-1 px-3 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+                    />
+                    <Button 
+                      onClick={sendMessage}
+                      disabled={!newMessage.trim()}
+                      size="sm"
+                      className="bg-blue-500 hover:bg-blue-600"
+                    >
+                      <Send className="h-4 w-4" />
+                    </Button>
+                  </div>
                 </div>
               </CardContent>
             </Card>
@@ -776,7 +1108,7 @@ export default function CollaborativeDoodlePage() {
                           <img src={doodle.imageData} alt="Doodle" className="w-full h-full object-cover" />
                         </div>
                         <div className="flex-1">
-                          <div className="flex items-center gap-2">
+                          <div className="flex items-center gap-2 mb-1">
                             <Badge variant="outline" className="text-xs">
                               {emotionThemes.find(t => t.id === doodle.theme)?.name}
                             </Badge>
@@ -789,6 +1121,11 @@ export default function CollaborativeDoodlePage() {
                           <div className="text-xs text-gray-500">
                             {formatTime(doodle.duration)} · {new Date(doodle.timestamp).toLocaleDateString()}
                           </div>
+                          {doodle.collaborators.length > 0 && (
+                            <div className="text-xs text-gray-500">
+                              协作者: {doodle.collaborators.join(', ')}
+                            </div>
+                          )}
                         </div>
                       </div>
                     ))}
@@ -796,11 +1133,86 @@ export default function CollaborativeDoodlePage() {
                 </CardContent>
               </Card>
             )}
+
+            {/* 绘画技巧 */}
+            <Card className="bg-white/80 backdrop-blur-sm shadow-lg">
+              <CardHeader className="pb-3">
+                <CardTitle className="text-lg flex items-center gap-2">
+                  <Lightbulb className="h-5 w-5 text-yellow-500" />
+                  绘画技巧
+                </CardTitle>
+              </CardHeader>
+              <CardContent className="space-y-3">
+                <div className="p-3 bg-purple-50 rounded-lg">
+                  <h4 className="font-medium text-purple-800 mb-1">色彩搭配</h4>
+                  <p className="text-sm text-purple-700">使用互补色创造和谐的画面，推荐使用主题推荐的颜色</p>
+                </div>
+                
+                <div className="p-3 bg-pink-50 rounded-lg">
+                  <h4 className="font-medium text-pink-800 mb-1">层次感</h4>
+                  <p className="text-sm text-pink-700">通过不同的画笔大小和透明度创造立体感</p>
+                </div>
+                
+                <div className="p-3 bg-blue-50 rounded-lg">
+                  <h4 className="font-medium text-blue-800 mb-1">协作技巧</h4>
+                  <p className="text-sm text-blue-700">通过聊天交流创意，分工完成不同部分</p>
+                </div>
+              </CardContent>
+            </Card>
           </div>
         </div>
       </main>
       
+      {/* 邀请模态框 */}
+      {showInviteModal && (
+        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
+          <Card className="w-full max-w-md">
+            <CardHeader>
+              <CardTitle className="flex items-center gap-2">
+                <UserPlus className="h-5 w-5 text-blue-500" />
+                邀请好友
+              </CardTitle>
+            </CardHeader>
+            <CardContent className="space-y-4">
+              <div>
+                <label className="block text-sm font-medium mb-2">邀请链接</label>
+                <div className="flex gap-2">
+                  <input
+                    type="text"
+                    value={inviteLink}
+                    readOnly
+                    className="flex-1 px-3 py-2 border rounded-lg bg-gray-50"
+                  />
+                  <Button onClick={copyInviteLink} variant="outline">
+                    <Copy className="h-4 w-4" />
+                  </Button>
+                </div>
+              </div>
+              
+              <div className="text-sm text-gray-600">
+                分享此链接给好友，邀请他们一起协作绘画！
+              </div>
+              
+              <div className="flex gap-2">
+                <Button onClick={() => setShowInviteModal(false)} className="flex-1">
+                  关闭
+                </Button>
+              </div>
+            </CardContent>
+          </Card>
+        </div>
+      )}
+      
       <Footer />
+      
+      <style jsx>{`
+        .bg-grid {
+          background-image: 
+            linear-gradient(to right, #e5e7eb 1px, transparent 1px),
+            linear-gradient(to bottom, #e5e7eb 1px, transparent 1px);
+          background-size: 20px 20px;
+        }
+      `}</style>
     </div>
   )
 }

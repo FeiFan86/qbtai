@@ -25,43 +25,51 @@ import {
   Clock,
   Play,
   Settings,
-  Trophy
+  Trophy,
+  Pause,
+  Save,
+  Share2,
+  History,
+  SkipForward,
+  Volume2,
+  VolumeX,
+  Zap
 } from 'lucide-react'
 import Link from 'next/link'
 
 // 游戏地图格子内容
 const boardSpaces = [
-  { id: 0, type: 'start', label: '起点', color: 'bg-green-400' },
-  { id: 1, type: 'question', label: '真心话', color: 'bg-blue-300' },
-  { id: 2, type: 'normal', label: '', color: 'bg-gray-200' },
-  { id: 3, type: 'challenge', label: '大冒险', color: 'bg-red-300' },
-  { id: 4, type: 'normal', label: '', color: 'bg-gray-200' },
-  { id: 5, type: 'gift', label: '礼物', color: 'bg-purple-300' },
-  { id: 6, type: 'normal', label: '', color: 'bg-gray-200' },
-  { id: 7, type: 'question', label: '真心话', color: 'bg-blue-300' },
-  { id: 8, type: 'normal', label: '', color: 'bg-gray-200' },
-  { id: 9, type: 'challenge', label: '大冒险', color: 'bg-red-300' },
-  { id: 10, type: 'normal', label: '', color: 'bg-gray-200' },
-  { id: 11, type: 'gift', label: '礼物', color: 'bg-purple-300' },
-  { id: 12, type: 'normal', label: '', color: 'bg-gray-200' },
-  { id: 13, type: 'question', label: '真心话', color: 'bg-blue-300' },
-  { id: 14, type: 'normal', label: '', color: 'bg-gray-200' },
-  { id: 15, type: 'challenge', label: '大冒险', color: 'bg-red-300' },
-  { id: 16, type: 'normal', label: '', color: 'bg-gray-200' },
-  { id: 17, type: 'gift', label: '礼物', color: 'bg-purple-300' },
-  { id: 18, type: 'normal', label: '', color: 'bg-gray-200' },
-  { id: 19, type: 'question', label: '真心话', color: 'bg-blue-300' },
-  { id: 20, type: 'normal', label: '', color: 'bg-gray-200' },
-  { id: 21, type: 'challenge', label: '大冒险', color: 'bg-red-300' },
-  { id: 22, type: 'normal', label: '', color: 'bg-gray-200' },
-  { id: 23, type: 'gift', label: '礼物', color: 'bg-purple-300' },
-  { id: 24, type: 'normal', label: '', color: 'bg-gray-200' },
-  { id: 25, type: 'question', label: '真心话', color: 'bg-blue-300' },
-  { id: 26, type: 'normal', label: '', color: 'bg-gray-200' },
-  { id: 27, type: 'challenge', label: '大冒险', color: 'bg-red-300' },
-  { id: 28, type: 'normal', label: '', color: 'bg-gray-200' },
-  { id: 29, type: 'gift', label: '礼物', color: 'bg-purple-300' },
-  { id: 30, type: 'finish', label: '终点', color: 'bg-yellow-400' }
+  { id: 0, type: 'start', label: '起点', color: 'bg-green-400', description: '游戏开始的地方' },
+  { id: 1, type: 'question', label: '真心话', color: 'bg-blue-300', description: '回答一个关于你们关系的问题' },
+  { id: 2, type: 'normal', label: '', color: 'bg-gray-200', description: '安全地带' },
+  { id: 3, type: 'challenge', label: '大冒险', color: 'bg-red-300', description: '完成一个有趣的挑战' },
+  { id: 4, type: 'normal', label: '', color: 'bg-gray-200', description: '安全地带' },
+  { id: 5, type: 'gift', label: '礼物', color: 'bg-purple-300', description: '给对方一个甜蜜的礼物' },
+  { id: 6, type: 'normal', label: '', color: 'bg-gray-200', description: '安全地带' },
+  { id: 7, type: 'question', label: '真心话', color: 'bg-blue-300', description: '回答一个关于你们关系的问题' },
+  { id: 8, type: 'normal', label: '', color: 'bg-gray-200', description: '安全地带' },
+  { id: 9, type: 'challenge', label: '大冒险', color: 'bg-red-300', description: '完成一个有趣的挑战' },
+  { id: 10, type: 'normal', label: '', color: 'bg-gray-200', description: '安全地带' },
+  { id: 11, type: 'gift', label: '礼物', color: 'bg-purple-300', description: '给对方一个甜蜜的礼物' },
+  { id: 12, type: 'normal', label: '', color: 'bg-gray-200', description: '安全地带' },
+  { id: 13, type: 'question', label: '真心话', color: 'bg-blue-300', description: '回答一个关于你们关系的问题' },
+  { id: 14, type: 'normal', label: '', color: 'bg-gray-200', description: '安全地带' },
+  { id: 15, type: 'challenge', label: '大冒险', color: 'bg-red-300', description: '完成一个有趣的挑战' },
+  { id: 16, type: 'normal', label: '', color: 'bg-gray-200', description: '安全地带' },
+  { id: 17, type: 'gift', label: '礼物', color: 'bg-purple-300', description: '给对方一个甜蜜的礼物' },
+  { id: 18, type: 'normal', label: '', color: 'bg-gray-200', description: '安全地带' },
+  { id: 19, type: 'question', label: '真心话', color: 'bg-blue-300', description: '回答一个关于你们关系的问题' },
+  { id: 20, type: 'normal', label: '', color: 'bg-gray-200', description: '安全地带' },
+  { id: 21, type: 'challenge', label: '大冒险', color: 'bg-red-300', description: '完成一个有趣的挑战' },
+  { id: 22, type: 'normal', label: '', color: 'bg-gray-200', description: '安全地带' },
+  { id: 23, type: 'gift', label: '礼物', color: 'bg-purple-300', description: '给对方一个甜蜜的礼物' },
+  { id: 24, type: 'normal', label: '', color: 'bg-gray-200', description: '安全地带' },
+  { id: 25, type: 'question', label: '真心话', color: 'bg-blue-300', description: '回答一个关于你们关系的问题' },
+  { id: 26, type: 'normal', label: '', color: 'bg-gray-200', description: '安全地带' },
+  { id: 27, type: 'challenge', label: '大冒险', color: 'bg-red-300', description: '完成一个有趣的挑战' },
+  { id: 28, type: 'normal', label: '', color: 'bg-gray-200', description: '安全地带' },
+  { id: 29, type: 'gift', label: '礼物', color: 'bg-purple-300', description: '给对方一个甜蜜的礼物' },
+  { id: 30, type: 'finish', label: '终点', color: 'bg-yellow-400', description: '到达终点，游戏胜利！' }
 ]
 
 // 真心话问题库
@@ -115,9 +123,30 @@ const giftTasks = [
   "给对方拍一张好看的照片"
 ]
 
+// 游戏记录接口
+interface GameRecord {
+  id: string
+  date: string
+  duration: number
+  winner: number
+  tasksCompleted: number
+  player1Name: string
+  player2Name: string
+}
+
+// 任务接口
+interface Task {
+  type: 'question' | 'challenge' | 'gift'
+  title: string
+  content: string
+  icon: JSX.Element
+}
+
 export default function RelationshipChessPage() {
   const [gameStarted, setGameStarted] = useState(false)
   const [currentPlayer, setCurrentPlayer] = useState(1)
+  const [player1Name, setPlayer1Name] = useState('玩家1')
+  const [player2Name, setPlayer2Name] = useState('玩家2')
   const [player1Position, setPlayer1Position] = useState(0)
   const [player2Position, setPlayer2Position] = useState(0)
   const [diceValue, setDiceValue] = useState(0)
@@ -128,15 +157,20 @@ export default function RelationshipChessPage() {
   const [gameTime, setGameTime] = useState(0)
   const [timerActive, setTimerActive] = useState(false)
   const [winner, setWinner] = useState<number | null>(null)
+  const [showSettings, setShowSettings] = useState(false)
+  const [soundEnabled, setSoundEnabled] = useState(true)
+  const [gameHistory, setGameHistory] = useState<GameRecord[]>([])
+  const [showHistory, setShowHistory] = useState(false)
+  const [isPaused, setIsPaused] = useState(false)
 
   // 计时器
   useEffect(() => {
     let interval: NodeJS.Timeout | null = null
-    if (timerActive && !winner) {
+    if (timerActive && !winner && !isPaused) {
       interval = setInterval(() => {
         setGameTime(prevTime => prevTime + 1)
       }, 1000)
-    } else if (!timerActive) {
+    } else if (!timerActive || isPaused) {
       if (interval) {
         clearInterval(interval)
       }
@@ -146,7 +180,19 @@ export default function RelationshipChessPage() {
         clearInterval(interval)
       }
     }
-  }, [timerActive, winner])
+  }, [timerActive, winner, isPaused])
+
+  // 加载游戏历史
+  useEffect(() => {
+    const savedHistory = localStorage.getItem('relationshipChessHistory')
+    if (savedHistory) {
+      try {
+        setGameHistory(JSON.parse(savedHistory))
+      } catch (error) {
+        console.error('Failed to load game history:', error)
+      }
+    }
+  }, [])
 
   // 格式化时间
   const formatTime = (seconds: number) => {
@@ -160,6 +206,7 @@ export default function RelationshipChessPage() {
     setGameStarted(true)
     setGameTime(0)
     setTimerActive(true)
+    setIsPaused(false)
     setCurrentPlayer(1)
     setPlayer1Position(0)
     setPlayer2Position(0)
@@ -170,12 +217,80 @@ export default function RelationshipChessPage() {
     setWinner(null)
   }
 
+  // 暂停游戏
+  const pauseGame = () => {
+    setIsPaused(!isPaused)
+  }
+
+  // 保存游戏
+  const saveGame = () => {
+    const gameState = {
+      currentPlayer,
+      player1Position,
+      player2Position,
+      gameTime,
+      completedTasks,
+      player1Name,
+      player2Name
+    }
+    localStorage.setItem('relationshipChessSave', JSON.stringify(gameState))
+    alert('游戏已保存！')
+  }
+
+  // 加载游戏
+  const loadGame = () => {
+    const savedGame = localStorage.getItem('relationshipChessSave')
+    if (savedGame) {
+      try {
+        const gameState = JSON.parse(savedGame)
+        setCurrentPlayer(gameState.currentPlayer)
+        setPlayer1Position(gameState.player1Position)
+        setPlayer2Position(gameState.player2Position)
+        setGameTime(gameState.gameTime)
+        setCompletedTasks(gameState.completedTasks || [])
+        setPlayer1Name(gameState.player1Name)
+        setPlayer2Name(gameState.player2Name)
+        setGameStarted(true)
+        setTimerActive(true)
+        alert('游戏已加载！')
+      } catch (error) {
+        console.error('Failed to load game:', error)
+        alert('加载游戏失败！')
+      }
+    } else {
+      alert('没有找到保存的游戏！')
+    }
+  }
+
+  // 分享游戏结果
+  const shareResult = () => {
+    if (winner) {
+      const winnerName = winner === 1 ? player1Name : player2Name
+      const text = `${winnerName}赢得了关系飞行棋游戏！用时${formatTime(gameTime)}，完成了${completedTasks.length}个任务。`
+      
+      if (navigator.share) {
+        navigator.share({
+          title: '关系飞行棋游戏结果',
+          text: text
+        })
+      } else {
+        navigator.clipboard.writeText(text)
+        alert('游戏结果已复制到剪贴板！')
+      }
+    }
+  }
+
   // 掷骰子
   const rollDice = () => {
-    if (isRolling) return
+    if (isRolling || isPaused) return
     
     setIsRolling(true)
     setDiceValue(0)
+    
+    // 播放掷骰子音效
+    if (soundEnabled) {
+      // 这里可以添加音效
+    }
     
     // 模拟掷骰子动画
     let rollCount = 0
@@ -230,13 +345,6 @@ export default function RelationshipChessPage() {
   }
 
   // 生成任务
-  interface Task {
-    type: 'question' | 'challenge' | 'gift'
-    title: string
-    content: string
-    icon: JSX.Element
-  }
-  
   const generateTask = (type: 'question' | 'challenge' | 'gift') => {
     let task: Task | null = null
     
@@ -280,6 +388,12 @@ export default function RelationshipChessPage() {
     }
   }
 
+  // 跳过任务
+  const skipTask = () => {
+    setShowTaskModal(false)
+    switchPlayer()
+  }
+
   // 切换玩家
   const switchPlayer = () => {
     setCurrentPlayer(currentPlayer === 1 ? 2 : 1)
@@ -289,6 +403,21 @@ export default function RelationshipChessPage() {
   const handleWin = (player: number) => {
     setWinner(player)
     setTimerActive(false)
+    
+    // 保存游戏记录
+    const record: GameRecord = {
+      id: Date.now().toString(),
+      date: new Date().toISOString(),
+      duration: gameTime,
+      winner: player,
+      tasksCompleted: completedTasks.length,
+      player1Name,
+      player2Name
+    }
+    
+    const updatedHistory = [record, ...gameHistory].slice(0, 10) // 保留最近10条记录
+    setGameHistory(updatedHistory)
+    localStorage.setItem('relationshipChessHistory', JSON.stringify(updatedHistory))
   }
 
   // 重置游戏
@@ -296,6 +425,7 @@ export default function RelationshipChessPage() {
     setGameStarted(false)
     setGameTime(0)
     setTimerActive(false)
+    setIsPaused(false)
     setCurrentPlayer(1)
     setPlayer1Position(0)
     setPlayer2Position(0)
@@ -306,375 +436,381 @@ export default function RelationshipChessPage() {
     setWinner(null)
   }
 
+  // 渲染骰子
+  const renderDice = () => {
+    if (isRolling) {
+      return <Dice6 className="h-16 w-16 text-purple-600 animate-spin" />
+    } else if (diceValue > 0) {
+      return (
+        <div className="h-16 w-16 bg-white border-2 border-purple-600 rounded-lg flex items-center justify-center text-3xl font-bold text-purple-600">
+          {diceValue}
+        </div>
+      )
+    } else {
+      return <Dice6 className="h-16 w-16 text-gray-400" />
+    }
+  }
+
   return (
-    <div className="min-h-screen bg-gradient-to-br from-purple-50 via-pink-50 to-blue-50">
+    <div className="min-h-screen bg-gradient-to-br from-blue-50 via-purple-50 to-pink-50">
       <Navigation />
       
       <main className="container mx-auto px-4 py-8">
-        <div className="mx-auto max-w-6xl">
-          <div className="mb-6">
-            <Link href="/games">
-              <Button variant="outline" className="mb-4">
-                <ArrowLeft className="h-4 w-4 mr-2" />
-                返回互动游戏
-              </Button>
-            </Link>
-          </div>
+        <div className="mb-6">
+          <Link href="/games/interactive-games" className="inline-flex items-center gap-2 text-blue-600 hover:text-blue-800 transition-colors mb-6">
+            <ArrowLeft className="h-4 w-4" />
+            返回互动游戏
+          </Link>
           
-          {/* 页面标题 */}
           <div className="text-center mb-8">
-            <h1 className="text-4xl font-bold tracking-tight mb-4">
+            <h1 className="text-4xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-blue-600 to-purple-600 mb-4">
               关系飞行棋
-              <span className="text-transparent bg-clip-text bg-gradient-to-r from-purple-500 to-pink-500 block md:inline">
-                增进了解
-              </span>
             </h1>
-            <p className="text-lg text-gray-600 max-w-2xl mx-auto">
-              两人专属互动棋盘游戏，通过完成任务增进彼此了解和感情
+            <p className="text-gray-600 max-w-2xl mx-auto text-lg">
+              通过情感话题和挑战增进彼此了解，在游戏中深化感情连接
             </p>
           </div>
+        </div>
 
-          {!gameStarted ? (
-            <Card className="max-w-2xl mx-auto">
-              <CardHeader>
-                <CardTitle className="flex items-center gap-2">
-                  <Dice6 className="h-5 w-5 text-purple-500" />
-                  游戏规则
+        {!gameStarted ? (
+          // 游戏开始界面
+          <div className="max-w-2xl mx-auto">
+            <Card className="bg-white/80 backdrop-blur-sm shadow-lg">
+              <CardHeader className="text-center">
+                <CardTitle className="text-2xl flex items-center justify-center gap-2">
+                  <Heart className="h-6 w-6 text-red-500" />
+                  准备开始游戏
                 </CardTitle>
                 <CardDescription>
-                  了解规则，准备开始你们的关系探索之旅
+                  设置玩家名称，开始你们的关系探索之旅
                 </CardDescription>
               </CardHeader>
-              <CardContent className="space-y-4">
-                <div className="space-y-3">
-                  <h3 className="font-semibold">游戏玩法</h3>
-                  <ul className="space-y-2 text-sm text-gray-600">
-                    <li className="flex items-start gap-2">
-                      <div className="w-5 h-5 rounded-full bg-purple-100 flex items-center justify-center flex-shrink-0 mt-0.5">
-                        <span className="text-xs font-bold text-purple-600">1</span>
-                      </div>
-                      <span>两人轮流掷骰子，根据点数前进相应步数</span>
-                    </li>
-                    <li className="flex items-start gap-2">
-                      <div className="w-5 h-5 rounded-full bg-purple-100 flex items-center justify-center flex-shrink-0 mt-0.5">
-                        <span className="text-xs font-bold text-purple-600">2</span>
-                      </div>
-                      <span>落在特殊格子需要完成相应任务：真心话、大冒险或甜蜜任务</span>
-                    </li>
-                    <li className="flex items-start gap-2">
-                      <div className="w-5 h-5 rounded-full bg-purple-100 flex items-center justify-center flex-shrink-0 mt-0.5">
-                        <span className="text-xs font-bold text-purple-600">3</span>
-                      </div>
-                      <span>完成任务后轮到下一位玩家，先到达终点者获胜</span>
-                    </li>
-                  </ul>
-                </div>
-                
-                <div className="grid grid-cols-3 gap-4 pt-4">
-                  <div className="text-center p-3 bg-blue-50 rounded-lg">
-                    <MessageCircle className="h-8 w-8 text-blue-500 mx-auto mb-2" />
-                    <h4 className="font-medium">真心话</h4>
-                    <p className="text-xs text-gray-600">分享内心真实的想法</p>
+              <CardContent className="space-y-6">
+                <div className="grid grid-cols-2 gap-4">
+                  <div>
+                    <label className="block text-sm font-medium mb-2">玩家1名称</label>
+                    <input
+                      type="text"
+                      value={player1Name}
+                      onChange={(e) => setPlayer1Name(e.target.value)}
+                      className="w-full p-3 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+                      placeholder="输入玩家1名称"
+                    />
                   </div>
-                  <div className="text-center p-3 bg-red-50 rounded-lg">
-                    <Sparkles className="h-8 w-8 text-red-500 mx-auto mb-2" />
-                    <h4 className="font-medium">大冒险</h4>
-                    <p className="text-xs text-gray-600">完成有趣的小挑战</p>
-                  </div>
-                  <div className="text-center p-3 bg-purple-50 rounded-lg">
-                    <Gift className="h-8 w-8 text-purple-500 mx-auto mb-2" />
-                    <h4 className="font-medium">甜蜜任务</h4>
-                    <p className="text-xs text-gray-600">表达爱意的小互动</p>
+                  <div>
+                    <label className="block text-sm font-medium mb-2">玩家2名称</label>
+                    <input
+                      type="text"
+                      value={player2Name}
+                      onChange={(e) => setPlayer2Name(e.target.value)}
+                      className="w-full p-3 border rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-500"
+                      placeholder="输入玩家2名称"
+                    />
                   </div>
                 </div>
                 
-                <div className="text-center pt-4">
-                  <Button onClick={startGame} size="lg" className="px-8 bg-gradient-to-r from-purple-500 to-pink-500 hover:from-purple-600 hover:to-pink-600">
+                <div className="flex gap-3">
+                  <Button onClick={startGame} className="flex-1 bg-gradient-to-r from-blue-500 to-purple-500 hover:from-blue-600 hover:to-purple-600 text-white">
                     <Play className="h-4 w-4 mr-2" />
                     开始游戏
+                  </Button>
+                  {localStorage.getItem('relationshipChessSave') && (
+                    <Button onClick={loadGame} variant="outline">
+                      <Save className="h-4 w-4 mr-2" />
+                      加载游戏
+                    </Button>
+                  )}
+                </div>
+                
+                {gameHistory.length > 0 && (
+                  <div className="text-center">
+                    <Button
+                      onClick={() => setShowHistory(!showHistory)}
+                      variant="ghost"
+                      className="text-blue-600"
+                    >
+                      <History className="h-4 w-4 mr-2" />
+                      查看游戏历史
+                    </Button>
+                  </div>
+                )}
+              </CardContent>
+            </Card>
+            
+            {showHistory && (
+              <Card className="mt-6 bg-white/80 backdrop-blur-sm shadow-lg">
+                <CardHeader>
+                  <CardTitle className="text-lg">游戏历史</CardTitle>
+                </CardHeader>
+                <CardContent>
+                  <div className="space-y-2 max-h-64 overflow-y-auto">
+                    {gameHistory.map((record) => (
+                      <div key={record.id} className="p-3 bg-gray-50 rounded-lg flex justify-between items-center">
+                        <div>
+                          <div className="font-medium">
+                            {record.player1Name} vs {record.player2Name}
+                          </div>
+                          <div className="text-sm text-gray-600">
+                            {new Date(record.date).toLocaleDateString()} · {formatTime(record.duration)}
+                          </div>
+                        </div>
+                        <Badge className="bg-green-100 text-green-800 border-0">
+                          {record.winner === 1 ? record.player1Name : record.player2Name} 获胜
+                        </Badge>
+                      </div>
+                    ))}
+                  </div>
+                </CardContent>
+              </Card>
+            )}
+          </div>
+        ) : (
+          // 游戏进行界面
+          <div className="grid grid-cols-1 lg:grid-cols-4 gap-6">
+            {/* 左侧游戏面板 */}
+            <div className="lg:col-span-3">
+              <Card className="bg-white/80 backdrop-blur-sm shadow-lg">
+                <CardHeader>
+                  <div className="flex justify-between items-center">
+                    <CardTitle className="flex items-center gap-2">
+                      <Trophy className="h-5 w-5 text-yellow-500" />
+                      游戏进行中
+                    </CardTitle>
+                    <div className="flex items-center gap-2">
+                      <Badge className={currentPlayer === 1 ? "bg-blue-100 text-blue-800 border-0" : "bg-purple-100 text-purple-800 border-0"}>
+                        当前玩家: {currentPlayer === 1 ? player1Name : player2Name}
+                      </Badge>
+                      <Badge className="bg-green-100 text-green-800 border-0">
+                        {formatTime(gameTime)}
+                      </Badge>
+                    </div>
+                  </div>
+                </CardHeader>
+                <CardContent className="space-y-6">
+                  {/* 游戏棋盘 */}
+                  <div className="bg-gradient-to-br from-blue-50 to-purple-50 p-6 rounded-xl">
+                    <div className="grid grid-cols-6 gap-2">
+                      {boardSpaces.map((space) => (
+                        <div
+                          key={space.id}
+                          className={`aspect-square ${space.color} rounded-lg flex flex-col items-center justify-center text-xs p-2 relative border-2 border-white`}
+                          title={space.description}
+                        >
+                          {space.label && <div className="font-semibold">{space.label}</div>}
+                          
+                          {/* 玩家棋子 */}
+                          {player1Position === space.id && (
+                            <div className="absolute top-0 right-0 w-4 h-4 bg-blue-600 rounded-full border-2 border-white transform translate-x-1 -translate-y-1"></div>
+                          )}
+                          {player2Position === space.id && (
+                            <div className="absolute bottom-0 left-0 w-4 h-4 bg-purple-600 rounded-full border-2 border-white transform -translate-x-1 translate-y-1"></div>
+                          )}
+                        </div>
+                      ))}
+                    </div>
+                  </div>
+                  
+                  {/* 游戏控制 */}
+                  <div className="flex items-center justify-between">
+                    <div className="flex items-center gap-4">
+                      {/* 骰子 */}
+                      <div className="flex flex-col items-center">
+                        {renderDice()}
+                        <div className="text-sm text-gray-600 mt-2">骰子</div>
+                      </div>
+                      
+                      {/* 掷骰子按钮 */}
+                      <Button
+                        onClick={rollDice}
+                        disabled={isRolling || isPaused || winner !== null}
+                        className="bg-gradient-to-r from-blue-500 to-purple-500 hover:from-blue-600 hover:to-purple-600"
+                      >
+                        {isRolling ? '掷骰子中...' : '掷骰子'}
+                      </Button>
+                    </div>
+                    
+                    <div className="flex items-center gap-2">
+                      {winner === null && (
+                        <Button onClick={pauseGame} variant="outline" size="sm">
+                          {isPaused ? <Play className="h-4 w-4" /> : <Pause className="h-4 w-4" />}
+                        </Button>
+                      )}
+                      <Button onClick={saveGame} variant="outline" size="sm">
+                        <Save className="h-4 w-4" />
+                      </Button>
+                      <Button onClick={resetGame} variant="outline" size="sm">
+                        <RotateCcw className="h-4 w-4" />
+                      </Button>
+                    </div>
+                  </div>
+                </CardContent>
+              </Card>
+            </div>
+            
+            {/* 右侧信息面板 */}
+            <div className="space-y-4">
+              {/* 玩家信息 */}
+              <Card className="bg-white/80 backdrop-blur-sm shadow-lg">
+                <CardHeader className="pb-3">
+                  <CardTitle className="text-lg flex items-center gap-2">
+                    <Users className="h-5 w-5 text-blue-500" />
+                    玩家信息
+                  </CardTitle>
+                </CardHeader>
+                <CardContent className="space-y-4">
+                  <div className={`p-3 rounded-lg ${currentPlayer === 1 ? 'bg-blue-50 border-2 border-blue-200' : 'bg-gray-50'}`}>
+                    <div className="flex items-center gap-2">
+                      <div className="w-4 h-4 bg-blue-600 rounded-full"></div>
+                      <div className="font-medium">{player1Name}</div>
+                    </div>
+                    <div className="text-sm text-gray-600">位置: {player1Position}/30</div>
+                  </div>
+                  
+                  <div className={`p-3 rounded-lg ${currentPlayer === 2 ? 'bg-purple-50 border-2 border-purple-200' : 'bg-gray-50'}`}>
+                    <div className="flex items-center gap-2">
+                      <div className="w-4 h-4 bg-purple-600 rounded-full"></div>
+                      <div className="font-medium">{player2Name}</div>
+                    </div>
+                    <div className="text-sm text-gray-600">位置: {player2Position}/30</div>
+                  </div>
+                </CardContent>
+              </Card>
+              
+              {/* 任务进度 */}
+              <Card className="bg-white/80 backdrop-blur-sm shadow-lg">
+                <CardHeader className="pb-3">
+                  <CardTitle className="text-lg flex items-center gap-2">
+                    <Award className="h-5 w-5 text-yellow-500" />
+                    任务进度
+                  </CardTitle>
+                </CardHeader>
+                <CardContent>
+                  <div className="text-center mb-4">
+                    <div className="text-2xl font-bold text-purple-600">{completedTasks.length}</div>
+                    <div className="text-sm text-gray-600">已完成任务</div>
+                  </div>
+                  
+                  {completedTasks.length > 0 && (
+                    <div className="space-y-2 max-h-48 overflow-y-auto">
+                      {completedTasks.map((task, index) => (
+                        <div key={index} className="flex items-center gap-2 p-2 bg-gray-50 rounded text-sm">
+                          {task.icon}
+                          <span className="truncate">{task.title}</span>
+                        </div>
+                      ))}
+                    </div>
+                  )}
+                </CardContent>
+              </Card>
+              
+              {/* 游戏说明 */}
+              <Card className="bg-white/80 backdrop-blur-sm shadow-lg">
+                <CardHeader className="pb-3">
+                  <CardTitle className="text-lg flex items-center gap-2">
+                    <Zap className="h-5 w-5 text-orange-500" />
+                    游戏说明
+                  </CardTitle>
+                </CardHeader>
+                <CardContent className="space-y-3">
+                  <div className="flex items-start gap-2">
+                    <div className="w-4 h-4 bg-blue-300 rounded-full mt-0.5"></div>
+                    <div className="text-sm">
+                      <div className="font-medium">真心话</div>
+                      <div className="text-gray-600">回答关于你们关系的问题</div>
+                    </div>
+                  </div>
+                  
+                  <div className="flex items-start gap-2">
+                    <div className="w-4 h-4 bg-red-300 rounded-full mt-0.5"></div>
+                    <div className="text-sm">
+                      <div className="font-medium">大冒险</div>
+                      <div className="text-gray-600">完成有趣的挑战任务</div>
+                    </div>
+                  </div>
+                  
+                  <div className="flex items-start gap-2">
+                    <div className="w-4 h-4 bg-purple-300 rounded-full mt-0.5"></div>
+                    <div className="text-sm">
+                      <div className="font-medium">甜蜜任务</div>
+                      <div className="text-gray-600">给对方准备小惊喜</div>
+                    </div>
+                  </div>
+                </CardContent>
+              </Card>
+            </div>
+          </div>
+        )}
+        
+        {/* 任务模态框 */}
+        {showTaskModal && currentTask && (
+          <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
+            <Card className="w-full max-w-md">
+              <CardHeader className="text-center">
+                <div className="mx-auto mb-2">{currentTask.icon}</div>
+                <CardTitle className="text-xl">{currentTask.title}</CardTitle>
+              </CardHeader>
+              <CardContent className="space-y-4">
+                <p className="text-center text-lg">{currentTask.content}</p>
+                
+                <div className="flex gap-3">
+                  <Button 
+                    onClick={completeTask}
+                    className="flex-1 bg-gradient-to-r from-green-500 to-teal-500 hover:from-green-600 hover:to-teal-600"
+                  >
+                    <CheckCircle className="h-4 w-4 mr-2" />
+                    完成任务
+                  </Button>
+                  <Button 
+                    onClick={skipTask}
+                    variant="outline"
+                  >
+                    <SkipForward className="h-4 w-4 mr-2" />
+                    跳过
                   </Button>
                 </div>
               </CardContent>
             </Card>
-          ) : (
-            <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-              {/* 左侧游戏控制区 */}
-              <div className="lg:col-span-1 space-y-6">
-                {/* 游戏状态 */}
-                <Card>
-                  <CardHeader>
-                    <CardTitle className="flex items-center justify-between">
-                      <span>游戏状态</span>
-                      <Button variant="outline" size="sm" onClick={resetGame}>
-                        <RotateCcw className="h-4 w-4 mr-1" />
-                        重置
-                      </Button>
-                    </CardTitle>
-                  </CardHeader>
-                  <CardContent className="space-y-4">
-                    <div className="flex justify-between items-center">
-                      <span className="text-sm font-medium">游戏时间</span>
-                      <span className="text-sm font-bold">{formatTime(gameTime)}</span>
-                    </div>
-                    
-                    <div className="flex justify-between items-center">
-                      <span className="text-sm font-medium">当前玩家</span>
-                      <Badge variant={currentPlayer === 1 ? "default" : "secondary"}>
-                        玩家 {currentPlayer}
-                      </Badge>
-                    </div>
-                    
-                    <div className="flex justify-between items-center">
-                      <span className="text-sm font-medium">已完成任务</span>
-                      <span className="text-sm font-bold">{completedTasks.length}</span>
-                    </div>
-                  </CardContent>
-                </Card>
-                
-                {/* 玩家位置 */}
-                <Card>
-                  <CardHeader>
-                    <CardTitle className="flex items-center gap-2">
-                      <Users className="h-5 w-5 text-blue-500" />
-                      玩家位置
-                    </CardTitle>
-                  </CardHeader>
-                  <CardContent className="space-y-4">
-                    <div className="flex items-center justify-between">
-                      <div className="flex items-center gap-2">
-                        <div className="w-4 h-4 rounded-full bg-blue-500"></div>
-                        <span className="text-sm font-medium">玩家 1</span>
-                      </div>
-                      <span className="text-sm font-bold">{player1Position} / 30</span>
-                    </div>
-                    
-                    <div className="flex items-center justify-between">
-                      <div className="flex items-center gap-2">
-                        <div className="w-4 h-4 rounded-full bg-pink-500"></div>
-                        <span className="text-sm font-medium">玩家 2</span>
-                      </div>
-                      <span className="text-sm font-bold">{player2Position} / 30</span>
-                    </div>
-                  </CardContent>
-                </Card>
-                
-                {/* 骰子 */}
-                <Card>
-                  <CardHeader>
-                    <CardTitle className="flex items-center gap-2">
-                      <Dice6 className="h-5 w-5 text-purple-500" />
-                      掷骰子
-                    </CardTitle>
-                  </CardHeader>
-                  <CardContent className="text-center">
-                    <div className="w-24 h-24 mx-auto mb-4 bg-white rounded-lg shadow-md flex items-center justify-center">
-                      <div className={`text-4xl font-bold ${isRolling ? 'animate-pulse' : ''}`}>
-                        {diceValue > 0 ? diceValue : '?'}
-                      </div>
-                    </div>
-                    <Button 
-                      onClick={rollDice} 
-                      disabled={isRolling || showTaskModal || winner !== null}
-                      className="w-full"
-                    >
-                      {isRolling ? '掷骰中...' : '掷骰子'}
-                    </Button>
-                  </CardContent>
-                </Card>
-                
-                {/* 任务历史 */}
-                <Card>
-                  <CardHeader>
-                    <CardTitle className="flex items-center gap-2">
-                      <Award className="h-5 w-5 text-yellow-500" />
-                      任务历史
-                    </CardTitle>
-                  </CardHeader>
-                  <CardContent>
-                    <div className="space-y-2 max-h-48 overflow-y-auto">
-                      {completedTasks.length > 0 ? (
-                        completedTasks.map((task, index) => (
-                          <div key={index} className="text-xs p-2 bg-gray-50 rounded flex items-center gap-2">
-                            {task.icon}
-                            <span className="truncate">{task.content}</span>
-                          </div>
-                        ))
-                      ) : (
-                        <p className="text-xs text-gray-500 text-center">暂无已完成任务</p>
-                      )}
-                    </div>
-                  </CardContent>
-                </Card>
-              </div>
-              
-              {/* 右侧游戏棋盘 */}
-              <div className="lg:col-span-2">
-                <Card className="bg-gradient-to-br from-purple-50 to-pink-50 border-2 border-purple-100">
-                  <CardHeader>
-                    <CardTitle className="flex items-center gap-2 text-center justify-center">
-                      <Settings className="h-6 w-6 text-purple-600" />
-                      <span className="text-xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-purple-600 to-pink-600">
-                        恋爱飞行棋地图
-                      </span>
-                    </CardTitle>
-                    <CardDescription className="text-center">
-                      两人一起探索爱的旅程，每个格子都有特别的惊喜
-                    </CardDescription>
-                  </CardHeader>
-                  <CardContent>
-                    <div className="relative bg-white p-4 rounded-xl shadow-lg border-2 border-purple-200">
-                      {/* 起点终点指示 */}
-                      <div className="flex justify-between items-center mb-4">
-                        <div className="text-center">
-                          <div className="w-12 h-12 bg-green-400 rounded-full flex items-center justify-center mx-auto mb-1 border-2 border-green-600">
-                            <span className="text-white font-bold">起</span>
-                          </div>
-                          <span className="text-xs font-medium text-gray-600">起点</span>
-                        </div>
-                        <div className="text-center">
-                          <div className="w-12 h-12 bg-yellow-400 rounded-full flex items-center justify-center mx-auto mb-1 border-2 border-yellow-600">
-                            <span className="text-white font-bold">终</span>
-                          </div>
-                          <span className="text-xs font-medium text-gray-600">终点</span>
-                        </div>
-                      </div>
-                      
-                      {/* 游戏棋盘 */}
-                      <div className="grid grid-cols-6 gap-2">
-                        {boardSpaces.map((space) => (
-                          <div
-                            key={space.id}
-                            className={`aspect-square rounded-lg flex flex-col items-center justify-center text-xs font-medium relative transition-all duration-300 hover:scale-105 hover:shadow-md ${
-                              space.color
-                            } ${
-                              space.id === player1Position ? 'ring-4 ring-blue-500 shadow-lg transform scale-110' : ''
-                            } ${
-                              space.id === player2Position ? 'ring-4 ring-pink-500 shadow-lg transform scale-110' : ''
-                            }`}
-                          >
-                            {/* 格子编号 */}
-                            <div className="absolute top-1 left-1 text-[10px] text-gray-700 font-bold">
-                              {space.id}
-                            </div>
-                            
-                            {/* 格子内容 */}
-                            {space.label && (
-                              <div className="text-center">
-                                <span className="text-xs font-bold">{space.label}</span>
-                                {space.type === 'question' && (
-                                  <MessageCircle className="h-3 w-3 mx-auto mt-1 text-blue-600" />
-                                )}
-                                {space.type === 'challenge' && (
-                                  <Sparkles className="h-3 w-3 mx-auto mt-1 text-red-600" />
-                                )}
-                                {space.type === 'gift' && (
-                                  <Gift className="h-3 w-3 mx-auto mt-1 text-purple-600" />
-                                )}
-                              </div>
-                            )}
-                            
-                            {/* 玩家标记 */}
-                            {space.id === player1Position && (
-                              <div className="absolute top-0 right-0 w-4 h-4 rounded-full bg-blue-500 border-2 border-white shadow-lg animate-pulse">
-                                <span className="text-[8px] text-white font-bold absolute inset-0 flex items-center justify-center">1</span>
-                              </div>
-                            )}
-                            {space.id === player2Position && (
-                              <div className="absolute bottom-0 left-0 w-4 h-4 rounded-full bg-pink-500 border-2 border-white shadow-lg animate-pulse">
-                                <span className="text-[8px] text-white font-bold absolute inset-0 flex items-center justify-center">2</span>
-                              </div>
-                            )}
-                          </div>
-                        ))}
-                      </div>
-                      
-                      {/* 图例说明 */}
-                      <div className="mt-4 grid grid-cols-4 gap-2 text-xs">
-                        <div className="flex items-center gap-1">
-                          <div className="w-3 h-3 bg-blue-300 rounded"></div>
-                          <span>真心话</span>
-                        </div>
-                        <div className="flex items-center gap-1">
-                          <div className="w-3 h-3 bg-red-300 rounded"></div>
-                          <span>大冒险</span>
-                        </div>
-                        <div className="flex items-center gap-1">
-                          <div className="w-3 h-3 bg-purple-300 rounded"></div>
-                          <span>甜蜜任务</span>
-                        </div>
-                        <div className="flex items-center gap-1">
-                          <div className="w-3 h-3 bg-yellow-400 rounded"></div>
-                          <span>终点</span>
-                        </div>
-                      </div>
-                    </div>
-                  </CardContent>
-                </Card>
-              </div>
-            </div>
-          )}
-          
-          {/* 任务弹窗 */}
-          {showTaskModal && currentTask && (
-            <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4 z-50">
-              <Card className="max-w-md w-full">
-                <CardHeader>
-                  <CardTitle className="flex items-center gap-2">
-                    {currentTask.icon}
-                    {currentTask.title}
-                  </CardTitle>
-                  <CardDescription>
-                    玩家 {currentPlayer} 的挑战任务
-                  </CardDescription>
-                </CardHeader>
-                <CardContent>
-                  <p className="text-gray-700 mb-6">{currentTask.content}</p>
-                  <div className="text-center">
-                    <Button onClick={completeTask} className="px-8">
-                      完成任务
-                    </Button>
+          </div>
+        )}
+        
+        {/* 游戏结束模态框 */}
+        {winner !== null && (
+          <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
+            <Card className="w-full max-w-md">
+              <CardHeader className="text-center">
+                <Trophy className="h-16 w-16 text-yellow-500 mx-auto mb-4" />
+                <CardTitle className="text-2xl">游戏结束！</CardTitle>
+              </CardHeader>
+              <CardContent className="space-y-4">
+                <div className="text-center">
+                  <div className="text-xl font-semibold mb-2">
+                    🎉 {winner === 1 ? player1Name : player2Name} 获胜！
                   </div>
-                </CardContent>
-              </Card>
-            </div>
-          )}
-          
-          {/* 获胜弹窗 */}
-          {winner && (
-            <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4 z-50">
-              <Card className="max-w-md w-full">
-                <CardHeader>
-                  <CardTitle className="flex items-center gap-2 text-center justify-center">
-                    <Trophy className="h-6 w-6 text-yellow-500" />
-                    游戏结束
-                  </CardTitle>
-                </CardHeader>
-                <CardContent className="text-center">
-                  <div className="mb-4">
-                    <div className={`w-16 h-16 rounded-full mx-auto mb-4 ${
-                      winner === 1 ? 'bg-blue-100' : 'bg-pink-100'
-                    } flex items-center justify-center`}>
-                      <Users className={`h-8 w-8 ${
-                        winner === 1 ? 'text-blue-500' : 'text-pink-500'
-                      }`} />
-                    </div>
-                    <h3 className="text-xl font-semibold mb-2">玩家 {winner} 获胜！</h3>
-                    <p className="text-gray-600 mb-4">游戏用时：{formatTime(gameTime)}</p>
-                    <p className="text-gray-600 mb-4">完成任务数：{completedTasks.length}</p>
+                  <div className="text-gray-600">
+                    用时: {formatTime(gameTime)} · 完成任务: {completedTasks.length}
                   </div>
-                  <div className="flex gap-2 justify-center">
-                    <Button onClick={resetGame} variant="outline">
-                      再来一局
-                    </Button>
-                    <Button onClick={() => setWinner(null)}>
-                      查看棋盘
-                    </Button>
-                  </div>
-                </CardContent>
-              </Card>
-            </div>
-          )}
-        </div>
+                </div>
+                
+                <div className="flex gap-3">
+                  <Button 
+                    onClick={shareResult}
+                    className="flex-1 bg-gradient-to-r from-blue-500 to-purple-500 hover:from-blue-600 hover:to-purple-600"
+                  >
+                    <Share2 className="h-4 w-4 mr-2" />
+                    分享结果
+                  </Button>
+                  <Button 
+                    onClick={resetGame}
+                    variant="outline"
+                  >
+                    <RotateCcw className="h-4 w-4 mr-2" />
+                    再来一局
+                  </Button>
+                </div>
+              </CardContent>
+            </Card>
+          </div>
+        )}
       </main>
       
       <Footer />
