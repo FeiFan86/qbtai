@@ -105,7 +105,6 @@ import {
   School,
   Hospital,
   Store,
-  Building,
   Factory,
   Bridge,
   Tower,
