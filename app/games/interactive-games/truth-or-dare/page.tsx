@@ -191,7 +191,7 @@ const coupleDareChallenges = {
 interface Task {
   type: 'truth' | 'dare' | 'winner'
   content: string
-  difficulty: 'easy' | 'medium' | 'hard'
+  difficulty?: 'easy' | 'medium' | 'hard'
   player: number
 }
 
