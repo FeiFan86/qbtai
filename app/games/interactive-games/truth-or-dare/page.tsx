@@ -193,7 +193,7 @@ export default function TruthOrDarePage() {
   const [gameMode, setGameMode] = useState('normal') // normal, couple, spicy
   const [currentPlayer, setCurrentPlayer] = useState(1)
   const [totalPlayers, setTotalPlayers] = useState(2)
-  const [difficulty, setDifficulty] = useState('medium') // easy, medium, hard
+  const [difficulty, setDifficulty] = useState<'easy' | 'medium' | 'hard'>('medium') // easy, medium, hard
   const [currentTask, setCurrentTask] = useState(null)
   const [taskType, setTaskType] = useState('truth') // truth, dare
   const [showTaskModal, setShowTaskModal] = useState(false)
