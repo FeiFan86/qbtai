@@ -33,6 +33,7 @@ import {
   Zap,
   Crown,
   Diamond,
+  Trophy,
   RefreshCw,
   Share2,
   Download,
