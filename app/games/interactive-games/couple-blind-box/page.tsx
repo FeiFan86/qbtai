@@ -334,7 +334,7 @@ export default function CoupleBlindBoxPage() {
     if (savedUserData) {
       try {
         const parsedData = JSON.parse(savedUserData)
-        let showResetMessage = false
+        let showResetMessage: string | null = null
         
         // 检查是否是新的一天
         if (parsedData.lastOpenDate !== today) {
