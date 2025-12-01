@@ -188,17 +188,24 @@ const coupleDareChallenges = {
   ]
 }
 
+interface Task {
+  type: 'truth' | 'dare' | 'winner'
+  content: string
+  difficulty: 'easy' | 'medium' | 'hard'
+  player: number
+}
+
 export default function TruthOrDarePage() {
   const [gameStarted, setGameStarted] = useState(false)
   const [gameMode, setGameMode] = useState('normal') // normal, couple, spicy
   const [currentPlayer, setCurrentPlayer] = useState(1)
   const [totalPlayers, setTotalPlayers] = useState(2)
   const [difficulty, setDifficulty] = useState<'easy' | 'medium' | 'hard'>('medium') // easy, medium, hard
-  const [currentTask, setCurrentTask] = useState(null)
+  const [currentTask, setCurrentTask] = useState<Task | null>(null)
   const [taskType, setTaskType] = useState('truth') // truth, dare
   const [showTaskModal, setShowTaskModal] = useState(false)
   const [isSpinning, setIsSpinning] = useState(false)
-  const [completedTasks, setCompletedTasks] = useState([])
+  const [completedTasks, setCompletedTasks] = useState<Task[]>([])
   const [skippedTasks, setSkippedTasks] = useState(0)
   const [gameTime, setGameTime] = useState(0)
   const [timerActive, setTimerActive] = useState(false)
