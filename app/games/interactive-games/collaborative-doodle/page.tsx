@@ -1,6 +1,6 @@
 'use client'
 
-import { useState, useEffect, useRef } from 'react'
+import { useState, useEffect, useRef, useCallback } from 'react'
 import { Navigation } from '@/components/navigation'
 import { Footer } from '@/components/footer'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
@@ -23,114 +23,177 @@ import {
   Lightbulb,
   Sparkles,
   Send,
-  Trophy
+  Trophy,
+  PenTool,
+  Circle,
+  Square,
+  Triangle,
+  Zap,
+  ImageIcon,
+  Eye,
+  Target,
+  Timer,
+  Share,
+  Play,
+  Pause,
+  CheckCircle
 } from 'lucide-react'
 import Link from 'next/link'
 
-// 绘画模板
-interface DrawingTemplate {
-  id: string
+// 绘画工具类型
+type DrawingTool = 'pen' | 'brush' | 'eraser' | 'circle' | 'square' | 'triangle'
+
+// 绘画工具配置
+const drawingTools: Array<{
+  id: DrawingTool
   name: string
+  icon: React.ReactNode
   description: string
-  svgPath: string
-  color: string
-}
-
-const drawingTemplates: DrawingTemplate[] = [
+}> = [
   {
-    id: 'heart',
-    name: '爱心',
-    description: '绘制一个美丽的爱心',
-    svgPath: 'M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.41 2 3 4.23 3 2.91c0 1.11.64 2.08 1.57 2.73L12 22l7.43-7.36c.93-.65 1.57-1.62 1.57-2.73 0-2.31-2.41-4.41-4.57-4.41z',
-    color: '#FF69B4'
+    id: 'pen',
+    name: '钢笔',
+    icon: <PenTool className="h-4 w-4" />,
+    description: '精确绘画工具'
   },
   {
-    id: 'smiley',
-    name: '笑脸',
-    description: '绘制一个开心的笑脸',
-    svgPath: 'M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 18c-4.41 0-8-3.59-8-8s3.59-8 8-8 8 3.59 8 8-3.59 8-8 8zm-2-9.5c-.83 0-1.5.67-1.5 1.5s.67 1.5 1.5 1.5 1.5-.67 1.5-1.5-.67-1.5-1.5-1.5zm4 0C-.83 0-1.5.67-1.5 1.5s.67 1.5 1.5 1.5 1.5-.67 1.5-1.5-.67-1.5-1.5-1.5zm-2 6.5c-2.33 0-4.31 1.46-4.71 3.5h2.12c.34-1.16 1.42-2 2.59-2s2.25.84 2.59 2h2.12c-.4-2.04-2.38-3.5-4.71-3.5z',
-    color: '#FFD700'
+    id: 'brush',
+    name: '画笔',
+    icon: <Brush className="h-4 w-4" />,
+    description: '柔和绘画效果'
   },
   {
-    id: 'house',
-    name: '房子',
-    description: '绘制一个温馨的房子',
-    svgPath: 'M10 20v-6h4v6h5v-8h3L12 3 2 12h3v8h5z',
-    color: '#8B4513'
+    id: 'eraser',
+    name: '橡皮擦',
+    icon: <Eraser className="h-4 w-4" />,
+    description: '擦除内容'
   },
   {
-    id: 'tree',
-    name: '树',
-    description: '绘制一棵茂盛的树',
-    svgPath: 'M12 1L3 9h4v11h10V9h4z',
-    color: '#228B22'
+    id: 'circle',
+    name: '圆形',
+    icon: <Circle className="h-4 w-4" />,
+    description: '绘制圆形'
   },
   {
-    id: 'star',
-    name: '星星',
-    description: '绘制一颗闪亮的星星',
-    svgPath: 'M12 17.27L18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9.24l5.46 4.73L12 17.27z',
-    color: '#FFA500'
+    id: 'square',
+    name: '方形',
+    icon: <Square className="h-4 w-4" />,
+    description: '绘制方形'
   },
   {
-    id: 'flower',
-    name: '花朵',
-    description: '绘制一朵美丽的花朵',
-    svgPath: 'M12 22c4.97 0 9-4.03 9-9-4.97 0-9 4.03-9 9 4.97 0 9 4.03 9 9zm0-18c4.97 0 9 4.03 9 9s-4.03 9-9 9-9-4.03-9-9 4.03-9 9-9zm0 16c-3.86 0-7-3.14-7-7s3.14-7 7-7 7 3.14 7 7-3.14 7-7 7zm0-12c-2.76 0-5 2.24-5 5s2.24 5 5 5 5-2.24 5-5-2.24-5-5-5z',
-    color: '#FF69B4'
+    id: 'triangle',
+    name: '三角形',
+    icon: <Triangle className="h-4 w-4" />,
+    description: '绘制三角形'
   }
 ]
 
-// 示例绘画
-const exampleDrawings = [
-  {
-    id: 'rainbow',
-    title: '彩虹心情',
-    description: '用彩虹色表达快乐的心情',
-    colors: ['#FF0000', '#FF7F00', '#FFFF00', '#00FF00', '#0000FF', '#4B0082', '#9400D3'],
-    techniques: ['渐变', '色彩搭配', '情感表达']
-  },
-  {
-    id: 'abstract',
-    title: '抽象艺术',
-    description: '自由发挥，创造独特的抽象作品',
-    colors: ['#FF6B6B', '#4ECDC4', '#45B7D1', '#96CEB4', '#FFEAA7', '#DDA0DD'],
-    techniques: ['抽象表现', '色彩理论', '构图平衡']
-  },
-  {
-    id: 'nature',
-    title: '自然风光',
-    description: '绘制大自然的美景',
-    colors: ['#228B22', '#32CD32', '#3CB371', '#8B4513', '#87CEEB', '#F0E68C'],
-    techniques: ['自然色彩', '层次感', '透视']
-  }
+// 颜色调色板
+const colorPalette = [
+  '#000000', '#FFFFFF', '#FF0000', '#00FF00', '#0000FF', '#FFFF00', 
+  '#FF00FF', '#00FFFF', '#FFA500', '#800080', '#FFC0CB', '#A52A2A',
+  '#808080', '#90EE90', '#ADD8E6', '#FFB6C1', '#FFD700', '#4B0082',
+  '#F0E68C', '#DDA0DD', '#B0C4DE', '#FF6347', '#40E0D0', '#EE82EE'
 ]
 
-// 情感主题和提示词
+// 情感主题
 const emotionThemes = [
   {
     id: 'happiness',
-    name: '快乐',
+    name: '快乐时光',
     color: '#FFD700',
+    icon: <Star className="h-5 w-5" />,
+    description: '用明亮的色彩表达快乐',
     prompts: [
-      '画出让你感到最开心的一刻',
-      '用色彩表达快乐的情绪',
+      '画出让你最开心的时刻',
+      '用色彩表达今天的快乐心情',
       '创作一个代表快乐的符号',
-      '画出阳光和彩虹'
-    ]
+      '画出阳光和彩虹的场景'
+    ],
+    recommendedColors: ['#FFD700', '#FF6B6B', '#4ECDC4', '#45B7D1', '#96CEB4']
   },
   {
     id: 'love',
-    name: '爱',
+    name: '甜蜜爱意',
     color: '#FF69B4',
+    icon: <Heart className="h-5 w-5" />,
+    description: '用温暖的色彩表达爱意',
     prompts: [
       '画出你们第一次见面的场景',
       '创作一个代表你们爱情的符号',
       '画出一起度过的美好时光',
-      '用色彩表达爱的感觉'
-    ]
+      '用色彩表达心中的爱意'
+    ],
+    recommendedColors: ['#FF69B4', '#FF6B9D', '#C44569', '#F8B195', '#F67280']
+  },
+  {
+    id: 'peace',
+    name: '平静心境',
+    color: '#87CEEB',
+    icon: <Sparkles className="h-5 w-5" />,
+    description: '用柔和的色彩表达平静',
+    prompts: [
+      '画出让你感到平静的场景',
+      '用色彩表达内心的宁静',
+      '创作一个代表平和的符号',
+      '画出自然的美景'
+    ],
+    recommendedColors: ['#87CEEB', '#6C5CE7', '#74B9FF', '#A29BFE', '#81ECEC']
+  },
+  {
+    id: 'dream',
+    name: '梦想憧憬',
+    color: '#9370DB',
+    icon: <Lightbulb className="h-5 w-5" />,
+    description: '用梦幻的色彩表达憧憬',
+    prompts: [
+      '画出你的梦想场景',
+      '用色彩表达对未来的憧憬',
+      '创作一个代表梦想的符号',
+      '画出你理想中的世界'
+    ],
+    recommendedColors: ['#9370DB', '#6C5CE7', '#A55EEA', '#8854D0', '#5F3DC4']
   }
 ]
+
+// 绘画挑战
+const drawingChallenges = [
+  {
+    id: 'blind_drawing',
+    name: '盲画挑战',
+    description: '不看画布，凭感觉作画',
+    difficulty: '简单',
+    timeLimit: 60,
+    icon: <Eye className="h-5 w-5" />
+  },
+  {
+    id: 'speed_drawing',
+    name: '速画挑战',
+    description: '在限定时间内完成作品',
+    difficulty: '中等',
+    timeLimit: 120,
+    icon: <Timer className="h-5 w-5" />
+  },
+  {
+    id: 'color_limit',
+    name: '色彩限制',
+    description: '仅使用3种颜色创作',
+    difficulty: '困难',
+    timeLimit: 180,
+    icon: <Palette className="h-5 w-5" />
+  }
+]
+
+// 画布历史记录
+interface DoodleHistory {
+  id: string
+  theme: string
+  prompt: string
+  timestamp: number
+  imageData: string
+  duration: number
+  challenge?: string
+}
 
 function formatTime(seconds: number): string {
   const minutes = Math.floor(seconds / 60)
@@ -138,95 +201,63 @@ function formatTime(seconds: number): string {
   return `${minutes.toString().padStart(2, '0')}:${remainingSeconds.toString().padStart(2, '0')}`
 }
 
-// 模板选择对话框
-const TemplateDialog = ({ 
-  isOpen, 
-  onClose, 
-  onSelectTemplate 
-}: {
-  isOpen: boolean
-  onClose: () => void
-  onSelectTemplate: (templateId: string) => void
-}) => {
-  if (!isOpen) return null
-
-  return (
-    <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
-      <div className="bg-white rounded-lg p-6 max-w-4xl max-h-[80vh] overflow-y-auto">
-        <div className="flex justify-between items-center mb-4">
-          <h2 className="text-xl font-bold">选择绘画模板</h2>
-          <button onClick={onClose} className="text-gray-500 hover:text-gray-700">
-            ✕
-          </button>
-        </div>
-        
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-          {drawingTemplates.map(template => (
-            <div 
-              key={template.id}
-              className="border rounded-lg p-4 cursor-pointer hover:shadow-md transition-shadow"
-              onClick={() => onSelectTemplate(template.id)}
-            >
-              <div className="flex justify-center mb-3">
-                <svg width="60" height="60" viewBox="0 0 24 24" className="text-gray-400">
-                  <path d={template.svgPath} fill={template.color} />
-                </svg>
-              </div>
-              <h3 className="font-medium text-center">{template.name}</h3>
-              <p className="text-sm text-gray-600 text-center mb-2">{template.description}</p>
-            </div>
-          ))}
-        </div>
-        
-        <div className="mt-6">
-          <h3 className="text-lg font-semibold mb-3">绘画示例</h3>
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-            {exampleDrawings.map(example => (
-              <div key={example.id} className="border rounded-lg p-3">
-                <h4 className="font-medium mb-1">{example.title}</h4>
-                <p className="text-sm text-gray-600 mb-2">{example.description}</p>
-                <div className="flex gap-1 mb-2">
-                  {example.colors.map(color => (
-                    <div key={color} className="w-4 h-4 rounded-full" style={{ backgroundColor: color }}></div>
-                  ))}
-                </div>
-                <div className="flex flex-wrap gap-1">
-                  {example.techniques.map(tech => (
-                    <span key={tech} className="text-xs bg-blue-100 text-blue-800 px-2 py-1 rounded">
-                      {tech}
-                    </span>
-                  ))}
-                </div>
-              </div>
-            ))}
-          </div>
-        </div>
-        
-        <div className="flex justify-end mt-6">
-          <button 
-            onClick={onClose}
-            className="px-4 py-2 bg-gray-500 text-white rounded-lg hover:bg-gray-600 transition-colors"
-          >
-            关闭
-          </button>
-        </div>
-      </div>
-    </div>
-  )
-}
-
 export default function CollaborativeDoodlePage() {
-  const [selectedTemplate, setSelectedTemplate] = useState<string>('')
-  const [showTemplateDialog, setShowTemplateDialog] = useState(false)
-  const [selectedTheme, setSelectedTheme] = useState<string>('happiness')
-  const [currentPrompt, setCurrentPrompt] = useState<string>('')
-  const [doodleHistory, setDoodleHistory] = useState<Array<{id: string, theme: string, prompt: string, timestamp: number}>>([])
+  const [selectedTheme, setSelectedTheme] = useState('happiness')
+  const [currentPrompt, setCurrentPrompt] = useState('')
+  const [selectedTool, setSelectedTool] = useState<DrawingTool>('pen')
+  const [selectedColor, setSelectedColor] = useState('#000000')
+  const [brushSize, setBrushSize] = useState(5)
   const [isDrawing, setIsDrawing] = useState(false)
   const [drawTime, setDrawTime] = useState(0)
+  const [doodleHistory, setDoodleHistory] = useState<DoodleHistory[]>([])
+  const [isPlaying, setIsPlaying] = useState(false)
+  const [activeChallenge, setActiveChallenge] = useState<string | null>(null)
+  const [remainingTime, setRemainingTime] = useState(0)
+  
   const canvasRef = useRef<HTMLCanvasElement>(null)
+  const contextRef = useRef<CanvasRenderingContext2D | null>(null)
   const drawTimeIntervalRef = useRef<NodeJS.Timeout | null>(null)
+  const challengeIntervalRef = useRef<NodeJS.Timeout | null>(null)
+  const [canvasSize, setCanvasSize] = useState({ width: 800, height: 600 })
 
   useEffect(() => {
+    // 初始化画布
+    if (canvasRef.current) {
+      const canvas = canvasRef.current
+      const rect = canvas.getBoundingClientRect()
+      canvas.width = rect.width
+      canvas.height = rect.height
+      
+      const context = canvas.getContext('2d')
+      if (context) {
+        context.lineCap = 'round'
+        context.lineJoin = 'round'
+        contextRef.current = context
+      }
+    }
+    
+    // 响应式调整画布大小
+    const handleResize = () => {
+      if (canvasRef.current && contextRef.current) {
+        const canvas = canvasRef.current
+        const rect = canvas.getBoundingClientRect()
+        const imageData = contextRef.current.getImageData(0, 0, canvas.width, canvas.height)
+        
+        canvas.width = rect.width
+        canvas.height = rect.height
+        
+        contextRef.current.putImageData(imageData, 0, 0)
+        contextRef.current.lineCap = 'round'
+        contextRef.current.lineJoin = 'round'
+      }
+    }
+    
+    window.addEventListener('resize', handleResize)
+    return () => window.removeEventListener('resize', handleResize)
+  }, [])
+
+  useEffect(() => {
+    // 设置当前主题的随机提示
     if (selectedTheme) {
       const theme = emotionThemes.find(t => t.id === selectedTheme)
       if (theme && theme.prompts.length > 0) {
@@ -237,7 +268,7 @@ export default function CollaborativeDoodlePage() {
   }, [selectedTheme])
 
   useEffect(() => {
-    // 从localStorage加载历史记录
+    // 加载历史记录
     const savedHistory = localStorage.getItem('doodleHistory')
     if (savedHistory) {
       try {
@@ -249,6 +280,7 @@ export default function CollaborativeDoodlePage() {
   }, [])
 
   useEffect(() => {
+    // 绘画计时器
     if (isDrawing) {
       drawTimeIntervalRef.current = setInterval(() => {
         setDrawTime(prev => prev + 1)
@@ -258,6 +290,7 @@ export default function CollaborativeDoodlePage() {
         clearInterval(drawTimeIntervalRef.current)
       }
     }
+    
     return () => {
       if (drawTimeIntervalRef.current) {
         clearInterval(drawTimeIntervalRef.current)
@@ -265,45 +298,76 @@ export default function CollaborativeDoodlePage() {
     }
   }, [isDrawing])
 
-  const startDrawing = () => {
-    if (!selectedTemplate) {
-      setShowTemplateDialog(true)
-      return
+  useEffect(() => {
+    // 挑战计时器
+    if (activeChallenge && remainingTime > 0) {
+      challengeIntervalRef.current = setInterval(() => {
+        setRemainingTime(prev => prev - 1)
+      }, 1000)
+    } else if (remainingTime === 0 && activeChallenge) {
+      endChallenge()
     }
+    
+    return () => {
+      if (challengeIntervalRef.current) {
+        clearInterval(challengeIntervalRef.current)
+      }
+    }
+  }, [activeChallenge, remainingTime])
+
+  const startDrawing = () => {
     setIsDrawing(true)
     setDrawTime(0)
-    // 这里可以初始化画布
-    if (canvasRef.current) {
-      const ctx = canvasRef.current.getContext('2d')
-      if (ctx) {
-        ctx.clearRect(0, 0, canvasRef.current.width, canvasRef.current.height)
-        ctx.strokeStyle = '#000000'
-        ctx.lineWidth = 2
-        ctx.lineCap = 'round'
-      }
+    if (contextRef.current) {
+      contextRef.current.strokeStyle = selectedColor
+      contextRef.current.lineWidth = brushSize
     }
   }
 
   const stopDrawing = () => {
     setIsDrawing(false)
-    // 保存到历史记录
-    const newDoodle = {
-      id: Date.now().toString(),
-      theme: selectedTheme,
-      prompt: currentPrompt,
-      timestamp: Date.now()
+    saveToHistory()
+  }
+
+  const startChallenge = (challengeId: string) => {
+    const challenge = drawingChallenges.find(c => c.id === challengeId)
+    if (challenge) {
+      setActiveChallenge(challengeId)
+      setRemainingTime(challenge.timeLimit)
+      startDrawing()
     }
-    const updatedHistory = [newDoodle, ...doodleHistory]
-    setDoodleHistory(updatedHistory)
-    localStorage.setItem('doodleHistory', JSON.stringify(updatedHistory))
+  }
+
+  const endChallenge = () => {
+    if (activeChallenge) {
+      stopDrawing()
+      setActiveChallenge(null)
+      setRemainingTime(0)
+    }
+  }
+
+  const saveToHistory = () => {
+    if (canvasRef.current) {
+      const imageData = canvasRef.current.toDataURL()
+      const newDoodle: DoodleHistory = {
+        id: Date.now().toString(),
+        theme: selectedTheme,
+        prompt: currentPrompt,
+        timestamp: Date.now(),
+        imageData,
+        duration: drawTime,
+        challenge: activeChallenge || undefined
+      }
+      
+      const updatedHistory = [newDoodle, ...doodleHistory].slice(0, 10) // 保留最近10个作品
+      setDoodleHistory(updatedHistory)
+      localStorage.setItem('doodleHistory', JSON.stringify(updatedHistory))
+    }
   }
 
   const clearCanvas = () => {
-    if (canvasRef.current) {
-      const ctx = canvasRef.current.getContext('2d')
-      if (ctx) {
-        ctx.clearRect(0, 0, canvasRef.current.width, canvasRef.current.height)
-      }
+    if (canvasRef.current && contextRef.current) {
+      contextRef.current.clearRect(0, 0, canvasRef.current.width, canvasRef.current.height)
     }
   }
 
@@ -316,186 +380,427 @@ export default function CollaborativeDoodlePage() {
     }
   }
 
+  const handleCanvasMouseDown = (e: React.MouseEvent<HTMLCanvasElement>) => {
+    if (!isDrawing) return
+    
+    const rect = canvasRef.current?.getBoundingClientRect()
+    if (!rect || !contextRef.current) return
+    
+    const x = e.clientX - rect.left
+    const y = e.clientY - rect.top
+    
+    contextRef.current.beginPath()
+    contextRef.current.moveTo(x, y)
+  }
+
+  const handleCanvasMouseMove = (e: React.MouseEvent<HTMLCanvasElement>) => {
+    if (!isDrawing) return
+    
+    const rect = canvasRef.current?.getBoundingClientRect()
+    if (!rect || !contextRef.current) return
+    
+    const x = e.clientX - rect.left
+    const y = e.clientY - rect.top
+    
+    if (selectedTool === 'eraser') {
+      contextRef.current.globalCompositeOperation = 'destination-out'
+    } else {
+      contextRef.current.globalCompositeOperation = 'source-over'
+      contextRef.current.strokeStyle = selectedColor
+    }
+    
+    contextRef.current.lineWidth = brushSize
+    
+    if (selectedTool === 'pen' || selectedTool === 'brush' || selectedTool === 'eraser') {
+      contextRef.current.lineTo(x, y)
+      contextRef.current.stroke()
+    }
+  }
+
+  const handleCanvasMouseUp = () => {
+    if (!contextRef.current) return
+    contextRef.current.closePath()
+  }
+
+  const undo = () => {
+    // 实现撤销功能
+    if (canvasRef.current && contextRef.current) {
+      const imageData = contextRef.current.getImageData(0, 0, canvasRef.current.width, canvasRef.current.height)
+      // 这里可以添加撤销逻辑
+    }
+  }
+
   return (
-    <div className="min-h-screen bg-gradient-to-br from-pink-50 to-purple-50">
+    <div className="min-h-screen bg-gradient-to-br from-purple-50 via-pink-50 to-indigo-50">
       <Navigation />
       
-      <div className="container mx-auto px-4 py-8">
+      <main className="container mx-auto px-4 py-8">
         <div className="mb-6">
-          <Link href="/games/interactive-games" className="inline-flex items-center text-purple-600 hover:text-purple-800 mb-6">
-            <ArrowLeft className="mr-2" size={20} />
+          <Link href="/games/interactive-games" className="inline-flex items-center gap-2 text-purple-600 hover:text-purple-800 transition-colors mb-6">
+            <ArrowLeft className="h-4 w-4" />
             返回互动游戏
           </Link>
           
-          <h1 className="text-3xl font-bold text-gray-800 mb-2">协作涂鸦</h1>
-          <p className="text-gray-600">选择一个模板，与伴侣一起创作美丽的画作</p>
+          <div className="text-center mb-8">
+            <h1 className="text-4xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-purple-600 to-pink-600 mb-4">
+              协作涂鸦板
+            </h1>
+            <p className="text-gray-600 max-w-2xl mx-auto text-lg">
+              选择情感主题，用色彩表达内心世界，与伴侣一起创作独特的艺术作品
+            </p>
+          </div>
         </div>
 
-        <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 mb-8">
-          <div className="lg:col-span-2">
-            <Card>
-              <CardHeader>
-                <CardTitle className="flex items-center">
-                  <Palette className="mr-2" size={20} />
-                  画布
-                </CardTitle>
-                <CardDescription>
-                  {currentPrompt ? `当前主题：${currentPrompt}` : '选择一个情感主题开始创作'}
-                </CardDescription>
-              </CardHeader>
-              <CardContent>
-                <div className="bg-white border-2 border-gray-300 rounded-lg p-2 mb-4">
-                  <canvas
-                    ref={canvasRef}
-                    width={600}
-                    height={400}
-                    className="w-full border border-gray-200 rounded cursor-crosshair"
-                  />
-                </div>
-                
-                <div className="flex flex-wrap gap-2 mb-4">
-                  <Button onClick={startDrawing} disabled={isDrawing}>
-                    {isDrawing ? (
-                      <>
-                        <Clock className="mr-2" size={16} />
-                        {formatTime(drawTime)}
-                      </>
-                    ) : (
-                      <>
-                        <Brush className="mr-2" size={16} />
-                        开始绘画
-                      </>
-                    )}
-                  </Button>
-                  <Button onClick={stopDrawing} disabled={!isDrawing} variant="outline">
-                    完成作品
-                  </Button>
-                  <Button onClick={clearCanvas} variant="outline">
-                    <Eraser className="mr-2" size={16} />
-                    清空画布
-                  </Button>
-                  <Button onClick={saveDoodle} variant="outline">
-                    <Download className="mr-2" size={16} />
-                    保存作品
-                  </Button>
-                </div>
-                
-                <div className="flex items-center text-sm text-gray-600">
-                  <Users className="mr-2" size={16} />
-                  <span>当前模板: {selectedTemplate ? drawingTemplates.find(t => t.id === selectedTemplate)?.name : '未选择'}</span>
-                </div>
-              </CardContent>
-            </Card>
-          </div>
-
-          <div className="space-y-6">
-            <Card>
-              <CardHeader>
-                <CardTitle className="flex items-center">
-                  <Heart className="mr-2" size={20} />
+        <div className="grid grid-cols-1 lg:grid-cols-4 gap-6">
+          {/* 左侧工具栏 */}
+          <div className="lg:col-span-1 space-y-4">
+            {/* 情感主题选择 */}
+            <Card className="bg-white/80 backdrop-blur-sm shadow-lg">
+              <CardHeader className="pb-3">
+                <CardTitle className="text-lg flex items-center gap-2">
+                  <Heart className="h-5 w-5 text-pink-500" />
                   情感主题
                 </CardTitle>
               </CardHeader>
-              <CardContent>
-                <div className="space-y-2">
-                  {emotionThemes.map(theme => (
+              <CardContent className="space-y-2">
+                {emotionThemes.map(theme => (
+                  <button
+                    key={theme.id}
+                    onClick={() => setSelectedTheme(theme.id)}
+                    className={`w-full p-3 rounded-lg border transition-all ${
+                      selectedTheme === theme.id 
+                        ? 'border-purple-500 bg-purple-50 text-purple-700 shadow-sm' 
+                        : 'border-gray-200 hover:border-gray-300 hover:bg-gray-50'
+                    }`}
+                  >
+                    <div className="flex items-center gap-3">
+                      <div className={`p-1 rounded-full bg-opacity-20`} style={{ backgroundColor: theme.color }}>
+                        {theme.icon}
+                      </div>
+                      <div className="text-left">
+                        <div className="font-medium">{theme.name}</div>
+                        <div className="text-xs text-gray-500">{theme.description}</div>
+                      </div>
+                    </div>
+                  </button>
+                ))}
+              </CardContent>
+            </Card>
+
+            {/* 绘画工具 */}
+            <Card className="bg-white/80 backdrop-blur-sm shadow-lg">
+              <CardHeader className="pb-3">
+                <CardTitle className="text-lg flex items-center gap-2">
+                  <Palette className="h-5 w-5 text-purple-500" />
+                  绘画工具
+                </CardTitle>
+              </CardHeader>
+              <CardContent className="space-y-3">
+                <div className="grid grid-cols-3 gap-2">
+                  {drawingTools.map(tool => (
                     <button
-                      key={theme.id}
-                      onClick={() => setSelectedTheme(theme.id)}
-                      className={`w-full text-left p-3 rounded-lg border transition-colors ${
-                        selectedTheme === theme.id 
+                      key={tool.id}
+                      onClick={() => setSelectedTool(tool.id)}
+                      className={`p-3 rounded-lg border transition-all ${
+                        selectedTool === tool.id 
                           ? 'border-purple-500 bg-purple-50 text-purple-700' 
                           : 'border-gray-200 hover:border-gray-300'
                       }`}
+                      title={tool.description}
                     >
-                      <div className="flex items-center">
-                        <div 
-                          className="w-4 h-4 rounded-full mr-3" 
-                          style={{ backgroundColor: theme.color }}
-                        />
-                        <span className="font-medium">{theme.name}</span>
-                      </div>
+                      {tool.icon}
                     </button>
                   ))}
+                </div>
+                
+                <div className="space-y-2">
+                  <label className="text-sm font-medium">画笔大小: {brushSize}px</label>
+                  <input
+                    type="range"
+                    min="1"
+                    max="50"
+                    value={brushSize}
+                    onChange={(e) => setBrushSize(Number(e.target.value))}
+                    className="w-full"
+                  />
                 </div>
               </CardContent>
             </Card>
 
-            <Card>
-              <CardHeader>
-                <CardTitle className="flex items-center">
-                  <Star className="mr-2" size={20} />
-                  绘画技巧
+            {/* 颜色选择 */}
+            <Card className="bg-white/80 backdrop-blur-sm shadow-lg">
+              <CardHeader className="pb-3">
+                <CardTitle className="text-lg flex items-center gap-2">
+                  <Sparkles className="h-5 w-5 text-purple-500" />
+                  颜色调色板
                 </CardTitle>
               </CardHeader>
-              <CardContent>
-                <div className="space-y-3">
-                  <div className="flex items-start">
-                    <Lightbulb className="mr-2 text-yellow-500 mt-1" size={16} />
-                    <div>
-                      <h4 className="font-medium">色彩搭配</h4>
-                      <p className="text-sm text-gray-600">使用互补色创造和谐的画面</p>
-                    </div>
-                  </div>
-                  <div className="flex items-start">
-                    <Sparkles className="mr-2 text-purple-500 mt-1" size={16} />
-                    <div>
-                      <h4 className="font-medium">层次感</h4>
-                      <p className="text-sm text-gray-600">通过深浅变化创造立体感</p>
-                    </div>
-                  </div>
-                  <div className="flex items-start">
-                    <Send className="mr-2 text-blue-500 mt-1" size={16} />
-                    <div>
-                      <h4 className="font-medium">情感表达</h4>
-                      <p className="text-sm text-gray-600">用色彩表达内心的感受</p>
-                    </div>
+              <CardContent className="space-y-3">
+                <div className="flex items-center gap-2">
+                  <div 
+                    className="w-8 h-8 rounded-full border-2 border-gray-300"
+                    style={{ backgroundColor: selectedColor }}
+                  />
+                  <input
+                    type="color"
+                    value={selectedColor}
+                    onChange={(e) => setSelectedColor(e.target.value)}
+                    className="w-full h-8"
+                  />
+                </div>
+                
+                <div className="grid grid-cols-6 gap-1">
+                  {colorPalette.map(color => (
+                    <button
+                      key={color}
+                      onClick={() => setSelectedColor(color)}
+                      className={`w-8 h-8 rounded border-2 transition-all ${
+                        selectedColor === color ? 'border-purple-500 scale-110' : 'border-gray-200'
+                      }`}
+                      style={{ backgroundColor: color }}
+                    />
+                  ))}
+                </div>
+                
+                {/* 推荐颜色 */}
+                <div className="pt-2 border-t">
+                  <div className="text-sm font-medium mb-2">推荐颜色</div>
+                  <div className="flex gap-1">
+                    {emotionThemes.find(t => t.id === selectedTheme)?.recommendedColors.map(color => (
+                      <button
+                        key={color}
+                        onClick={() => setSelectedColor(color)}
+                        className={`w-6 h-6 rounded border transition-all ${
+                          selectedColor === color ? 'border-purple-500 scale-110' : 'border-gray-200'
+                        }`}
+                        style={{ backgroundColor: color }}
+                      />
+                    ))}
                   </div>
                 </div>
               </CardContent>
             </Card>
           </div>
-        </div>
 
-        {doodleHistory.length > 0 && (
-          <Card>
-            <CardHeader>
-              <CardTitle className="flex items-center">
-                <Trophy className="mr-2" size={20} />
-                作品历史
-              </CardTitle>
-            </CardHeader>
-            <CardContent>
-              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-                {doodleHistory.map(doodle => (
-                  <div key={doodle.id} className="border rounded-lg p-3">
-                    <div className="flex items-center justify-between mb-2">
-                      <Badge variant="outline">
-                        {emotionThemes.find(t => t.id === doodle.theme)?.name}
-                      </Badge>
-                      <span className="text-sm text-gray-500">
-                        {new Date(doodle.timestamp).toLocaleDateString()}
-                      </span>
-                    </div>
-                    <p className="text-sm text-gray-600">{doodle.prompt}</p>
+          {/* 中间画布区域 */}
+          <div className="lg:col-span-2">
+            <Card className="bg-white/80 backdrop-blur-sm shadow-lg">
+              <CardHeader>
+                <div className="flex justify-between items-start">
+                  <div>
+                    <CardTitle className="flex items-center gap-2">
+                      <Brush className="h-5 w-5 text-purple-500" />
+                      画布
+                    </CardTitle>
+                    <CardDescription className="mt-1">
+                      {currentPrompt && (
+                        <div className="flex items-center gap-2">
+                          <Target className="h-4 w-4 text-pink-500" />
+                          <span>{currentPrompt}</span>
+                        </div>
+                      )}
+                    </CardDescription>
                   </div>
-                ))}
-              </div>
-            </CardContent>
-          </Card>
-        )}
-      </div>
+                  
+                  {activeChallenge && (
+                    <Badge className="bg-orange-100 text-orange-800 border-0">
+                      <Timer className="h-3 w-3 mr-1" />
+                      {formatTime(remainingTime)}
+                    </Badge>
+                  )}
+                </div>
+              </CardHeader>
+              <CardContent className="space-y-4">
+                {/* 画布 */}
+                <div className="relative bg-white rounded-lg border-2 border-gray-200 overflow-hidden">
+                  <canvas
+                    ref={canvasRef}
+                    onMouseDown={handleCanvasMouseDown}
+                    onMouseMove={handleCanvasMouseMove}
+                    onMouseUp={handleCanvasMouseUp}
+                    onMouseLeave={handleCanvasMouseUp}
+                    className="w-full cursor-crosshair"
+                    style={{ height: '400px' }}
+                  />
+                  
+                  {!isDrawing && !activeChallenge && (
+                    <div className="absolute inset-0 flex items-center justify-center pointer-events-none">
+                      <div className="text-center text-gray-400">
+                        <Brush className="h-12 w-12 mx-auto mb-2" />
+                        <p>选择工具和颜色，点击开始创作</p>
+                      </div>
+                    </div>
+                  )}
+                </div>
+                
+                {/* 控制按钮 */}
+                <div className="flex flex-wrap gap-2">
+                  {!isDrawing ? (
+                    <Button onClick={startDrawing} className="bg-gradient-to-r from-purple-500 to-pink-500 hover:from-purple-600 hover:to-pink-600">
+                      <Play className="h-4 w-4 mr-2" />
+                      开始绘画
+                    </Button>
+                  ) : (
+                    <Button onClick={stopDrawing} variant="outline">
+                      <Pause className="h-4 w-4 mr-2" />
+                      暂停绘画
+                    </Button>
+                  )}
+                  
+                  <Button onClick={clearCanvas} variant="outline">
+                    <RotateCcw className="h-4 w-4 mr-2" />
+                    清空画布
+                  </Button>
+                  
+                  <Button onClick={undo} variant="outline" disabled={!isDrawing}>
+                    <Undo2 className="h-4 w-4 mr-2" />
+                    撤销
+                  </Button>
+                  
+                  <Button onClick={saveDoodle} variant="outline">
+                    <Download className="h-4 w-4 mr-2" />
+                    保存作品
+                  </Button>
+                  
+                  <Button onClick={() => {}} variant="outline">
+                    <Share className="h-4 w-4 mr-2" />
+                    分享
+                  </Button>
+                </div>
+                
+                {/* 绘画信息 */}
+                <div className="flex items-center justify-between text-sm text-gray-600 bg-gray-50 rounded-lg p-3">
+                  <div className="flex items-center gap-4">
+                    <div className="flex items-center gap-1">
+                      <Clock className="h-4 w-4" />
+                      <span>绘画时间: {formatTime(drawTime)}</span>
+                    </div>
+                    <div className="flex items-center gap-1">
+                      <Brush className="h-4 w-4" />
+                      <span>当前工具: {drawingTools.find(t => t.id === selectedTool)?.name}</span>
+                    </div>
+                  </div>
+                  <div className="flex items-center gap-1">
+                    <div className="w-4 h-4 rounded border border-gray-300" style={{ backgroundColor: selectedColor }} />
+                    <span>当前颜色</span>
+                  </div>
+                </div>
+              </CardContent>
+            </Card>
+          </div>
 
-      <Footer />
+          {/* 右侧功能区域 */}
+          <div className="lg:col-span-1 space-y-4">
+            {/* 绘画挑战 */}
+            <Card className="bg-white/80 backdrop-blur-sm shadow-lg">
+              <CardHeader className="pb-3">
+                <CardTitle className="text-lg flex items-center gap-2">
+                  <Zap className="h-5 w-5 text-orange-500" />
+                  绘画挑战
+                </CardTitle>
+              </CardHeader>
+              <CardContent className="space-y-2">
+                {drawingChallenges.map(challenge => (
+                  <button
+                    key={challenge.id}
+                    onClick={() => startChallenge(challenge.id)}
+                    disabled={activeChallenge !== null}
+                    className={`w-full p-3 rounded-lg border transition-all text-left ${
+                      activeChallenge === challenge.id 
+                        ? 'border-orange-500 bg-orange-50 text-orange-700' 
+                        : 'border-gray-200 hover:border-gray-300 hover:bg-gray-50 disabled:opacity-50 disabled:cursor-not-allowed'
+                    }`}
+                  >
+                    <div className="flex items-center justify-between">
+                      <div className="flex items-center gap-2">
+                        {challenge.icon}
+                        <div>
+                          <div className="font-medium">{challenge.name}</div>
+                          <div className="text-xs text-gray-500">{challenge.description}</div>
+                        </div>
+                      </div>
+                      <div className="text-right">
+                        <Badge variant="outline" className="text-xs">
+                          {challenge.difficulty}
+                        </Badge>
+                        <div className="text-xs text-gray-500 mt-1">
+                          {formatTime(challenge.timeLimit)}
+                        </div>
+                      </div>
+                    </div>
+                  </button>
+                ))}
+              </CardContent>
+            </Card>
+
+            {/* 绘画技巧 */}
+            <Card className="bg-white/80 backdrop-blur-sm shadow-lg">
+              <CardHeader className="pb-3">
+                <CardTitle className="text-lg flex items-center gap-2">
+                  <Lightbulb className="h-5 w-5 text-yellow-500" />
+                  绘画技巧
+                </CardTitle>
+              </CardHeader>
+              <CardContent className="space-y-3">
+                <div className="p-3 bg-purple-50 rounded-lg">
+                  <h4 className="font-medium text-purple-800 mb-1">色彩搭配</h4>
+                  <p className="text-sm text-purple-700">使用互补色创造和谐的画面，推荐使用主题推荐的颜色</p>
+                </div>
+                
+                <div className="p-3 bg-pink-50 rounded-lg">
+                  <h4 className="font-medium text-pink-800 mb-1">层次感</h4>
+                  <p className="text-sm text-pink-700">通过不同的画笔大小和透明度创造立体感</p>
+                </div>
+                
+                <div className="p-3 bg-blue-50 rounded-lg">
+                  <h4 className="font-medium text-blue-800 mb-1">情感表达</h4>
+                  <p className="text-sm text-blue-700">用色彩和形状表达内心的真实感受</p>
+                </div>
+              </CardContent>
+            </Card>
+
+            {/* 作品历史 */}
+            {doodleHistory.length > 0 && (
+              <Card className="bg-white/80 backdrop-blur-sm shadow-lg">
+                <CardHeader className="pb-3">
+                  <CardTitle className="text-lg flex items-center gap-2">
+                    <Trophy className="h-5 w-5 text-yellow-500" />
+                    作品历史
+                  </CardTitle>
+                </CardHeader>
+                <CardContent>
+                  <div className="space-y-2 max-h-64 overflow-y-auto">
+                    {doodleHistory.map(doodle => (
+                      <div key={doodle.id} className="flex items-center gap-3 p-2 bg-gray-50 rounded-lg">
+                        <div className="w-12 h-12 bg-white rounded border border-gray-200 overflow-hidden">
+                          <img src={doodle.imageData} alt="Doodle" className="w-full h-full object-cover" />
+                        </div>
+                        <div className="flex-1">
+                          <div className="flex items-center gap-2">
+                            <Badge variant="outline" className="text-xs">
+                              {emotionThemes.find(t => t.id === doodle.theme)?.name}
+                            </Badge>
+                            {doodle.challenge && (
+                              <Badge variant="secondary" className="text-xs">
+                                {drawingChallenges.find(c => c.id === doodle.challenge)?.name}
+                              </Badge>
+                            )}
+                          </div>
+                          <div className="text-xs text-gray-500">
+                            {formatTime(doodle.duration)} · {new Date(doodle.timestamp).toLocaleDateString()}
+                          </div>
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                </CardContent>
+              </Card>
+            )}
+          </div>
+        </div>
+      </main>
       
-      <TemplateDialog 
-        isOpen={showTemplateDialog}
-        onClose={() => setShowTemplateDialog(false)}
-        onSelectTemplate={(templateId) => {
-          setSelectedTemplate(templateId)
-          setShowTemplateDialog(false)
-        }}
-      />
+      <Footer />
     </div>
   )
 }
