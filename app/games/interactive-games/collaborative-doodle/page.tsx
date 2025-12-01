@@ -98,7 +98,7 @@ import {
   Bike,
   Bus,
   Truck,
-  House,
+  Home,
   Building,
   Castle,
   Church,
