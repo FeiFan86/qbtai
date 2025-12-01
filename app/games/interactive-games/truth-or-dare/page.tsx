@@ -202,7 +202,7 @@ export default function TruthOrDarePage() {
   const [skippedTasks, setSkippedTasks] = useState(0)
   const [gameTime, setGameTime] = useState(0)
   const [timerActive, setTimerActive] = useState(false)
-  const [playerScores, setPlayerScores] = useState({})
+  const [playerScores, setPlayerScores] = useState<Record<number, number>>({})
   const [maxScore, setMaxScore] = useState(5) // 5分获胜
 
   // 计时器
@@ -244,7 +244,7 @@ export default function TruthOrDarePage() {
     setPlayerScores({})
     
     // 初始化玩家分数
-    const scores = {}
+    const scores: Record<number, number> = {}
     for (let i = 1; i <= totalPlayers; i++) {
       scores[i] = 0
     }
