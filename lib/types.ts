@@ -62,16 +62,50 @@ export interface UserAchievement {
   progress: number;
 }
 
-export interface UserAchievement {
-  achievementId: string;
-  unlockedAt: string;
-  progress: number;
+// 游戏统计数据类型定义
+export interface GameStats {
+  userId: string;
+  totalGamesPlayed: number;
+  totalPlayTime: number;
+  lastPlayed: string;
+  favoriteGame: string;
+  achievements: string[];
+  highScores: {
+    gameId: string;
+    score: number;
+  }[];
 }
 
-export interface UserAchievement {
-  achievementId: string;
-  unlockedAt: string;
+// 排行榜数据类型定义
+export interface Leaderboard {
+  id: string;
+  type: 'weekly' | 'monthly' | 'all_time';
+  entries: LeaderboardEntry[];
+  updatedAt: string;
+}
+
+// 游戏会话数据类型定义
+export interface GameSession {
+  id: string;
+  userId: string;
+  gameId: string;
+  startTime: string;
+  endTime?: string;
+  duration: number;
+  score?: number;
+  completion: number;
+  data?: any;
+}
+
+// 游戏进度数据类型定义
+export interface GameProgress {
+  userId: string;
+  gameId: string;
   progress: number;
+  currentLevel?: number;
+  unlockedFeatures: string[];
+  saveData?: any;
+  lastPlayed: string;
 }
 
 // 排行榜相关类型定义
