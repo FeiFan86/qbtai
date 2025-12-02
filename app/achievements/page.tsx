@@ -28,7 +28,13 @@ import {
 import Link from 'next/link'
 
 // 游戏成就分类
-const gameCategories = {
+interface GameCategory {
+  name: string;
+  icon: string;
+  description: string;
+}
+
+const gameCategories: Record<string, GameCategory> = {
   'memory-puzzle': {
     name: '记忆拼图',
     icon: '🧩',
