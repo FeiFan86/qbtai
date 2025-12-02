@@ -711,9 +711,9 @@ export default function CoupleBlindBoxPage() {
       <main className="container mx-auto px-4 py-8">
         <div className="mx-auto max-w-4xl">
           <div className="mb-6">
-            <Link href="/games/interactive-games" className="inline-flex items-center gap-2 text-pink-600 hover:text-pink-800 transition-colors mb-6">
+            <Link href="/games" className="inline-flex items-center gap-2 text-pink-600 hover:text-pink-800 transition-colors mb-6">
               <ArrowLeft className="h-4 w-4" />
-              返回互动游戏
+              返回游戏中心
             </Link>
           </div>
           

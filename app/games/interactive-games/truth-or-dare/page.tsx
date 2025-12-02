@@ -110,20 +110,20 @@ const dareChallenges = {
     "用手比划心形"
   ],
   medium: [
-    "打电话给朋友说\"我爱你\"",
-    "发一条朋友圈说\"我今天太帅了\"",
+    "打电话给朋友说"我爱你"",
+    "发一条朋友圈说"我今天太帅了"",
     "跳一段奇怪的舞蹈",
     "给陌生人一个拥抱",
     "用嘴叼着笔写字",
     "头顶一本书走一圈",
     "跪地求婚给在场任意一人",
-    "用三种语言说\"我饿了\"",
+    "用三种语言说"我饿了"",
     "唱一首儿歌",
     "做10个俯卧撑"
   ],
   hard: [
     "在社交媒体上发布一张奇怪的自拍",
-    "给前任发一条\"最近好吗\"的消息",
+    "给前任发一条"最近好吗"的消息",
     "脱掉上衣（如果合适的话）",
     "在街上大声唱一首歌",
     "向陌生人借10块钱",
@@ -348,10 +348,10 @@ export default function TruthOrDarePage() {
       
       <main className="container mx-auto px-4 py-8">
         <div className="mb-6">
-          <Link href="/games/interactive-games" className="inline-flex items-center gap-2 text-purple-600 hover:text-purple-800 transition-colors mb-6">
-            <ArrowLeft className="h-4 w-4" />
-            返回互动游戏
-          </Link>
+            <Link href="/games" className="inline-flex items-center gap-2 text-purple-600 hover:text-purple-800 transition-colors mb-6">
+              <ArrowLeft className="h-4 w-4" />
+              返回游戏中心
+            </Link>
           
           <div className="text-center mb-8">
             <h1 className="text-4xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-red-600 to-pink-600 mb-4">

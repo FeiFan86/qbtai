@@ -700,10 +700,10 @@ export default function ComplaintWallPage() {
       
       <main className="container mx-auto px-4 py-8">
         <div className="mb-6">
-          <Link href="/games/interactive-games" className="inline-flex items-center gap-2 text-orange-600 hover:text-orange-800 transition-colors mb-6">
-            <ArrowLeft className="h-4 w-4" />
-            返回互动游戏
-          </Link>
+            <Link href="/games" className="inline-flex items-center gap-2 text-orange-600 hover:text-orange-800 transition-colors mb-6">
+              <ArrowLeft className="h-4 w-4" />
+              返回游戏中心
+            </Link>
           
           <div className="text-center mb-8">
             <h1 className="text-4xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-orange-600 to-red-600 mb-4">

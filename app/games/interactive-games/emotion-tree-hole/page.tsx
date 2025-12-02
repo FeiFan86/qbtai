@@ -223,7 +223,7 @@ export default function EmotionTreeHolePage() {
             <Link href="/games">
               <Button variant="outline" className="mb-4">
                 <ArrowLeft className="h-4 w-4 mr-2" />
-                返回互动游戏
+                返回游戏中心
               </Button>
             </Link>
           </div>
