@@ -465,7 +465,9 @@ export default function ComplaintWallPage() {
       content: newReply.trim(),
       timestamp: Date.now(),
       likes: 0,
-      isAnonymous: true
+      isAnonymous: true,
+      empathyScore: 0,
+      isHelpful: false
     }
     
     const updatedComplaints = complaints.map(complaint => {
