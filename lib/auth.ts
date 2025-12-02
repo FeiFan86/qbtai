@@ -167,9 +167,10 @@ export const updateUserGameStats = (gameName: string, playTime: number): void =>
   let favoriteGame = ''
   let maxCount = 0
   for (const [game, count] of Object.entries(gameStats)) {
-    if (count > maxCount) {
+    const countValue = count as number
+    if (countValue > maxCount) {
       favoriteGame = game
-      maxCount = count as number
+      maxCount = countValue
     }
   }
   
