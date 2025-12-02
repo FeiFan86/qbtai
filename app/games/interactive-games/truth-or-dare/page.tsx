@@ -21,6 +21,7 @@ const safeLocalStorage = {
     }
   }
 }
+
 import { Navigation } from '@/components/navigation'
 import { Footer } from '@/components/footer'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
@@ -55,84 +56,226 @@ import {
 } from 'lucide-react'
 import Link from 'next/link'
 
-// 真心话问题库 - 按难度分类
+// 真心话问题库 - 按难度和主题分类
 const truthQuestions = {
-  easy: [
-    "你最喜欢的电影是什么？",
-    "你小时候最喜欢的卡通片是什么？",
-    "你最喜欢的食物是什么？",
-    "你最喜欢的季节是哪个？",
-    "你最想去哪个国家旅行？",
-    "你最害怕的动物是什么？",
-    "你最喜欢的颜色是什么？",
-    "你最擅长的技能是什么？",
-    "你最喜欢的音乐类型是什么？",
-    "你最想拥有的超能力是什么？"
-  ],
-  medium: [
-    "你曾经撒过最大的谎是什么？",
-    "你最尴尬的经历是什么？",
-    "你暗恋过的人有几个？",
-    "你做过的最疯狂的梦是什么？",
-    "你最想改变过去的哪件事？",
-    "你最不好意思的爱好是什么？",
-    "你最讨厌的特质是什么？",
-    "你最想对初恋说什么？",
-    "你最害怕失去什么？",
-    "你最大的秘密是什么？"
-  ],
-  hard: [
-    "你最想和谁共度一生？",
-    "你曾经为爱做过最疯狂的事是什么？",
-    "你最深刻的记忆是什么？",
-    "你最想弥补的遗憾是什么？",
-    "你最脆弱的时候是什么时候？",
-    "你最想对父母说什么？",
-    "你最害怕的未来是什么？",
-    "你最想改变自己的哪一点？",
-    "你最大的恐惧是什么？",
-    "你最想对全世界说什么？"
-  ]
+  easy: {
+    general: [
+      "你最喜欢的电影是什么？",
+      "你小时候最喜欢的卡通片是什么？",
+      "你最喜欢的食物是什么？",
+      "你最喜欢的季节是哪个？",
+      "你最想去哪个国家旅行？",
+      "你最害怕的动物是什么？",
+      "你最喜欢的颜色是什么？",
+      "你最擅长的技能是什么？",
+      "你最喜欢的音乐类型是什么？",
+      "你最想拥有的超能力是什么？"
+    ],
+    relationship: [
+      "你最欣赏对方的哪个特点？",
+      "分享一个你们之间的甜蜜回忆",
+      "如果只能用一个词形容对方，你会用什么？",
+      "对方做什么事情会让你最心动？",
+      "你们第一次见面时你的第一印象是什么？",
+      "你最想和对方一起实现的一个梦想是什么？",
+      "分享一件对方不知道的关于你的小事",
+      "你认为什么样的关系最理想？",
+      "当对方情绪低落时，你通常会如何安慰TA？"
+    ],
+    future: [
+      "你想象中和对方一起变老的场景",
+      "你希望十年后的你们是什么样子的",
+      "你最想为对方改变的一个缺点是什么？",
+      "如果可以给对方一项超能力，你会给什么",
+      "你认为你们关系中最重要的三个品质是什么",
+      "你最想对对方说的一句话是什么",
+      "你最希望和对方一起实现的未来计划是什么",
+      "你最害怕和对方发生的争执是什么",
+      "你最期待和对方一起经历的下一件事是什么"
+    ]
+  },
+  medium: {
+    general: [
+      "你曾经撒过最大的谎是什么？",
+      "你最尴尬的经历是什么？",
+      "你暗恋过的人有几个？",
+      "你做过的最疯狂的梦是什么？",
+      "你最想改变过去的哪件事？",
+      "你最不好意思的爱好是什么？",
+      "你最讨厌的特质是什么？",
+      "你最想对初恋说什么？",
+      "你最害怕失去什么？",
+      "你最大的秘密是什么？"
+    ],
+    relationship: [
+      "分享一个你觉得对方很可爱的小习惯",
+      "当你们意见不合时，通常如何解决？",
+      "对方最让你放心不下的一个习惯是什么？",
+      "你们在一起最开心的时光是什么时候？",
+      "如果你们可以交换一天生活，你想体验什么",
+      "对方最让你觉得温暖的一个举动是什么？",
+      "你们之间有什么特别的暗号或默契",
+      "你最欣赏对方的哪一点是别人不常注意的",
+      "你最想为对方做的一件小事是什么"
+    ],
+    past: [
+      "分享一个童年时的尴尬经历",
+      "你最难忘的一次旅行经历是什么？",
+      "你小时候最想成为的职业是什么？",
+      "分享一个你学生时代的趣事",
+      "你最难忘的一次生日是怎么过的？",
+      "你最难忘的一个节日回忆是什么",
+      "你第一次独立完成的一件事是什么？",
+      "分享一个你年少轻狂的故事",
+      "你最想回到过去改变的一件事是什么"
+    ]
+  },
+  hard: {
+    deep: [
+      "你最想和谁共度一生？",
+      "你曾经为爱做过最疯狂的事是什么？",
+      "你最深刻的记忆是什么？",
+      "你最想弥补的遗憾是什么？",
+      "你最脆弱的时候是什么时候？",
+      "你最想对父母说什么？",
+      "你最害怕的未来是什么？",
+      "你最想改变自己的哪一点？",
+      "你最大的恐惧是什么？",
+      "你最想对全世界说什么？"
+    ],
+    vulnerable: [
+      "什么时候你感到最孤独？",
+      "你最害怕被别人知道的缺点是什么？",
+      "什么时候你感到最没有安全感？",
+      "你最不愿意面对的自己的哪一面？",
+      "你最害怕被辜负的是什么？",
+      "什么时候你觉得自己最失败？",
+      "你最不想被别人触动的痛处是什么？",
+      "你最害怕失去的是什么？",
+      "你最不敢深究的自己哪一方面是什么？"
+    ],
+    life: [
+      "你人生中最重要的一天是哪天？",
+      "你觉得人生的意义是什么？",
+      "你最希望别人如何评价你？",
+      "你最不愿意妥协的原则是什么？",
+      "你觉得人生中最值得的是什么？",
+      "你最害怕人生中错过的是什么？",
+      "你最想对年轻时自己说什么？",
+      "你觉得人生中最难得的是什么？",
+      "你最希望留下什么遗产给世界？"
+    ]
+  }
 }
 
-// 大冒险挑战库 - 按难度分类
+// 大冒险挑战库 - 按难度和主题分类
 const dareChallenges = {
-  easy: [
-    "模仿一种动物的叫声",
-    "用腹语说一段话",
-    "做一个鬼脸并保持30秒",
-    "单脚站立并唱歌",
-    "闭着眼睛转三圈后走路",
-    "用脚写字",
-    "学机器人走路",
-    "倒着走10步",
-    "用鼻子写字",
-    "用手比划心形"
-  ],
-  medium: [
-    "打电话给朋友说'我爱你'",
-    "发一条朋友圈说'我今天太帅了'",
-    "跳一段奇怪的舞蹈",
-    "给陌生人一个拥抱",
-    "用嘴叼着笔写字",
-    "头顶一本书走一圈",
-    "跪地求婚给在场任意一人",
-    "用三种语言说'我饿了'",
-    "唱一首儿歌",
-    "做10个俯卧撑"
-  ],
-  hard: [
-    "在社交媒体上发布一张奇怪的自拍",
-    "给前任发一条'最近好吗'的消息",
-    "脱掉上衣（如果合适的话）",
-    "在街上大声唱一首歌",
-    "向陌生人借10块钱",
-    "穿着睡衣去便利店买东西",
-    "在电梯里做俯卧撑",
-    "给陌生人讲一个冷笑话",
-    "在公园里模仿雕像",
-    "用牙齿咬开一瓶饮料"
-  ]
+  easy: {
+    funny: [
+      "模仿一种动物的叫声",
+      "用腹语说一段话",
+      "做一个鬼脸并保持30秒",
+      "单脚站立并唱歌",
+      "闭着眼睛转三圈后走路",
+      "用脚写字",
+      "学机器人走路",
+      "倒着走10步",
+      "用鼻子写字",
+      "用手比划心形"
+    ],
+    social: [
+      "给在场三人各一句赞美",
+      "分享一个最近发生的趣事",
+      "讲一个冷笑话让大家都笑",
+      "用三种不同的声音说'你好'",
+      "表演一个你最近看到的有趣广告",
+      "模仿在场一个朋友的标志性动作",
+      "用夸张的语气宣布你的饥饿状态",
+      "给大家表演一个魔术",
+      "说出你手机的三个有趣功能"
+    ],
+    creative: [
+      "用30秒编一个简短的故事",
+      "现场画一幅抽象画并解释含义",
+      "用身体语言表演一个成语",
+      "用三种表情表演一种情绪",
+      "给大家展示你的隐藏才艺",
+      "用周围的三个物品编一个故事",
+      "创造一种新的打招呼方式",
+      "用物体打击乐演奏一段节奏",
+      "即兴创作一句人生格言"
+    ]
+  },
+  medium: {
+    social: [
+      "打电话给朋友说'我爱你'",
+      "发一条朋友圈说'我今天太帅了'",
+      "给陌生人一个拥抱",
+      "向三个陌生人要祝福",
+      "在社交媒体发布一个正能量帖子",
+      "给朋友发一条真挚的感谢信息",
+      "请陌生人为你拍一张照片",
+      "分享一件你从未告诉别人的事",
+      "向你崇拜的人发送一条粉丝信息"
+    ],
+    physical: [
+      "跳一段奇怪的舞蹈",
+      "用嘴叼着笔写字",
+      "头顶一本书走一圈",
+      "做10个俯卧撑",
+      "原地跑30秒并念口号",
+      "模仿一种动物走路一分钟",
+      "闭眼睛画自己的自画像",
+      "用单脚跳完一首歌",
+      "背一个人走5米"
+    ],
+    embarrassing: [
+      "跪地求婚给在场任意一人",
+      "分享一个童年尴尬故事",
+      "展示你最丑的表情",
+      "唱一首儿歌并做动作",
+      "用三种语言说'我饿了'",
+      "跳一段你最讨厌的舞蹈",
+      "大声朗诵一段诗歌",
+      "模仿你最不喜欢的明星",
+      "表演你最尴尬的时刻"
+    ]
+  },
+  hard: {
+    brave: [
+      "在社交媒体上发布一张奇怪的自拍",
+      "给前任发一条'最近好吗'的消息",
+      "在街上大声唱一首歌",
+      "向陌生人借10块钱",
+      "穿着睡衣去便利店买东西",
+      "给陌生人讲一个冷笑话",
+      "在公园里模仿雕像",
+      "用牙齿咬开一瓶饮料",
+      "在电梯里做俯卧撑"
+    ],
+    extreme: [
+      "脱掉上衣（如果合适的话）",
+      "现场表演你的洗澡过程",
+      "给路人表演一段单口相声",
+      "在公共场所大声喊出你的梦想",
+      "向陌生人讨要一个拥抱",
+      "在公园里模仿鸟叫30秒",
+      "在咖啡店点一杯奇特的特调饮料",
+      "给陌生人做一次免费按摩",
+      "现场表演换衣服"
+    ],
+    relationship: [
+      "给在场最亲密的人说一句真挚的话",
+      "描述你对TA的感情变化",
+      "分享你最想改变对方的一个地方",
+      "承诺一件你将要为TA做的事",
+      "表达你最近最感谢对方的一点",
+      "描述你对未来的共同规划",
+      "坦白一件你一直没说出口的小事",
+      "评价你们关系的一个优点和缺点",
+      "描述你最难忘的一个共同经历"
+    ]
+  }
 }
 
 // 游戏统计
@@ -150,6 +293,7 @@ interface CustomCard {
   id: string
   type: 'truth' | 'dare'
   difficulty: 'easy' | 'medium' | 'hard'
+  category: string
   content: string
   isPublic: boolean
   likes: number
@@ -158,6 +302,7 @@ interface CustomCard {
 export default function TruthOrDarePage() {
   const [gameMode, setGameMode] = useState<'truth' | 'dare'>('truth')
   const [difficulty, setDifficulty] = useState<'easy' | 'medium' | 'hard'>('easy')
+  const [category, setCategory] = useState<string>('general') // 新增分类状态
   const [currentCard, setCurrentCard] = useState<string>('')
   const [isPlaying, setIsPlaying] = useState(false)
   const [showAnswer, setShowAnswer] = useState(false)
@@ -175,36 +320,14 @@ export default function TruthOrDarePage() {
   const [newCardContent, setNewCardContent] = useState('')
   const [newCardType, setNewCardType] = useState<'truth' | 'dare'>('truth')
   const [newCardDifficulty, setNewCardDifficulty] = useState<'easy' | 'medium' | 'hard'>('easy')
+  const [newCardCategory, setNewCardCategory] = useState<string>('general') // 新增自定义卡片分类
   const [currentStreak, setCurrentStreak] = useState(0)
   const [history, setHistory] = useState<Array<{type: 'truth' | 'dare', content: string, timestamp: number}>>([])
   const [timer, setTimer] = useState<number>(0)
   const [isTimerRunning, setIsTimerRunning] = useState(false)
   const [completedCards, setCompletedCards] = useState<Set<string>>(new Set())
   const [timeLimit, setTimeLimit] = useState<number>(60) // 默认60秒
-  const [timer, setTimer] = useState<number>(0)
-  const [isTimerRunning, setIsTimerRunning] = useState(false)
-  const [completedCards, setCompletedCards] = useState<Set<string>>(new Set())
-  const [timeLimit, setTimeLimit] = useState<number>(60) // 默认60秒
-  
-  // 多人游戏增强功能
-  const [players, setPlayers] = useState([
-    { id: 1, name: '玩家1', score: 0, isActive: true, avatar: '👤' },
-    { id: 2, name: '玩家2', score: 0, isActive: true, avatar: '👤' },
-    { id: 3, name: '玩家3', score: 0, isActive: false, avatar: '👤' },
-    { id: 4, name: '玩家4', score: 0, isActive: false, avatar: '👤' }
-  ])
-  const [currentPlayer, setCurrentPlayer] = useState<number>(1)
-  const [playerTurnOrder, setPlayerTurnOrder] = useState<number[]>([1, 2])
-  const [currentTurnIndex, setCurrentTurnIndex] = useState(0)
-  const [teamMode, setTeamMode] = useState<'individual' | 'teams'>('individual')
-  const [teams, setTeams] = useState([
-    { id: 1, name: '红队', players: [1], score: 0, color: '#FF6B6B' },
-    { id: 2, name: '蓝队', players: [2], score: 0, color: '#4ECDC4' }
-  ])
-  const [gameRound, setGameRound] = useState(1)
-  const [maxRounds, setMaxRounds] = useState(10)
-  const [gamePhase, setGamePhase] = useState<'setup' | 'playing' | 'results'>('setup')
-  const [showPlayerManager, setShowPlayerManager] = useState(false)
+  const [favoriteCards, setFavoriteCards] = useState<string[]>([]) // 新增收藏功能
 
   useEffect(() => {
     // 加载保存的数据
@@ -246,15 +369,47 @@ export default function TruthOrDarePage() {
   }, [])
 
   const getRandomCard = () => {
-    const questionPool = gameMode === 'truth' ? truthQuestions[difficulty] : dareChallenges[difficulty]
+    // 获取对应难度和分类的问题池
+    const questionPool = gameMode === 'truth' 
+      ? truthQuestions[difficulty][category] || truthQuestions[difficulty]['general']
+      : dareChallenges[difficulty][category] || dareChallenges[difficulty]['funny']
+    
     const customPool = customCards.filter(card => 
       card.type === gameMode && 
-      card.difficulty === difficulty
+      card.difficulty === difficulty &&
+      card.category === category
     ).map(card => card.content)
     
     const allCards = [...questionPool, ...customPool]
     const randomIndex = Math.floor(Math.random() * allCards.length)
     return allCards[randomIndex]
+  }
+  
+  // 收藏/取消收藏卡片
+  const toggleFavoriteCard = () => {
+    if (!currentCard) return
+    
+    const cardKey = `${gameMode}-${difficulty}-${category}-${currentCard}`
+    if (favoriteCards.includes(cardKey)) {
+      setFavoriteCards(prev => prev.filter(id => id !== cardKey))
+    } else {
+      setFavoriteCards(prev => [...prev, cardKey])
+    }
+  }
+  
+  // 查看收藏的卡片
+  const viewFavoriteCards = () => {
+    if (favoriteCards.length === 0) {
+      alert('你还没有收藏任何卡片！\n\n点击星星图标可以收藏喜欢的卡片。')
+      return
+    }
+    
+    const cardList = favoriteCards.map(cardKey => {
+      const [mode, diff, cat, content] = cardKey.split('-')
+      return `${mode === 'truth' ? '真心话' : '大冒险'}: ${content} (${diff}, ${cat})`
+    }).slice(0, 10) // 只显示前10个
+    
+    alert(`你的收藏卡片（前10个）：\n\n${cardList.map((card, index) => `${index+1}. ${card}`).join('\n')}`)
   }
 
   const startGame = () => {
@@ -322,6 +477,7 @@ export default function TruthOrDarePage() {
       id: Date.now().toString(),
       type: newCardType,
       difficulty: newCardDifficulty,
+      category: newCardCategory,
       content: newCardContent.trim(),
       isPublic: false,
       likes: 0
@@ -369,6 +525,7 @@ export default function TruthOrDarePage() {
               <ArrowLeft className="h-4 w-4" />
               返回游戏中心
             </Link>
+          </div>
           
           <div className="text-center mb-8">
             <h1 className="text-4xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-red-600 to-pink-600 mb-4">
@@ -421,6 +578,93 @@ export default function TruthOrDarePage() {
                     <div className="text-xs text-gray-500">接受挑战任务</div>
                   </div>
                 </button>
+              </CardContent>
+            </Card>
+
+            {/* 分类选择 */}
+            <Card className="bg-white/80 backdrop-blur-sm shadow-lg">
+              <CardHeader className="pb-3">
+                <CardTitle className="text-lg flex items-center gap-2">
+                  <Filter className="h-5 w-5 text-purple-500" />
+                  问题分类
+                </CardTitle>
+              </CardHeader>
+              <CardContent className="space-y-2">
+                <div className="grid grid-cols-1 gap-2">
+                  {gameMode === 'truth' ? (
+                    <>
+                      <button
+                        onClick={() => setCategory('general')}
+                        className={`p-2 rounded-lg border transition-all text-left ${
+                          category === 'general' 
+                            ? 'border-purple-500 bg-purple-50 text-purple-700' 
+                            : 'border-gray-200 hover:border-gray-300 hover:bg-gray-50'
+                        }`}
+                      >
+                        <div className="font-medium">日常通用</div>
+                        <div className="text-xs text-gray-500">日常生活中的问题</div>
+                      </button>
+                      <button
+                        onClick={() => setCategory('relationship')}
+                        className={`p-2 rounded-lg border transition-all text-left ${
+                          category === 'relationship' 
+                            ? 'border-purple-500 bg-purple-50 text-purple-700' 
+                            : 'border-gray-200 hover:border-gray-300 hover:bg-gray-50'
+                        }`}
+                      >
+                        <div className="font-medium">情感关系</div>
+                        <div className="text-xs text-gray-500">关于感情和关系</div>
+                      </button>
+                      <button
+                        onClick={() => setCategory('future')}
+                        className={`p-2 rounded-lg border transition-all text-left ${
+                          category === 'future' 
+                            ? 'border-purple-500 bg-purple-50 text-purple-700' 
+                            : 'border-gray-200 hover:border-gray-300 hover:bg-gray-50'
+                        }`}
+                      >
+                        <div className="font-medium">未来规划</div>
+                        <div className="text-xs text-gray-500">关于未来的想法</div>
+                      </button>
+                    </>
+                  ) : (
+                    <>
+                      <button
+                        onClick={() => setCategory('funny')}
+                        className={`p-2 rounded-lg border transition-all text-left ${
+                          category === 'funny' 
+                            ? 'border-purple-500 bg-purple-50 text-purple-700' 
+                            : 'border-gray-200 hover:border-gray-300 hover:bg-gray-50'
+                        }`}
+                      >
+                        <div className="font-medium">搞笑有趣</div>
+                        <div className="text-xs text-gray-500">轻松有趣的挑战</div>
+                      </button>
+                      <button
+                        onClick={() => setCategory('social')}
+                        className={`p-2 rounded-lg border transition-all text-left ${
+                          category === 'social' 
+                            ? 'border-purple-500 bg-purple-50 text-purple-700' 
+                            : 'border-gray-200 hover:border-gray-300 hover:bg-gray-50'
+                        }`}
+                      >
+                        <div className="font-medium">社交互动</div>
+                        <div className="text-xs text-gray-500">与朋友互动的挑战</div>
+                      </button>
+                      <button
+                        onClick={() => setCategory('creative')}
+                        className={`p-2 rounded-lg border transition-all text-left ${
+                          category === 'creative' 
+                            ? 'border-purple-500 bg-purple-50 text-purple-700' 
+                            : 'border-gray-200 hover:border-gray-300 hover:bg-gray-50'
+                        }`}
+                      >
+                        <div className="font-medium">创意表演</div>
+                        <div className="text-xs text-gray-500">发挥想象力的挑战</div>
+                      </button>
+                    </>
+                  )}
+                </div>
               </CardContent>
             </Card>
 
@@ -511,6 +755,15 @@ export default function TruthOrDarePage() {
                 >
                   <Sparkles className="h-4 w-4 mr-2" />
                   创建自定义卡片
+                </Button>
+                
+                <Button 
+                  onClick={viewFavoriteCards}
+                  variant="outline"
+                  className="w-full"
+                >
+                  <Star className="h-4 w-4 mr-2" />
+                  查看收藏卡片
                 </Button>
                 
                 {customCards.length > 0 && (
@@ -762,6 +1015,80 @@ export default function TruthOrDarePage() {
                   </button>
                 </div>
               </div>
+              
+              {newCardType === 'truth' ? (
+                <div>
+                  <label className="text-sm font-medium mb-1 block">问题分类</label>
+                  <div className="grid grid-cols-1 gap-2">
+                    <button
+                      onClick={() => setNewCardCategory('general')}
+                      className={`p-2 rounded-lg border ${
+                        newCardCategory === 'general' 
+                          ? 'border-purple-500 bg-purple-50 text-purple-700' 
+                          : 'border-gray-200'
+                      }`}
+                    >
+                      日常通用
+                    </button>
+                    <button
+                      onClick={() => setNewCardCategory('relationship')}
+                      className={`p-2 rounded-lg border ${
+                        newCardCategory === 'relationship' 
+                          ? 'border-purple-500 bg-purple-50 text-purple-700' 
+                          : 'border-gray-200'
+                      }`}
+                    >
+                      情感关系
+                    </button>
+                    <button
+                      onClick={() => setNewCardCategory('future')}
+                      className={`p-2 rounded-lg border ${
+                        newCardCategory === 'future' 
+                          ? 'border-purple-500 bg-purple-50 text-purple-700' 
+                          : 'border-gray-200'
+                      }`}
+                    >
+                      未来规划
+                    </button>
+                  </div>
+                </div>
+              ) : (
+                <div>
+                  <label className="text-sm font-medium mb-1 block">挑战分类</label>
+                  <div className="grid grid-cols-2 gap-2">
+                    <button
+                      onClick={() => setNewCardCategory('funny')}
+                      className={`p-2 rounded-lg border ${
+                        newCardCategory === 'funny' 
+                          ? 'border-purple-500 bg-purple-50 text-purple-700' 
+                          : 'border-gray-200'
+                      }`}
+                    >
+                      搞笑有趣
+                    </button>
+                    <button
+                      onClick={() => setNewCardCategory('social')}
+                      className={`p-2 rounded-lg border ${
+                        newCardCategory === 'social' 
+                          ? 'border-purple-500 bg-purple-50 text-purple-700' 
+                          : 'border-gray-200'
+                      }`}
+                    >
+                      社交互动
+                    </button>
+                    <button
+                      onClick={() => setNewCardCategory('creative')}
+                      className={`p-2 rounded-lg border ${
+                        newCardCategory === 'creative' 
+                          ? 'border-purple-500 bg-purple-50 text-purple-700' 
+                          : 'border-gray-200'
+                      }`}
+                    >
+                      创意表演
+                    </button>
+                  </div>
+                </div>
+              )}
               
               <div>
                 <label className="text-sm font-medium mb-1 block">难度等级</label>

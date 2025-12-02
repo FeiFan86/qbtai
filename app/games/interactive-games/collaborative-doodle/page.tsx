@@ -268,6 +268,20 @@ export default function CollaborativeDoodlePage() {
     } else {
       ctx.globalCompositeOperation = 'source-over'
     }
+    
+    // 在协作模式下，发送绘画开始事件
+    if (room && gameMode === 'collaborative') {
+      const drawingData: DrawingData = {
+        tool,
+        color,
+        size: brushSize,
+        points: [{ x, y }],
+        timestamp: Date.now(),
+        userId: 'user1' // 当前用户ID
+      }
+      
+      sendDrawingData(drawingData)
+    }
   }
 
   // 绘画中
@@ -381,6 +395,71 @@ export default function CollaborativeDoodlePage() {
     
     setRoom(newRoom)
     setGameMode(mode)
+    
+    // 模拟WebSocket连接
+    connectToRoom(newRoom.id)
+  }
+
+  // 模拟连接到房间
+  const connectToRoom = (roomId: string) => {
+    // 在真实应用中，这里会建立WebSocket连接
+    console.log(`Connecting to room: ${roomId}`)
+    
+    // 模拟其他玩家加入
+    setTimeout(() => {
+      if (Math.random() > 0.5) {
+        const newUser: User = {
+          id: `user${Date.now()}`,
+          name: `Player ${users.length + 1}`,
+          color: `#${Math.floor(Math.random()*16777215).toString(16)}`,
+          isOnline: true,
+          isDrawing: false
+        }
+        
+        setUsers(prev => [...prev, newUser])
+        
+        // 添加系统消息
+        const systemMessage: ChatMessage = {
+          id: Date.now().toString(),
+          userId: 'system',
+          content: `${newUser.name} 加入了房间`,
+          timestamp: Date.now(),
+          isGuess: false,
+          isCorrect: false
+        }
+        
+        setMessages(prev => [...prev, systemMessage])
+      }
+    }, 3000)
+  }
+
+  // 发送绘画数据
+  const sendDrawingData = (drawingData: DrawingData) => {
+    if (!room) return
+    
+    // 在真实应用中，这里会通过WebSocket发送绘画数据
+    console.log('Sending drawing data:', drawingData)
+    
+    // 模拟其他玩家的绘画动作
+    if (Math.random() > 0.7) {
+      setTimeout(() => {
+        // 模拟接收到其他玩家的绘画数据
+        const otherUserDrawing: DrawingData = {
+          tool: 'pen',
+          color: `#${Math.floor(Math.random()*16777215).toString(16)}`,
+          size: Math.floor(Math.random() * 10) + 1,
+          points: Array.from({ length: 5 }, () => ({
+            x: Math.random() * 800,
+            y: Math.random() * 500
+          })),
+          timestamp: Date.now(),
+          userId: users[0]?.id || 'user1'
+        }
+        
+        // 在真实应用中，这里会在画布上绘制其他用户的绘画
+        console.log('Received drawing data:', otherUserDrawing)
+      }, 1000)
+    }
   }
 
   // 获取随机词汇

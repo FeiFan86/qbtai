@@ -89,6 +89,11 @@ interface UserData {
   totalTasksCompleted: number
   partnerName?: string
   relationshipStartDate?: string
+  favoriteTasks: string[] // 收藏的任务
+  recentUnlocks: string[] // 最近解锁的任务
+  lastBonusResetDate?: string // 上次重置奖励日期
+  monthlyBonusUsed: boolean // 是否已使用月度奖励
+  dailyRewardClaimed: boolean // 今日奖励是否已领取
 }
 
 // 成就系统
@@ -318,7 +323,11 @@ export default function CoupleBlindBoxPage() {
     currentStreak: 3,
     completedTasks: [],
     unlockedAchievements: [],
-    totalTasksCompleted: 0
+    totalTasksCompleted: 0,
+    favoriteTasks: [],
+    recentUnlocks: [],
+    dailyRewardClaimed: false,
+    monthlyBonusUsed: false
   })
   const [showCompletionMessage, setShowCompletionMessage] = useState(false)
   const [activeTab, setActiveTab] = useState('daily')
@@ -621,11 +630,71 @@ export default function CoupleBlindBoxPage() {
     }
   }
 
+  // 收藏任务
+  const favoriteTask = () => {
+    if (selectedTask && !userData.favoriteTasks.includes(selectedTask.id)) {
+      const newFavorites = [...userData.favoriteTasks, selectedTask.id]
+      const updatedUserData = {
+        ...userData,
+        favoriteTasks: newFavorites
+      }
+      saveUserData(updatedUserData)
+      alert(`✨ 已将"${selectedTask.title}"添加到收藏！`)
+    } else if (selectedTask && userData.favoriteTasks.includes(selectedTask.id)) {
+      const newFavorites = userData.favoriteTasks.filter(id => id !== selectedTask.id)
+      const updatedUserData = {
+        ...userData,
+        favoriteTasks: newFavorites
+      }
+      saveUserData(updatedUserData)
+      alert(`已将"${selectedTask.title}"从收藏中移除`)
+    }
+  }
+  
+  // 领取每日登录奖励
+  const claimDailyReward = () => {
+    if (!userData.dailyRewardClaimed) {
+      const rewardPoints = 10 + Math.floor(userData.currentStreak / 7) * 5 // 连续奖励
+      const updatedUserData = {
+        ...userData,
+        points: userData.points + rewardPoints,
+        dailyRewardClaimed: true
+      }
+      saveUserData(updatedUserData)
+      alert(`🎁 领取每日登录成功！\n\n获得 ${rewardPoints} 积分\n连续登录${userData.currentStreak}天，额外获得${Math.floor(userData.currentStreak / 7) * 5}积分！`)
+    }
+  }
+  
+  // 领取月度奖励
+  const claimMonthlyBonus = () => {
+    if (!userData.monthlyBonusUsed && userData.currentStreak >= 7) {
+      const bonusPoints = 100
+      const updatedUserData = {
+        ...userData,
+        points: userData.points + bonusPoints,
+        monthlyBonusUsed: true
+      }
+      saveUserData(updatedUserData)
+      alert(`🏆 领取月度奖励成功！\n\n连续打卡${userData.currentStreak}天，获得${bonusPoints}积分！`)
+    }
+  }
+  
+  // 查看收藏任务
+  const viewFavoriteTasks = () => {
+    const favoriteTasksList = coupleTasks.filter(task => userData.favoriteTasks.includes(task.id))
+    if (favoriteTasksList.length === 0) {
+      alert('你还没有收藏任何任务！\n\n完成任务时可以点击收藏按钮添加到收藏。')
+    } else {
+      alert(`你有${favoriteTasksList.length}个收藏的任务：\n\n${favoriteTasksList.map((task, index) => `${index+1}. ${task.title}`).join('\n')}`)
+    }
+  }
+
   // 完成任务
   const completeTask = () => {
     if (selectedTask) {
       const today = new Date().toDateString()
       const newCompletedTasks = [...userData.completedTasks, selectedTask.id]
+      const newRecentUnlocks = [selectedTask.id, ...userData.recentUnlocks].slice(0, 5) // 保留最近5个
       
       // 统计今天的完成数量
       const todayTasks = taskHistory.filter(entry => 
@@ -635,6 +704,7 @@ export default function CoupleBlindBoxPage() {
       const newUserData = {
         ...userData,
         completedTasks: newCompletedTasks,
+        recentUnlocks: newRecentUnlocks,
         points: userData.points + selectedTask.points,
         totalTasksCompleted: userData.totalTasksCompleted + 1,
         lastCompletedDate: new Date().toISOString(),
@@ -763,6 +833,32 @@ export default function CoupleBlindBoxPage() {
                 >
                   <Trophy className="h-4 w-4" />
                   查看成就
+                </Button>
+                <Button 
+                  onClick={viewFavoriteTasks}
+                  variant="outline"
+                  className="flex items-center gap-2"
+                >
+                  <Heart className="h-4 w-4" />
+                  查看收藏
+                </Button>
+                <Button 
+                  onClick={claimDailyReward}
+                  variant="outline"
+                  disabled={userData.dailyRewardClaimed}
+                  className="flex items-center gap-2"
+                >
+                  <Gift className="h-4 w-4" />
+                  {userData.dailyRewardClaimed ? '今日奖励已领取' : '领取每日奖励'}
+                </Button>
+                <Button 
+                  onClick={claimMonthlyBonus}
+                  variant="outline"
+                  disabled={userData.monthlyBonusUsed || userData.currentStreak < 7}
+                  className="flex items-center gap-2"
+                >
+                  <Crown className="h-4 w-4" />
+                  {userData.monthlyBonusUsed ? '月度奖励已领取' : userData.currentStreak < 7 ? '需连续7天' : '领取月度奖励'}
                 </Button>
                 <Button 
                   onClick={() => setShowHistory(!showHistory)}
@@ -984,13 +1080,23 @@ export default function CoupleBlindBoxPage() {
                   <p className="text-sm text-blue-700">{selectedTask.tips}</p>
                 </div>
                 
-                <Button 
-                  onClick={completeTask}
-                  className="w-full bg-gradient-to-r from-green-500 to-teal-500 hover:from-green-600 hover:to-teal-600"
-                >
-                  <CheckCircle className="h-4 w-4 mr-2" />
-                  完成任务
-                </Button>
+                <div className="flex gap-2">
+                  <Button 
+                    onClick={favoriteTask}
+                    variant="outline"
+                    className="flex-1"
+                  >
+                    <Heart className={`h-4 w-4 mr-2 ${userData.favoriteTasks.includes(selectedTask?.id || '') ? 'text-red-500 fill-red-500' : ''}`} />
+                    {userData.favoriteTasks.includes(selectedTask?.id || '') ? '已收藏' : '收藏'}
+                  </Button>
+                  <Button 
+                    onClick={completeTask}
+                    className="flex-1 bg-gradient-to-r from-green-500 to-teal-500 hover:from-green-600 hover:to-teal-600"
+                  >
+                    <CheckCircle className="h-4 w-4 mr-2" />
+                    完成任务
+                  </Button>
+                </div>
               </CardContent>
             </Card>
           )}
@@ -1043,6 +1149,9 @@ export default function CoupleBlindBoxPage() {
                         </div>
                         {isCompleted && (
                           <CheckCircle className="h-5 w-5 text-green-500 ml-2" />
+                        )}
+                        {userData.favoriteTasks.includes(task.id) && !isCompleted && (
+                          <Heart className="h-5 w-5 text-red-500 ml-2" />
                         )}
                       </div>
                     </div>

@@ -1,4 +1,5 @@
 // 统一错误处理
+import React from 'react'
 
 interface ErrorInfo {
   code: string
@@ -185,41 +186,36 @@ export class ErrorHandler {
   static clearErrorLog(): void {
     this.errorLog = []
   }
-
-  // 创建错误边界
-  static createErrorBoundary() {
-    return class ErrorBoundary extends React.Component<
-      { children: React.ReactNode; fallback?: React.ReactNode },
-      { hasError: boolean }
-    > {
-      constructor(props: any) {
-        super(props)
-        this.state = { hasError: false }
-      }
-
-      static getDerivedStateFromError() {
-        return { hasError: true }
-      }
-
-      componentDidCatch(error: Error, errorInfo: React.ErrorInfo) {
-        ErrorHandler.handle(error, 'ReactErrorBoundary')
-      }
-
-      render(): React.ReactNode {
-        if (this.state.hasError) {
-          return this.props.fallback || (
-            <div className="p-4 bg-red-50 border border-red-200 rounded">
-              <h3 className="text-red-800 font-semibold">出错了</h3>
-              <p className="text-red-600">页面加载失败，请刷新重试</p>
-            </div>
-          )
-        }
-
-        return this.props.children
-      }
-    }
-  }
 }
 
-// 创建错误边界组件
-export const ErrorBoundary = ErrorHandler.createErrorBoundary()
+// 错误边界组件
+export class ErrorBoundary extends React.Component<
+  { children: React.ReactNode; fallback?: React.ReactNode },
+  { hasError: boolean }
+> {
+  constructor(props: any) {
+    super(props)
+    this.state = { hasError: false }
+  }
+
+  static getDerivedStateFromError() {
+    return { hasError: true }
+  }
+
+  componentDidCatch(error: Error, errorInfo: React.ErrorInfo) {
+    ErrorHandler.handle(error, 'ReactErrorBoundary')
+  }
+
+  render() {
+    if (this.state.hasError) {
+      return this.props.fallback || React.createElement(
+        'div',
+        { className: 'p-4 bg-red-50 border border-red-200 rounded' },
+        React.createElement('h3', { className: 'text-red-800 font-semibold' }, '出错了'),
+        React.createElement('p', { className: 'text-red-600' }, '页面加载失败，请刷新重试')
+      )
+    }
+
+    return this.props.children
+  }
+}

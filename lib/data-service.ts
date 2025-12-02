@@ -107,6 +107,87 @@ class DataService {
       body: JSON.stringify({ operations: data }),
     })
   }
+
+  // 游戏进度和得分API
+  async saveGameProgress(gameType: string, userId: string, progress: any, score: number = 0, timeSpent: number = 0): Promise<any> {
+    return this.request<any>('/games', {
+      method: 'POST',
+      body: JSON.stringify({
+        action: 'saveProgress',
+        gameId: `${gameType}-${userId}`,
+        gameType,
+        progress,
+        score,
+        timeSpent
+      })
+    })
+  }
+
+  async getGameProgress(gameType: string, userId: string): Promise<any> {
+    return this.request<any>('/games', {
+      method: 'GET',
+      body: JSON.stringify({
+        action: 'getProgress',
+        gameId: `${gameType}-${userId}`,
+        gameType
+      })
+    })
+  }
+
+  async saveGameScore(gameType: string, userId: string, score: number, timeSpent: number = 0): Promise<any> {
+    return this.request<any>('/games', {
+      method: 'POST',
+      body: JSON.stringify({
+        action: 'saveScore',
+        gameId: `${gameType}-${userId}`,
+        gameType,
+        score,
+        timeSpent
+      })
+    })
+  }
+
+  async getUserGameStats(userId: string): Promise<any> {
+    return this.request<any>('/games', {
+      method: 'GET',
+      body: JSON.stringify({
+        action: 'getUserStats',
+        userId
+      })
+    })
+  }
+
+  async getGameLeaderboard(gameType: string, limit: number = 10): Promise<any> {
+    return this.request<any>('/games', {
+      method: 'GET',
+      body: JSON.stringify({
+        action: 'getLeaderboard',
+        gameType,
+        limit
+      })
+    })
+  }
+
+  async saveAchievement(userId: string, achievementId: string): Promise<any> {
+    return this.request<any>('/games', {
+      method: 'POST',
+      body: JSON.stringify({
+        action: 'saveAchievement',
+        userId,
+        achievementId
+      })
+    })
+  }
+
+  async getUserAchievements(userId: string): Promise<any> {
+    return this.request<any>('/games', {
+      method: 'GET',
+      body: JSON.stringify({
+        action: 'getUserAchievements',
+        userId
+      })
+    })
+  }
 }
 
 export const dataService = new DataService()
