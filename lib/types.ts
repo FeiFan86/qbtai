@@ -187,7 +187,8 @@ export const mockData: Database = {
       unlocked: false,
       progress: 0,
       target: 1,
-      category: 'gameplay'
+      category: 'gameplay',
+      points: 10
     }
   ],
   leaderboards: [
