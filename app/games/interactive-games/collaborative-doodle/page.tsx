@@ -112,7 +112,6 @@ import {
   Compass,
   Anchor,
   Sailboat,
-  Surfing,
   Skiing,
   Snowboarding,
   Soccer,
