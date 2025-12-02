@@ -68,6 +68,7 @@ async function updateLeaderboard(leaderboardType: string) {
     username: user.username,
     avatar: '',
     rank: index + 1,
+    score: user.score || 0,
     achievementsCount: user.achievementsCount || 0,
     lastActivity: user.lastActivity || new Date().toISOString()
   }))
