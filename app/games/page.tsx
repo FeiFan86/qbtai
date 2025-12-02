@@ -327,26 +327,26 @@ export default function GamesPage() {
             </p>
             
             {/* 统计数据 */}
-            <div className="flex flex-wrap justify-center gap-4 mb-8">
-              <div className="bg-white rounded-xl px-6 py-4 shadow-md">
-                <div className="text-3xl font-bold text-purple-600">{totalGames}</div>
-                <div className="text-sm text-gray-500">精选游戏</div>
+            <div className="grid grid-cols-2 xs:grid-cols-3 md:grid-cols-5 gap-3 xs:gap-4 mb-8">
+              <div className="bg-white rounded-xl p-4 xs:p-6 shadow-md">
+                <div className="text-xl xs:text-2xl md:text-3xl font-bold text-purple-600">{totalGames}</div>
+                <div className="text-xs xs:text-sm text-gray-500">精选游戏</div>
               </div>
-              <div className="bg-white rounded-xl px-6 py-4 shadow-md">
-                <div className="text-3xl font-bold text-pink-600">{newGames}</div>
-                <div className="text-sm text-gray-500">最新上线</div>
+              <div className="bg-white rounded-xl p-4 xs:p-6 shadow-md">
+                <div className="text-xl xs:text-2xl md:text-3xl font-bold text-pink-600">{newGames}</div>
+                <div className="text-xs xs:text-sm text-gray-500">最新上线</div>
               </div>
-              <div className="bg-white rounded-xl px-6 py-4 shadow-md">
-                <div className="text-3xl font-bold text-blue-600">{hotGames}</div>
-                <div className="text-sm text-gray-500">热门推荐</div>
+              <div className="bg-white rounded-xl p-4 xs:p-6 shadow-md">
+                <div className="text-xl xs:text-2xl md:text-3xl font-bold text-blue-600">{hotGames}</div>
+                <div className="text-xs xs:text-sm text-gray-500">热门推荐</div>
               </div>
-              <div className="bg-white rounded-xl px-6 py-4 shadow-md">
-                <div className="text-3xl font-bold text-green-600">{totalPlayCount.toLocaleString()}</div>
-                <div className="text-sm text-gray-500">总游戏次数</div>
+              <div className="bg-white rounded-xl p-4 xs:p-6 shadow-md">
+                <div className="text-xl xs:text-2xl md:text-3xl font-bold text-green-600">{totalPlayCount.toLocaleString()}</div>
+                <div className="text-xs xs:text-sm text-gray-500">总游戏次数</div>
               </div>
-              <div className="bg-white rounded-xl px-6 py-4 shadow-md">
-                <div className="text-3xl font-bold text-yellow-600">{avgRating}</div>
-                <div className="text-sm text-gray-500">平均评分</div>
+              <div className="bg-white rounded-xl p-4 xs:p-6 shadow-md">
+                <div className="text-xl xs:text-2xl md:text-3xl font-bold text-yellow-600">{avgRating}</div>
+                <div className="text-xs xs:text-sm text-gray-500">平均评分</div>
               </div>
             </div>
           </div>

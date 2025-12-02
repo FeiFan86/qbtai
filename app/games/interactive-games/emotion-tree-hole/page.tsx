@@ -1,26 +1,7 @@
 'use client'
 
 import { useState, useEffect } from 'react'
-
-// 安全的 localStorage 访问函数
-const safeLocalStorage = {
-  getItem: (key: string) => {
-    if (typeof window !== 'undefined') {
-      return localStorage.getItem(key)
-    }
-    return null
-  },
-  setItem: (key: string, value: string) => {
-    if (typeof window !== 'undefined') {
-      localStorage.setItem(key, value)
-    }
-  },
-  removeItem: (key: string) => {
-    if (typeof window !== 'undefined') {
-      localStorage.removeItem(key)
-    }
-  }
-}
+import { dataManager, GameDataManager, initializeDataManager } from '@/lib/dataManager'
 import { Navigation } from '@/components/navigation'
 import { Footer } from '@/components/footer'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
@@ -116,33 +97,41 @@ const mockTreeHolePosts: Post[] = [
 
 export default function EmotionTreeHolePage() {
   const [posts, setPosts] = useState<Post[]>([])
+  const [isInitialized, setIsInitialized] = useState(false)
   
-  // 从本地存储加载数据
+  // 从数据管理器加载数据
   useEffect(() => {
-    const savedPosts = safeLocalStorage.getItem('emotionTreeHolePosts')
-    if (savedPosts) {
-      const parsedPosts = JSON.parse(savedPosts)
-      // 将字符串时间戳转换为Date对象
-      const postsWithDates = parsedPosts.map((post: any): Post => ({
-        ...post,
-        timestamp: new Date(post.timestamp)
-      }))
-      setPosts(postsWithDates)
-    } else {
-      // 如果没有保存的数据，使用模拟数据
-      setPosts(mockTreeHolePosts)
+    const loadData = async () => {
+      await initializeDataManager()
+      
+      const savedPosts = await dataManager.getItem<Post[]>('emotionTreeHolePosts')
+      if (savedPosts) {
+        // 将字符串时间戳转换为Date对象
+        const postsWithDates = savedPosts.map((post: any): Post => ({
+          ...post,
+          timestamp: new Date(post.timestamp)
+        }))
+        setPosts(postsWithDates)
+      } else {
+        // 如果没有保存的数据，使用模拟数据
+        setPosts(mockTreeHolePosts)
+      }
+      setIsInitialized(true)
     }
+    
+    loadData()
   }, [])
   
-  // 保存数据到本地存储
-  const savePostsToLocalStorage = (updatedPosts: Post[]) => {
-    safeLocalStorage.setItem('emotionTreeHolePosts', JSON.stringify(updatedPosts))
+  // 保存数据到数据管理器
+  const savePosts = async (updatedPosts: Post[]) => {
+    await dataManager.setItem('emotionTreeHolePosts', updatedPosts)
   }
   const [newPostContent, setNewPostContent] = useState('')
   const [selectedEmotion, setSelectedEmotion] = useState('neutral')
   const [isSubmitting, setIsSubmitting] = useState(false)
   const [showSubmitSuccess, setShowSubmitSuccess] = useState(false)
   const [activeTab, setActiveTab] = useState('all')
+  const [replyInputs, setReplyInputs] = useState<{[key: string]: string}>({})
 
   const emotionOptions = [
     { value: 'happiness', label: '开心', icon: <Smile className="h-5 w-5 text-yellow-500" />, color: 'border-yellow-200 bg-yellow-50' },
@@ -174,7 +163,7 @@ export default function EmotionTreeHolePage() {
         
         const updatedPosts = [newPost, ...posts]
         setPosts(updatedPosts)
-        savePostsToLocalStorage(updatedPosts)
+        savePosts(updatedPosts)
         setNewPostContent('')
         setSelectedEmotion('neutral')
         setIsSubmitting(false)
@@ -208,12 +197,12 @@ export default function EmotionTreeHolePage() {
       return post
     })
     setPosts(updatedPosts)
-    savePostsToLocalStorage(updatedPosts)
+    savePosts(updatedPosts)
   }
 
   // 点赞回复功能
   const handleLikeReply = (postId: string, replyId: string) => {
-    const updatedPosts = posts.map(post => {
+      const updatedPosts = posts.map(post => {
       if (post.id === postId) {
         const updatedReplies = post.repliesList.map(reply => {
           if (reply.id === replyId) {
@@ -226,7 +215,47 @@ export default function EmotionTreeHolePage() {
       return post
     })
     setPosts(updatedPosts)
-    savePostsToLocalStorage(updatedPosts)
+    savePosts(updatedPosts)
+  }
+
+  // 回复帖子功能
+  const handleReply = (postId: string) => {
+    const replyContent = replyInputs[postId]?.trim()
+    if (!replyContent) return
+
+    const updatedPosts = posts.map(post => {
+      if (post.id === postId) {
+        const newReply: Reply = {
+          id: `reply_${Date.now()}`,
+          content: replyContent,
+          timestamp: new Date(),
+          likes: 0
+        }
+        return {
+          ...post,
+          replies: post.replies + 1,
+          repliesList: [...post.repliesList, newReply]
+        }
+      }
+      return post
+    })
+
+    setPosts(updatedPosts)
+    savePosts(updatedPosts)
+    
+    // 清空回复输入框
+    setReplyInputs(prev => ({
+      ...prev,
+      [postId]: ''
+    }))
+  }
+
+  // 更新回复输入
+  const handleReplyInputChange = (postId: string, content: string) => {
+    setReplyInputs(prev => ({
+      ...prev,
+      [postId]: content
+    }))
   }
 
   const getMoodIcon = (mood: number) => {
@@ -452,20 +481,28 @@ export default function EmotionTreeHolePage() {
                         </div>
                       )}
                       
-                      {/* 回复输入框 - 暂时禁用，等待功能完善 */}
+                      {/* 回复输入框 */}
                       <div className="border-t pt-3 mt-4">
                         <div className="flex gap-2">
                           <Textarea
-                            placeholder="回复功能正在开发中..."
+                            placeholder="写下温暖的回应..."
                             rows={2}
                             className="resize-none"
-                            disabled
+                            value={replyInputs[post.id] || ''}
+                            onChange={(e) => handleReplyInputChange(post.id, e.target.value)}
                           />
-                          <Button size="sm" className="px-3" disabled>
+                          <Button 
+                            size="sm" 
+                            className="px-3"
+                            onClick={() => handleReply(post.id)}
+                            disabled={!replyInputs[post.id]?.trim()}
+                          >
                             <Send className="h-4 w-4" />
                           </Button>
                         </div>
-                        <p className="text-xs text-gray-500 mt-1">回复功能即将上线，敬请期待！</p>
+                        <p className="text-xs text-gray-500 mt-1">
+                          保持友善和尊重的交流氛围，用温暖的话语回应他人
+                        </p>
                       </div>
                     </CardContent>
                   </Card>

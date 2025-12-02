@@ -177,6 +177,14 @@ export default function TruthOrDarePage() {
   const [newCardDifficulty, setNewCardDifficulty] = useState<'easy' | 'medium' | 'hard'>('easy')
   const [currentStreak, setCurrentStreak] = useState(0)
   const [history, setHistory] = useState<Array<{type: 'truth' | 'dare', content: string, timestamp: number}>>([])
+  const [timer, setTimer] = useState<number>(0)
+  const [isTimerRunning, setIsTimerRunning] = useState(false)
+  const [completedCards, setCompletedCards] = useState<Set<string>>(new Set())
+  const [timeLimit, setTimeLimit] = useState<number>(60) // 默认60秒
+  const [timer, setTimer] = useState<number>(0)
+  const [isTimerRunning, setIsTimerRunning] = useState(false)
+  const [completedCards, setCompletedCards] = useState<Set<string>>(new Set())
+  const [timeLimit, setTimeLimit] = useState<number>(60) // 默认60秒
   
   // 多人游戏增强功能
   const [players, setPlayers] = useState([
@@ -224,6 +232,15 @@ export default function TruthOrDarePage() {
         setHistory(JSON.parse(savedHistory))
       } catch (error) {
         console.error('Failed to load game history:', error)
+      }
+    }
+
+    const savedCompleted = safeLocalStorage.getItem('truthOrDareCompleted')
+    if (savedCompleted) {
+      try {
+        setCompletedCards(new Set(JSON.parse(savedCompleted)))
+      } catch (error) {
+        console.error('Failed to load completed cards:', error)
       }
     }
   }, [])

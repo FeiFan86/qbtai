@@ -1,20 +1,16 @@
-import './globals.css'
-import type { Metadata, Viewport } from 'next'
+import type { Metadata } from 'next'
 import { Inter } from 'next/font/google'
+import './globals.css'
+import { AuthProvider } from '@/components/auth-provider'
+import { ErrorBoundary } from '@/lib/error-handler'
+import React from 'react'
 
 const inter = Inter({ subsets: ['latin'] })
 
 export const metadata: Metadata = {
-  title: '丘比特AI情感助手',
-  description: '基于火山引擎DeepSeek模型的智能情感分析和社交助手',
-  keywords: 'AI, 情感分析, 社交助手, 丘比特, 深度求索',
-  authors: [{ name: '丘比特AI团队' }],
-}
-
-export const viewport: Viewport = {
-  width: 'device-width',
-  initialScale: 1,
-  themeColor: '#e91e63',
+  title: '丘比特AI情感助手 - 专为情侣设计的互动游戏平台',
+  description: '专为情侣设计的互动游戏平台，包含多种有趣的互动游戏，帮助情侣增进感情，创造美好回忆。',
+  keywords: '情侣游戏,互动游戏,情感助手,情侣互动,关系增进',
 }
 
 export default function RootLayout({
@@ -23,11 +19,15 @@ export default function RootLayout({
   children: React.ReactNode
 }) {
   return (
-    <html lang="zh-CN">
-      <body className={inter.className}>
-        <div className="min-h-screen bg-gradient-to-br from-pink-50 via-purple-50 to-indigo-50">
-          {children}
-        </div>
+    <html lang="zh-CN" className="h-full">
+      <body className={`${inter.className} h-full bg-gray-50`}>
+        <ErrorBoundary>
+          <AuthProvider>
+            <div className="min-h-full flex flex-col">
+              {children}
+            </div>
+          </AuthProvider>
+        </ErrorBoundary>
       </body>
     </html>
   )
