@@ -677,7 +677,7 @@ export default function CollaborativeDoodlePage() {
                         {messages.map((message) => (
                           <div key={message.id} className="flex items-start gap-2">
                             <div className="w-6 h-6 bg-green-500 rounded-full flex items-center justify-center">
-                              <User className="h-3 w-3 text-white" />
+                              <Users className="h-3 w-3 text-white" />
                             </div>
                             <div className="flex-1">
                               <div className="text-sm font-medium">玩家</div>
