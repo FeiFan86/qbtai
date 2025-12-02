@@ -179,15 +179,7 @@ class DataService {
     })
   }
 
-  async getUserAchievements(userId: string): Promise<any> {
-    return this.request<any>('/games', {
-      method: 'GET',
-      body: JSON.stringify({
-        action: 'getUserAchievements',
-        userId
-      })
-    })
-  }
+
 }
 
 export const dataService = new DataService()
