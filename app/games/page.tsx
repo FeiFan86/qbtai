@@ -241,6 +241,44 @@ export default function GamesPage() {
       playCount: 1543,
       isNew: false,
       isHot: true
+    },
+    {
+      id: 'memory-puzzle',
+      title: '记忆拼图',
+      description: '共同回忆收集，通过拼图游戏重温美好时光',
+      icon: <Brain className="h-10 w-10 text-white" />,
+      color: 'from-cyan-500 to-blue-700',
+      bgPattern: 'bg-gradient-to-br from-cyan-50 to-blue-100',
+      href: '/games/interactive-games/memory-puzzle',
+      features: ['回忆收集', '记忆力挑战', '情侣互动', '情感增进', '美好时光'],
+      difficulty: '中等',
+      players: '单人',
+      gradient: 'from-cyan-400 via-cyan-500 to-cyan-600',
+      shadowColor: 'shadow-cyan-200',
+      tags: ['记忆', '情侣', '互动', '情感'],
+      rating: 4.7,
+      playCount: 3250,
+      isNew: true,
+      isHot: true
+    },
+    {
+      id: 'tacit-challenge',
+      title: '默契挑战',
+      description: '情侣默契度测试，发现彼此的了解和关心',
+      icon: <Heart className="h-10 w-10 text-white" />,
+      color: 'from-pink-500 to-rose-700',
+      bgPattern: 'bg-gradient-to-br from-pink-50 to-rose-100',
+      href: '/games/interactive-games/tacit-challenge',
+      features: ['默契测试', '情感分析', '个性化建议', '情侣互动', '关系增进'],
+      difficulty: '中等',
+      players: '双人',
+      gradient: 'from-pink-400 via-pink-500 to-pink-600',
+      shadowColor: 'shadow-pink-200',
+      tags: ['默契', '测试', '情侣', '情感分析'],
+      rating: 4.8,
+      playCount: 4560,
+      isNew: true,
+      isHot: true
     }
   ]
 

@@ -1,11 +1,14 @@
 'use client'
 
 import { useState, useEffect, useCallback } from 'react'
+import { Navigation } from '@/components/navigation'
+import { Footer } from '@/components/footer'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
 import { Button } from '@/components/ui/button'
 import { Badge } from '@/components/ui/badge'
 import { Progress } from '@/components/ui/progress'
-import { Play, RotateCcw, Heart, Share2, Star, Clock, Target } from 'lucide-react'
+import { Play, RotateCcw, Heart, Share2, Star, Clock, Target, ArrowLeft } from 'lucide-react'
+import Link from 'next/link'
 
 // 拼图卡片类型
 interface PuzzleCard {
@@ -161,17 +164,27 @@ export default function MemoryPuzzlePage() {
     : 0
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-pink-50 via-purple-50 to-blue-50 py-8 px-4">
-      <div className="max-w-6xl mx-auto">
-        {/* 页面标题 */}
-        <div className="text-center mb-8">
-          <h1 className="text-4xl md:text-6xl font-bold text-gray-900 mb-4">
-            记忆拼图
-          </h1>
-          <p className="text-lg text-gray-600 max-w-2xl mx-auto">
-            通过拼图游戏重温你们的美好回忆，考验记忆力的同时增进感情
-          </p>
+    <div className="min-h-screen bg-gradient-to-br from-purple-50 via-pink-50 to-indigo-100">
+      <Navigation />
+      
+      <main className="container mx-auto px-4 py-8">
+        <div className="mb-8">
+          <Link href="/games" className="inline-flex items-center gap-2 text-purple-600 hover:text-purple-800 transition-colors mb-6">
+            <ArrowLeft className="h-4 w-4" />
+            返回游戏中心
+          </Link>
+          
+          <div className="text-center mb-8">
+            <h1 className="text-4xl md:text-6xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-purple-600 to-pink-600 mb-4">
+              记忆拼图
+            </h1>
+            <p className="text-lg text-gray-600 max-w-2xl mx-auto">
+              通过拼图游戏重温你们的美好回忆，考验记忆力的同时增进感情
+            </p>
+          </div>
         </div>
+
+        <div className="max-w-6xl mx-auto">
 
         {/* 游戏控制区 */}
         <Card className="mb-6">
@@ -367,7 +380,10 @@ export default function MemoryPuzzlePage() {
             </CardContent>
           </Card>
         )}
-      </div>
+        </div>
+      </main>
+      
+      <Footer />
     </div>
   )
 }

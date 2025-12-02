@@ -1,6 +1,8 @@
 'use client'
 
 import { useState, useEffect, useCallback } from 'react'
+import { Navigation } from '@/components/navigation'
+import { Footer } from '@/components/footer'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
 import { Button } from '@/components/ui/button'
 import { Badge } from '@/components/ui/badge'
@@ -17,8 +19,10 @@ import {
   CheckCircle,
   Brain,
   Sparkles,
-  Trophy
+  Trophy,
+  ArrowLeft
 } from 'lucide-react'
+import Link from 'next/link'
 
 // 默契测试问题类型
 interface TacitQuestion {
@@ -233,17 +237,27 @@ export default function TacitChallengePage() {
     : 0
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-blue-50 via-purple-50 to-pink-50 py-8 px-4">
-      <div className="max-w-4xl mx-auto">
-        {/* 页面标题 */}
-        <div className="text-center mb-8">
-          <h1 className="text-4xl md:text-6xl font-bold text-gray-900 mb-4">
-            默契挑战
-          </h1>
-          <p className="text-lg text-gray-600 max-w-2xl mx-auto">
-            测试你们之间的默契程度，发现彼此的了解和关心，让感情更加深厚
-          </p>
+    <div className="min-h-screen bg-gradient-to-br from-purple-50 via-pink-50 to-indigo-100">
+      <Navigation />
+      
+      <main className="container mx-auto px-4 py-8">
+        <div className="mb-8">
+          <Link href="/games" className="inline-flex items-center gap-2 text-purple-600 hover:text-purple-800 transition-colors mb-6">
+            <ArrowLeft className="h-4 w-4" />
+            返回游戏中心
+          </Link>
+          
+          <div className="text-center mb-8">
+            <h1 className="text-4xl md:text-6xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-purple-600 to-pink-600 mb-4">
+              默契挑战
+            </h1>
+            <p className="text-lg text-gray-600 max-w-2xl mx-auto">
+              测试你们之间的默契程度，发现彼此的了解和关心，让感情更加深厚
+            </p>
+          </div>
         </div>
+
+        <div className="max-w-4xl mx-auto">
 
         {/* 游戏控制区 */}
         <Card className="mb-6">
@@ -513,7 +527,10 @@ export default function TacitChallengePage() {
             </CardContent>
           </Card>
         )}
-      </div>
+        </div>
+      </main>
+      
+      <Footer />
     </div>
   )
 }
