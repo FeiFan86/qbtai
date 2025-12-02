@@ -9,7 +9,7 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/com
 import { Button } from '@/components/ui/button'
 import { Badge } from '@/components/ui/badge'
 import { Progress } from '@/components/ui/progress'
-import { Play, RotateCcw, Heart, Share2, Star, Clock, Target, ArrowLeft, User, Award } from 'lucide-react'
+import { Play, RotateCcw, Heart, Share2, Star, Clock, Target, ArrowLeft, User, Award, Trophy } from 'lucide-react'
 import Link from 'next/link'
 
 // 拼图卡片类型
