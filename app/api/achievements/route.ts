@@ -8,55 +8,55 @@ const achievements: Achievement[] = [
     name: '初次见面',
     description: '首次登录应用',
     icon: '🌟',
-    points: 10,
+    unlocked: false,
+    progress: 0,
+    target: 1,
     category: 'basic',
-    requirements: {
-      loginCount: 1
-    }
+    points: 10
   },
   {
     id: 'chat_expert',
     name: '聊天达人',
     description: '完成100次对话',
     icon: '💬',
-    points: 50,
+    unlocked: false,
+    progress: 0,
+    target: 100,
     category: 'social',
-    requirements: {
-      chatCount: 100
-    }
+    points: 50
   },
   {
     id: 'game_master',
     name: '游戏大师',
     description: '完成所有游戏挑战',
     icon: '🎮',
-    points: 100,
+    unlocked: false,
+    progress: 0,
+    target: 5,
     category: 'gaming',
-    requirements: {
-      gamesCompleted: 5
-    }
+    points: 100
   },
   {
     id: 'streak_7',
     name: '七日连登',
     description: '连续登录7天',
     icon: '🔥',
-    points: 30,
+    unlocked: false,
+    progress: 0,
+    target: 7,
     category: 'daily',
-    requirements: {
-      loginStreak: 7
-    }
+    points: 30
   },
   {
     id: 'social_butterfly',
     name: '社交达人',
     description: '添加5个好友',
     icon: '🦋',
-    points: 40,
+    unlocked: false,
+    progress: 0,
+    target: 5,
     category: 'social',
-    requirements: {
-      friendsCount: 5
-    }
+    points: 40
   }
 ]
 

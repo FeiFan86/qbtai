@@ -53,6 +53,7 @@ export interface Achievement {
   progress: number;
   target: number;
   category: string;
+  points: number;
 }
 
 export interface UserAchievement {
