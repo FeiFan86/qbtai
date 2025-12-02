@@ -9,7 +9,7 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/com
 import { Button } from '@/components/ui/button'
 import { Badge } from '@/components/ui/badge'
 import { Progress } from '@/components/ui/progress'
-import { Play, RotateCcw, Heart, Share2, Star, Clock, Target, ArrowLeft } from 'lucide-react'
+import { Play, RotateCcw, Heart, Share2, Star, Clock, Target, ArrowLeft, User } from 'lucide-react'
 import Link from 'next/link'
 
 // 拼图卡片类型
@@ -405,7 +405,7 @@ export default function MemoryPuzzlePage() {
         <Card className="w-full max-w-md">
           <CardHeader className="text-center">
             <CardTitle className="flex items-center gap-2">
-              <Users className="h-5 w-5 text-purple-500" />
+              <User className="h-5 w-5 text-purple-500" />
               需要登录
             </CardTitle>
             <CardDescription>
