@@ -208,11 +208,11 @@ export class ErrorHandler {
 
       render(): React.ReactNode {
         if (this.state.hasError) {
-          return this.props.fallback || (
-            <div className="p-4 bg-red-50 border border-red-200 rounded">
-              <h3 className="text-red-800 font-semibold">出错了</h3>
-              <p className="text-red-600">页面加载失败，请刷新重试</p>
-            </div>
+          return this.props.fallback || React.createElement(
+            'div',
+            { className: 'p-4 bg-red-50 border border-red-200 rounded' },
+            React.createElement('h3', { className: 'text-red-800 font-semibold' }, '出错了'),
+            React.createElement('p', { className: 'text-red-600' }, '页面加载失败，请刷新重试')
           )
         }
 
