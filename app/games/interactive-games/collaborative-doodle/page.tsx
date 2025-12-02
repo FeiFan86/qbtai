@@ -323,7 +323,7 @@ export default function CollaborativeDoodlePage() {
     const ctx = canvas?.getContext('2d')
     if (!canvas || !ctx || index < 0 || index >= canvasHistory.length) return
     
-    const img = new Image()
+    const img = new window.Image()
     img.onload = () => {
       ctx.clearRect(0, 0, canvas.width, canvas.height)
       ctx.drawImage(img, 0, 0)
