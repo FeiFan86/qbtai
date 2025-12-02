@@ -222,38 +222,42 @@ export default function MemoryPuzzlePage() {
 
   // 检查游戏是否完成
   useEffect(() => {
-    if (gameStarted && cards.length > 0 && cards.every(card => card.isMatched)) {
-      setGameCompleted(true)
-      setTimerActive(false)
-      
-      // 计算最终得分
-      const baseScore = 50 * difficultyLevels[difficulty].pointsMultiplier
-      const timeBonus = Math.max(0, difficultyLevels[difficulty].timeBonus - time) * difficultyLevels[difficulty].pointsMultiplier
-      const mistakePenalty = mistakes * 5
-      const finalScore = Math.max(0, baseScore + timeBonus - mistakePenalty)
-      
-      // 更新总得分
-      setTotalPoints(prev => prev + finalScore)
-      
-      // 更新最佳时间
-      const themeName = memoryThemes[currentTheme].name
-      const currentBest = bestTimes[`${difficulty}-${themeName}`] || Infinity
-      if (time < currentBest) {
-        setBestTimes(prev => ({
-          ...prev,
-          [`${difficulty}-${themeName}`]: time
-        }))
+    const handleGameCompletion = async () => {
+      if (gameStarted && cards.length > 0 && cards.every(card => card.isMatched)) {
+        setGameCompleted(true)
+        setTimerActive(false)
+        
+        // 计算最终得分
+        const baseScore = 50 * difficultyLevels[difficulty].pointsMultiplier
+        const timeBonus = Math.max(0, difficultyLevels[difficulty].timeBonus - time) * difficultyLevels[difficulty].pointsMultiplier
+        const mistakePenalty = mistakes * 5
+        const finalScore = Math.max(0, baseScore + timeBonus - mistakePenalty)
+        
+        // 更新总得分
+        setTotalPoints(prev => prev + finalScore)
+        
+        // 更新最佳时间
+        const themeName = memoryThemes[currentTheme].name
+        const currentBest = bestTimes[`${difficulty}-${themeName}`] || Infinity
+        if (time < currentBest) {
+          setBestTimes(prev => ({
+            ...prev,
+            [`${difficulty}-${themeName}`]: time
+          }))
+        }
+        
+        // 更新连胜
+        setCurrentStreak(prev => prev + 1)
+        
+        // 检查成就
+        checkAchievements(time, finalScore)
+        
+        // 保存游戏进度
+        await saveGameProgress()
       }
-      
-      // 更新连胜
-      setCurrentStreak(prev => prev + 1)
-      
-      // 检查成就
-      checkAchievements(time, finalScore)
-      
-      // 保存游戏进度
-      await saveGameProgress()
     }
+    
+    handleGameCompletion()
   }, [cards, gameStarted, difficulty, currentTheme, time, mistakes, bestTimes, user, isAuthenticated])
   
   // 检查成就
