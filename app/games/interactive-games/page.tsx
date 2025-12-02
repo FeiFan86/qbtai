@@ -34,7 +34,8 @@ import {
   Grid3X3,
   List,
   Filter,
-  Search
+  Search,
+  Brain
 } from 'lucide-react'
 import Link from 'next/link'
 
@@ -159,6 +160,50 @@ export default function InteractiveGamesPage() {
       isHot: true,
       lastUpdated: '2024-01-25',
       author: '情侣关系团队'
+    },
+    {
+      id: 'memory-puzzle',
+      title: '记忆拼图',
+      description: '共同回忆收集，通过拼图游戏重温美好时光',
+      longDescription: '通过有趣的拼图游戏收集和重温你们的美好回忆。考验记忆力的同时增进感情，让每一个回忆都成为你们感情的珍贵财富。',
+      icon: <Brain className="h-10 w-10 text-white" />,
+      color: 'from-cyan-400 to-blue-600',
+      bgPattern: 'bg-gradient-to-br from-cyan-50 to-blue-100',
+      href: '/games/interactive-games/memory-puzzle',
+      features: ['回忆收集', '记忆力挑战', '情侣互动', '情感增进', '美好时光'],
+      difficulty: '中等',
+      players: '单人',
+      status: 'completed',
+      likes: 1980,
+      plays: 3250,
+      rating: 4.7,
+      tags: ['记忆', '情侣', '互动', '情感'],
+      isNew: true,
+      isHot: true,
+      lastUpdated: '2024-01-30',
+      author: '情感记忆团队'
+    },
+    {
+      id: 'tacit-challenge',
+      title: '默契挑战',
+      description: '情侣默契度测试，发现彼此的了解和关心',
+      longDescription: '专门为情侣设计的默契度测试游戏，通过问答了解彼此，增进感情。专业的默契度分析和个性化建议，帮助你们更好地理解对方。',
+      icon: <Heart className="h-10 w-10 text-white" />,
+      color: 'from-pink-400 to-rose-600',
+      bgPattern: 'bg-gradient-to-br from-pink-50 to-rose-100',
+      href: '/games/interactive-games/tacit-challenge',
+      features: ['默契测试', '情感分析', '个性化建议', '情侣互动', '关系增进'],
+      difficulty: '中等',
+      players: '双人',
+      status: 'completed',
+      likes: 2230,
+      plays: 4560,
+      rating: 4.8,
+      tags: ['默契', '测试', '情侣', '情感分析'],
+      isNew: true,
+      isHot: true,
+      lastUpdated: '2024-01-30',
+      author: '关系研究团队'
     },
     {
       id: 'complaint-wall',
