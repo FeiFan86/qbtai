@@ -52,7 +52,8 @@ import {
   VolumeX,
   Eye,
   EyeOff,
-  Lightbulb
+  Lightbulb,
+  Filter
 } from 'lucide-react'
 import Link from 'next/link'
 
@@ -525,16 +526,15 @@ export default function TruthOrDarePage() {
               <ArrowLeft className="h-4 w-4" />
               返回游戏中心
             </Link>
-          </div>
-          
-          <div className="text-center mb-8">
-            <h1 className="text-4xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-red-600 to-pink-600 mb-4">
-              真心话大冒险
-            </h1>
-            <p className="text-gray-600 max-w-2xl mx-auto text-lg">
-              经典游戏情感版，增进朋友间的了解和信任，创造美好回忆
-            </p>
-          </div>
+        </div>
+        
+        <div className="text-center mb-8">
+          <h1 className="text-4xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-red-600 to-pink-600 mb-4">
+            真心话大冒险
+          </h1>
+          <p className="text-gray-600 max-w-2xl mx-auto text-lg">
+            经典游戏情感版，增进朋友间的了解和信任，创造美好回忆
+          </p>
         </div>
 
         <div className="grid grid-cols-1 lg:grid-cols-4 gap-6">
