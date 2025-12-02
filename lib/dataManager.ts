@@ -1,6 +1,6 @@
 // 统一的数据管理器 - 提供稳定的数据存储和迁移功能
 
-import { db, storage, DataMigrator } from './database'
+import { databaseService } from './database'
 
 // 数据存储接口
 export interface DataStorage {

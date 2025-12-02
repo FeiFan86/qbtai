@@ -52,7 +52,7 @@ function calculateUserScore(user: any): number {
 }
 
 // 更新排行榜
-export async function updateLeaderboard(leaderboardType: string) {
+async function updateLeaderboard(leaderboardType: string) {
   const users = Object.values(userData)
   const scoredUsers = users.map(user => ({
     ...user,
