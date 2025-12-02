@@ -9,6 +9,10 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/com
 export default function LoginPage() {
   const { user, isAuthenticated, logout } = useAuth()
 
+  const handleGamesRedirect = () => {
+    window.location.href = '/games'
+  }
+
   if (isAuthenticated && user) {
     return (
       <div className="min-h-screen flex items-center justify-center p-4">
@@ -27,7 +31,7 @@ export default function LoginPage() {
                 开始探索有趣的互动游戏吧！
               </p>
               <div className="flex gap-4 justify-center">
-                <Button onClick={() => window.location.href = '/games'}>
+                <Button onClick={handleGamesRedirect}>
                   进入游戏中心
                 </Button>
                 <Button variant="outline" onClick={logout}>

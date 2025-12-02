@@ -45,6 +45,10 @@ export default function RegisterPage() {
     }))
   }
 
+  const handleLoginRedirect = () => {
+    window.location.href = '/login'
+  }
+
   return (
     <div className="min-h-screen flex items-center justify-center p-4 bg-gradient-to-br from-blue-50 to-purple-50">
       <Card className="w-full max-w-md">
@@ -136,7 +140,7 @@ export default function RegisterPage() {
             <button 
               type="button" 
               className="ml-1 text-blue-600 hover:underline"
-              onClick={() => window.location.href = '/login'}
+              onClick={handleLoginRedirect}
             >
               立即登录
             </button>

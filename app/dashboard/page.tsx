@@ -10,6 +10,26 @@ import { Button } from '@/components/ui/button'
 export default function DashboardPage() {
   const { isAuthenticated, user } = useAuth()
 
+  const handleLoginRedirect = () => {
+    window.location.href = '/login'
+  }
+
+  const handleGamesRedirect = () => {
+    window.location.href = '/games'
+  }
+
+  const handleInteractiveGamesRedirect = () => {
+    window.location.href = '/games/interactive-games'
+  }
+
+  const handleAchievementsRedirect = () => {
+    window.location.href = '/achievements'
+  }
+
+  const handleLeaderboardsRedirect = () => {
+    window.location.href = '/leaderboards'
+  }
+
   if (!isAuthenticated) {
     return (
       <div className="min-h-screen flex items-center justify-center p-4">
@@ -23,7 +43,7 @@ export default function DashboardPage() {
             </CardDescription>
           </CardHeader>
           <CardContent className="text-center">
-            <Button onClick={() => window.location.href = '/login'}>
+            <Button onClick={handleLoginRedirect}>
               立即登录
             </Button>
           </CardContent>
@@ -68,7 +88,7 @@ export default function DashboardPage() {
                   <Button 
                     variant="outline" 
                     className="h-20 flex flex-col items-center justify-center"
-                    onClick={() => window.location.href = '/games'}
+                    onClick={handleGamesRedirect}
                   >
                     <span className="text-2xl mb-1">🎮</span>
                     <span className="text-sm">游戏中心</span>
@@ -77,7 +97,7 @@ export default function DashboardPage() {
                   <Button 
                     variant="outline" 
                     className="h-20 flex flex-col items-center justify-center"
-                    onClick={() => window.location.href = '/games/interactive-games'}
+                    onClick={handleInteractiveGamesRedirect}
                   >
                     <span className="text-2xl mb-1">💝</span>
                     <span className="text-sm">互动游戏</span>
@@ -86,7 +106,7 @@ export default function DashboardPage() {
                   <Button 
                     variant="outline" 
                     className="h-20 flex flex-col items-center justify-center"
-                    onClick={() => window.location.href = '/achievements'}
+                    onClick={handleAchievementsRedirect}
                   >
                     <span className="text-2xl mb-1">🏆</span>
                     <span className="text-sm">成就系统</span>
@@ -95,7 +115,7 @@ export default function DashboardPage() {
                   <Button 
                     variant="outline" 
                     className="h-20 flex flex-col items-center justify-center"
-                    onClick={() => window.location.href = '/leaderboards'}
+                    onClick={handleLeaderboardsRedirect}
                   >
                     <span className="text-2xl mb-1">📊</span>
                     <span className="text-sm">排行榜</span>

@@ -137,6 +137,30 @@ export default function MemoryPuzzlePage() {
   const [currentScore, setCurrentScore] = useState(0) // 当前游戏得分
   const [isLoading, setIsLoading] = useState(false) // 加载状态
 
+  // 处理页面跳转的函数
+  const handleLoginRedirect = () => {
+    window.location.href = '/login'
+  }
+  
+  const handleGamesRedirect = () => {
+    window.location.href = '/games'
+  }
+  
+  const toggleAchievements = () => {
+    setShowAchievements(!showAchievements)
+  }
+  
+  const shareScore = () => {
+    // 实现分享功能
+    if (navigator.share) {
+      navigator.share({
+        title: '记忆拼图游戏',
+        text: `我在记忆拼图游戏中获得了 ${currentScore} 分！快来挑战吧！`,
+        url: window.location.href,
+      }).catch(err => console.log('分享失败', err))
+    }
+  }
+
   // 初始化游戏
   const initializeGame = useCallback(() => {
     const theme = memoryThemes[currentTheme]
@@ -415,7 +439,7 @@ export default function MemoryPuzzlePage() {
           <CardContent className="text-center">
             <p className="mb-4">登录后，您的游戏进度和成就将自动保存到云端</p>
             <Button 
-              onClick={() => window.location.href = '/login'}
+              onClick={handleLoginRedirect}
               className="w-full bg-gradient-to-r from-purple-500 to-pink-500 hover:from-purple-600 hover:to-pink-600"
             >
               前往登录
@@ -493,7 +517,7 @@ export default function MemoryPuzzlePage() {
             
             <div className="flex flex-wrap gap-3 mt-4">
               <Button 
-                onClick={() => setShowAchievements(!showAchievements)}
+                onClick={toggleAchievements}
                 variant="outline"
                 className="flex items-center gap-2"
               >
@@ -800,7 +824,7 @@ export default function MemoryPuzzlePage() {
                   <RotateCcw className="h-4 w-4" />
                   再玩一次
                 </Button>
-                <Button variant="outline" className="gap-2">
+                <Button variant="outline" className="gap-2" onClick={shareScore}>
                   <Share2 className="h-4 w-4" />
                   分享成绩
                 </Button>
