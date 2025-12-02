@@ -1,5 +1,39 @@
 import { NextRequest, NextResponse } from 'next/server'
-import { AuthService } from '@/lib/auth'
+
+// 服务器端认证验证函数
+async function verifyAuthToken(request: NextRequest) {
+  try {
+    const authHeader = request.headers.get('authorization')
+    if (!authHeader || !authHeader.startsWith('Bearer ')) {
+      return { success: false, error: '缺少认证令牌' }
+    }
+
+    const token = authHeader.slice(7) // 移除 'Bearer ' 前缀
+    
+    // 调用认证API验证token
+    const response = await fetch(`${process.env.NEXTAUTH_URL || 'http://localhost:3000'}/api/auth/verify`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({ token }),
+    })
+
+    const result = await response.json()
+    
+    if (!result.success) {
+      return { success: false, error: result.error || '认证失败' }
+    }
+
+    return { 
+      success: true, 
+      data: result.data 
+    }
+  } catch (error) {
+    console.error('认证验证失败:', error)
+    return { success: false, error: '服务器内部错误' }
+  }
+}
 
 // 游戏进度接口
 interface GameProgress {
@@ -25,7 +59,7 @@ const GAME_TYPES = {
 export async function POST(request: NextRequest) {
   try {
     // 验证用户身份
-    const authResult = await AuthService.verifyToken(request)
+    const authResult = await verifyAuthToken(request)
     if (!authResult.success) {
       return NextResponse.json(
         { success: false, error: '未授权访问' },
@@ -133,7 +167,7 @@ export async function POST(request: NextRequest) {
 export async function GET(request: NextRequest) {
   try {
     // 验证用户身份
-    const authResult = await AuthService.verifyToken(request)
+    const authResult = await verifyAuthToken(request)
     if (!authResult.success) {
       return NextResponse.json(
         { success: false, error: '未授权访问' },
