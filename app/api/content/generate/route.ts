@@ -1,40 +1,29 @@
 import { NextRequest, NextResponse } from 'next/server'
-import { volcanoAPI } from '@/lib/volcano-api'
 
 export async function POST(request: NextRequest) {
   try {
-    console.log('Content generation request received')
+    const { topic, type, tone } = await request.json()
     
-    const body = await request.json()
-    const { prompt, style, length, context } = body
-
-    if (!prompt) {
-      return NextResponse.json(
-        { error: '缺少必要参数：prompt' },
-        { status: 400 }
-      )
+    // 模拟内容生成
+    const mockContent = {
+      topic,
+      type,
+      tone,
+      content: `这是一段关于"${topic}"的${tone}风格的${type}内容示例。内容生成功能正在开发中，未来将集成更强大的AI能力。`,
+      length: 150,
+      quality: 0.85,
+      suggestions: [
+        '可以进一步扩展这个话题',
+        '考虑添加更多具体细节',
+        '保持语气一致'
+      ],
+      timestamp: new Date().toISOString()
     }
 
-    const generationRequest = {
-      prompt,
-      style: style || 'casual',
-      length: length || 'medium',
-      context: context || ''
-    }
-
-    console.log('Calling volcanoAPI to generate content')
-    const result = await volcanoAPI.generateContent(generationRequest)
-    console.log('Content generation result:', result)
-
-    return NextResponse.json(result)
+    return NextResponse.json(mockContent)
   } catch (error) {
-    console.error('Content generation API error:', error)
-    
     return NextResponse.json(
-      { 
-        success: false,
-        error: '内容生成失败，请稍后重试'
-      },
+      { error: 'Failed to generate content' },
       { status: 500 }
     )
   }

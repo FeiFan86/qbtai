@@ -1,32 +1,32 @@
 import { NextRequest, NextResponse } from 'next/server'
-import { volcanoAPI } from '@/lib/volcano-api'
 
 export async function POST(request: NextRequest) {
   try {
-    const body = await request.json()
-    const { input, type, context } = body
-
-    if (!input) {
-      return NextResponse.json(
-        { error: '缺少必要参数：input' },
-        { status: 400 }
-      )
+    const { input, type } = await request.json()
+    
+    // 模拟情感分析结果
+    const mockAnalysis = {
+      input,
+      type,
+      emotion: {
+        primary: 'positive',
+        secondary: ['joy', 'contentment'],
+        score: 0.85
+      },
+      intensity: 0.7,
+      confidence: 0.92,
+      suggestions: [
+        '继续保持积极心态',
+        '与他人分享这份快乐',
+        '记录下这个美好的时刻'
+      ],
+      timestamp: new Date().toISOString()
     }
 
-    // 调用火山引擎API进行情感分析
-    const result = await volcanoAPI.analyzeEmotion({
-      input,
-      type: type || 'text',
-      context: context || []
-    })
-
-    return NextResponse.json(result)
+    return NextResponse.json(mockAnalysis)
   } catch (error) {
-    console.error('Emotion analysis error:', error)
     return NextResponse.json(
-      { 
-        error: '服务器内部错误'
-      },
+      { error: 'Failed to analyze emotion' },
       { status: 500 }
     )
   }

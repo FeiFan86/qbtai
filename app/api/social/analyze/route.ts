@@ -1,32 +1,30 @@
 import { NextRequest, NextResponse } from 'next/server'
-import { volcanoAPI } from '@/lib/volcano-api'
 
 export async function POST(request: NextRequest) {
   try {
-    const body = await request.json()
-    const { conversation, context, scenario } = body
-
-    if (!conversation) {
-      return NextResponse.json(
-        { error: '缺少必要参数：conversation' },
-        { status: 400 }
-      )
+    const { text, platform } = await request.json()
+    
+    // 模拟社交分析
+    const mockAnalysis = {
+      text,
+      platform,
+      analysis: {
+        engagement: 0.72,
+        sentiment: 'positive',
+        topics: ['情感', '互动', '关系'],
+        recommendations: [
+          '内容情感表达积极',
+          '建议增加互动元素',
+          '保持一致的沟通风格'
+        ]
+      },
+      timestamp: new Date().toISOString()
     }
 
-    // 调用火山引擎API进行社交对话分析
-    const result = await volcanoAPI.analyzeSocialConversation({
-      conversation,
-      context: context || '',
-      scenario: scenario || 'casual'
-    })
-
-    return NextResponse.json(result)
+    return NextResponse.json(mockAnalysis)
   } catch (error) {
-    console.error('Social conversation analysis error:', error)
     return NextResponse.json(
-      { 
-        error: '服务器内部错误'
-      },
+      { error: 'Failed to analyze social content' },
       { status: 500 }
     )
   }
