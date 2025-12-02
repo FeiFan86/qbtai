@@ -57,7 +57,13 @@ const gameCategories = {
 }
 
 // 成就类型
-const achievementTypes = {
+interface AchievementType {
+  name: string;
+  color: string;
+  description: string;
+}
+
+const achievementTypes: Record<string, AchievementType> = {
   milestone: {
     name: '里程碑',
     color: 'bg-blue-100 text-blue-800',
