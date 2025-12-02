@@ -23,13 +23,15 @@ export class DataManager {
 
   // 创建IndexedDB存储方案
   private createIndexedDBStorage(): DataStorage {
+    const self = this;
+    
     return {
       async getItem<T>(key: string): Promise<T | null> {
         if (typeof window === 'undefined') return null
         
         try {
           // 直接访问IndexedDB而不是使用databaseService的私有方法
-          const db = await this.openDatabase()
+          const db = await self.openDatabase()
           if (!db) return null
           
           return new Promise((resolve, reject) => {
@@ -47,14 +49,14 @@ export class DataManager {
           console.warn('IndexedDB storage getItem failed:', error)
           return null
         }
-      }.bind(this),
+      },
       
       async setItem(key: string, value: any): Promise<void> {
         if (typeof window === 'undefined') return
         
         try {
           // 直接访问IndexedDB而不是使用databaseService的私有方法
-          const db = await this.openDatabase()
+          const db = await self.openDatabase()
           if (!db) return
           
           return new Promise((resolve, reject) => {
@@ -68,14 +70,14 @@ export class DataManager {
         } catch (error) {
           console.warn('IndexedDB storage setItem failed:', error)
         }
-      }.bind(this),
+      },
       
       async removeItem(key: string): Promise<void> {
         if (typeof window === 'undefined') return
         
         try {
           // 直接访问IndexedDB而不是使用databaseService的私有方法
-          const db = await this.openDatabase()
+          const db = await self.openDatabase()
           if (!db) return
           
           return new Promise((resolve, reject) => {
@@ -89,14 +91,14 @@ export class DataManager {
         } catch (error) {
           console.warn('IndexedDB storage removeItem failed:', error)
         }
-      }.bind(this),
+      },
       
       async clear(): Promise<void> {
         if (typeof window === 'undefined') return
         
         try {
           // 直接访问IndexedDB清空storage表
-          const db = await this.openDatabase()
+          const db = await self.openDatabase()
           if (!db) return
           
           return new Promise((resolve, reject) => {
@@ -110,7 +112,7 @@ export class DataManager {
         } catch (error) {
           console.warn('IndexedDB storage clear failed:', error)
         }
-      }.bind(this)
+      }
     }
   }
   
