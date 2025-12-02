@@ -303,7 +303,7 @@ interface CustomCard {
 export default function TruthOrDarePage() {
   const [gameMode, setGameMode] = useState<'truth' | 'dare'>('truth')
   const [difficulty, setDifficulty] = useState<'easy' | 'medium' | 'hard'>('easy')
-  const [category, setCategory] = useState<string>('general') // 新增分类状态
+  const [category, setCategory] = useState<'general' | 'relationship' | 'future' | 'past' | 'funny' | 'social' | 'creative'>('general') // 新增分类状态
   const [currentCard, setCurrentCard] = useState<string>('')
   const [isPlaying, setIsPlaying] = useState(false)
   const [showAnswer, setShowAnswer] = useState(false)
