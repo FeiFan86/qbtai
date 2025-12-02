@@ -371,9 +371,29 @@ export default function TruthOrDarePage() {
 
   const getRandomCard = () => {
     // 获取对应难度和分类的问题池
-    const questionPool = gameMode === 'truth' 
-      ? truthQuestions[difficulty][category] || truthQuestions[difficulty]['general']
-      : dareChallenges[difficulty][category] || dareChallenges[difficulty]['funny']
+    let questionPool: string[] = []
+    
+    if (gameMode === 'truth') {
+      // 类型安全的访问truthQuestions
+      const truthDifficulty = truthQuestions[difficulty]
+      if (category in truthDifficulty) {
+        questionPool = truthDifficulty[category as keyof typeof truthDifficulty]
+      } else {
+        // 如果分类不存在，使用默认分类
+        const defaultCategory = Object.keys(truthDifficulty)[0] as keyof typeof truthDifficulty
+        questionPool = truthDifficulty[defaultCategory]
+      }
+    } else {
+      // 类型安全的访问dareChallenges
+      const dareDifficulty = dareChallenges[difficulty]
+      if (category in dareDifficulty) {
+        questionPool = dareDifficulty[category as keyof typeof dareDifficulty]
+      } else {
+        // 如果分类不存在，使用默认分类
+        const defaultCategory = Object.keys(dareDifficulty)[0] as keyof typeof dareDifficulty
+        questionPool = dareDifficulty[defaultCategory]
+      }
+    }
     
     const customPool = customCards.filter(card => 
       card.type === gameMode && 
