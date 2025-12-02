@@ -199,6 +199,36 @@ export default function EmotionTreeHolePage() {
     return `${days}天前`
   }
 
+  // 点赞功能
+  const handleLikePost = (postId: string) => {
+    const updatedPosts = posts.map(post => {
+      if (post.id === postId) {
+        return { ...post, likes: post.likes + 1 }
+      }
+      return post
+    })
+    setPosts(updatedPosts)
+    savePostsToLocalStorage(updatedPosts)
+  }
+
+  // 点赞回复功能
+  const handleLikeReply = (postId: string, replyId: string) => {
+    const updatedPosts = posts.map(post => {
+      if (post.id === postId) {
+        const updatedReplies = post.repliesList.map(reply => {
+          if (reply.id === replyId) {
+            return { ...reply, likes: reply.likes + 1 }
+          }
+          return reply
+        })
+        return { ...post, repliesList: updatedReplies }
+      }
+      return post
+    })
+    setPosts(updatedPosts)
+    savePostsToLocalStorage(updatedPosts)
+  }
+
   const getMoodIcon = (mood: number) => {
     if (mood >= 8) return <Smile className="h-4 w-4 text-yellow-500" />
     if (mood >= 6) return <Meh className="h-4 w-4 text-green-500" />
@@ -373,14 +403,17 @@ export default function EmotionTreeHolePage() {
                       <p className="text-gray-700 mb-4 leading-relaxed">{post.content}</p>
                       
                       <div className="flex items-center gap-4 text-sm text-gray-500 mb-4">
-                        <button className="flex items-center gap-1 hover:text-blue-600 transition-colors">
+                        <button 
+                          onClick={() => handleLikePost(post.id)}
+                          className="flex items-center gap-1 text-gray-500 hover:text-blue-600 transition-colors"
+                        >
                           <ThumbsUp className="h-4 w-4" />
                           <span>{post.likes}</span>
                         </button>
-                        <button className="flex items-center gap-1 hover:text-blue-600 transition-colors">
+                        <div className="flex items-center gap-1 text-gray-500">
                           <MessageCircle className="h-4 w-4" />
                           <span>{post.replies}</span>
-                        </button>
+                        </div>
                         <div className="flex items-center gap-1">
                           <Eye className="h-4 w-4" />
                           <span>{Math.floor(post.likes * 5 + 20)}</span>
@@ -404,7 +437,10 @@ export default function EmotionTreeHolePage() {
                                   <span className="text-xs text-gray-500">
                                     {formatTimestamp(reply.timestamp)}
                                   </span>
-                                  <button className="ml-auto flex items-center gap-1 text-xs text-gray-500 hover:text-blue-600">
+                                  <button 
+                                    onClick={() => handleLikeReply(post.id, reply.id)}
+                                    className="ml-auto flex items-center gap-1 text-xs text-gray-500 hover:text-blue-600 transition-colors"
+                                  >
                                     <ThumbsUp className="h-3 w-3" />
                                     <span>{reply.likes}</span>
                                   </button>
@@ -416,18 +452,20 @@ export default function EmotionTreeHolePage() {
                         </div>
                       )}
                       
-                      {/* 回复输入框 */}
+                      {/* 回复输入框 - 暂时禁用，等待功能完善 */}
                       <div className="border-t pt-3 mt-4">
                         <div className="flex gap-2">
                           <Textarea
-                            placeholder="写下你的温暖回应..."
+                            placeholder="回复功能正在开发中..."
                             rows={2}
                             className="resize-none"
+                            disabled
                           />
-                          <Button size="sm" className="px-3">
+                          <Button size="sm" className="px-3" disabled>
                             <Send className="h-4 w-4" />
                           </Button>
                         </div>
+                        <p className="text-xs text-gray-500 mt-1">回复功能即将上线，敬请期待！</p>
                       </div>
                     </CardContent>
                   </Card>
