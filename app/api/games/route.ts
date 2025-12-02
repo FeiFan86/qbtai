@@ -1,6 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { AuthService } from '@/lib/auth'
-import { DataService } from '@/lib/data-service'
 
 // 游戏进度接口
 interface GameProgress {
