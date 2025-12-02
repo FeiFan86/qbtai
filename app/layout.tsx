@@ -2,8 +2,7 @@ import type { Metadata } from 'next'
 import { Inter } from 'next/font/google'
 import './globals.css'
 import { AuthProvider } from '@/components/auth-provider'
-import { ErrorHandler } from '@/lib/error-handler'
-import React from 'react'
+import { ErrorBoundary } from '@/components/ErrorBoundary'
 
 const inter = Inter({ subsets: ['latin'] })
 
@@ -18,8 +17,6 @@ export default function RootLayout({
 }: {
   children: React.ReactNode
 }) {
-  const ErrorBoundary = ErrorHandler.createErrorBoundary()
-  
   return (
     <html lang="zh-CN" className="h-full">
       <body className={`${inter.className} h-full bg-gray-50`}>
