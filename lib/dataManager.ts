@@ -245,12 +245,46 @@ export class DataManager {
 
     // IndexedDB统计（简化版）
     try {
-      const stats = await db.get<{itemsCount: number; estimatedSize: number}>('gameStats', 'storageStats')
-      return {
-        type: 'IndexedDB',
-        estimatedSize: stats?.estimatedSize || 0,
-        itemsCount: stats?.itemsCount || 0
+      const database = await this.openDatabase()
+      if (!database) {
+        return {
+          type: 'IndexedDB',
+          estimatedSize: 0,
+          itemsCount: 0
+        }
       }
+      
+      return new Promise((resolve, reject) => {
+        const transaction = database.transaction(['storage'], 'readonly')
+        const store = transaction.objectStore('storage')
+        const request = store.getAll()
+        
+        request.onerror = () => {
+          resolve({
+            type: 'IndexedDB',
+            estimatedSize: 0,
+            itemsCount: 0
+          })
+        }
+        
+        request.onsuccess = () => {
+          const items = request.result || []
+          let estimatedSize = 0
+          
+          // 估算存储大小
+          items.forEach(item => {
+            if (item && item.value) {
+              estimatedSize += JSON.stringify(item.value).length
+            }
+          })
+          
+          resolve({
+            type: 'IndexedDB',
+            estimatedSize,
+            itemsCount: items.length
+          })
+        }
+      })
     } catch {
       return {
         type: 'IndexedDB',
