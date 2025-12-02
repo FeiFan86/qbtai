@@ -1,4 +1,5 @@
 // 统一错误处理
+import React from 'react'
 
 interface ErrorInfo {
   code: string
