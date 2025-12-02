@@ -621,7 +621,7 @@ export default function CollaborativeDoodlePage() {
                       创建房间
                     </Button>
                     <Button variant="outline" className="w-full">
-                      <Link className="h-4 w-4 mr-2" />
+                      <UserPlus className="h-4 w-4 mr-2" />
                       加入房间
                     </Button>
                   </div>
@@ -756,7 +756,7 @@ export default function CollaborativeDoodlePage() {
                       创建协作房间
                     </Button>
                     <Button variant="outline" className="w-full">
-                      <Link className="h-4 w-4 mr-2" />
+                      <UserPlus className="h-4 w-4 mr-2" />
                       加入房间
                     </Button>
                     <Button variant="outline" className="w-full">
