@@ -395,7 +395,11 @@ export default function CoupleBlindBoxPage() {
         currentStreak: 0,
         completedTasks: [],
         unlockedAchievements: [],
-        totalTasksCompleted: 0
+        totalTasksCompleted: 0,
+        favoriteTasks: [],
+        recentUnlocks: [],
+        monthlyBonusUsed: false,
+        dailyRewardClaimed: false
       }
       setUserData(initialData)
       safeLocalStorage.setItem('coupleBlindBoxUserData', JSON.stringify(initialData))
