@@ -809,8 +809,7 @@ export default function MemoryPuzzlePage() {
           </Card>
         )}
         </div>
-      </main>
-      
+
         {/* 成就解锁提示 */}
         {newAchievement && (
           <div className="fixed top-4 right-4 bg-yellow-100 border border-yellow-300 text-yellow-800 p-4 rounded-lg shadow-lg z-50 max-w-sm">

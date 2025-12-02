@@ -430,11 +430,10 @@ export default function AchievementsPage() {
                       </div>
                     </div>
                   </div>
+                  {achievement.unlocked && (
+                    <CheckCircle className="h-6 w-6 text-green-500" />
+                  )}
                 </div>
-                {achievement.unlocked && (
-                  <CheckCircle className="h-6 w-6 text-green-500" />
-                )}
-              </div>
               </CardHeader>
               <CardContent>
                 <p className="text-sm text-gray-600 mb-3">{achievement.description}</p>
