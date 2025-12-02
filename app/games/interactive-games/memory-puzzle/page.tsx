@@ -262,7 +262,7 @@ export default function MemoryPuzzlePage() {
   
   // 检查成就
   const checkAchievements = (completionTime: number, finalScore: number) => {
-    const newAchievements = []
+    const newAchievements: string[] = []
     
     // 首次胜利
     if (!unlockedAchievements.includes('first_win')) {
