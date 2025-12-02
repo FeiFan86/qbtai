@@ -55,6 +55,24 @@ export interface Achievement {
   category: string;
 }
 
+export interface UserAchievement {
+  achievementId: string;
+  unlockedAt: string;
+  progress: number;
+}
+
+export interface UserAchievement {
+  achievementId: string;
+  unlockedAt: string;
+  progress: number;
+}
+
+export interface UserAchievement {
+  achievementId: string;
+  unlockedAt: string;
+  progress: number;
+}
+
 // 排行榜相关类型定义
 export interface LeaderboardEntry {
   rank: number;
