@@ -358,7 +358,12 @@ export default function ComplaintWallPage() {
       replies: [],
       isAnonymous,
       tags,
-      isHot: false
+      isHot: false,
+      viewCount: 0,
+      shareCount: 0,
+      isFeatured: false,
+      moodScore: 0,
+      supportTips: []
     }
     
     const updatedComplaints = [newComplaintData, ...complaints]
