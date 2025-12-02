@@ -502,7 +502,10 @@ export default function RelationshipChessPage() {
       winner: player,
       tasksCompleted: completedTasks.length,
       player1Name,
-      player2Name
+      player2Name,
+      player1Score: player === 1 ? 1 : 0,
+      player2Score: player === 2 ? 1 : 0,
+      specialEvents: []
     }
     
     const updatedHistory = [record, ...gameHistory].slice(0, 10) // 保留最近10条记录
