@@ -28,48 +28,114 @@ export class DataManager {
         if (typeof window === 'undefined') return null
         
         try {
-          // 使用databaseService来获取数据
-          return await databaseService.getRecord('storage', key) || null
+          // 直接访问IndexedDB而不是使用databaseService的私有方法
+          const db = await this.openDatabase()
+          if (!db) return null
+          
+          return new Promise((resolve, reject) => {
+            const transaction = db.transaction(['storage'], 'readonly')
+            const store = transaction.objectStore('storage')
+            const request = store.get(key)
+            
+            request.onerror = () => reject(request.error)
+            request.onsuccess = () => {
+              const result = request.result
+              resolve(result ? result.value : null)
+            }
+          })
         } catch (error) {
           console.warn('IndexedDB storage getItem failed:', error)
           return null
         }
-      },
+      }.bind(this),
       
       async setItem(key: string, value: any): Promise<void> {
         if (typeof window === 'undefined') return
         
         try {
-          // 使用databaseService来存储数据
-          await databaseService.addRecord('storage', { key, value, timestamp: Date.now() })
+          // 直接访问IndexedDB而不是使用databaseService的私有方法
+          const db = await this.openDatabase()
+          if (!db) return
+          
+          return new Promise((resolve, reject) => {
+            const transaction = db.transaction(['storage'], 'readwrite')
+            const store = transaction.objectStore('storage')
+            const request = store.put({ key, value, timestamp: Date.now() })
+            
+            request.onerror = () => reject(request.error)
+            request.onsuccess = () => resolve()
+          })
         } catch (error) {
           console.warn('IndexedDB storage setItem failed:', error)
         }
-      },
+      }.bind(this),
       
       async removeItem(key: string): Promise<void> {
         if (typeof window === 'undefined') return
         
         try {
-          await databaseService.deleteRecord('storage', key)
+          // 直接访问IndexedDB而不是使用databaseService的私有方法
+          const db = await this.openDatabase()
+          if (!db) return
+          
+          return new Promise((resolve, reject) => {
+            const transaction = db.transaction(['storage'], 'readwrite')
+            const store = transaction.objectStore('storage')
+            const request = store.delete(key)
+            
+            request.onerror = () => reject(request.error)
+            request.onsuccess = () => resolve()
+          })
         } catch (error) {
           console.warn('IndexedDB storage removeItem failed:', error)
         }
-      },
+      }.bind(this),
       
       async clear(): Promise<void> {
         if (typeof window === 'undefined') return
         
         try {
-          // 这里需要实现清空storage表的功能
-          // 由于databaseService没有提供直接清空表的方法，我们使用回退方案
-          // 在实际使用中，应该扩展databaseService来支持这个功能
-          console.warn('IndexedDB clear not implemented, using fallback')
+          // 直接访问IndexedDB清空storage表
+          const db = await this.openDatabase()
+          if (!db) return
+          
+          return new Promise((resolve, reject) => {
+            const transaction = db.transaction(['storage'], 'readwrite')
+            const store = transaction.objectStore('storage')
+            const request = store.clear()
+            
+            request.onerror = () => reject(request.error)
+            request.onsuccess = () => resolve()
+          })
         } catch (error) {
           console.warn('IndexedDB storage clear failed:', error)
         }
-      }
+      }.bind(this)
     }
+  }
+  
+  // 打开数据库连接
+  private async openDatabase(): Promise<IDBDatabase | null> {
+    if (typeof window === 'undefined') return null
+    
+    const dbName = 'cupid_ai_db'
+    const version = 1
+    
+    return new Promise((resolve, reject) => {
+      const request = indexedDB.open(dbName, version)
+      
+      request.onerror = () => reject(request.error)
+      request.onsuccess = () => resolve(request.result)
+      
+      request.onupgradeneeded = (event) => {
+        const db = (event.target as IDBOpenDBRequest).result
+        
+        // 创建storage表（如果不存在）
+        if (!db.objectStoreNames.contains('storage')) {
+          db.createObjectStore('storage', { keyPath: 'key' })
+        }
+      }
+    })
   }
 
   // 创建回退存储方案（当IndexedDB不可用时）
