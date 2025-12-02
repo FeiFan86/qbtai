@@ -341,13 +341,18 @@ export class GameDataManager {
     const allKeys = await this.getAllGameRecordKeys(gameName)
     const limitedKeys = allKeys.slice(-limit)
     
-    const records = []
+    const records: any[] = []
     for (const key of limitedKeys) {
-      const record = await dataManager.getItem(key)
+      const record = await dataManager.getItem<any>(key)
       if (record) records.push(record)
     }
     
-    return records.sort((a, b) => new Date(b.timestamp).getTime() - new Date(a.timestamp).getTime())
+    return records.sort((a, b) => {
+      // 确保 timestamp 存在，否则使用当前时间
+      const aTime = a.timestamp ? new Date(a.timestamp).getTime() : Date.now()
+      const bTime = b.timestamp ? new Date(b.timestamp).getTime() : Date.now()
+      return bTime - aTime
+    })
   }
 
   // 获取所有游戏记录键（简化实现）
