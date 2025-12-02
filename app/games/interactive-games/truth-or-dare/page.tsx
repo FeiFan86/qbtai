@@ -715,7 +715,12 @@ export default function TruthOrDarePage() {
                         </span>
                       </div>
                       <Badge className={getDifficultyColor(level)}>
-                        {level === 'easy' ? truthQuestions.easy.length : level === 'medium' ? truthQuestions.medium.length : truthQuestions.hard.length}
+                        {level === 'easy' 
+                          ? Object.values(truthQuestions.easy).flat().length 
+                          : level === 'medium' 
+                          ? Object.values(truthQuestions.medium).flat().length 
+                          : Object.values(truthQuestions.hard).flat().length
+                        }
                       </Badge>
                     </div>
                   </button>
