@@ -272,6 +272,7 @@ export default function EmotionTreeHolePage() {
         username: user.username,
         avatar: user.avatar || '',
         content,
+        likes: [],
         isAnonymous: false
       })
 
