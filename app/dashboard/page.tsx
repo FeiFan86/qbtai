@@ -1,7 +1,7 @@
 'use client'
 
 import React from 'react'
-import { UserProfile } from '@/components/user-profile'
+import { UserProfileCard } from '@/components/user-profile'
 import { ApiStatus } from '@/components/api-status'
 import { useAuth } from '@/components/auth-provider'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
@@ -69,7 +69,7 @@ export default function DashboardPage() {
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
           {/* 用户信息 */}
           <div className="lg:col-span-1">
-            <UserProfile />
+            <UserProfileCard />
           </div>
 
           {/* 主要内容 */}
