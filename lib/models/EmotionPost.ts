@@ -107,6 +107,13 @@ EmotionPostSchema.virtual('createdAtFormatted').get(function() {
   return this.createdAt.toLocaleDateString('zh-CN')
 })
 
+// 静态方法接口
+export interface EmotionPostModel extends mongoose.Model<any> {
+  findByGameType(gameType: string, limit?: number): Promise<any[]>;
+  findFeatured(gameType: string): Promise<any[]>;
+  findByCategory(gameType: string, category: string): Promise<any[]>;
+}
+
 // 静态方法
 EmotionPostSchema.statics.findByGameType = function(gameType: string, limit: number = 20) {
   return this.find({ gameType })
@@ -127,4 +134,4 @@ EmotionPostSchema.statics.findByCategory = function(gameType: string, category: 
     .limit(20)
 }
 
-export default mongoose.models.EmotionPost || mongoose.model('EmotionPost', EmotionPostSchema)
+export default mongoose.models.EmotionPost || mongoose.model('EmotionPost', EmotionPostSchema) as EmotionPostModel

@@ -10,7 +10,9 @@ export async function GET(request: NextRequest) {
     const { searchParams } = new URL(request.url)
     const limit = parseInt(searchParams.get('limit') || '20')
     
-    const posts = await EmotionPost.findByGameType('emotion-tree-hole', limit)
+    const posts = await EmotionPost.find({ gameType: 'emotion-tree-hole' })
+      .sort({ createdAt: -1 })
+      .limit(limit)
     
     return NextResponse.json({
       success: true,
@@ -48,7 +50,16 @@ export async function POST(request: NextRequest) {
     const savedPost = await newPost.save()
     
     // 更新用户游戏进度
-    await GameProgress.updateScore(userId, 'emotion-tree-hole', 10)
+    await GameProgress.findOneAndUpdate(
+      { userId, gameType: 'emotion-tree-hole' },
+      {
+        userId,
+        gameType: 'emotion-tree-hole',
+        score: 10,
+        lastPlayed: new Date()
+      },
+      { upsert: true, new: true }
+    )
     
     return NextResponse.json({
       success: true,

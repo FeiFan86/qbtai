@@ -68,6 +68,13 @@ GameProgressSchema.virtual('lastPlayedFormatted').get(function() {
   return this.lastPlayed.toLocaleDateString('zh-CN')
 })
 
+// 静态方法接口
+export interface GameProgressModel extends mongoose.Model<any> {
+  getUserProgress(userId: string): Promise<any[]>;
+  getLeaderboard(gameType: string, limit?: number): Promise<any[]>;
+  updateScore(userId: string, gameType: string, newScore: number): Promise<any>;
+}
+
 // 静态方法
 GameProgressSchema.statics.getUserProgress = function(userId: string) {
   return this.find({ userId })
@@ -103,4 +110,4 @@ GameProgressSchema.statics.updateScore = async function(userId: string, gameType
   })
 }
 
-export default mongoose.models.GameProgress || mongoose.model('GameProgress', GameProgressSchema)
+export default mongoose.models.GameProgress || mongoose.model('GameProgress', GameProgressSchema) as GameProgressModel
