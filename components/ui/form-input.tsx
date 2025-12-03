@@ -1,7 +1,7 @@
 import React from 'react'
 import { cn } from '@/lib/utils'
 
-interface FormInputProps extends React.TextareaHTMLAttributes<HTMLTextAreaElement> {
+type FormInputProps = (React.InputHTMLAttributes<HTMLInputElement> | React.TextareaHTMLAttributes<HTMLTextAreaElement>) & {
   label?: string
   error?: string
   hint?: string
