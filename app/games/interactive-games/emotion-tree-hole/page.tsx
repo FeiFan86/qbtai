@@ -207,6 +207,7 @@ export default function EmotionTreeHolePage() {
     try {
       // 保存到数据库
       const savedPost = await databaseService.createEmotionPost('emotion-tree-hole', {
+        gameType: 'emotion-tree-hole',
         userId: user.id,
         username: user.username,
         avatar: user.avatar || '',
@@ -214,7 +215,12 @@ export default function EmotionTreeHolePage() {
         content: newPost.content,
         category: newPost.category,
         tags: [newPost.category],
-        isAnonymous: false
+        isAnonymous: false,
+        likes: [],
+        replies: [],
+        replyCount: 0,
+        isFeatured: false,
+        imageUrl: ''
       })
 
       // 更新本地状态
