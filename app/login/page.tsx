@@ -15,6 +15,11 @@ export default function LoginPage() {
     router.push('/games')
   }
 
+  const handleLogout = () => {
+    logout()
+    router.push('/')
+  }
+
   if (isAuthenticated && user) {
     return (
       <div className="min-h-screen flex items-center justify-center p-4">
@@ -36,7 +41,7 @@ export default function LoginPage() {
                 <Button onClick={handleGamesRedirect}>
                   进入游戏中心
                 </Button>
-                <Button variant="outline" onClick={logout}>
+                <Button variant="outline" onClick={handleLogout}>
                   退出登录
                 </Button>
               </div>

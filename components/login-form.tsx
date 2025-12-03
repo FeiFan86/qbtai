@@ -5,9 +5,11 @@ import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
 import { useAuth } from './auth-provider'
+import { useRouter } from 'next/navigation'
 
 export function LoginForm() {
   const { login, isLoading } = useAuth()
+  const router = useRouter()
   const [formData, setFormData] = useState({
     username: '',
     password: '',
@@ -20,6 +22,8 @@ export function LoginForm() {
 
     try {
       await login(formData)
+      // 登录成功后跳转到游戏页面
+      router.push('/games')
     } catch (err) {
       setError(err instanceof Error ? err.message : '登录失败')
     }
@@ -93,7 +97,7 @@ export function LoginForm() {
           <button 
             type="button" 
             className="ml-1 text-blue-600 hover:underline"
-            onClick={() => {/* 切换到注册表单 */}}
+            onClick={() => router.push('/register')}
           >
             立即注册
           </button>

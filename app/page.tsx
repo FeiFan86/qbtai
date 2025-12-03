@@ -24,12 +24,12 @@ export default function HomePage() {
               <span className="ml-2 text-xl font-bold text-gray-900">丘比特AI情感助手</span>
             </div>
             <div className="flex items-center space-x-4">
-              <Link href="/login">
-                <Button variant="outline">登录</Button>
-              </Link>
-              <Link href="/register">
-                <Button>注册</Button>
-              </Link>
+              <Button variant="outline" onClick={() => router.push('/login')}>
+                登录
+              </Button>
+              <Button onClick={() => router.push('/register')}>
+                注册
+              </Button>
             </div>
           </div>
         </div>

@@ -34,6 +34,8 @@ export default function RegisterPage() {
 
     try {
       await register(formData)
+      // 注册成功后跳转到游戏页面
+      router.push('/games')
     } catch (err) {
       setError(err instanceof Error ? err.message : '注册失败')
     }
