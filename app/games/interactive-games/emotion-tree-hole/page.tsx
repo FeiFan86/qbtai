@@ -251,7 +251,7 @@ export default function EmotionTreeHolePage() {
                     label="分享你的情感故事"
                     placeholder="在这里倾诉你的心情，无论开心还是难过，都会有人倾听..."
                     value={newPost.content}
-                    onChange={(e) => setNewPost(prev => ({ ...prev, content: e.target.value }))}
+                    onChange={(e: React.ChangeEvent<HTMLTextAreaElement>) => setNewPost(prev => ({ ...prev, content: e.target.value }))}
                     multiline
                     rows={4}
                   />
