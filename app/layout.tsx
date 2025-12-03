@@ -23,11 +23,13 @@ export default function RootLayout({
   return (
     <html lang="zh-CN" className="h-full">
       <body className={`${inter.className} h-full bg-gray-50`} suppressHydrationWarning>
-        <AuthProvider>
-          <div className="min-h-full flex flex-col">
-            {children}
-          </div>
-        </AuthProvider>
+        <ClientWrapper fallback={<div className="min-h-screen flex items-center justify-center">加载中...</div>}>
+          <AuthProvider>
+            <div className="min-h-full flex flex-col">
+              {children}
+            </div>
+          </AuthProvider>
+        </ClientWrapper>
       </body>
     </html>
   )

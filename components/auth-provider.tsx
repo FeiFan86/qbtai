@@ -21,24 +21,51 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   const [isLoading, setIsLoading] = useState(true)
 
   useEffect(() => {
-    checkAuthStatus()
+    // 延迟检查认证状态，避免阻塞页面渲染
+    const timer = setTimeout(() => {
+      checkAuthStatus()
+    }, 100)
+    
+    return () => clearTimeout(timer)
   }, [])
 
   const checkAuthStatus = async () => {
     try {
       setIsLoading(true)
-      const authenticated = await AuthService.isAuthenticated()
+      
+      // 首先检查本地存储中是否有token，如果没有，直接返回false
+      const token = AuthService.getToken()
+      if (!token) {
+        setUser(null)
+        setIsAuthenticated(false)
+        setIsLoading(false)
+        return
+      }
+      
+      // 添加超时处理
+      const timeoutPromise = new Promise((_, reject) => {
+        setTimeout(() => reject(new Error('认证检查超时')), 3000)
+      })
+      
+      const authenticated = await Promise.race([
+        AuthService.isAuthenticated(),
+        timeoutPromise
+      ]) as boolean
       
       if (authenticated) {
         const currentUser = AuthService.getCurrentUser()
         setUser(currentUser)
         setIsAuthenticated(true)
       } else {
+        // 如果token无效，清除本地存储
+        AuthService.logout()
         setUser(null)
         setIsAuthenticated(false)
       }
     } catch (error) {
       console.error('检查认证状态失败:', error)
+      // 发生错误时也清除本地存储
+      AuthService.logout()
       setUser(null)
       setIsAuthenticated(false)
     } finally {
