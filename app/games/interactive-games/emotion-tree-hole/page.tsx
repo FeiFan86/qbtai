@@ -69,21 +69,6 @@ const getEmotionFromCategory = (category: string) => {
   return emotionMap[category] || 'neutral'
 }
 
-// 将 EmotionPost 的 category 映射到 emotion 显示
-const getEmotionFromCategory = (category: string) => {
-  const emotionMap: Record<string, 'happy' | 'sad' | 'neutral' | 'anxious' | 'excited'> = {
-    happy: 'happy',
-    sad: 'sad',
-    angry: 'sad',
-    anxious: 'anxious',
-    confused: 'anxious',
-    love: 'happy',
-    excited: 'excited',
-    other: 'neutral'
-  }
-  return emotionMap[category] || 'neutral'
-}
-
 export default function EmotionTreeHolePage() {
   const { isAuthenticated, user } = useAuth()
   const [posts, setPosts] = useState<EmotionPost[]>([])
