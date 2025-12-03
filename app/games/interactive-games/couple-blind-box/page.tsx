@@ -36,7 +36,9 @@ interface BlindBox {
   tasks: string[]
   reward: string
   isLocked: boolean
+  unlockDate?: string // 解锁日期
   completedAt?: Date
+  lastOpenedDate?: string // 上次开启日期
 }
 
 const categoryColors = {

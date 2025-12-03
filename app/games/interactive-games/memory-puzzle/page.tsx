@@ -89,28 +89,32 @@ const achievements = [
 const difficultyLevels = {
   easy: {
     name: '简单',
-    gridSize: 3, // 3x2 网格，6张卡片
+    gridCols: 3, // 3列
+    gridRows: 2, // 2行，共6张卡片（3对）
     cardBackStyle: 'bg-gradient-to-br from-blue-100 to-blue-200',
     timeBonus: 60, // 时间奖励（秒）
     pointsMultiplier: 1
   },
   medium: {
     name: '中等',
-    gridSize: 4, // 4x4 网格，16张卡片
+    gridCols: 4, // 4列
+    gridRows: 4, // 4行，共16张卡片（8对）
     cardBackStyle: 'bg-gradient-to-br from-purple-100 to-purple-200',
     timeBonus: 90,
     pointsMultiplier: 2
   },
   hard: {
     name: '困难',
-    gridSize: 6, // 6x4 网格，24张卡片
+    gridCols: 6, // 6列
+    gridRows: 4, // 4行，共24张卡片（12对）
     cardBackStyle: 'bg-gradient-to-br from-red-100 to-red-200',
     timeBonus: 120,
     pointsMultiplier: 3
   },
   expert: {
     name: '专家',
-    gridSize: 8, // 6x6 网格，36张卡片
+    gridCols: 6, // 6列
+    gridRows: 6, // 6行，共36张卡片（18对）
     cardBackStyle: 'bg-gradient-to-br from-gray-700 to-gray-900',
     timeBonus: 150,
     pointsMultiplier: 5
@@ -166,9 +170,11 @@ export default function MemoryPuzzlePage() {
   // 初始化游戏
   const initializeGame = useCallback(() => {
     const theme = memoryThemes[currentTheme]
-    const gridSize = difficultyLevels[difficulty].gridSize
+    const level = difficultyLevels[difficulty]
+    // 计算所需卡片对数
+    const cardPairsCount = (level.gridCols * level.gridRows) / 2
     // 根据网格大小选择合适的图像数量
-    const imageCount = Math.min(gridSize * gridSize / 2, theme.images.length)
+    const imageCount = Math.min(cardPairsCount, theme.images.length)
     const selectedImages = theme.images.slice(0, imageCount)
     const cardPairs = [...selectedImages, ...selectedImages]
     
@@ -192,58 +198,83 @@ export default function MemoryPuzzlePage() {
   }, [currentTheme, difficulty])
 
   // 处理卡片点击
-  const handleCardClick = (clickedCard: PuzzleCard) => {
-    if (!gameStarted || gameCompleted || clickedCard.isFlipped || clickedCard.isMatched) {
+  const handleCardClick = (cardId: number) => {
+    // 防止重复点击同一张卡片或已匹配的卡片
+    if (!gameStarted || gameCompleted || flippedCards.includes(cardId)) {
       return
     }
 
-    if (flippedCards.length < 2) {
-      const newFlippedCards = [...flippedCards, clickedCard.id]
-      setFlippedCards(newFlippedCards)
-      
-      setCards(prevCards => 
-        prevCards.map(card => 
-          card.id === clickedCard.id ? { ...card, isFlipped: true } : card
-        )
-      )
-
-      if (newFlippedCards.length === 2) {
-        setMoves(prev => prev + 1)
-        
-        setTimeout(() => {
-          const [firstId, secondId] = newFlippedCards
-          const firstCard = cards.find(card => card.id === firstId)!
-          const secondCard = cards.find(card => card.id === secondId)!
-          
-          if (firstCard.image === secondCard.image) {
-            // 匹配成功
-            setCards(prevCards =>
-              prevCards.map(card =>
-                card.id === firstId || card.id === secondId
-                  ? { ...card, isMatched: true }
-                  : card
-              )
-            )
-            
-            // 计算得分
-            const matchScore = 10 * difficultyLevels[difficulty].pointsMultiplier
-            setCurrentScore(prev => prev + matchScore)
-          } else {
-            // 匹配失败，翻回
-            setCards(prevCards =>
-              prevCards.map(card =>
-                card.id === firstId || card.id === secondId
-                  ? { ...card, isFlipped: false }
-                  : card
-              )
-            )
-            setMistakes(prev => prev + 1)
-          }
-          
-          setFlippedCards([])
-        }, 1000)
-      }
+    const clickedCard = cards.find(card => card.id === cardId)
+    if (!clickedCard || clickedCard.isFlipped || clickedCard.isMatched) {
+      return
     }
+
+    // 翻转卡片
+    setCards(prevCards => 
+      prevCards.map(card => 
+        card.id === cardId ? { ...card, isFlipped: true } : card
+      )
+    )
+    
+    // 添加到已翻转卡片列表
+    const newFlippedCards = [...flippedCards, cardId]
+    setFlippedCards(newFlippedCards)
+
+    // 如果翻转了两张卡片，检查是否匹配
+    if (newFlippedCards.length === 2) {
+      setMoves(prev => prev + 1)
+      
+      // 延迟检查匹配，给用户时间看到第二张卡片
+      setTimeout(() => {
+        const [firstId, secondId] = newFlippedCards
+        const firstCard = cards.find(card => card.id === firstId)
+        const secondCard = cards.find(card => card.id === secondId)
+        
+        if (firstCard && secondCard && firstCard.image === secondCard.image) {
+          // 匹配成功
+          setCards(prevCards =>
+            prevCards.map(card =>
+              card.id === firstId || card.id === secondId
+                ? { ...card, isMatched: true }
+                : card
+            )
+          )
+          
+          // 计算得分
+          const matchScore = 10 * difficultyLevels[difficulty].pointsMultiplier
+          setCurrentScore(prev => prev + matchScore)
+          
+          // 播放匹配成功音效（如果需要）
+          playMatchSound()
+        } else {
+          // 匹配失败，翻回卡片
+          setCards(prevCards =>
+            prevCards.map(card =>
+              card.id === firstId || card.id === secondId
+                ? { ...card, isFlipped: false }
+                : card
+            )
+          )
+          setMistakes(prev => prev + 1)
+          
+          // 播放匹配失败音效（如果需要）
+          playMismatchSound()
+        }
+        
+        // 重置翻转的卡片列表
+        setFlippedCards([])
+      }, 1000)
+    }
+  }
+  
+  // 播放匹配成功音效（占位函数）
+  const playMatchSound = () => {
+    // 这里可以添加音效播放逻辑
+  }
+  
+  // 播放匹配失败音效（占位函数）
+  const playMismatchSound = () => {
+    // 这里可以添加音效播放逻辑
   }
 
   // 检查游戏是否完成
@@ -616,7 +647,7 @@ export default function MemoryPuzzlePage() {
                     <div className="text-center">
                       <div className="font-medium">{level.name}</div>
                       <div className="text-xs text-gray-500">
-                        {level.gridSize * level.gridSize / 2} 对卡片
+                        {(level.gridCols * level.gridRows) / 2} 对卡片
                       </div>
                       <div className="text-xs text-purple-600">
                         {level.pointsMultiplier}x 积分
@@ -712,7 +743,13 @@ export default function MemoryPuzzlePage() {
 
         {/* 拼图游戏区 */}
         {gameStarted ? (
-          <div className="grid grid-cols-3 md:grid-cols-4 lg:grid-cols-6 gap-4 mb-8">
+          <div 
+            className={`grid gap-4 mb-8`}
+            style={{
+              gridTemplateColumns: `repeat(${difficultyLevels[difficulty].gridCols}, minmax(0, 1fr))`,
+              gridTemplateRows: `repeat(${difficultyLevels[difficulty].gridRows}, minmax(0, 1fr))`
+            }}
+          >
             {cards.map((card) => (
               <Card
                 key={card.id}
@@ -723,7 +760,7 @@ export default function MemoryPuzzlePage() {
                 } ${
                   card.isMatched ? 'border-2 border-green-500' : ''
                 }`}
-                onClick={() => handleCardClick(card)}
+                onClick={() => handleCardClick(card.id)}
               >
                 <CardContent className="p-0 h-full flex items-center justify-center">
                   {card.isFlipped || card.isMatched ? (
