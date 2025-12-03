@@ -22,6 +22,12 @@ export default function SocialAssistantPage() {
   const [analysisResult, setAnalysisResult] = useState<any>(null)
   const [analysisProgress, setAnalysisProgress] = useState(0)
   const resultRef = useRef<HTMLDivElement>(null)
+  
+  // 处理示例选择
+  const handleExampleSelect = (example: any) => {
+    setConversationText(example.example)
+    setScenario(example.scenario)
+  }
 
   const handleAnalyze = async () => {
     if (!conversationText.trim()) return
@@ -180,10 +186,7 @@ export default function SocialAssistantPage() {
                     <div 
                       key={index}
                       className="border rounded-lg p-4 cursor-pointer hover:bg-gray-50 transition-colors"
-                      onClick={() => {
-                        setConversationText(example.example)
-                        setScenario(example.scenario)
-                      }}
+                      onClick={() => handleExampleSelect(example)}
                     >
                       <div className="flex items-center gap-2 mb-3">
                         {example.icon}

@@ -4,6 +4,10 @@ import { Button } from '@/components/ui/button'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
 
 export default function HomePage() {
+  const handleDashboardRedirect = () => {
+    window.location.href = '/dashboard'
+  }
+
   return (
     <div className="min-h-screen bg-gradient-to-br from-purple-50 via-pink-50 to-blue-50">
       {/* 导航栏 */}
@@ -165,7 +169,7 @@ export default function HomePage() {
                 
                 <Button 
                   variant="outline" 
-                  onClick={() => window.location.href = '/dashboard'}
+                  onClick={handleDashboardRedirect}
                 >
                   查看详细开发状态
                 </Button>

@@ -5,6 +5,7 @@
   "scripts": {
     "dev": "next dev",
     "build": "next build",
+    "build:fix": "node scripts/fix-all-inline-handlers.js && next build",
     "start": "next start",
     "lint": "next lint"
   },
