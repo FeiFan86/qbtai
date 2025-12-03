@@ -2,8 +2,10 @@
 
 import React, { useState } from 'react'
 import { Button } from '@/components/ui/button'
-import { Input } from '@/components/ui/input'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
+import { FormInput } from '@/components/ui/form-input'
+import { Alert } from '@/components/ui/alert'
+import { LoadingSpinner } from '@/components/ui/loading-spinner'
 import { useAuth } from './auth-provider'
 import { useRouter } from 'next/navigation'
 
@@ -20,6 +22,16 @@ export function LoginForm() {
     e.preventDefault()
     setError('')
 
+    if (!formData.username.trim()) {
+      setError('请输入用户名或邮箱')
+      return
+    }
+
+    if (!formData.password) {
+      setError('请输入密码')
+      return
+    }
+
     try {
       await login(formData)
       // 登录成功后跳转到游戏页面
@@ -35,6 +47,8 @@ export function LoginForm() {
       ...prev,
       [name]: value,
     }))
+    // 清除错误信息
+    if (error) setError('')
   }
 
   return (
@@ -48,47 +62,44 @@ export function LoginForm() {
       <CardContent>
         <form onSubmit={handleSubmit} className="space-y-4">
           {error && (
-            <div className="bg-red-50 border border-red-200 text-red-700 px-4 py-3 rounded">
+            <Alert variant="destructive" onDismiss={() => setError('')}>
               {error}
-            </div>
+            </Alert>
           )}
           
-          <div className="space-y-2">
-            <label htmlFor="username" className="text-sm font-medium">
-              用户名或邮箱
-            </label>
-            <Input
-              id="username"
-              name="username"
-              type="text"
-              value={formData.username}
-              onChange={handleChange}
-              placeholder="请输入用户名或邮箱"
-              required
-            />
-          </div>
+          <FormInput
+            id="username"
+            name="username"
+            type="text"
+            label="用户名或邮箱"
+            placeholder="请输入用户名或邮箱"
+            value={formData.username}
+            onChange={handleChange}
+            required
+          />
           
-          <div className="space-y-2">
-            <label htmlFor="password" className="text-sm font-medium">
-              密码
-            </label>
-            <Input
-              id="password"
-              name="password"
-              type="password"
-              value={formData.password}
-              onChange={handleChange}
-              placeholder="请输入密码"
-              required
-            />
-          </div>
+          <FormInput
+            id="password"
+            name="password"
+            type="password"
+            label="密码"
+            placeholder="请输入密码"
+            value={formData.password}
+            onChange={handleChange}
+            required
+          />
           
           <Button 
             type="submit" 
             className="w-full" 
             disabled={isLoading}
           >
-            {isLoading ? '登录中...' : '登录'}
+            {isLoading ? (
+              <>
+                <LoadingSpinner size="sm" className="mr-2" />
+                登录中...
+              </>
+            ) : '登录'}
           </Button>
         </form>
         
@@ -96,7 +107,7 @@ export function LoginForm() {
           还没有账号？
           <button 
             type="button" 
-            className="ml-1 text-blue-600 hover:underline"
+            className="ml-1 text-blue-600 hover:underline font-medium"
             onClick={() => router.push('/register')}
           >
             立即注册
