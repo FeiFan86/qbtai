@@ -1,7 +1,7 @@
 import React from 'react'
 import { cn } from '@/lib/utils'
 
-type FormInputProps = (React.InputHTMLAttributes<HTMLInputElement> | React.TextareaHTMLAttributes<HTMLTextAreaElement>) & {
+interface BaseFormInputProps {
   label?: string
   error?: string
   hint?: string
@@ -10,20 +10,31 @@ type FormInputProps = (React.InputHTMLAttributes<HTMLInputElement> | React.Texta
   rows?: number
 }
 
-export function FormInput({
-  label,
-  error,
-  hint,
-  containerClassName,
-  className,
-  id,
-  multiline,
-  rows = 3,
-  ...props
-}: FormInputProps) {
-  const inputId = id || label?.toLowerCase().replace(/\s+/g, '-')
+interface InputProps extends BaseFormInputProps, React.InputHTMLAttributes<HTMLInputElement> {
+  multiline?: false
+}
 
-  const InputComponent = multiline ? 'textarea' : 'input'
+interface TextareaProps extends BaseFormInputProps, React.TextareaHTMLAttributes<HTMLTextAreaElement> {
+  multiline?: true
+  rows?: number
+}
+
+type FormInputProps = InputProps | TextareaProps
+
+export function FormInput(props: FormInputProps) {
+  const { 
+    label, 
+    error, 
+    hint, 
+    containerClassName, 
+    className, 
+    id, 
+    multiline, 
+    rows = 3,
+    ...inputProps 
+  } = props
+
+  const inputId = id || label?.toLowerCase().replace(/\s+/g, '-')
 
   return (
     <div className={cn('space-y-2', containerClassName)}>
@@ -35,7 +46,7 @@ export function FormInput({
           {label}
         </label>
       )}
-      {InputComponent === 'textarea' ? (
+      {multiline ? (
         <textarea
           id={inputId}
           rows={rows}
@@ -44,7 +55,7 @@ export function FormInput({
             error && 'border-red-500 focus:border-red-500 focus:ring-red-500',
             className
           )}
-          {...props}
+          {...inputProps as React.TextareaHTMLAttributes<HTMLTextAreaElement>}
         />
       ) : (
         <input
@@ -54,7 +65,7 @@ export function FormInput({
             error && 'border-red-500 focus:border-red-500 focus:ring-red-500',
             className
           )}
-          {...props}
+          {...inputProps as React.InputHTMLAttributes<HTMLInputElement>}
         />
       )}
       {error && (
