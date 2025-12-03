@@ -71,7 +71,7 @@ const emotionLabels = {
 export default function EmotionTreeHolePage() {
   const { isAuthenticated, user } = useAuth()
   const [posts, setPosts] = useState<EmotionPost[]>([])
-  const [newPost, setNewPost] = useState({ content: '', emotion: 'neutral' as const })
+  const [newPost, setNewPost] = useState({ content: '', emotion: 'neutral' as EmotionPost['emotion'] })
   const [isSubmitting, setIsSubmitting] = useState(false)
   const [successMessage, setSuccessMessage] = useState('')
   const postsEndRef = useRef<HTMLDivElement>(null)
