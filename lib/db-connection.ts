@@ -2,24 +2,26 @@ import mongoose from 'mongoose'
 
 const MONGODB_URI = process.env.MONGODB_URI || `mongodb://root:qq116121@183.87.130.22:27017/cupid-ai?authSource=admin`
 
+interface MongooseCache {
+  conn: typeof mongoose | null
+  promise: Promise<typeof mongoose> | null
+}
+
 declare global {
-  var mongoose: {
-    conn: typeof mongoose | null
-    promise: Promise<typeof mongoose> | null
-  }
+  var mongoose: MongooseCache
 }
 
 if (!MONGODB_URI) {
   throw new Error('请设置MONGODB_URI环境变量')
 }
 
-let cached = global.mongoose
+let cached: MongooseCache = global.mongoose
 
 if (!cached) {
   cached = global.mongoose = { conn: null, promise: null }
 }
 
-async function connectDB() {
+async function connectDB(): Promise<typeof mongoose> {
   if (cached.conn) {
     return cached.conn
   }
@@ -29,9 +31,7 @@ async function connectDB() {
       bufferCommands: false,
     }
 
-    cached.promise = mongoose.connect(MONGODB_URI, opts).then((mongooseConnection) => {
-      return mongooseConnection
-    })
+    cached.promise = mongoose.connect(MONGODB_URI, opts)
   }
 
   try {
