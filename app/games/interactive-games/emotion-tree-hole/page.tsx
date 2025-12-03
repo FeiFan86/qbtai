@@ -28,26 +28,7 @@ import {
 } from 'lucide-react'
 import Link from 'next/link'
 import { databaseService } from '@/lib/database-service'
-
-interface EmotionPost {
-  id: string
-  content: string
-  emotion: 'happy' | 'sad' | 'neutral' | 'anxious' | 'excited'
-  timestamp: Date
-  replies: EmotionReply[]
-  likes: number
-  userId?: string
-  userName?: string
-}
-
-interface EmotionReply {
-  id: string
-  content: string
-  timestamp: Date
-  isSupportive: boolean
-  userId?: string
-  userName?: string
-}
+import { EmotionPost, EmotionReply } from '@/lib/types'
 
 const emotionColors = {
   happy: 'bg-yellow-100 text-yellow-800 border-yellow-200',
@@ -73,10 +54,40 @@ const emotionLabels = {
   excited: '兴奋'
 }
 
+// 将 EmotionPost 的 category 映射到 emotion 显示
+const getEmotionFromCategory = (category: string) => {
+  const emotionMap: Record<string, 'happy' | 'sad' | 'neutral' | 'anxious' | 'excited'> = {
+    happy: 'happy',
+    sad: 'sad',
+    angry: 'sad',
+    anxious: 'anxious',
+    confused: 'anxious',
+    love: 'happy',
+    excited: 'excited',
+    other: 'neutral'
+  }
+  return emotionMap[category] || 'neutral'
+}
+
+// 将 EmotionPost 的 category 映射到 emotion 显示
+const getEmotionFromCategory = (category: string) => {
+  const emotionMap: Record<string, 'happy' | 'sad' | 'neutral' | 'anxious' | 'excited'> = {
+    happy: 'happy',
+    sad: 'sad',
+    angry: 'sad',
+    anxious: 'anxious',
+    confused: 'anxious',
+    love: 'happy',
+    excited: 'excited',
+    other: 'neutral'
+  }
+  return emotionMap[category] || 'neutral'
+}
+
 export default function EmotionTreeHolePage() {
   const { isAuthenticated, user } = useAuth()
   const [posts, setPosts] = useState<EmotionPost[]>([])
-  const [newPost, setNewPost] = useState({ content: '', emotion: 'neutral' as EmotionPost['emotion'] })
+  const [newPost, setNewPost] = useState({ content: '', category: 'other' as EmotionPost['category'] })
   const [isSubmitting, setIsSubmitting] = useState(false)
   const [successMessage, setSuccessMessage] = useState('')
   const [loading, setLoading] = useState(true)
@@ -171,8 +182,8 @@ export default function EmotionTreeHolePage() {
         avatar: user.avatar || '',
         title: newPost.content.substring(0, 50) + (newPost.content.length > 50 ? '...' : ''),
         content: newPost.content,
-        category: newPost.emotion,
-        tags: [newPost.emotion],
+        category: newPost.category,
+        tags: [newPost.category],
         isAnonymous: false
       })
 
@@ -301,11 +312,11 @@ export default function EmotionTreeHolePage() {
                           key={key}
                           type="button"
                           className={`px-3 py-2 rounded-lg border flex items-center gap-2 transition-colors ${
-                            newPost.emotion === key
+                            getEmotionFromCategory(newPost.category) === key
                               ? emotionColors[key as keyof typeof emotionColors]
                               : 'bg-white border-gray-200 hover:bg-gray-50'
                           }`}
-                          onClick={() => setNewPost(prev => ({ ...prev, emotion: key as EmotionPost['emotion'] }))}
+                          onClick={() => setNewPost(prev => ({ ...prev, category: key as EmotionPost['category'] }))}
                         >
                           {emotionIcons[key as keyof typeof emotionIcons]}
                           <span className="text-sm">{label}</span>
@@ -378,8 +389,8 @@ export default function EmotionTreeHolePage() {
                     {/* 帖子头部 */}
                     <div className="flex items-start justify-between mb-4">
                       <div className="flex items-center gap-2">
-                        <div className={`p-2 rounded-full ${emotionColors[post.emotion]}`}>
-                          {emotionIcons[post.emotion]}
+                        <div className={`p-2 rounded-full ${emotionColors[getEmotionFromCategory(post.category)]}`}>
+                          {emotionIcons[getEmotionFromCategory(post.category)]}
                         </div>
                         <span className="text-sm text-gray-500">匿名用户</span>
                       </div>
