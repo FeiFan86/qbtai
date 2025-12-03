@@ -5,12 +5,14 @@ import { LoginForm } from '@/components/login-form'
 import { useAuth } from '@/components/auth-provider'
 import { Button } from '@/components/ui/button'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
+import { useRouter } from 'next/navigation'
 
 export default function LoginPage() {
   const { user, isAuthenticated, logout } = useAuth()
+  const router = useRouter()
 
   const handleGamesRedirect = () => {
-    window.location.href = '/games'
+    router.push('/games')
   }
 
   if (isAuthenticated && user) {

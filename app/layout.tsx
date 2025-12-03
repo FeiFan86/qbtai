@@ -3,6 +3,8 @@ import { Inter } from 'next/font/google'
 import './globals.css'
 import { AuthProvider } from '@/components/auth-provider'
 import { ClientWrapper } from '@/components/client-wrapper'
+import ErrorBoundary from '@/components/error-boundary'
+import GlobalErrorHandler from '@/components/global-error-handler'
 
 const inter = Inter({ subsets: ['latin'] })
 
@@ -23,12 +25,15 @@ export default function RootLayout({
   return (
     <html lang="zh-CN" className="h-full">
       <body className={`${inter.className} h-full bg-gray-50`} suppressHydrationWarning>
+        <GlobalErrorHandler />
         <ClientWrapper fallback={<div className="min-h-screen flex items-center justify-center">加载中...</div>}>
-          <AuthProvider>
-            <div className="min-h-full flex flex-col">
-              {children}
-            </div>
-          </AuthProvider>
+          <ErrorBoundary>
+            <AuthProvider>
+              <div className="min-h-full flex flex-col">
+                {children}
+              </div>
+            </AuthProvider>
+          </ErrorBoundary>
         </ClientWrapper>
       </body>
     </html>

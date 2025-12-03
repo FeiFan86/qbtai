@@ -11,6 +11,7 @@ import { Badge } from '@/components/ui/badge'
 import { Progress } from '@/components/ui/progress'
 import { Play, RotateCcw, Heart, Share2, Star, Clock, Target, ArrowLeft, User, Award, Trophy, CheckCircle } from 'lucide-react'
 import Link from 'next/link'
+import { useRouter } from 'next/navigation'
 
 // 拼图卡片类型
 interface PuzzleCard {
@@ -118,6 +119,7 @@ const difficultyLevels = {
 
 export default function MemoryPuzzlePage() {
   const { user, isAuthenticated } = useAuth()
+  const router = useRouter()
   const [gameStarted, setGameStarted] = useState(false)
   const [currentTheme, setCurrentTheme] = useState(0)
   const [difficulty, setDifficulty] = useState<'easy' | 'medium' | 'hard' | 'expert'>('easy')
@@ -139,11 +141,11 @@ export default function MemoryPuzzlePage() {
 
   // 处理页面跳转的函数
   const handleLoginRedirect = () => {
-    window.location.href = '/login'
+    router.push('/login')
   }
   
   const handleGamesRedirect = () => {
-    window.location.href = '/games'
+    router.push('/games')
   }
   
   const toggleAchievements = () => {
@@ -156,7 +158,7 @@ export default function MemoryPuzzlePage() {
       navigator.share({
         title: '记忆拼图游戏',
         text: `我在记忆拼图游戏中获得了 ${currentScore} 分！快来挑战吧！`,
-        url: window.location.href,
+        url: '/games/interactive-games/memory-puzzle',
       }).catch(err => console.log('分享失败', err))
     }
   }

@@ -6,28 +6,30 @@ import { ApiStatus } from '@/components/api-status'
 import { useAuth } from '@/components/auth-provider'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
 import { Button } from '@/components/ui/button'
+import { useRouter } from 'next/navigation'
 
 export default function DashboardPage() {
   const { isAuthenticated, user } = useAuth()
+  const router = useRouter()
 
   const handleLoginRedirect = () => {
-    window.location.href = '/login'
+    router.push('/login')
   }
 
   const handleGamesRedirect = () => {
-    window.location.href = '/games'
+    router.push('/games')
   }
 
   const handleInteractiveGamesRedirect = () => {
-    window.location.href = '/games/interactive-games'
+    router.push('/games/interactive-games')
   }
 
   const handleAchievementsRedirect = () => {
-    window.location.href = '/achievements'
+    router.push('/achievements')
   }
 
   const handleLeaderboardsRedirect = () => {
-    window.location.href = '/leaderboards'
+    router.push('/leaderboards')
   }
 
   if (!isAuthenticated) {

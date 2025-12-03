@@ -21,6 +21,9 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   const [isLoading, setIsLoading] = useState(true)
 
   useEffect(() => {
+    // 确保只在客户端执行
+    if (typeof window === 'undefined') return
+    
     // 延迟检查认证状态，避免阻塞页面渲染
     const timer = setTimeout(() => {
       checkAuthStatus()

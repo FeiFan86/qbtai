@@ -3,9 +3,19 @@ import Link from 'next/link'
 import { Button } from '@/components/ui/button'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
 
+'use client'
+
+import React from 'react'
+import Link from 'next/link'
+import { Button } from '@/components/ui/button'
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
+import { useRouter } from 'next/navigation'
+
 export default function HomePage() {
+  const router = useRouter()
+
   const handleDashboardRedirect = () => {
-    window.location.href = '/dashboard'
+    router.push('/dashboard')
   }
 
   return (

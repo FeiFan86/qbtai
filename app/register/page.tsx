@@ -5,9 +5,11 @@ import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
 import { useAuth } from '@/components/auth-provider'
+import { useRouter } from 'next/navigation'
 
 export default function RegisterPage() {
   const { register, isLoading } = useAuth()
+  const router = useRouter()
   const [formData, setFormData] = useState({
     username: '',
     email: '',
@@ -46,7 +48,7 @@ export default function RegisterPage() {
   }
 
   const handleLoginRedirect = () => {
-    window.location.href = '/login'
+    router.push('/login')
   }
 
   return (

@@ -84,12 +84,12 @@ export class AuthService {
   static getCurrentUser(): User | null {
     if (typeof window === 'undefined') return null
     
-    const userStr = localStorage.getItem(this.userKey)
-    if (!userStr) return null
-
     try {
+      const userStr = localStorage.getItem(this.userKey)
+      if (!userStr) return null
       return JSON.parse(userStr)
-    } catch {
+    } catch (error) {
+      console.error('Failed to parse user data:', error)
       return null
     }
   }
@@ -121,9 +121,17 @@ export class AuthService {
 
   // 检查是否已登录
   static async isAuthenticated(): Promise<boolean> {
+    // 在服务器端直接返回false
+    if (typeof window === 'undefined') return false
+    
     const token = this.getToken()
     if (!token) return false
 
-    return await this.verifyToken(token)
+    try {
+      return await this.verifyToken(token)
+    } catch (error) {
+      console.error('Authentication check failed:', error)
+      return false
+    }
   }
 }
