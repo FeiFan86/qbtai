@@ -36,7 +36,11 @@
     "date-fns": "^3.6.0",
     "tailwindcss-animate": "^1.0.7",
     "jspdf": "^2.5.1",
-    "html2canvas": "^1.4.1"
+    "html2canvas": "^1.4.1",
+    "mongodb": "^5.8.0",
+    "mongoose": "^7.5.0",
+    "bcryptjs": "^2.4.3",
+    "jsonwebtoken": "^9.0.2"
   },
   "devDependencies": {
     "eslint": "^8",

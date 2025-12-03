@@ -27,6 +27,7 @@ import {
   Star
 } from 'lucide-react'
 import Link from 'next/link'
+import { databaseService } from '@/lib/database-service'
 
 interface EmotionPost {
   id: string
@@ -35,6 +36,8 @@ interface EmotionPost {
   timestamp: Date
   replies: EmotionReply[]
   likes: number
+  userId?: string
+  userName?: string
 }
 
 interface EmotionReply {
@@ -42,6 +45,8 @@ interface EmotionReply {
   content: string
   timestamp: Date
   isSupportive: boolean
+  userId?: string
+  userName?: string
 }
 
 const emotionColors = {
@@ -74,59 +79,75 @@ export default function EmotionTreeHolePage() {
   const [newPost, setNewPost] = useState({ content: '', emotion: 'neutral' as EmotionPost['emotion'] })
   const [isSubmitting, setIsSubmitting] = useState(false)
   const [successMessage, setSuccessMessage] = useState('')
+  const [loading, setLoading] = useState(true)
+  const [replyInputs, setReplyInputs] = useState<Record<string, string>>({})
   const postsEndRef = useRef<HTMLDivElement>(null)
 
-  // 模拟数据加载
+  // 加载真实数据
   useEffect(() => {
-    const mockPosts: EmotionPost[] = [
-      {
-        id: '1',
-        content: '今天工作遇到了挫折，感觉有点沮丧。但和朋友聊了聊后，心情好多了。有时候倾诉真的很有用。',
-        emotion: 'sad',
-        timestamp: new Date(Date.now() - 2 * 60 * 60 * 1000),
-        replies: [
-          {
-            id: '1-1',
-            content: '抱抱你，工作挫折是难免的，你已经很棒了！',
-            timestamp: new Date(Date.now() - 1.5 * 60 * 60 * 1000),
-            isSupportive: true
-          },
-          {
-            id: '1-2',
-            content: '我也是，每次和朋友聊天后都感觉好很多。',
-            timestamp: new Date(Date.now() - 1 * 60 * 60 * 1000),
-            isSupportive: true
-          }
-        ],
-        likes: 12
-      },
-      {
-        id: '2',
-        content: '今天和另一半一起做饭，虽然厨房弄得一团糟，但过程超级开心！简单的生活也可以很幸福。',
-        emotion: 'happy',
-        timestamp: new Date(Date.now() - 4 * 60 * 60 * 1000),
-        replies: [
-          {
-            id: '2-1',
-            content: '这种日常的小幸福最珍贵了！',
-            timestamp: new Date(Date.now() - 3.5 * 60 * 60 * 1000),
-            isSupportive: true
-          }
-        ],
-        likes: 25
-      },
-      {
-        id: '3',
-        content: '最近总是睡不好，对未来的不确定性让我感到焦虑。希望大家都能找到内心的平静。',
-        emotion: 'anxious',
-        timestamp: new Date(Date.now() - 6 * 60 * 60 * 1000),
-        replies: [],
-        likes: 8
-      }
-    ]
-
-    setPosts(mockPosts)
+    loadPosts()
   }, [])
+
+  const loadPosts = async () => {
+    try {
+      setLoading(true)
+      // 从数据库加载帖子
+      const postsData = await databaseService.getEmotionPosts('emotion-tree-hole', 20)
+      setPosts(postsData)
+    } catch (error) {
+      console.error('加载帖子失败:', error)
+      // 如果API失败，使用模拟数据
+      const mockPosts: EmotionPost[] = [
+        {
+          id: '1',
+          content: '今天工作遇到了挫折，感觉有点沮丧。但和朋友聊了聊后，心情好多了。有时候倾诉真的很有用。',
+          emotion: 'sad',
+          timestamp: new Date(Date.now() - 2 * 60 * 60 * 1000),
+          replies: [
+            {
+              id: '1-1',
+              content: '抱抱你，工作挫折是难免的，你已经很棒了！',
+              timestamp: new Date(Date.now() - 1.5 * 60 * 60 * 1000),
+              isSupportive: true
+            },
+            {
+              id: '1-2',
+              content: '我也是，每次和朋友聊天后都感觉好很多。',
+              timestamp: new Date(Date.now() - 1 * 60 * 60 * 1000),
+              isSupportive: true
+            }
+          ],
+          likes: 12
+        },
+        {
+          id: '2',
+          content: '今天和另一半一起做饭，虽然厨房弄得一团糟，但过程超级开心！简单的生活也可以很幸福。',
+          emotion: 'happy',
+          timestamp: new Date(Date.now() - 4 * 60 * 60 * 1000),
+          replies: [
+            {
+              id: '2-1',
+              content: '这种日常的小幸福最珍贵了！',
+              timestamp: new Date(Date.now() - 3.5 * 60 * 60 * 1000),
+              isSupportive: true
+            }
+          ],
+          likes: 25
+        },
+        {
+          id: '3',
+          content: '最近总是睡不好，对未来的不确定性让我感到焦虑。希望大家都能找到内心的平静。',
+          emotion: 'anxious',
+          timestamp: new Date(Date.now() - 6 * 60 * 60 * 1000),
+          replies: [],
+          likes: 8
+        }
+      ]
+      setPosts(mockPosts)
+    } finally {
+      setLoading(false)
+    }
+  }
 
   const handleSubmitPost = async (e: React.FormEvent) => {
     e.preventDefault()
@@ -135,7 +156,7 @@ export default function EmotionTreeHolePage() {
       return
     }
 
-    if (!isAuthenticated) {
+    if (!isAuthenticated || !user) {
       alert('请先登录再分享你的情感')
       return
     }
@@ -143,21 +164,25 @@ export default function EmotionTreeHolePage() {
     setIsSubmitting(true)
 
     try {
-      // 模拟API调用
-      await new Promise(resolve => setTimeout(resolve, 1000))
-      
-      const post: EmotionPost = {
-        id: Date.now().toString(),
+      // 保存到数据库
+      const savedPost = await databaseService.createEmotionPost('emotion-tree-hole', {
+        userId: user.id,
+        username: user.username,
+        avatar: user.avatar || '',
+        title: newPost.content.substring(0, 50) + (newPost.content.length > 50 ? '...' : ''),
         content: newPost.content,
-        emotion: newPost.emotion,
-        timestamp: new Date(),
-        replies: [],
-        likes: 0
-      }
+        category: newPost.emotion,
+        tags: [newPost.emotion],
+        isAnonymous: false
+      })
 
-      setPosts(prev => [post, ...prev])
+      // 更新本地状态
+      setPosts(prev => [savedPost, ...prev])
       setNewPost({ content: '', emotion: 'neutral' })
       setSuccessMessage('你的情感已成功分享到树洞！')
+      
+      // 保存游戏进度
+      await databaseService.saveGameProgress('emotion-tree-hole', user.id, { postsCount: posts.length + 1 })
       
       // 3秒后清除成功消息
       setTimeout(() => setSuccessMessage(''), 3000)
@@ -166,8 +191,50 @@ export default function EmotionTreeHolePage() {
       window.scrollTo({ top: 0, behavior: 'smooth' })
     } catch (error) {
       console.error('提交失败:', error)
+      alert('提交失败，请稍后重试')
     } finally {
       setIsSubmitting(false)
+    }
+  }
+
+  const handleLikePost = async (postId: string) => {
+    if (!isAuthenticated || !user) {
+      alert('请先登录再支持他人')
+      return
+    }
+
+    try {
+      const updatedPost = await databaseService.likeEmotionPost('emotion-tree-hole', postId)
+      setPosts(prev => prev.map(post => 
+        post.id === postId ? { ...post, likes: updatedPost.likes } : post
+      ))
+    } catch (error) {
+      console.error('点赞失败:', error)
+    }
+  }
+
+  const handleAddReply = async (postId: string, content: string) => {
+    if (!isAuthenticated || !user) {
+      alert('请先登录再回复')
+      return
+    }
+
+    try {
+      const newReply = await databaseService.addEmotionReply('emotion-tree-hole', postId, {
+        userId: user.id,
+        username: user.username,
+        avatar: user.avatar || '',
+        content,
+        isAnonymous: false
+      })
+
+      setPosts(prev => prev.map(post => 
+        post.id === postId 
+          ? { ...post, replies: [...post.replies, newReply] }
+          : post
+      ))
+    } catch (error) {
+      console.error('回复失败:', error)
     }
   }
 
