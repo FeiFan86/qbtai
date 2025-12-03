@@ -225,7 +225,7 @@ export default function EmotionTreeHolePage() {
 
       // 更新本地状态
       setPosts(prev => [savedPost, ...prev])
-      setNewPost({ content: '', emotion: 'neutral' })
+      setNewPost({ content: '', category: 'other' })
       setSuccessMessage('你的情感已成功分享到树洞！')
       
       // 保存游戏进度
