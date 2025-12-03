@@ -107,12 +107,35 @@ EmotionPostSchema.virtual('createdAtFormatted').get(function() {
   return this.createdAt.toLocaleDateString('zh-CN')
 })
 
-// 静态方法接口
-export interface EmotionPostModel extends mongoose.Model<any> {
-  findByGameType(gameType: string, limit?: number): Promise<any[]>;
-  findFeatured(gameType: string): Promise<any[]>;
-  findByCategory(gameType: string, category: string): Promise<any[]>;
+// 定义文档接口
+interface IEmotionPost {
+  gameType: string;
+  userId: string;
+  username: string;
+  avatar: string;
+  title: string;
+  content: string;
+  category: 'happy' | 'sad' | 'angry' | 'anxious' | 'excited' | 'confused' | 'love' | 'other';
+  tags: string[];
+  isAnonymous: boolean;
+  likes: string[];
+  replies: any[];
+  replyCount: number;
+  isFeatured: boolean;
+  imageUrl: string;
+  createdAt: Date;
+  updatedAt: Date;
 }
+
+// 静态方法接口
+interface EmotionPostStatics {
+  findByGameType(gameType: string, limit?: number): Promise<IEmotionPost[]>;
+  findFeatured(gameType: string): Promise<IEmotionPost[]>;
+  findByCategory(gameType: string, category: string): Promise<IEmotionPost[]>;
+}
+
+// 创建模型类型
+export type EmotionPostModel = mongoose.Model<IEmotionPost> & EmotionPostStatics;
 
 // 静态方法
 EmotionPostSchema.statics.findByGameType = function(gameType: string, limit: number = 20) {
@@ -134,4 +157,4 @@ EmotionPostSchema.statics.findByCategory = function(gameType: string, category: 
     .limit(20)
 }
 
-export default mongoose.models.EmotionPost || mongoose.model('EmotionPost', EmotionPostSchema) as EmotionPostModel
+export default (mongoose.models.EmotionPost as EmotionPostModel) || mongoose.model<IEmotionPost, EmotionPostModel>('EmotionPost', EmotionPostSchema)
