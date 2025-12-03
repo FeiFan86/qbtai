@@ -96,47 +96,92 @@ export default function EmotionTreeHolePage() {
       const mockPosts: EmotionPost[] = [
         {
           id: '1',
+          gameType: 'emotion-tree-hole',
+          userId: 'user_mock_1',
+          username: '匿名用户',
+          avatar: '',
+          title: '今天工作遇到了挫折...',
           content: '今天工作遇到了挫折，感觉有点沮丧。但和朋友聊了聊后，心情好多了。有时候倾诉真的很有用。',
-          emotion: 'sad',
-          timestamp: new Date(Date.now() - 2 * 60 * 60 * 1000),
+          category: 'sad',
+          tags: ['sad'],
+          isAnonymous: true,
+          likes: [],
           replies: [
             {
               id: '1-1',
+              userId: 'user_mock_2',
+              username: '支持者',
+              avatar: '',
               content: '抱抱你，工作挫折是难免的，你已经很棒了！',
-              timestamp: new Date(Date.now() - 1.5 * 60 * 60 * 1000),
-              isSupportive: true
+              likes: [],
+              isAnonymous: true,
+              timestamp: new Date(Date.now() - 1.5 * 60 * 60 * 1000).toISOString(),
             },
             {
               id: '1-2',
+              userId: 'user_mock_3',
+              username: '共鸣者',
+              avatar: '',
               content: '我也是，每次和朋友聊天后都感觉好很多。',
-              timestamp: new Date(Date.now() - 1 * 60 * 60 * 1000),
-              isSupportive: true
+              likes: [],
+              isAnonymous: true,
+              timestamp: new Date(Date.now() - 1 * 60 * 60 * 1000).toISOString(),
             }
           ],
-          likes: 12
+          replyCount: 2,
+          isFeatured: false,
+          imageUrl: '',
+          timestamp: new Date(Date.now() - 2 * 60 * 60 * 1000).toISOString(),
+          likeCount: 12
         },
         {
           id: '2',
+          gameType: 'emotion-tree-hole',
+          userId: 'user_mock_4',
+          username: '匿名用户',
+          avatar: '',
+          title: '今天和另一半一起做饭...',
           content: '今天和另一半一起做饭，虽然厨房弄得一团糟，但过程超级开心！简单的生活也可以很幸福。',
-          emotion: 'happy',
-          timestamp: new Date(Date.now() - 4 * 60 * 60 * 1000),
+          category: 'happy',
+          tags: ['happy'],
+          isAnonymous: true,
+          likes: [],
           replies: [
             {
               id: '2-1',
+              userId: 'user_mock_5',
+              username: '欣赏者',
+              avatar: '',
               content: '这种日常的小幸福最珍贵了！',
-              timestamp: new Date(Date.now() - 3.5 * 60 * 60 * 1000),
-              isSupportive: true
+              likes: [],
+              isAnonymous: true,
+              timestamp: new Date(Date.now() - 3.5 * 60 * 60 * 1000).toISOString(),
             }
           ],
-          likes: 25
+          replyCount: 1,
+          isFeatured: false,
+          imageUrl: '',
+          timestamp: new Date(Date.now() - 4 * 60 * 60 * 1000).toISOString(),
+          likeCount: 25
         },
         {
           id: '3',
+          gameType: 'emotion-tree-hole',
+          userId: 'user_mock_6',
+          username: '匿名用户',
+          avatar: '',
+          title: '最近总是睡不好...',
           content: '最近总是睡不好，对未来的不确定性让我感到焦虑。希望大家都能找到内心的平静。',
-          emotion: 'anxious',
-          timestamp: new Date(Date.now() - 6 * 60 * 60 * 1000),
+          category: 'anxious',
+          tags: ['anxious'],
+          isAnonymous: true,
+          likes: [],
           replies: [],
-          likes: 8
+          replyCount: 0,
+          isFeatured: false,
+          imageUrl: '',
+          timestamp: new Date(Date.now() - 6 * 60 * 60 * 1000).toISOString(),
+          likeCount: 8
         }
       ]
       setPosts(mockPosts)
@@ -234,7 +279,8 @@ export default function EmotionTreeHolePage() {
     }
   }
 
-  const formatTime = (date: Date) => {
+  const formatTime = (timestamp: string | Date) => {
+    const date = typeof timestamp === 'string' ? new Date(timestamp) : timestamp
     const now = new Date()
     const diff = now.getTime() - date.getTime()
     const hours = Math.floor(diff / (1000 * 60 * 60))
