@@ -1,3 +1,36 @@
+// 情感帖子相关类型定义
+export interface EmotionReply {
+  id: string;
+  userId: string;
+  username: string;
+  avatar: string;
+  content: string;
+  likes: string[];
+  isAnonymous: boolean;
+  timestamp: string;
+}
+
+export interface EmotionPost {
+  id: string;
+  gameType: string;
+  userId: string;
+  username: string;
+  avatar: string;
+  title: string;
+  content: string;
+  category: 'happy' | 'sad' | 'angry' | 'anxious' | 'excited' | 'confused' | 'love' | 'other';
+  tags: string[];
+  isAnonymous: boolean;
+  likes: string[];
+  replies: EmotionReply[];
+  replyCount: number;
+  isFeatured: boolean;
+  imageUrl: string;
+  timestamp: string;
+  likeCount?: number;
+  createdAtFormatted?: string;
+}
+
 // 用户相关类型定义
 export interface User {
   id: string;
