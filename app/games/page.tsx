@@ -368,7 +368,7 @@ export default function GamesPage() {
                     className={`transition-all duration-300 ${isLoaded ? 'translate-y-0 opacity-100' : 'translate-y-10 opacity-0'}`}
                     style={{ transitionDelay: `${index * 100}ms` }}
                   >
-                    <GameCard game={game} />
+                    <GameCard game={{...game, difficulty: game.difficulty as '简单' | '中等' | '困难'}} />
                   </div>
                 ))}
               </div>
@@ -380,7 +380,7 @@ export default function GamesPage() {
                     className={`transition-all duration-300 ${isLoaded ? 'translate-x-0 opacity-100' : 'translate-x-10 opacity-0'}`}
                     style={{ transitionDelay: `${index * 50}ms` }}
                   >
-                    <GameCard game={game} size="compact" />
+                    <GameCard game={{...game, difficulty: game.difficulty as '简单' | '中等' | '困难'}} size="compact" />
                   </div>
                 ))}
               </div>
