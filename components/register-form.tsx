@@ -85,7 +85,7 @@ export function RegisterForm() {
 
   const getPasswordStrength = () => {
     const password = formData.password
-    if (!password) return { score: 0, text: '', color: '', width: '0%' }
+    if (!password) return { score: 0, text: '', color: '', bgColor: '', width: '0%' }
 
     let score = 0
     if (password.length >= 6) score += 1
