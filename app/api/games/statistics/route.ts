@@ -29,7 +29,7 @@ export async function GET(request: NextRequest) {
           _id: null,
           totalGames: { $sum: 1 },
           averageProgress: { $avg: '$progress' },
-          totalPlayTime: { $sum: '$playTime' || 0 },
+          totalPlayTime: { $sum: { $ifNull: ['$totalPlayTime', 0] } },
           lastPlayed: { $max: '$lastPlayed' }
         }
       }
