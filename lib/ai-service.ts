@@ -113,6 +113,7 @@ export class AIService {
       // 返回默认内容作为降级方案
       return {
         content: '抱歉，AI服务暂时不可用。请稍后重试。',
+        suggestions: ['建议稍后再次尝试', '检查网络连接是否正常', '联系技术支持获取帮助'],
         type,
         length: 20,
         createdAt: new Date().toISOString()
