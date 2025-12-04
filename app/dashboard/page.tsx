@@ -7,6 +7,7 @@ import { useAuth } from '@/components/auth-provider'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
 import { Button } from '@/components/ui/button'
 import { useRouter } from 'next/navigation'
+import { Heart } from 'lucide-react'
 
 export default function DashboardPage() {
   const { isAuthenticated, user } = useAuth()
@@ -56,12 +57,43 @@ export default function DashboardPage() {
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-rose-50 via-pink-50 to-purple-50 relative overflow-hidden">
-      {/* 增强背景装饰元素 */}
+      {/* 增强背景装饰元素 - 与首页保持一致 */}
       <div className="absolute inset-0 bg-gradient-to-br from-rose-100/20 via-pink-100/20 to-purple-100/20"></div>
       <div className="absolute top-10 left-10 w-72 h-72 bg-gradient-to-r from-rose-300/30 to-pink-300/30 rounded-full blur-3xl animate-pulse"></div>
       <div className="absolute bottom-10 right-10 w-96 h-96 bg-gradient-to-r from-purple-300/30 to-blue-300/30 rounded-full blur-3xl animate-pulse"></div>
       <div className="absolute top-1/4 right-1/4 w-64 h-64 bg-gradient-to-r from-orange-300/20 to-red-300/20 rounded-full blur-3xl animate-pulse delay-300"></div>
       <div className="absolute bottom-1/3 left-1/3 w-80 h-80 bg-gradient-to-r from-yellow-300/20 to-amber-300/20 rounded-full blur-3xl animate-pulse delay-700"></div>
+
+      {/* 导航栏 - 与首页一致 */}
+      <nav className="relative z-10 bg-white/70 backdrop-blur-md border-b border-white/20">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="flex justify-between items-center h-16">
+            <div className="flex items-center space-x-3">
+              <div className="relative">
+                <div className="w-10 h-10 bg-gradient-to-r from-rose-500 to-pink-500 rounded-full flex items-center justify-center">
+                  <Heart className="h-5 w-5 text-white" fill="currentColor" />
+                </div>
+                <div className="absolute -top-1 -right-1 w-3 h-3 bg-green-400 rounded-full border-2 border-white"></div>
+              </div>
+              <div>
+                <span className="text-xl font-bold bg-gradient-to-r from-rose-600 to-pink-600 bg-clip-text text-transparent">
+                  丘比特AI
+                </span>
+                <span className="block text-xs text-gray-500 -mt-1">情感互动平台</span>
+              </div>
+            </div>
+            <div className="flex items-center space-x-3">
+              <Button 
+                variant="ghost" 
+                onClick={() => router.push('/')}
+                className="text-gray-600 hover:text-rose-600 transition-colors"
+              >
+                返回首页
+              </Button>
+            </div>
+          </div>
+        </div>
+      </nav>
       
       <div className="relative z-10 p-4">
         <div className="max-w-6xl mx-auto">
@@ -179,6 +211,26 @@ export default function DashboardPage() {
           </div>
         </div>
       </div>
+
+      {/* 页脚 - 与首页一致 */}
+      <footer className="relative z-10 bg-white/70 backdrop-blur-md border-t border-white/20 mt-16">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
+          <div className="text-center space-y-4">
+            <div className="flex items-center justify-center space-x-3">
+              <div className="w-8 h-8 bg-gradient-to-r from-rose-500 to-pink-500 rounded-full flex items-center justify-center">
+                <Heart className="h-4 w-4 text-white" fill="currentColor" />
+              </div>
+              <span className="text-lg font-bold text-gray-900">丘比特AI情感助手</span>
+            </div>
+            <p className="text-gray-600">
+              © 2024 专为情侣设计的互动游戏平台. 让爱更美好.
+            </p>
+            <p className="text-sm text-gray-500">
+              当前版本: v2.0.0 | 用心创造每一份感动
+            </p>
+          </div>
+        </div>
+      </footer>
     </div>
   )
 }

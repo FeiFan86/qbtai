@@ -1,8 +1,7 @@
 'use client'
 
-import { useState, useRef, useEffect } from 'react'
-import { Navigation } from '@/components/navigation'
-import { Footer } from '@/components/footer'
+import { useState, useRef } from 'react'
+import { useRouter } from 'next/navigation'
 import { Button } from '@/components/ui/button'
 import { Textarea } from '@/components/ui/textarea'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
@@ -10,18 +9,24 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
 import { Label } from '@/components/ui/label'
 import { Badge } from '@/components/ui/badge'
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select'
-import { MessageCircle, Users, Brain, Lightbulb, CheckCircle, AlertCircle, TrendingUp, Home, HeadphonesIcon, BookOpen, Stethoscope } from 'lucide-react'
+import { MessageCircle, Users, Brain, Lightbulb, CheckCircle, AlertCircle, TrendingUp, Heart as HeartIcon, Mic, HeadphonesIcon, BookOpen, Stethoscope } from 'lucide-react'
 import { ConversationAnalysis } from '@/components/conversation-analysis'
 import { SocialStrategies } from '@/components/social-strategies'
 
 export default function SocialAssistantPage() {
+  const router = useRouter()
   const [conversationText, setConversationText] = useState('')
   const [context, setContext] = useState('')
   const [scenario, setScenario] = useState('casual')
   const [isAnalyzing, setIsAnalyzing] = useState(false)
   const [analysisResult, setAnalysisResult] = useState<any>(null)
   const [analysisProgress, setAnalysisProgress] = useState(0)
+  const [isVisible, setIsVisible] = useState(false)
   const resultRef = useRef<HTMLDivElement>(null)
+  
+  useEffect(() => {
+    setIsVisible(true)
+  }, [])
   
   // 处理示例选择
   const handleExampleSelect = (example: any) => {
@@ -98,257 +103,304 @@ export default function SocialAssistantPage() {
     {
       title: '职场沟通',
       description: '分析工作中的对话，提供专业建议',
-      icon: <Users className="h-5 w-5 text-blue-500" />,
-      scenario: 'professional',
-      example: '老板：项目进度如何了？\n我：目前遇到一些技术难题，可能需要延期。'
+      example: '老板: 这个项目为什么延期了？\n我: 是因为技术上遇到了一些挑战...\n老板: 这些挑战之前没有考虑到吗？\n我: 我觉得这些风险评估可能有些不足...',
+      scenario: 'work',
+      icon: <BookOpen className="h-5 w-5 text-blue-500" />
     },
     {
-      title: '情侣对话',
-      description: '改善亲密关系中的沟通方式',
-      icon: <MessageCircle className="h-5 w-5 text-pink-500" />,
-      scenario: 'romantic',
-      example: '伴侣：你最近总是忙工作，都没时间陪我。'
-    },
-    {
-      title: '朋友交流',
-      description: '优化与朋友的日常对话',
-      icon: <Users className="h-5 w-5 text-green-500" />,
-      scenario: 'casual',
-      example: '朋友：最近感觉怎么样？\n我：还行，就是工作有点压力。'
-    },
-    {
-      title: '冲突调解',
-      description: '提供冲突处理和解决方案',
-      icon: <AlertCircle className="h-5 w-5 text-orange-500" />,
-      scenario: 'conflict',
-      example: 'A：你总是不尊重我的意见！\nB：我没有，只是我们的看法不同。'
+      title: '情侣交流',
+      description: '分析情侣间的对话，改善沟通方式',
+      example: 'A: 你最近工作好像很忙，都没时间陪我\nB: 我知道，最近项目太忙了，我也不想这样\nA: 我理解，但我们需要时间在一起\nB: 这个项目完成后，我一定多陪你好吗？',
+      scenario: 'couple',
+      icon: <HeartIcon className="h-5 w-5 text-rose-500" />
     },
     {
       title: '家庭关系',
-      description: '改善家庭成员之间的沟通',
-      icon: <Home className="h-5 w-5 text-purple-500" />,
+      description: '分析家庭成员间的沟通问题',
+      example: '妈妈: 你怎么又不做家务？\n我: 今天太累了，明天再做吧\n妈妈: 你总是说明天，明天...\n我: 我知道这让你失望了，但我真的很累',
       scenario: 'family',
-      example: '父母：你怎么又这么晚回来？\n我：公司加班，没办法。'
+      icon: <Users className="h-5 w-5 text-green-500" />
     },
     {
-      title: '客户服务',
-      description: '提升客户服务沟通技巧',
-      icon: <HeadphonesIcon className="h-5 w-5 text-cyan-500" />,
-      scenario: 'service',
-      example: '客户：你们的产品质量太差了！\n客服：非常抱歉给您带来不便，请详细说明问题。'
-    },
-    {
-      title: '教育场景',
-      description: '师生沟通技巧提升',
-      icon: <BookOpen className="h-5 w-5 text-indigo-500" />,
-      scenario: 'education',
-      example: '学生：这个概念太难了，我完全听不懂。\n老师：没关系，我们换个方式解释。'
-    },
-    {
-      title: '医疗沟通',
-      description: '医患沟通技巧优化',
-      icon: <Stethoscope className="h-5 w-5 text-red-500" />,
-      scenario: 'medical',
-      example: '患者：医生，我检查结果怎么样？\n医生：根据检查结果，您的身体状况总体良好。'
+      title: '朋友间沟通',
+      description: '分析朋友间的交流，改善友谊',
+      example: '朋友: 你怎么最近都不回我消息？\n我: 最近真的很忙，事情太多了\n朋友: 再忙也有时间回个消息吧\n我: 你说得对，我应该多联系你',
+      scenario: 'friends',
+      icon: <MessageCircle className="h-5 w-5 text-purple-500" />
     }
   ]
 
+  const socialScenarios = [
+    { id: 'casual', label: '日常交流' },
+    { id: 'work', label: '职场沟通' },
+    { id: 'couple', label: '情侣交流' },
+    { id: 'family', label: '家庭关系' },
+    { id: 'friends', label: '朋友交流' },
+    { id: 'conflict', label: '冲突解决' }
+  ]
+
   return (
-    <div className="min-h-screen bg-gradient-to-br from-pink-50 via-purple-50 to-indigo-50">
-      <Navigation />
-      
-      <main className="container mx-auto px-4 py-8">
-        <div className="mx-auto max-w-6xl">
-          <div className="text-center mb-10">
-            <h1 className="text-4xl font-bold tracking-tight gradient-text mb-4">
-              社交互动助手
-            </h1>
-            <p className="text-lg text-gray-600 max-w-2xl mx-auto">
-              智能分析对话内容，提供专业的社交策略和话术建议，改善您的沟通技巧
-            </p>
+    <div className="min-h-screen bg-gradient-to-br from-rose-50 via-pink-50 to-purple-50 relative overflow-hidden">
+      {/* 增强背景装饰元素 - 与首页保持一致 */}
+      <div className="absolute inset-0 bg-gradient-to-br from-rose-100/20 via-pink-100/20 to-purple-100/20"></div>
+      <div className="absolute top-10 left-10 w-72 h-72 bg-gradient-to-r from-rose-300/30 to-pink-300/30 rounded-full blur-3xl animate-pulse"></div>
+      <div className="absolute bottom-10 right-10 w-96 h-96 bg-gradient-to-r from-purple-300/30 to-blue-300/30 rounded-full blur-3xl animate-pulse"></div>
+      <div className="absolute top-1/4 right-1/4 w-64 h-64 bg-gradient-to-r from-orange-300/20 to-red-300/20 rounded-full blur-3xl animate-pulse delay-300"></div>
+      <div className="absolute bottom-1/3 left-1/3 w-80 h-80 bg-gradient-to-r from-yellow-300/20 to-amber-300/20 rounded-full blur-3xl animate-pulse delay-700"></div>
+
+      {/* 导航栏 - 与首页一致 */}
+      <nav className="relative z-10 bg-white/70 backdrop-blur-md border-b border-white/20">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="flex justify-between items-center h-16">
+            <div className="flex items-center space-x-3">
+              <div className="relative">
+                <div className="w-10 h-10 bg-gradient-to-r from-rose-500 to-pink-500 rounded-full flex items-center justify-center">
+                  <HeartIcon className="h-5 w-5 text-white" fill="currentColor" />
+                </div>
+                <div className="absolute -top-1 -right-1 w-3 h-3 bg-green-400 rounded-full border-2 border-white"></div>
+              </div>
+              <div>
+                <span className="text-xl font-bold bg-gradient-to-r from-rose-600 to-pink-600 bg-clip-text text-transparent">
+                  丘比特AI
+                </span>
+                <span className="block text-xs text-gray-500 -mt-1">情感互动平台</span>
+              </div>
+            </div>
+            <div className="flex items-center space-x-3">
+              <Button 
+                variant="ghost" 
+                onClick={() => router.push('/login')}
+                className="text-gray-600 hover:text-rose-600 transition-colors"
+              >
+                登录
+              </Button>
+              <Button 
+                onClick={() => router.push('/register')}
+                className="bg-gradient-to-r from-rose-500 to-pink-500 hover:from-rose-600 hover:to-pink-600 transition-all duration-300 shadow-lg hover:shadow-xl"
+              >
+                立即体验
+              </Button>
+            </div>
+          </div>
+        </div>
+      </nav>
+
+      {/* 主要内容区域 */}
+      <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16 lg:py-24">
+        <div className="text-center mb-16">
+          {/* 标签 */}
+          <div className="inline-flex items-center px-4 py-2 rounded-full bg-white/80 backdrop-blur-sm border border-white/20 shadow-sm mb-6">
+            <MessageCircle className="h-4 w-4 text-rose-500 mr-2" />
+            <span className="text-sm font-medium text-gray-700">AI社交沟通助手</span>
           </div>
 
-          <div className="space-y-6">
-            {/* 场景示例 */}
-            <Card>
+          {/* 主标题 */}
+          <div className="space-y-4 mb-8">
+            <h1 className="text-4xl md:text-6xl lg:text-7xl font-bold tracking-tight">
+              <span className="block text-gray-900">社交助手</span>
+              <span className="block bg-gradient-to-r from-rose-600 via-pink-600 to-purple-600 bg-clip-text text-transparent">
+                提升人际沟通
+              </span>
+            </h1>
+            <p className="text-xl md:text-2xl text-gray-600 max-w-4xl mx-auto leading-relaxed">
+              分析社交对话模式，提供专业沟通建议，
+              <span className="text-rose-600 font-medium">让每一次交流都更加有效和愉快</span>
+            </p>
+          </div>
+        </div>
+
+        {/* 主要功能区域 */}
+        <div className="grid lg:grid-cols-3 gap-8">
+          {/* 左侧 - 分析输入区 */}
+          <div className="lg:col-span-2">
+            <Card className="bg-white/80 backdrop-blur-sm border-0 shadow-lg">
               <CardHeader>
-                <CardTitle className="flex items-center gap-2">
-                  <Lightbulb className="h-5 w-5 text-yellow-500" />
-                  场景示例
+                <CardTitle className="text-2xl font-bold text-gray-900">
+                  <div className="flex items-center space-x-2">
+                    <MessageCircle className="h-6 w-6 text-rose-500" />
+                    <span>社交对话分析</span>
+                  </div>
                 </CardTitle>
-                <CardDescription>
-                  选择一个场景，快速了解如何优化对话
+                <CardDescription className="text-gray-600">
+                  输入对话内容，AI将为您分析沟通模式和提供改善建议
                 </CardDescription>
               </CardHeader>
-              <CardContent>
-                <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-4">
-                  {conversationExamples.map((example, index) => (
-                    <div 
-                      key={index}
-                      className="border rounded-lg p-4 cursor-pointer hover:bg-gray-50 transition-colors"
-                      onClick={() => handleExampleSelect(example)}
-                    >
-                      <div className="flex items-center gap-2 mb-3">
-                        {example.icon}
-                        <span className="font-medium">{example.title}</span>
-                      </div>
-                      <p className="text-sm text-gray-600 mb-3">{example.description}</p>
-                      <div className="text-xs text-gray-500 bg-gray-100 p-2 rounded">
-                        点击填充示例对话
-                      </div>
+              <CardContent className="space-y-6">
+                <div className="space-y-2">
+                  <Label htmlFor="scenario">场景类型</Label>
+                  <Select value={scenario} onValueChange={setScenario}>
+                    <SelectTrigger className="bg-white/50 border-white/20">
+                      <SelectValue placeholder="选择对话场景" />
+                    </SelectTrigger>
+                    <SelectContent>
+                      {socialScenarios.map(s => (
+                        <SelectItem key={s.id} value={s.id}>{s.label}</SelectItem>
+                      ))}
+                    </SelectContent>
+                  </Select>
+                </div>
+
+                <div className="space-y-2">
+                  <Label htmlFor="conversation">对话内容</Label>
+                  <Textarea
+                    id="conversation"
+                    placeholder="输入需要分析的对话内容，请按顺序包含各方发言..."
+                    value={conversationText}
+                    onChange={(e) => setConversationText(e.target.value)}
+                    rows={8}
+                    className="bg-white/50 border-white/20 resize-none"
+                  />
+                </div>
+
+                <div className="space-y-2">
+                  <Label htmlFor="context">背景信息（可选）</Label>
+                  <Textarea
+                    id="context"
+                    placeholder="提供对话的背景信息，帮助AI更好地理解情境..."
+                    value={context}
+                    onChange={(e) => setContext(e.target.value)}
+                    rows={3}
+                    className="bg-white/50 border-white/20 resize-none"
+                  />
+                </div>
+
+                {/* 分析进度条 */}
+                {isAnalyzing && (
+                  <div>
+                    <div className="flex items-center justify-between mb-2">
+                      <span className="text-sm font-medium text-gray-700">正在分析...</span>
+                      <span className="text-sm text-gray-500">{analysisProgress}%</span>
                     </div>
-                  ))}
+                    <div className="w-full bg-gray-200 rounded-full h-2 overflow-hidden">
+                      <div 
+                        className="h-full bg-gradient-to-r from-rose-500 to-pink-500 rounded-full transition-all duration-300 ease-out"
+                        style={{ width: `${analysisProgress}%` }}
+                      ></div>
+                    </div>
+                  </div>
+                )}
+
+                {/* 分析按钮 */}
+                <div className="flex justify-center">
+                  <Button
+                    onClick={handleAnalyze}
+                    disabled={isAnalyzing || !conversationText.trim()}
+                    className="bg-gradient-to-r from-rose-500 to-pink-500 hover:from-rose-600 hover:to-pink-600 text-white shadow-lg hover:shadow-xl transition-all duration-300 px-8 py-3 text-lg"
+                    size="lg"
+                  >
+                    {isAnalyzing ? (
+                      <>
+                        <Brain className="h-5 w-5 mr-2 animate-pulse" />
+                        分析中...
+                      </>
+                    ) : (
+                      <>
+                        <TrendingUp className="h-5 w-5 mr-2" />
+                        开始分析
+                      </>
+                    )}
+                  </Button>
                 </div>
               </CardContent>
             </Card>
+          </div>
 
-              {/* 对话分析 */}
-              <Card>
-                <CardHeader>
-                  <CardTitle className="flex items-center gap-2">
-                    <MessageCircle className="h-5 w-5 text-purple-500" />
-                    对话分析
-                  </CardTitle>
-                  <CardDescription>
-                    输入对话内容，获取专业的社交分析和个性化改进建议
-                  </CardDescription>
-                </CardHeader>
-                <CardContent className="space-y-4">
-                  <div>
-                    <Label htmlFor="scenario">社交场景</Label>
-                    <Select value={scenario} onValueChange={setScenario}>
-                      <SelectTrigger>
-                        <SelectValue placeholder="选择社交场景" />
-                      </SelectTrigger>
-                      <SelectContent>
-                        <SelectItem value="casual">日常闲聊</SelectItem>
-                        <SelectItem value="professional">职场沟通</SelectItem>
-                        <SelectItem value="romantic">亲密关系</SelectItem>
-                        <SelectItem value="conflict">冲突处理</SelectItem>
-                        <SelectItem value="family">家庭关系</SelectItem>
-                        <SelectItem value="service">客户服务</SelectItem>
-                        <SelectItem value="education">教育场景</SelectItem>
-                        <SelectItem value="medical">医疗沟通</SelectItem>
-                      </SelectContent>
-                    </Select>
-                  </div>
-
-                  <div>
-                    <Label htmlFor="conversation">对话内容 *</Label>
-                    <Textarea
-                      id="conversation"
-                      placeholder="粘贴或输入您想分析的对话内容..."
-                      value={conversationText}
-                      onChange={(e) => setConversationText(e.target.value)}
-                      rows={8}
-                      className="resize-none"
-                    />
-                  </div>
-
-                  <div>
-                    <Label htmlFor="context">背景信息（可选）</Label>
-                    <Textarea
-                      id="context"
-                      placeholder="提供相关背景信息，如关系状态、发生场景等..."
-                      value={context}
-                      onChange={(e) => setContext(e.target.value)}
-                      rows={3}
-                    />
-                  </div>
-
-                  {/* 分析进度条 */}
-                  {isAnalyzing && (
-                    <div className="space-y-2">
-                      <div className="flex justify-between items-center">
-                        <span className="text-sm text-gray-600">正在分析对话内容...</span>
-                        <span className="text-sm font-medium text-purple-600">{analysisProgress}%</span>
-                      </div>
-                      <div className="w-full bg-gray-200 rounded-full h-2 overflow-hidden">
-                        <div 
-                          className="h-full bg-gradient-to-r from-pink-500 to-purple-500 rounded-full transition-all duration-300 ease-out"
-                          style={{ width: `${analysisProgress}%` }}
-                        ></div>
-                      </div>
-                      <div className="text-xs text-gray-500 space-y-1">
-                        {analysisProgress < 30 && <div>📝 正在解析对话内容...</div>}
-                        {analysisProgress >= 30 && analysisProgress < 60 && <div>🔍 正在分析情感倾向...</div>}
-                        {analysisProgress >= 60 && analysisProgress < 90 && <div>🧠 正在生成社交策略...</div>}
-                        {analysisProgress >= 90 && <div>✨ 分析完成，正在生成报告...</div>}
-                      </div>
-                    </div>
-                  )}
-
-                  <div className="flex justify-end">
-                    <Button 
-                      onClick={handleAnalyze} 
-                      disabled={!conversationText.trim() || isAnalyzing}
-                      variant="pink"
-                      className="relative"
-                    >
-                      {isAnalyzing ? (
-                        <>
-                          <div className="animate-spin h-4 w-4 mr-2 border-2 border-white border-t-transparent rounded-full"></div>
-                          分析中...
-                          <div className="absolute inset-0 bg-gradient-to-r from-pink-400 to-purple-400 rounded-md opacity-20 animate-pulse"></div>
-                        </>
-                      ) : (
-                        '分析对话'
-                      )}
-                    </Button>
-                  </div>
-                </CardContent>
-              </Card>
-
-            {/* 分析结果区域 */}
-            {analysisResult && (
-              <div ref={resultRef} className="space-y-6 scroll-mt-20">
-                <div className="text-center mb-4">
-                  <div className="inline-flex items-center gap-2 px-4 py-2 bg-green-100 text-green-800 rounded-full">
-                    <CheckCircle className="h-5 w-5" />
-                    <span className="font-medium">分析完成</span>
-                  </div>
-                </div>
-                <ConversationAnalysis result={analysisResult} />
-                <SocialStrategies result={analysisResult} />
-              </div>
-            )}
-
-            {/* 社交技巧提示 */}
-            <Card>
+          {/* 右侧 - 示例和功能介绍 */}
+          <div className="lg:col-span-1 space-y-6">
+            {/* 对话示例 */}
+            <Card className="bg-white/80 backdrop-blur-sm border-0 shadow-lg">
               <CardHeader>
-                <CardTitle className="text-lg">社交技巧</CardTitle>
+                <CardTitle className="text-xl font-bold text-gray-900">对话示例</CardTitle>
+                <CardDescription>点击加载示例文本</CardDescription>
               </CardHeader>
               <CardContent className="space-y-3">
-                <div className="flex items-start gap-3">
+                {conversationExamples.map((example, index) => (
+                  <div 
+                    key={index}
+                    className="p-3 bg-gray-50 rounded-lg border border-gray-200 cursor-pointer hover:bg-gray-100 transition-colors"
+                    onClick={() => handleExampleSelect(example)}
+                  >
+                    <div className="flex items-start space-x-2">
+                      <div className="p-1 rounded bg-white">
+                        {example.icon}
+                      </div>
+                      <div className="flex-1 min-w-0">
+                        <h4 className="font-semibold text-gray-900 text-sm">{example.title}</h4>
+                        <p className="text-xs text-gray-600 mt-1">{example.description}</p>
+                      </div>
+                    </div>
+                  </div>
+                ))}
+              </CardContent>
+            </Card>
+
+            {/* 功能特色 */}
+            <Card className="bg-white/80 backdrop-blur-sm border-0 shadow-lg">
+              <CardHeader>
+                <CardTitle className="text-xl font-bold text-gray-900">功能特色</CardTitle>
+                <CardDescription>强大的社交分析能力</CardDescription>
+              </CardHeader>
+              <CardContent className="space-y-4">
+                <div className="flex items-start space-x-3">
                   <CheckCircle className="h-5 w-5 text-green-500 mt-0.5" />
                   <div>
-                    <p className="text-sm font-medium">积极倾听</p>
-                    <p className="text-xs text-gray-600">给予对方充分的表达空间</p>
+                    <h4 className="font-semibold text-gray-900">多场景分析</h4>
+                    <p className="text-sm text-gray-600">支持各种社交场景的对话分析</p>
                   </div>
                 </div>
-                
-                <div className="flex items-start gap-3">
-                  <TrendingUp className="h-5 w-5 text-blue-500 mt-0.5" />
+                <div className="flex items-start space-x-3">
+                  <Lightbulb className="h-5 w-5 text-blue-500 mt-0.5" />
                   <div>
-                    <p className="text-sm font-medium">情感共鸣</p>
-                    <p className="text-xs text-gray-600">理解和回应对方的情感</p>
+                    <h4 className="font-semibold text-gray-900">智能建议</h4>
+                    <p className="text-sm text-gray-600">提供个性化的沟通改善建议</p>
                   </div>
                 </div>
-                
-                <div className="flex items-start gap-3">
-                  <AlertCircle className="h-5 w-5 text-orange-500 mt-0.5" />
+                <div className="flex items-start space-x-3">
+                  <Brain className="h-5 w-5 text-purple-500 mt-0.5" />
                   <div>
-                    <p className="text-sm font-medium">避免评判</p>
-                    <p className="text-xs text-gray-600">保持开放和包容的态度</p>
+                    <h4 className="font-semibold text-gray-900">深度分析</h4>
+                    <p className="text-sm text-gray-600">分析对话中的情感和沟通模式</p>
                   </div>
                 </div>
               </CardContent>
             </Card>
           </div>
         </div>
-      </main>
-      
-      <Footer />
+
+        {/* 分析结果区域 */}
+        {analysisResult && (
+          <div ref={resultRef} className={`mt-12 transition-all duration-500 ${analysisResult ? 'translate-y-0 opacity-100' : 'translate-y-8 opacity-0'}`}>
+            <ConversationAnalysis analysis={analysisResult} />
+          </div>
+        )}
+
+        {/* 社交策略建议 */}
+        {analysisResult && (
+          <div className="mt-8">
+            <SocialStrategies analysis={analysisResult} />
+          </div>
+        )}
+      </div>
+
+      {/* 页脚 - 与首页一致 */}
+      <footer className="relative z-10 bg-white/70 backdrop-blur-md border-t border-white/20 mt-16">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
+          <div className="text-center space-y-4">
+            <div className="flex items-center justify-center space-x-3">
+              <div className="w-8 h-8 bg-gradient-to-r from-rose-500 to-pink-500 rounded-full flex items-center justify-center">
+                <HeartIcon className="h-4 w-4 text-white" fill="currentColor" />
+              </div>
+              <span className="text-lg font-bold text-gray-900">丘比特AI情感助手</span>
+            </div>
+            <p className="text-gray-600">
+              © 2024 专为情侣设计的互动游戏平台. 让爱更美好.
+            </p>
+            <p className="text-sm text-gray-500">
+              当前版本: v2.0.0 | 用心创造每一份感动
+            </p>
+          </div>
+        </div>
+      </footer>
     </div>
   )
 }
