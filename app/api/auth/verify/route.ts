@@ -46,7 +46,9 @@ export async function POST(request: NextRequest) {
   } catch (error) {
     console.error('令牌验证失败:', error)
     
-    if (error.name === 'JsonWebTokenError' || error.name === 'TokenExpiredError') {
+    // 类型安全检查
+    if (error && typeof error === 'object' && 'name' in error && 
+        (error.name === 'JsonWebTokenError' || error.name === 'TokenExpiredError')) {
       return NextResponse.json(
         { success: false, error: '认证令牌无效或已过期' },
         { status: 401 }
