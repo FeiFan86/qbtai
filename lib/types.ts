@@ -37,16 +37,31 @@ export interface User {
   username: string;
   email: string;
   avatar: string;
+  bio: string;
+  preferences: UserPreferences;
+  stats: UserStats;
   createdAt: string;
   lastLogin: string;
-  preferences: UserPreferences;
 }
 
 export interface UserPreferences {
   theme: 'light' | 'dark' | 'auto';
   language: string;
   soundEnabled: boolean;
-  notifications: boolean;
+  notifications: {
+    email: boolean;
+    push: boolean;
+  };
+}
+
+export interface UserStats {
+  totalGames: number;
+  totalScore: number;
+  totalPlayTime: number;
+  achievements: {
+    id: string;
+    unlockedAt: Date;
+  }[];
 }
 
 export interface LoginData {
@@ -174,59 +189,24 @@ export interface AnalyticsData {
 // AI服务相关类型定义
 export interface EmotionAnalysisResult {
   emotions: {
-    happy: number;
-    sad: number;
-    angry: number;
-    anxious: number;
-    excited: number;
-    confused: number;
-    love: number;
+    type: string;
+    score: number;
+    color: string;
+  }[];
+  overall: {
+    sentiment: 'positive' | 'neutral' | 'negative';
+    confidence: number;
   };
-  dominantEmotion: string;
-  confidence: number;
-  sentiment: 'positive' | 'neutral' | 'negative';
   keywords: string[];
-  suggestions: string[];
+  summary: string;
 }
 
 export interface GeneratedContent {
   content: string;
-  type: 'love' | 'encouragement' | 'advice' | 'story';
-  length: number;
-  createdAt: string;
-}
-
-export interface ConversationAnalysis {
-  emotionalTone: string;
-  relationshipDepth: number;
-  communicationStyle: string;
-  keyTopics: string[];
   suggestions: string[];
-}
-
-// AI服务相关类型定义
-export interface EmotionAnalysisResult {
-  emotions: {
-    happy: number;
-    sad: number;
-    angry: number;
-    anxious: number;
-    excited: number;
-    confused: number;
-    love: number;
-  };
-  dominantEmotion: string;
-  confidence: number;
-  sentiment: 'positive' | 'neutral' | 'negative';
-  keywords: string[];
-  suggestions: string[];
-}
-
-export interface GeneratedContent {
-  content: string;
-  type: 'love' | 'encouragement' | 'advice' | 'story';
-  length: number;
-  createdAt: string;
+  type?: 'love' | 'encouragement' | 'advice' | 'story';
+  length?: number;
+  createdAt?: string;
 }
 
 export interface ConversationAnalysis {
@@ -253,14 +233,24 @@ export const mockData: Database = {
       username: 'testuser',
       email: 'test@example.com',
       avatar: '',
-      createdAt: '2024-01-01T00:00:00.000Z',
-      lastLogin: '2024-01-01T00:00:00.000Z',
+      bio: '',
       preferences: {
         theme: 'auto',
         language: 'zh',
         soundEnabled: true,
-        notifications: true
-      }
+        notifications: {
+          email: true,
+          push: true
+        }
+      },
+      stats: {
+        totalGames: 0,
+        totalScore: 0,
+        totalPlayTime: 0,
+        achievements: []
+      },
+      createdAt: '2024-01-01T00:00:00.000Z',
+      lastLogin: '2024-01-01T00:00:00.000Z'
     }
   ],
   games: [

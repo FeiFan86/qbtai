@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server'
 import bcrypt from 'bcryptjs'
+import jwt from 'jsonwebtoken'
 import dbConnect from '@/lib/db'
 import User from '@/lib/models/User'
 
@@ -61,7 +62,18 @@ export async function POST(request: NextRequest) {
       }
     })
 
-    // 返回用户信息（不包含密码）
+    // 生成JWT令牌
+    const token = jwt.sign(
+      { 
+        id: newUser._id,
+        username: newUser.username,
+        email: newUser.email 
+      },
+      process.env.JWT_SECRET || 'cupid-ai-jwt-secret',
+      { expiresIn: '7d' }
+    )
+
+    // 返回用户信息和令牌
     const userResponse = {
       id: newUser._id,
       username: newUser.username,
@@ -76,7 +88,10 @@ export async function POST(request: NextRequest) {
     return NextResponse.json({
       success: true,
       message: '注册成功',
-      data: userResponse
+      data: {
+        user: userResponse,
+        token
+      }
     })
   } catch (error) {
     console.error('用户注册失败:', error)
