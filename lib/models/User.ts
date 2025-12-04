@@ -103,7 +103,7 @@ UserSchema.index({ emailVerificationToken: 1, emailVerificationExpiry: 1 })
 
 // 添加虚拟字段：检查账户是否被锁定
 UserSchema.virtual('isLocked').get(function() {
-  return !!(this.lockUntil && this.lockUntil > Date.now())
+  return !!(this.lockUntil && this.lockUntil.getTime() > Date.now())
 })
 
 // 静态方法接口
@@ -137,21 +137,21 @@ UserSchema.statics.getLeaderboard = function(limit: number = 10) {
 UserSchema.statics.findByResetToken = function(token: string) {
   return this.findOne({
     resetToken: token,
-    resetTokenExpiry: { $gt: Date.now() }
+    resetTokenExpiry: { $gt: new Date() }
   })
 }
 
 UserSchema.statics.findByEmailVerificationToken = function(token: string) {
   return this.findOne({
     emailVerificationToken: token,
-    emailVerificationExpiry: { $gt: Date.now() }
+    emailVerificationExpiry: { $gt: new Date() }
   })
 }
 
 // 实例方法：增加登录尝试次数
 UserSchema.methods.incLoginAttempts = function() {
   // 如果已经有锁定且已经过期，重置计数器
-  if (this.lockUntil && this.lockUntil < Date.now()) {
+  if (this.lockUntil && this.lockUntil.getTime() < Date.now()) {
     return this.updateOne({
       $unset: { lockUntil: 1 },
       $set: { loginAttempts: 1 }
@@ -165,7 +165,7 @@ UserSchema.methods.incLoginAttempts = function() {
   const lockTime = 2 * 60 * 60 * 1000 // 2小时
   
   if (this.loginAttempts + 1 >= maxAttempts && !this.isLocked) {
-    updates.$set = { lockUntil: Date.now() + lockTime }
+    updates.$set = { lockUntil: new Date(Date.now() + lockTime) }
   }
   
   return this.updateOne(updates)
