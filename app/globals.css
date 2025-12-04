@@ -51,6 +51,10 @@
     --shadow-xl: 0 16px 32px rgba(255, 107, 107, 0.18);
     --shadow-2xl: 0 24px 48px rgba(255, 107, 107, 0.2);
     --shadow-glow: 0 0 20px rgba(255, 107, 107, 0.3);
+    
+    /* 字体 */
+    --font-sans: 'Inter', 'Noto Sans SC', sans-serif;
+    --font-mono: 'JetBrains Mono', 'Fira Code', monospace;
   }
   
   [data-theme="dark"] {
@@ -90,6 +94,7 @@
     text-rendering: optimizeLegibility;
     font-feature-settings: 'kern' 1, 'liga' 1;
     background: #fafafa;
+    font-family: var(--font-sans);
   }
 
   /* 自定义滚动条 */
@@ -123,92 +128,27 @@
   }
 }
 
+/* 增强组件样式 */
 @layer components {
-  /* 基础按钮组件 */
-  .btn {
-    @apply inline-flex items-center justify-center px-4 py-3 text-sm font-medium rounded-lg transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-offset-2;
-    min-height: 44px;
-    -webkit-tap-highlight-color: transparent;
-    position: relative;
-    overflow: hidden;
+  /* 导航栏 */
+  .navbar {
+    @apply fixed top-0 left-0 right-0 z-50 transition-all duration-300;
   }
   
-  .btn:before {
-    content: '';
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    width: 0;
-    height: 0;
-    border-radius: 50%;
-    background: rgba(255, 255, 255, 0.2);
-    transform: translate(-50%, -50%);
-    transition: width 0.6s, height 0.6s;
-  }
-  
-  .btn:active:before {
-    width: 300px;
-    height: 300px;
-  }
-  
-  /* 按钮变体 */
-  .btn-primary {
-    @apply btn;
-    background: var(--gradient-primary);
-    color: white;
-    box-shadow: 0 4px 14px 0 rgba(99, 102, 241, 0.3);
-  }
-  
-  .btn-primary:hover {
-    transform: translateY(-2px);
-    box-shadow: 0 6px 20px 0 rgba(99, 102, 241, 0.4);
-  }
-  
-  .btn-secondary {
-    @apply btn;
-    background: var(--gradient-secondary);
-    color: white;
-    box-shadow: 0 4px 14px 0 rgba(240, 147, 251, 0.3);
-  }
-  
-  .btn-secondary:hover {
-    transform: translateY(-2px);
-    box-shadow: 0 6px 20px 0 rgba(240, 147, 251, 0.4);
-  }
-  
-  .btn-ghost {
-    @apply btn;
-    background: transparent;
-    color: var(--gray-700);
-    border: 1px solid var(--gray-200);
-  }
-  
-  .btn-ghost:hover {
-    background: var(--gray-50);
-    transform: translateY(-1px);
-  }
-  
-  /* 卡片组件 */
+  /* 卡片样式 */
   .card {
-    @apply bg-white rounded-2xl shadow-md border-0;
-    backdrop-filter: blur(10px);
-    background: rgba(255, 255, 255, 0.9);
-    border: 1px solid rgba(255, 255, 255, 0.2);
-    box-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.15);
-    transition: all 0.3s ease;
+    @apply bg-white border border-gray-100 rounded-xl transition-all duration-300;
+    box-shadow: var(--shadow);
   }
   
   .card:hover {
-    transform: translateY(-5px);
-    box-shadow: 0 20px 40px 0 rgba(31, 38, 135, 0.2);
+    box-shadow: var(--shadow-lg);
+    transform: translateY(-2px);
   }
   
-  .card-interactive {
-    @apply card cursor-pointer;
-  }
-  
-  .card-interactive:hover {
-    transform: translateY(-5px) scale(1.02);
+  /* 按钮样式 */
+  .btn-primary {
+    @apply bg-gradient-to-r from-rose-500 to-pink-500 text-white hover:from-rose-600 hover:to-pink-600 transition-all duration-200 shadow-md hover:shadow-lg;
   }
   
   /* 输入框组件 */
@@ -227,179 +167,14 @@
     @apply max-w-7xl mx-auto px-4 sm:px-6 lg:px-8;
   }
   
-  /* 网格系统 */
-  .grid-auto {
-    display: grid;
-    gap: 1.5rem;
-    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-  }
-  
-  /* 响应式文本 */
-  .text-responsive-xs {
-    font-size: clamp(0.75rem, 2vw, 0.875rem);
-  }
-  
-  .text-responsive-sm {
-    font-size: clamp(0.875rem, 3vw, 1rem);
-  }
-  
-  .text-responsive-base {
-    font-size: clamp(1rem, 4vw, 1.125rem);
-  }
-  
-  .text-responsive-lg {
-    font-size: clamp(1.125rem, 5vw, 1.25rem);
-  }
-  
-  .text-responsive-xl {
-    font-size: clamp(1.25rem, 6vw, 1.5rem);
-  }
-  
-  .text-responsive-2xl {
-    font-size: clamp(1.5rem, 7vw, 2rem);
-  }
-  
-  .text-responsive-3xl {
-    font-size: clamp(2rem, 8vw, 3rem);
-  }
-  
-  .text-responsive-4xl {
-    font-size: clamp(2.5rem, 9vw, 4rem);
-  }
-  
-  /* 导航栏 */
-  .navbar {
-    @apply fixed top-0 left-0 right-0 z-50 bg-white/10 backdrop-blur-md border-b border-white/20;
-    backdrop-filter: blur(10px);
-    background: rgba(255, 255, 255, 0.85);
+  /* 渐变文字 */
+  .text-gradient {
+    @apply bg-gradient-to-r from-rose-600 via-pink-600 to-purple-600 bg-clip-text text-transparent;
   }
   
   /* 页脚 */
   .footer {
-    @apply bg-gray-50 border-t border-gray-200;
-  }
-  
-  /* 模态框/弹窗背景 */
-  .modal-overlay {
-    @apply fixed inset-0 z-50 flex items-center justify-center bg-black/50 backdrop-blur-sm;
-  }
-  
-  /* 徽章 */
-  .badge {
-    @apply inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium;
-  }
-  
-  .badge-primary {
-    @apply badge bg-primary-100 text-primary-800;
-  }
-  
-  .badge-success {
-    @apply badge bg-green-100 text-green-800;
-  }
-  
-  .badge-warning {
-    @apply badge bg-yellow-100 text-yellow-800;
-  }
-  
-  .badge-error {
-    @apply badge bg-red-100 text-red-800;
-  }
-  
-  /* 分隔线 */
-  .divider {
-    @apply border-0 border-b border-gray-200;
-  }
-}
-
-@layer utilities {
-  /* 渐变文本 */
-  .text-gradient {
-    background: var(--gradient-primary);
-    -webkit-background-clip: text;
-    -webkit-text-fill-color: transparent;
-    background-clip: text;
-  }
-  
-  .text-gradient-secondary {
-    background: var(--gradient-secondary);
-    -webkit-background-clip: text;
-    -webkit-text-fill-color: transparent;
-    background-clip: text;
-  }
-  
-  /* 阴影效果 */
-  .shadow-glow {
-    box-shadow: 0 0 20px rgba(99, 102, 241, 0.3);
-  }
-  
-  .shadow-glow-secondary {
-    box-shadow: 0 0 20px rgba(240, 147, 251, 0.3);
-  }
-  
-  /* 玻璃效果 */
-  .glass {
-    backdrop-filter: blur(10px);
-    background: rgba(255, 255, 255, 0.85);
-    border: 1px solid rgba(255, 255, 255, 0.2);
-  }
-  
-  .glass-dark {
-    backdrop-filter: blur(10px);
-    background: rgba(0, 0, 0, 0.25);
-    border: 1px solid rgba(255, 255, 255, 0.1);
-  }
-  
-  /* 隐藏滚动条 */
-  .scrollbar-hide {
-    -ms-overflow-style: none;
-    scrollbar-width: none;
-  }
-  
-  .scrollbar-hide::-webkit-scrollbar {
-    display: none;
-  }
-  
-  /* 平滑滚动 */
-  .scroll-smooth {
-    scroll-behavior: smooth;
-    -webkit-overflow-scrolling: touch;
-  }
-  
-  /* 安全区域 */
-  .safe-top {
-    padding-top: env(safe-area-inset-top, 0px);
-  }
-  
-  .safe-bottom {
-    padding-bottom: env(safe-area-inset-bottom, 0px);
-  }
-  
-  /* 动画 */
-  .animate-float {
-    animation: float 3s ease-in-out infinite;
-  }
-  
-  .animate-float-delayed {
-    animation: float 3s ease-in-out infinite;
-    animation-delay: 1s;
-  }
-  
-  @keyframes float {
-    0%, 100% { transform: translateY(0px); }
-    50% { transform: translateY(-10px); }
-  }
-  
-  .animate-pulse-glow {
-    animation: pulseGlow 2s ease-in-out infinite;
-  }
-  
-  @keyframes pulseGlow {
-    0%, 100% { 
-      box-shadow: 0 0 10px rgba(99, 102, 241, 0.3);
-    }
-    50% { 
-      box-shadow: 0 0 30px rgba(99, 102, 241, 0.5);
-    }
+    @apply bg-white/70 backdrop-blur-md border-t border-gray-100 mt-16;
   }
   
   /* 响应式隐藏 */
@@ -435,8 +210,8 @@
   }
 }
 
-/* 动画定义 */
-@keyframes slideInUp {
+/* 增强动画定义 */
+@keyframes slide-up {
   from {
     opacity: 0;
     transform: translateY(30px);
@@ -447,18 +222,7 @@
   }
 }
 
-@keyframes slideInRight {
-  from {
-    opacity: 0;
-    transform: translateX(30px);
-  }
-  to {
-    opacity: 1;
-    transform: translateX(0);
-  }
-}
-
-@keyframes fadeIn {
+@keyframes fade-in {
   from {
     opacity: 0;
   }
@@ -467,10 +231,10 @@
   }
 }
 
-@keyframes scaleIn {
+@keyframes scale-up {
   from {
     opacity: 0;
-    transform: scale(0.9);
+    transform: scale(0.95);
   }
   to {
     opacity: 1;
@@ -478,123 +242,88 @@
   }
 }
 
-.animate-slide-in-up {
-  animation: slideInUp 0.5s ease-out;
+@keyframes float {
+  0%, 100% {
+    transform: translateY(0px);
+  }
+  50% {
+    transform: translateY(-10px);
+  }
 }
 
-.animate-slide-in-right {
-  animation: slideInRight 0.5s ease-out;
+@keyframes float-delayed {
+  0%, 100% {
+    transform: translateY(0px);
+  }
+  50% {
+    transform: translateY(-15px);
+  }
+}
+
+@keyframes pulse-glow {
+  0%, 100% {
+    opacity: 0.6;
+  }
+  50% {
+    opacity: 0.9;
+  }
+}
+
+.animate-slide-up {
+  animation: slide-up 0.6s ease-out forwards;
 }
 
 .animate-fade-in {
-  animation: fadeIn 0.5s ease-out;
+  animation: fade-in 0.6s ease-out forwards;
 }
 
-.animate-scale-in {
-  animation: scaleIn 0.3s ease-out;
+.animate-scale-up {
+  animation: scale-up 0.6s ease-out forwards;
 }
 
-/* 延迟动画 */
-.delay-100 {
-  animation-delay: 100ms;
+.animate-float {
+  animation: float 3s ease-in-out infinite;
 }
 
-.delay-200 {
-  animation-delay: 200ms;
+.animate-float-delayed {
+  animation: float-delayed 4s ease-in-out infinite;
+  animation-delay: 1s;
 }
 
-.delay-300 {
-  animation-delay: 300ms;
+.animate-pulse-glow {
+  animation: pulse-glow 4s ease-in-out infinite;
 }
 
-.delay-500 {
-  animation-delay: 500ms;
+/* 延迟动画类 */
+.delay-100 { animation-delay: 100ms; }
+.delay-200 { animation-delay: 200ms; }
+.delay-300 { animation-delay: 300ms; }
+.delay-500 { animation-delay: 500ms; }
+.delay-700 { animation-delay: 700ms; }
+.delay-800 { animation-delay: 800ms; }
+
+/* 悬停效果 */
+.hover\:scale-105:hover {
+  transform: scale(1.05);
 }
 
-.delay-700 {
-  animation-delay: 700ms;
+.hover\:scale-102:hover {
+  transform: scale(1.02);
 }
 
-/* 打印样式 */
-@media print {
-  .no-print {
-    display: none !important;
-  }
-  
-  .print-break {
-    page-break-before: always;
-  }
-  
-  body {
-    background: white !important;
-  }
-  
-  .card {
-    box-shadow: none !important;
-    border: 1px solid #ccc !important;
-  }
+/* 玻璃效果 */
+.glass {
+  background: rgba(255, 255, 255, 0.7);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  border: 1px solid rgba(255, 255, 255, 0.2);
 }
 
-/* 高对比度模式 */
-@media (prefers-contrast: high) {
-  .btn {
-    border-width: 2px;
-  }
-  
-  .input {
-    border-width: 2px;
-  }
-  
-  .card {
-    border-width: 2px;
-  }
+/* 安全区域 */
+.safe-top {
+  padding-top: env(safe-area-inset-top);
 }
 
-/* 减少动画模式 */
-@media (prefers-reduced-motion: reduce) {
-  *,
-  *::before,
-  *::after {
-    animation-duration: 0.01ms !important;
-    animation-iteration-count: 1 !important;
-    transition-duration: 0.01ms !important;
-    scroll-behavior: auto !important;
-  }
-  
-  .animate-float,
-  .animate-float-delayed,
-  .animate-pulse-glow {
-    animation: none !important;
-  }
-}
-
-/* 暗色模式支持 */
-@media (prefers-color-scheme: dark) {
-  html {
-    color-scheme: dark;
-  }
-}
-
-/* 移动设备优化 */
-@media (max-width: 640px) {
-  .container {
-    padding-left: 1rem;
-    padding-right: 1rem;
-  }
-  
-  .btn {
-    min-height: 44px;
-    padding: 12px 16px;
-    font-size: 16px;
-  }
-  
-  .input {
-    min-height: 44px;
-    padding: 12px 16px;
-    font-size: 16px;
-  }
-  
-  .card {
-    border-radius: 16px;
-  }
+.safe-bottom {
+  padding-bottom: env(safe-area-inset-bottom);
 }
