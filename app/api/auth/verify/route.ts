@@ -15,7 +15,27 @@ export async function POST(request: NextRequest) {
     }
 
     // 验证JWT令牌
-    const decoded = jwt.verify(token, process.env.JWT_SECRET || 'cupid-ai-jwt-secret') as any
+    let decoded
+    try {
+      decoded = jwt.verify(token, process.env.JWT_SECRET || 'cupid-ai-jwt-secret') as any
+    } catch (jwtError) {
+      // 如果是JWT验证错误，返回特定的错误信息
+      if (jwtError instanceof jwt.JsonWebTokenError) {
+        return NextResponse.json(
+          { success: false, error: '无效的令牌' },
+          { status: 401 }
+        )
+      }
+
+      if (jwtError instanceof jwt.TokenExpiredError) {
+        return NextResponse.json(
+          { success: false, error: '令牌已过期' },
+          { status: 401 }
+        )
+      }
+
+      throw jwtError
+    }
 
     // 连接数据库并验证用户
     await dbConnect()
@@ -28,6 +48,17 @@ export async function POST(request: NextRequest) {
       )
     }
 
+    // 如果令牌包含密码更改时间，验证密码是否在令牌签发后被更改
+    if (decoded.passwordChangedAt) {
+      const passwordChangedAt = new Date(user.passwordChangedAt).getTime() / 1000
+      if (passwordChangedAt > decoded.iat) {
+        return NextResponse.json(
+          { success: false, error: '用户密码已更改，请重新登录' },
+          { status: 401 }
+        )
+      }
+    }
+
     // 返回用户信息
     const userData = {
       id: user._id,
@@ -36,12 +67,16 @@ export async function POST(request: NextRequest) {
       avatar: user.avatar,
       bio: user.bio,
       preferences: user.preferences,
-      stats: user.stats
+      stats: user.stats,
+      emailVerified: user.emailVerified
     }
 
     return NextResponse.json({
       success: true,
-      data: userData
+      data: {
+        valid: true,
+        user: userData
+      }
     })
   } catch (error) {
     console.error('令牌验证失败:', error)

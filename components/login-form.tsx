@@ -1,14 +1,9 @@
 'use client'
 
 import React, { useState } from 'react'
-import { Button } from '@/components/ui/button'
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
-import { FormInput } from '@/components/ui/form-input'
-import { Alert } from '@/components/ui/alert'
-import { LoadingSpinner } from '@/components/ui/loading-spinner'
 import { useAuth } from './auth-provider'
 import { useRouter } from 'next/navigation'
-import { Heart, Lock, User, Sparkles } from 'lucide-react'
+import { Heart, Lock, User, Sparkles, Eye, EyeOff, ArrowRight } from 'lucide-react'
 
 export function LoginForm() {
   const { login, isLoading } = useAuth()
@@ -17,7 +12,9 @@ export function LoginForm() {
     username: '',
     password: '',
   })
+  const [showPassword, setShowPassword] = useState(false)
   const [error, setError] = useState('')
+  const [focusedField, setFocusedField] = useState<string | null>(null)
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
@@ -35,8 +32,8 @@ export function LoginForm() {
 
     try {
       await login(formData)
-      // 登录成功后跳转到游戏页面
-      router.push('/games')
+      // 登录成功后跳转到首页
+      router.push('/')
     } catch (err) {
       setError(err instanceof Error ? err.message : '登录失败')
     }
@@ -52,64 +49,117 @@ export function LoginForm() {
     if (error) setError('')
   }
 
+  const togglePasswordVisibility = () => {
+    setShowPassword(!showPassword)
+  }
+
   return (
-    <Card className="w-full max-w-md mx-auto bg-white/80 backdrop-blur-sm border-white/20 shadow-2xl">
-      <CardHeader className="text-center pb-4">
-        <div className="w-20 h-20 bg-gradient-to-r from-rose-500 to-pink-500 rounded-full flex items-center justify-center mx-auto mb-4 shadow-lg">
-          <Heart className="h-10 w-10 text-white" fill="currentColor" />
+    <div className="w-full max-w-md mx-auto animate-slide-in-up">
+      {/* 登录表单卡片 */}
+      <div className="card p-8 md:p-10 shadow-2xl">
+        {/* 头部图标和标题 */}
+        <div className="text-center mb-8">
+          <div className="w-20 h-20 bg-gradient-to-r from-primary-500 to-secondary-500 rounded-full flex items-center justify-center mx-auto mb-6 shadow-glow animate-float">
+            <Heart className="h-10 w-10 text-white" fill="currentColor" />
+          </div>
+          <h2 className="text-3xl font-bold text-gradient mb-2">欢迎回来</h2>
+          <p className="text-gray-600 text-pretty">
+            回到丘比特AI情感助手，继续您的甜蜜旅程
+          </p>
         </div>
-        <CardTitle className="text-3xl font-bold bg-gradient-to-r from-rose-600 to-pink-600 bg-clip-text text-transparent">
-          欢迎回来
-        </CardTitle>
-        <CardDescription className="text-gray-600">
-          回到丘比特AI情感助手，继续您的甜蜜旅程
-        </CardDescription>
-      </CardHeader>
-      <CardContent>
+
+        {/* 表单 */}
         <form onSubmit={handleSubmit} className="space-y-6">
+          {/* 错误提示 */}
           {error && (
-            <Alert variant="destructive" onDismiss={() => setError('')}>
-              <div className="flex items-center gap-2">
-                <Sparkles className="h-4 w-4" />
-                {error}
-              </div>
-            </Alert>
+            <div className="bg-red-50 border border-red-200 text-red-700 px-4 py-3 rounded-lg flex items-center gap-2 animate-scale-in">
+              <Sparkles className="h-4 w-4 flex-shrink-0" />
+              <span className="text-sm">{error}</span>
+            </div>
           )}
           
-          <div className="space-y-4">
-            <FormInput
-              id="username"
-              name="username"
-              type="text"
-              label="用户名或邮箱"
-              placeholder="请输入用户名或邮箱"
-              value={formData.username}
-              onChange={handleChange}
-              required
-              icon={<User className="h-4 w-4 text-gray-400" />}
-            />
-            
-            <FormInput
-              id="password"
-              name="password"
-              type="password"
-              label="密码"
-              placeholder="请输入密码"
-              value={formData.password}
-              onChange={handleChange}
-              required
-              icon={<Lock className="h-4 w-4 text-gray-400" />}
-            />
+          {/* 用户名输入框 */}
+          <div className="space-y-2">
+            <label htmlFor="username" className="block text-sm font-medium text-gray-700">
+              用户名或邮箱
+            </label>
+            <div className={`relative transition-all duration-200 ${focusedField === 'username' ? 'transform scale-105' : ''}`}>
+              <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                <User className="h-5 w-5 text-gray-400" />
+              </div>
+              <input
+                id="username"
+                name="username"
+                type="text"
+                placeholder="请输入用户名或邮箱"
+                value={formData.username}
+                onChange={handleChange}
+                onFocus={() => setFocusedField('username')}
+                onBlur={() => setFocusedField(null)}
+                className="input pl-10 pr-4 py-3 w-full"
+                required
+              />
+            </div>
           </div>
           
-          <Button 
+          {/* 密码输入框 */}
+          <div className="space-y-2">
+            <label htmlFor="password" className="block text-sm font-medium text-gray-700">
+              密码
+            </label>
+            <div className={`relative transition-all duration-200 ${focusedField === 'password' ? 'transform scale-105' : ''}`}>
+              <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                <Lock className="h-5 w-5 text-gray-400" />
+              </div>
+              <input
+                id="password"
+                name="password"
+                type={showPassword ? "text" : "password"}
+                placeholder="请输入密码"
+                value={formData.password}
+                onChange={handleChange}
+                onFocus={() => setFocusedField('password')}
+                onBlur={() => setFocusedField(null)}
+                className="input pl-10 pr-12 py-3 w-full"
+                required
+              />
+              <button
+                type="button"
+                onClick={togglePasswordVisibility}
+                className="absolute inset-y-0 right-0 pr-3 flex items-center text-gray-400 hover:text-gray-600 transition-colors"
+              >
+                {showPassword ? <EyeOff className="h-5 w-5" /> : <Eye className="h-5 w-5" />}
+              </button>
+            </div>
+          </div>
+          
+          {/* 记住我和忘记密码 */}
+          <div className="flex items-center justify-between">
+            <label className="flex items-center">
+              <input
+                type="checkbox"
+                className="w-4 h-4 text-primary-600 border-gray-300 rounded focus:ring-primary-500"
+              />
+              <span className="ml-2 text-sm text-gray-600">记住我</span>
+            </label>
+            <button 
+              type="button" 
+              className="text-sm text-primary-600 hover:text-primary-700 transition-colors font-medium"
+              onClick={() => router.push('/forgot-password')}
+            >
+              忘记密码？
+            </button>
+          </div>
+          
+          {/* 提交按钮 */}
+          <button 
             type="submit" 
-            className="w-full bg-gradient-to-r from-rose-500 to-pink-500 hover:from-rose-600 hover:to-pink-600 text-white shadow-lg transition-all duration-300 h-12 text-lg font-semibold"
+            className="btn-primary w-full text-lg font-semibold py-3 disabled:opacity-70 disabled:cursor-not-allowed"
             disabled={isLoading}
           >
             {isLoading ? (
               <>
-                <LoadingSpinner size="sm" className="mr-2 text-white" />
+                <div className="inline-block h-5 w-5 animate-spin rounded-full border-2 border-solid border-current border-r-transparent align-[-0.125em] motion-reduce:animate-[spin_1.5s_linear_infinite] mr-2"></div>
                 登录中...
               </>
             ) : (
@@ -118,22 +168,24 @@ export function LoginForm() {
                 立即登录
               </>
             )}
-          </Button>
+          </button>
         </form>
         
-        <div className="mt-6 pt-4 border-t border-gray-200/50 text-center">
+        {/* 底部链接 */}
+        <div className="mt-8 pt-6 border-t border-gray-200 text-center">
           <p className="text-sm text-gray-600">
             还没有账号？
             <button 
               type="button" 
-              className="ml-1 font-medium bg-gradient-to-r from-rose-600 to-pink-600 bg-clip-text text-transparent hover:from-rose-700 hover:to-pink-700 transition-all"
+              className="ml-1 font-medium text-primary-600 hover:text-primary-700 transition-colors"
               onClick={() => router.push('/register')}
             >
               立即注册
+              <ArrowRight className="inline h-3 w-3 ml-1" />
             </button>
           </p>
         </div>
-      </CardContent>
-    </Card>
+      </div>
+    </div>
   )
 }
