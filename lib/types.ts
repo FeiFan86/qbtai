@@ -171,6 +171,72 @@ export interface AnalyticsData {
   }[];
 }
 
+// AI服务相关类型定义
+export interface EmotionAnalysisResult {
+  emotions: {
+    happy: number;
+    sad: number;
+    angry: number;
+    anxious: number;
+    excited: number;
+    confused: number;
+    love: number;
+  };
+  dominantEmotion: string;
+  confidence: number;
+  sentiment: 'positive' | 'neutral' | 'negative';
+  keywords: string[];
+  suggestions: string[];
+}
+
+export interface GeneratedContent {
+  content: string;
+  type: 'love' | 'encouragement' | 'advice' | 'story';
+  length: number;
+  createdAt: string;
+}
+
+export interface ConversationAnalysis {
+  emotionalTone: string;
+  relationshipDepth: number;
+  communicationStyle: string;
+  keyTopics: string[];
+  suggestions: string[];
+}
+
+// AI服务相关类型定义
+export interface EmotionAnalysisResult {
+  emotions: {
+    happy: number;
+    sad: number;
+    angry: number;
+    anxious: number;
+    excited: number;
+    confused: number;
+    love: number;
+  };
+  dominantEmotion: string;
+  confidence: number;
+  sentiment: 'positive' | 'neutral' | 'negative';
+  keywords: string[];
+  suggestions: string[];
+}
+
+export interface GeneratedContent {
+  content: string;
+  type: 'love' | 'encouragement' | 'advice' | 'story';
+  length: number;
+  createdAt: string;
+}
+
+export interface ConversationAnalysis {
+  emotionalTone: string;
+  relationshipDepth: number;
+  communicationStyle: string;
+  keyTopics: string[];
+  suggestions: string[];
+}
+
 export interface Database {
   users: User[];
   games: GameData[];

@@ -1,4 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server'
+import dbConnect from '@/lib/db'
+import GameProgress from '@/lib/models/GameProgress'
 
 // 服务器端认证验证函数
 async function verifyAuthToken(request: NextRequest) {
@@ -93,8 +95,13 @@ export async function POST(request: NextRequest) {
           achievements: achievements || []
         }
 
-        // 这里应该保存到数据库，现在返回成功响应
-        console.log('保存游戏进度:', gameProgress)
+        // 保存到数据库
+        await dbConnect()
+        await GameProgress.findOneAndUpdate(
+          { userId, gameType, gameId },
+          gameProgress,
+          { upsert: true, new: true }
+        )
         
         return NextResponse.json({
           success: true,
@@ -106,21 +113,22 @@ export async function POST(request: NextRequest) {
         // 获取游戏进度
         console.log('获取游戏进度:', { gameId, gameType, userId })
         
-        // 这里应该从数据库查询，现在返回模拟数据
-        const mockProgress = {
-          gameId,
-          gameType,
-          userId,
-          progress: {},
-          score: 0,
-          timeSpent: 0,
-          completedAt: new Date().toISOString(),
-          achievements: []
-        }
-
+        // 从数据库查询
+        await dbConnect()
+        const progress = await GameProgress.findOne({ userId, gameId, gameType })
+        
         return NextResponse.json({
           success: true,
-          data: mockProgress
+          data: progress || {
+            gameId,
+            gameType,
+            userId,
+            progress: {},
+            score: 0,
+            timeSpent: 0,
+            completedAt: new Date().toISOString(),
+            achievements: []
+          }
         })
 
       case 'saveScore':
@@ -141,12 +149,14 @@ export async function POST(request: NextRequest) {
           completedAt: new Date().toISOString()
         }
 
-        console.log('保存游戏得分:', scoreData)
+        // 保存游戏得分到数据库
+        await dbConnect()
+        const updatedProgress = await GameProgress.updateScore(userId, gameType, score)
         
         return NextResponse.json({
           success: true,
           message: '游戏得分已保存',
-          data: scoreData
+          data: updatedProgress
         })
 
       default:
@@ -185,48 +195,44 @@ export async function GET(request: NextRequest) {
       // 获取用户游戏统计
       console.log('获取用户游戏统计:', userId)
       
-      // 这里应该从数据库查询，现在返回模拟数据
-      const mockStats = {
-        totalGames: 15,
-        totalScore: 1250,
-        favoriteGame: GAME_TYPES.MEMORY_PUZZLE,
-        achievements: [
-          { id: 'first_win', unlockedAt: new Date().toISOString() },
-          { id: 'puzzle_master', unlockedAt: new Date().toISOString() }
-        ],
-        playTime: {
-          [GAME_TYPES.MEMORY_PUZZLE]: 1200,
-          [GAME_TYPES.TRUTH_OR_DARE]: 800,
-          [GAME_TYPES.COLLABORATIVE_DOODLE]: 600
+        // 从数据库查询用户统计
+        await dbConnect()
+        const progressList = await GameProgress.find({ userId })
+        
+        const stats = {
+          totalGames: progressList.length,
+          totalScore: progressList.reduce((sum, p) => sum + (p.score || 0), 0),
+          favoriteGame: progressList.length > 0 
+            ? progressList.reduce((max, p) => p.playCount > max.playCount ? p : max, progressList[0]).gameType
+            : GAME_TYPES.MEMORY_PUZZLE,
+          achievements: [], // 可以从用户模型获取
+          playTime: progressList.reduce((acc, p) => {
+            acc[p.gameType] = (acc[p.gameType] || 0) + (p.timeSpent || 0)
+            return acc
+          }, {} as Record<string, number>)
         }
-      }
 
-      return NextResponse.json({
-        success: true,
-        data: mockStats
-      })
+        return NextResponse.json({
+          success: true,
+          data: stats
+        })
     }
 
     if (action === 'getLeaderboard' && gameType) {
       // 获取游戏排行榜
       console.log('获取游戏排行榜:', gameType)
       
-      // 这里应该从数据库查询，现在返回模拟数据
-      const mockLeaderboard = [
-        { userId: 'user1', username: '玩家1', score: 1500, rank: 1 },
-        { userId: 'user2', username: '玩家2', score: 1200, rank: 2 },
-        { userId: 'user3', username: '玩家3', score: 900, rank: 3 },
-        { userId: 'user4', username: '玩家4', score: 750, rank: 4 },
-        { userId: 'user5', username: '玩家5', score: 600, rank: 5 }
-      ]
-
-      return NextResponse.json({
-        success: true,
-        data: {
-          gameType,
-          leaderboard: mockLeaderboard
-        }
-      })
+        // 从数据库查询排行榜
+        await dbConnect()
+        const leaderboard = await GameProgress.getLeaderboard(gameType, 10)
+        
+        return NextResponse.json({
+          success: true,
+          data: {
+            gameType,
+            leaderboard
+          }
+        })
     }
 
     return NextResponse.json(
