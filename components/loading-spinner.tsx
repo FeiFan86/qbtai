@@ -50,3 +50,58 @@ export function LoadingSpinner({
     </div>
   )
 }
+
+interface LoadingOverlayProps {
+  show: boolean
+  message?: string
+  className?: string
+}
+
+export function LoadingOverlay({ 
+  show, 
+  message = '加载中...', 
+  className = '' 
+}: LoadingOverlayProps) {
+  if (!show) return null
+
+  return (
+    <div className={`fixed inset-0 bg-black/50 flex items-center justify-center z-50 ${className}`}>
+      <div className="bg-white rounded-lg p-6 shadow-lg max-w-sm mx-4">
+        <div className="flex items-center gap-3">
+          <LoadingSpinner size="md" />
+          <span className="text-gray-700">{message}</span>
+        </div>
+      </div>
+    </div>
+  )
+}
+
+interface ErrorMessageProps {
+  error: string
+  onRetry?: () => void
+  className?: string
+}
+
+export function ErrorMessage({ 
+  error, 
+  onRetry, 
+  className = '' 
+}: ErrorMessageProps) {
+  return (
+    <div className={`bg-red-50 border border-red-200 rounded-lg p-4 ${className}`}>
+      <div className="flex items-center justify-between">
+        <div className="flex items-center gap-2">
+          <span className="text-red-600 text-sm font-medium">{error}</span>
+        </div>
+        {onRetry && (
+          <button
+            onClick={onRetry}
+            className="text-red-600 hover:text-red-700 text-sm font-medium px-3 py-1 rounded border border-red-200 hover:bg-red-50"
+          >
+            重试
+          </button>
+        )}
+      </div>
+    </div>
+  )
+}
