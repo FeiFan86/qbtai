@@ -2,6 +2,8 @@
 
 import React, { useState } from 'react'
 import { MessageCircle, Calendar, Heart, Plus } from 'lucide-react'
+import GlobalNavbar from '@/components/global-navbar'
+import UsageGuard, { UsageStatus } from '@/components/usage-guard'
 
 export default function EmotionDiaryPage() {
   const [diaries, setDiaries] = useState([
@@ -29,8 +31,11 @@ export default function EmotionDiaryPage() {
     emotion: '快乐'
   })
 
-  const handleAddDiary = () => {
+  const handleAddDiary = async (onRecordUsage: () => Promise<void>) => {
     if (!newDiary.title.trim() || !newDiary.content.trim()) return
+    
+    // 记录使用次数
+    await onRecordUsage()
     
     const diary = {
       id: Date.now(),
@@ -46,45 +51,33 @@ export default function EmotionDiaryPage() {
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-rose-50 via-white to-pink-50">
-      {/* 导航栏 */}
-      <nav className="fixed top-0 left-0 right-0 z-50 bg-white/80 backdrop-blur-md border-b border-gray-100">
-        <div className="container">
-          <div className="flex justify-between items-center h-16">
-            <a href="/" className="flex items-center space-x-3">
-              <div className="w-8 h-8 bg-gradient-to-r from-rose-500 to-pink-500 rounded-full flex items-center justify-center">
-                <MessageCircle className="h-4 w-4 text-white" />
-              </div>
-              <span className="text-lg font-bold text-gray-900">丘比特AI</span>
-            </a>
-            <div className="flex items-center space-x-4">
-              <a href="/" className="text-gray-600 hover:text-rose-600 transition-colors">
-                返回首页
-              </a>
-              <a href="/login" className="text-gray-600 hover:text-rose-600 transition-colors">
-                登录
-              </a>
-            </div>
-          </div>
-        </div>
-      </nav>
+    <UsageGuard feature="emotion-diary">
+      {({ canUse, remainingUses, onUse, isLoading, usageText }) => (
+        <div className="min-h-screen bg-gradient-to-br from-rose-50 via-white to-pink-50">
+          {/* 导航栏 */}
+          <GlobalNavbar />
 
-      {/* 主要内容 */}
-      <main className="pt-16">
-        <div className="container py-12">
-          {/* 页面标题 */}
-          <div className="text-center mb-12">
-            <div className="inline-flex items-center px-4 py-2 rounded-full bg-white/80 backdrop-blur-sm border border-gray-200 mb-4">
-              <MessageCircle className="h-5 w-5 text-rose-500 mr-2" />
-              <span className="text-sm font-medium text-gray-700">情感日记</span>
-            </div>
-            <h1 className="text-3xl md:text-4xl font-bold text-gray-900 mb-4">
-              记录情感历程
-            </h1>
-            <p className="text-lg text-gray-600 max-w-2xl mx-auto">
-              记录每一天的情感变化，追踪成长的足迹
-            </p>
-          </div>
+          {/* 主要内容 */}
+          <main className="pt-16">
+            <div className="container py-12">
+              {/* 页面标题 */}
+              <div className="text-center mb-12">
+                <div className="inline-flex items-center px-4 py-2 rounded-full bg-white/80 backdrop-blur-sm border border-gray-200 mb-4">
+                  <MessageCircle className="h-5 w-5 text-rose-500 mr-2" />
+                  <span className="text-sm font-medium text-gray-700">情感日记</span>
+                </div>
+                <h1 className="text-3xl md:text-4xl font-bold text-gray-900 mb-4">
+                  记录情感历程
+                </h1>
+                <p className="text-lg text-gray-600 max-w-2xl mx-auto">
+                  记录每一天的情感变化，追踪成长的足迹
+                </p>
+              </div>
+
+              {/* 使用状态提示 */}
+              <div className="max-w-4xl mx-auto mb-6">
+                <UsageStatus feature="emotion-diary" className="justify-center" />
+              </div>
 
           <div className="max-w-4xl mx-auto grid md:grid-cols-3 gap-8">
             {/* 新建日记 */}
@@ -139,13 +132,18 @@ export default function EmotionDiaryPage() {
                 </div>
 
                 <button
-                  onClick={handleAddDiary}
-                  disabled={!newDiary.title.trim() || !newDiary.content.trim()}
+                  onClick={() => handleAddDiary(onUse)}
+                  disabled={!newDiary.title.trim() || !newDiary.content.trim() || !canUse}
                   className="w-full bg-gradient-to-r from-rose-500 to-pink-500 text-white py-3 rounded-lg font-medium hover:from-rose-600 hover:to-pink-600 transition-all disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center"
                 >
                   <Plus className="h-4 w-4 mr-2" />
-                  保存日记
+                  {isLoading ? '保存中...' : '保存日记'}
                 </button>
+                {!canUse && (
+                  <p className="text-sm text-amber-600 mt-2 text-center">
+                    使用次数已用完，请登录或等待重置
+                  </p>
+                )}
               </div>
             </div>
 
@@ -214,25 +212,27 @@ export default function EmotionDiaryPage() {
               </div>
             </div>
           </div>
-        </div>
-      </main>
-
-      {/* 页脚 */}
-      <footer className="bg-gray-50 border-t border-gray-200">
-        <div className="container py-8">
-          <div className="text-center">
-            <div className="flex items-center justify-center space-x-2 mb-4">
-              <div className="w-6 h-6 bg-gradient-to-r from-rose-500 to-pink-500 rounded-full flex items-center justify-center">
-                <MessageCircle className="h-3 w-3 text-white" />
-              </div>
-              <span className="text-gray-900 font-semibold">丘比特AI情感助手</span>
             </div>
-            <p className="text-gray-600 text-sm">
-              © 2024 专为情侣设计的情感助手平台. 让爱更美好.
-            </p>
-          </div>
+          </main>
+
+          {/* 页脚 */}
+          <footer className="bg-gray-50 border-t border-gray-200">
+            <div className="container py-8">
+              <div className="text-center">
+                <div className="flex items-center justify-center space-x-2 mb-4">
+                  <div className="w-6 h-6 bg-gradient-to-r from-rose-500 to-pink-500 rounded-full flex items-center justify-center">
+                    <MessageCircle className="h-3 w-3 text-white" />
+                  </div>
+                  <span className="text-gray-900 font-semibold">丘比特AI情感助手</span>
+                </div>
+                <p className="text-gray-600 text-sm">
+                  © 2024 专为情侣设计的情感助手平台. 让爱更美好.
+                </p>
+              </div>
+            </div>
+          </footer>
         </div>
-      </footer>
-    </div>
+      )}
+    </UsageGuard>
   )
 }

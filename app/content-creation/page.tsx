@@ -2,6 +2,8 @@
 
 import React, { useState } from 'react'
 import { PenTool, Sparkles, Download, Share2 } from 'lucide-react'
+import GlobalNavbar from '@/components/global-navbar'
+import UsageGuard, { UsageStatus } from '@/components/usage-guard'
 
 export default function ContentCreationPage() {
   const [prompt, setPrompt] = useState('')

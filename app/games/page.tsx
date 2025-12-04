@@ -3,6 +3,8 @@
 import React, { useState } from 'react'
 import Link from 'next/link'
 import { Gamepad2, Heart, MessageCircle, Users, Trophy, Star } from 'lucide-react'
+import GlobalNavbar from '@/components/global-navbar'
+import UsageGuard, { UsageStatus } from '@/components/usage-guard'
 
 export default function GamesPage() {
   const games = [
@@ -63,28 +65,11 @@ export default function GamesPage() {
   ]
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-rose-50 via-white to-pink-50">
-      {/* 导航栏 */}
-      <nav className="fixed top-0 left-0 right-0 z-50 bg-white/80 backdrop-blur-md border-b border-gray-100">
-        <div className="container">
-          <div className="flex justify-between items-center h-16">
-            <a href="/" className="flex items-center space-x-3">
-              <div className="w-8 h-8 bg-gradient-to-r from-rose-500 to-pink-500 rounded-full flex items-center justify-center">
-                <Gamepad2 className="h-4 w-4 text-white" />
-              </div>
-              <span className="text-lg font-bold text-gray-900">丘比特AI</span>
-            </a>
-            <div className="flex items-center space-x-4">
-              <a href="/" className="text-gray-600 hover:text-rose-600 transition-colors">
-                返回首页
-              </a>
-              <a href="/login" className="text-gray-600 hover:text-rose-600 transition-colors">
-                登录
-              </a>
-            </div>
-          </div>
-        </div>
-      </nav>
+    <UsageGuard feature="games">
+      {({ canUse, remainingUses, onUse, isLoading, usageText }) => (
+        <div className="min-h-screen bg-gradient-to-br from-rose-50 via-white to-pink-50">
+          {/* 导航栏 */}
+          <GlobalNavbar />
 
       {/* 主要内容 */}
       <main className="pt-16">
@@ -101,6 +86,11 @@ export default function GamesPage() {
             <p className="text-lg text-gray-600 max-w-2xl mx-auto">
               通过精心设计的互动游戏，增进感情深度，创造美好回忆
             </p>
+          </div>
+
+          {/* 使用状态提示 */}
+          <div className="max-w-4xl mx-auto mb-6">
+            <UsageStatus feature="games" className="justify-center" />
           </div>
 
           {/* 游戏列表 */}
@@ -123,9 +113,17 @@ export default function GamesPage() {
                   <span>{game.players}</span>
                   <span>{game.difficulty}</span>
                 </div>
-                <button className="w-full bg-gradient-to-r from-rose-500 to-pink-500 text-white py-2 rounded-lg font-medium hover:from-rose-600 hover:to-pink-600 transition-all group-hover:shadow-md">
-                  开始游戏
+                <button 
+                  className="w-full bg-gradient-to-r from-rose-500 to-pink-500 text-white py-2 rounded-lg font-medium hover:from-rose-600 hover:to-pink-600 transition-all group-hover:shadow-md disabled:opacity-50 disabled:cursor-not-allowed"
+                  disabled={!canUse}
+                >
+                  {isLoading ? '加载中...' : '开始游戏'}
                 </button>
+                {!canUse && (
+                  <p className="text-sm text-amber-600 mt-2 text-center">
+                    使用次数已用完，请登录或等待重置
+                  </p>
+                )}
               </div>
             ))}
           </div>
@@ -152,25 +150,27 @@ export default function GamesPage() {
               </div>
             </div>
           </div>
-        </div>
-      </main>
-
-      {/* 页脚 */}
-      <footer className="bg-gray-50 border-t border-gray-200">
-        <div className="container py-8">
-          <div className="text-center">
-            <div className="flex items-center justify-center space-x-2 mb-4">
-              <div className="w-6 h-6 bg-gradient-to-r from-rose-500 to-pink-500 rounded-full flex items-center justify-center">
-                <Gamepad2 className="h-3 w-3 text-white" />
-              </div>
-              <span className="text-gray-900 font-semibold">丘比特AI情感助手</span>
             </div>
-            <p className="text-gray-600 text-sm">
-              © 2024 专为情侣设计的情感助手平台. 让爱更美好.
-            </p>
-          </div>
+          </main>
+
+          {/* 页脚 */}
+          <footer className="bg-gray-50 border-t border-gray-200">
+            <div className="container py-8">
+              <div className="text-center">
+                <div className="flex items-center justify-center space-x-2 mb-4">
+                  <div className="w-6 h-6 bg-gradient-to-r from-rose-500 to-pink-500 rounded-full flex items-center justify-center">
+                    <Gamepad2 className="h-3 w-3 text-white" />
+                  </div>
+                  <span className="text-gray-900 font-semibold">丘比特AI情感助手</span>
+                </div>
+                <p className="text-gray-600 text-sm">
+                  © 2024 专为情侣设计的情感助手平台. 让爱更美好.
+                </p>
+              </div>
+            </div>
+          </footer>
         </div>
-      </footer>
-    </div>
+      )}
+    </UsageGuard>
   )
 }
