@@ -207,7 +207,7 @@ export async function GET(request: NextRequest) {
             : GAME_TYPES.MEMORY_PUZZLE,
           achievements: [], // 可以从用户模型获取
           playTime: progressList.reduce((acc, p) => {
-            acc[p.gameType] = (acc[p.gameType] || 0) + (p.timeSpent || 0)
+            acc[p.gameType] = (acc[p.gameType] || 0) + (p.totalPlayTime || 0)
             return acc
           }, {} as Record<string, number>)
         }
