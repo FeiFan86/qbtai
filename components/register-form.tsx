@@ -132,7 +132,7 @@ export function RegisterForm() {
       <div className="card p-8 md:p-10 shadow-2xl">
         {/* 头部图标和标题 */}
         <div className="text-center mb-8">
-          <div className="w-20 h-20 bg-gradient-to-r from-primary-500 to-secondary-500 rounded-full flex items-center justify-center mx-auto mb-6 shadow-glow animate-float">
+          <div className="w-20 h-20 bg-gradient-to-r from-rose-400 to-pink-400 rounded-full flex items-center justify-center mx-auto mb-6 shadow-glow animate-float">
             <Heart className="h-10 w-10 text-white" fill="currentColor" />
           </div>
           <h2 className="text-3xl font-bold text-gradient mb-2">开启甜蜜旅程</h2>

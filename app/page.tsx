@@ -237,7 +237,7 @@ export default function HomePage() {
                     key={index}
                     onClick={() => setActiveFeatureIndex(index)}
                     className={`card p-4 text-left transition-all duration-300 ${
-                      index === activeFeatureIndex ? 'ring-2 ring-primary-500 transform scale-105' : 'hover:transform hover:scale-102'
+                      index === activeFeatureIndex ? 'ring-2 ring-rose-400 transform scale-105' : 'hover:transform hover:scale-102'
                     }`}
                   >
                     <div className="flex items-center space-x-3">
@@ -258,7 +258,7 @@ export default function HomePage() {
                   key={index}
                   onClick={() => setActiveFeatureIndex(index)}
                   className={`w-2 h-2 rounded-full transition-all duration-300 ${
-                    index === activeFeatureIndex ? 'w-8 bg-primary-500' : 'bg-gray-300'
+                    index === activeFeatureIndex ? 'w-8 bg-rose-400' : 'bg-gray-300'
                   }`}
                 />
               ))}
@@ -302,7 +302,7 @@ export default function HomePage() {
       {/* CTA 区域 */}
       <section className={`relative z-10 py-20 transition-all duration-1000 delay-700 ${isVisible ? 'translate-y-0 opacity-100' : 'translate-y-12 opacity-0'}`}>
         <div className="container">
-          <div className="card p-12 md:p-16 bg-gradient-to-r from-primary-500 to-secondary-500 text-white">
+          <div className="card p-12 md:p-16 bg-gradient-to-r from-rose-400 to-pink-400 text-white">
             <div className="text-center max-w-3xl mx-auto space-y-6">
               <div className="w-20 h-20 bg-white/20 backdrop-blur-sm rounded-full flex items-center justify-center mx-auto">
                 <Heart className="h-10 w-10 text-white" fill="currentColor" />
@@ -316,7 +316,7 @@ export default function HomePage() {
               <div className="flex flex-col sm:flex-row gap-4 justify-center pt-4">
                 <button 
                   onClick={() => router.push('/register')}
-                  className="bg-white text-primary-600 hover:bg-gray-100 border-0 font-semibold px-8 py-3 text-lg transition-colors"
+                  className="bg-white text-rose-500 hover:bg-gray-100 border-0 font-semibold px-8 py-3 text-lg transition-colors"
                 >
                   立即注册
                 </button>
