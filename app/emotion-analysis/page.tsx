@@ -326,7 +326,7 @@ export default function EmotionAnalysisPage() {
         {/* 分析结果区域 */}
         {latestAnalysis && (
           <div ref={resultRef} className={`mt-12 transition-all duration-500 ${latestAnalysis ? 'translate-y-0 opacity-100' : 'translate-y-8 opacity-0'}`}>
-            <EmotionAnalysisResult analysis={latestAnalysis} />
+            <EmotionAnalysisResult result={latestAnalysis.result || latestAnalysis} />
           </div>
         )}
 

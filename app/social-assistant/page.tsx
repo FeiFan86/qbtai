@@ -370,14 +370,14 @@ export default function SocialAssistantPage() {
         {/* 分析结果区域 */}
         {analysisResult && (
           <div ref={resultRef} className={`mt-12 transition-all duration-500 ${analysisResult ? 'translate-y-0 opacity-100' : 'translate-y-8 opacity-0'}`}>
-            <ConversationAnalysis analysis={analysisResult} />
+            <ConversationAnalysis result={analysisResult.result || analysisResult} />
           </div>
         )}
 
         {/* 社交策略建议 */}
         {analysisResult && (
           <div className="mt-8">
-            <SocialStrategies analysis={analysisResult} />
+            <SocialStrategies result={analysisResult.result || analysisResult} />
           </div>
         )}
       </div>
