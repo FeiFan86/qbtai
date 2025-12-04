@@ -5,12 +5,17 @@ import { PenTool, Sparkles, Download, Share2 } from 'lucide-react'
 import GlobalNavbar from '@/components/global-navbar'
 import UsageGuard, { UsageStatus } from '@/components/usage-guard'
 
+interface GenerationResult {
+  content: string;
+  suggestions: string[];
+}
+
 export default function ContentCreationPage() {
   const [prompt, setPrompt] = useState('')
   const [style, setStyle] = useState('casual')
   const [length, setLength] = useState('medium')
   const [isGenerating, setIsGenerating] = useState(false)
-  const [result, setResult] = useState(null)
+  const [result, setResult] = useState<GenerationResult | null>(null)
 
   const handleGenerate = async () => {
     if (!prompt.trim()) return
