@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server'
-import jwt, { JsonWebTokenError, TokenExpiredError } from 'jsonwebtoken'
+import jwt from 'jsonwebtoken'
 import dbConnect from '@/lib/db'
 import User from '@/lib/models/User'
 
@@ -20,18 +20,20 @@ export async function POST(request: NextRequest) {
       decoded = jwt.verify(token, process.env.JWT_SECRET || 'cupid-ai-jwt-secret') as any
     } catch (jwtError) {
       // 如果是JWT验证错误，返回特定的错误信息
-      if (jwtError instanceof JsonWebTokenError) {
-        return NextResponse.json(
-          { success: false, error: '无效的令牌' },
-          { status: 401 }
-        )
-      }
+      if (jwtError && typeof jwtError === 'object' && 'name' in jwtError) {
+        if (jwtError.name === 'JsonWebTokenError') {
+          return NextResponse.json(
+            { success: false, error: '无效的令牌' },
+            { status: 401 }
+          )
+        }
 
-      if (jwtError instanceof TokenExpiredError) {
-        return NextResponse.json(
-          { success: false, error: '令牌已过期' },
-          { status: 401 }
-        )
+        if (jwtError.name === 'TokenExpiredError') {
+          return NextResponse.json(
+            { success: false, error: '令牌已过期' },
+            { status: 401 }
+          )
+        }
       }
 
       throw jwtError
