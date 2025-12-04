@@ -5,10 +5,21 @@ import { Brain, MessageCircle, BarChart3, Download, Share2 } from 'lucide-react'
 import GlobalNavbar from '@/components/global-navbar'
 import UsageGuard, { UsageStatus } from '@/components/usage-guard'
 
+interface Emotion {
+  name: string;
+  score: number;
+  color: string;
+}
+
+interface AnalysisResult {
+  emotions: Emotion[];
+  summary: string;
+}
+
 export default function EmotionAnalysisPage() {
   const [inputText, setInputText] = useState('')
   const [isAnalyzing, setIsAnalyzing] = useState(false)
-  const [result, setResult] = useState(null)
+  const [result, setResult] = useState<AnalysisResult | null>(null)
 
   const handleAnalyze = async (onRecordUsage: () => Promise<void>) => {
     if (!inputText.trim()) return
