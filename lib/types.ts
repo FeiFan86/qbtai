@@ -188,6 +188,27 @@ export interface AnalyticsData {
 
 // AI服务相关类型定义
 export interface EmotionAnalysisResult {
+  id: string;
+  timestamp: string | Date;
+  input: string;
+  type: 'text' | 'voice' | 'image';
+  result: {
+    emotions: {
+      type: string;
+      score: number;
+      color: string;
+    }[];
+    overall: {
+      sentiment: 'positive' | 'neutral' | 'negative';
+      confidence: number;
+    };
+    keywords: string[];
+    summary: string;
+  };
+}
+
+// 简化的情感分析结果类型（用于AI服务返回）
+export interface SimpleEmotionAnalysisResult {
   emotions: {
     type: string;
     score: number;

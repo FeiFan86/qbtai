@@ -1,5 +1,5 @@
 // AI服务调用模块
-import { EmotionAnalysisResult, GeneratedContent } from './types'
+import { SimpleEmotionAnalysisResult, GeneratedContent } from './types'
 
 interface VolcanoAIResponse {
   code: number
@@ -22,7 +22,7 @@ export class AIService {
   }
 
   // 情感分析
-  static async analyzeEmotion(text: string): Promise<EmotionAnalysisResult> {
+  static async analyzeEmotion(text: string): Promise<SimpleEmotionAnalysisResult> {
     try {
       const timestamp = Date.now()
       const signature = this.generateSignature(timestamp)
@@ -32,24 +32,21 @@ export class AIService {
       const mockResponse = {
         success: true,
         data: {
-          emotions: {
-            happy: Math.random() * 0.3 + 0.6,
-            sad: Math.random() * 0.2,
-            angry: Math.random() * 0.1,
-            anxious: Math.random() * 0.15,
-            excited: Math.random() * 0.25,
-            confused: Math.random() * 0.1,
-            love: Math.random() * 0.4 + 0.3
+          emotions: [
+            { type: 'happy', score: Math.random() * 0.3 + 0.6, color: '#F59E0B' },
+            { type: 'love', score: Math.random() * 0.4 + 0.3, color: '#EF4444' },
+            { type: 'excited', score: Math.random() * 0.25, color: '#8B5CF6' },
+            { type: 'anxious', score: Math.random() * 0.15, color: '#3B82F6' },
+            { type: 'sad', score: Math.random() * 0.2, color: '#6B7280' },
+            { type: 'angry', score: Math.random() * 0.1, color: '#DC2626' },
+            { type: 'confused', score: Math.random() * 0.1, color: '#6366F1' }
+          ],
+          overall: {
+            sentiment: Math.random() > 0.3 ? 'positive' : 'neutral',
+            confidence: Math.random() * 0.3 + 0.7
           },
-          dominantEmotion: Math.random() > 0.5 ? 'happy' : 'love',
-          confidence: Math.random() * 0.3 + 0.7,
-          sentiment: Math.random() > 0.3 ? 'positive' : 'neutral',
           keywords: ['开心', '幸福', '美好', '期待'],
-          suggestions: [
-            '继续保持积极的心态，生活会更加美好',
-            '多与朋友分享快乐，幸福会加倍',
-            '尝试记录下此刻的心情，未来可以回顾'
-          ]
+          summary: '从您的文字中感受到积极向上的情绪，整体情感状态良好，充满了对生活的热爱和期待。'
         }
       }
 
@@ -57,7 +54,7 @@ export class AIService {
       await new Promise(resolve => setTimeout(resolve, 500 + Math.random() * 1000))
 
       if (mockResponse.success) {
-        return mockResponse.data as EmotionAnalysisResult
+        return mockResponse.data as SimpleEmotionAnalysisResult
       }
       
       throw new Error('AI分析失败')
@@ -66,23 +63,21 @@ export class AIService {
       
       // 返回默认结果作为降级方案
       return {
-        emotions: {
-          happy: 0.5,
-          sad: 0.1,
-          angry: 0.05,
-          anxious: 0.1,
-          excited: 0.2,
-          confused: 0.05,
-          love: 0.3
+        emotions: [
+          { type: 'happy', score: 0.5, color: '#F59E0B' },
+          { type: 'love', score: 0.3, color: '#EF4444' },
+          { type: 'excited', score: 0.2, color: '#8B5CF6' },
+          { type: 'anxious', score: 0.1, color: '#3B82F6' },
+          { type: 'sad', score: 0.1, color: '#6B7280' },
+          { type: 'angry', score: 0.05, color: '#DC2626' },
+          { type: 'confused', score: 0.05, color: '#6366F1' }
+        ],
+        overall: {
+          sentiment: 'neutral',
+          confidence: 0.5
         },
-        dominantEmotion: 'neutral',
-        confidence: 0.5,
-        sentiment: 'neutral',
         keywords: ['正常', '平静', '日常'],
-        suggestions: [
-          '情绪状态正常，继续保持良好的生活习惯',
-          '适当运动有助于维持良好的情绪状态'
-        ]
+        summary: '情绪状态正常，保持良好的生活习惯有助于维持心理平衡。'
       }
     }
   }

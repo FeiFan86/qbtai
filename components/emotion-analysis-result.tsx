@@ -5,24 +5,10 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from './ui/
 import { Badge } from './ui/badge'
 import { Button } from './ui/button'
 import { Heart, Frown, Meh, Smile, Laugh, ChevronDown, ChevronUp, Info, Download } from 'lucide-react'
-
-interface Emotion {
-  type: string
-  score: number
-  color: string
-  icon?: React.ReactNode
-}
+import { SimpleEmotionAnalysisResult } from '../lib/types'
 
 interface EmotionAnalysisResultProps {
-  result: {
-    emotions: Emotion[]
-    overall: {
-      sentiment: string
-      confidence: number
-    }
-    keywords: string[]
-    summary: string
-  }
+  result: SimpleEmotionAnalysisResult
   compact?: boolean
 }
 

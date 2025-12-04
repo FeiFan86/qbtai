@@ -9,7 +9,7 @@ import { Badge } from '@/components/ui/badge'
 import { UnifiedLayout } from '@/components/layout-unified'
 import { MessageSquare, Mic, Image, Brain, CheckCircle, TrendingUp, AlertCircle } from 'lucide-react'
 import { ChatEmotionAnalysisEnhanced } from '@/components/chat-emotion-analysis-enhanced'
-import { EmotionAnalysisResult } from '@/components/emotion-analysis-result'
+import { EmotionAnalysisResult as EmotionAnalysisResultComponent } from '@/components/emotion-analysis-result'
 import { SocialSuggestions } from '@/components/social-suggestions'
 
 export default function EmotionAnalysisPage() {
@@ -263,7 +263,7 @@ export default function EmotionAnalysisPage() {
       {/* 分析结果区域 */}
       {latestAnalysis && (
         <div ref={resultRef} className={`mt-12 transition-all duration-500 ${latestAnalysis ? 'translate-y-0 opacity-100' : 'translate-y-8 opacity-0'}`}>
-          <EmotionAnalysisResult result={latestAnalysis.result || latestAnalysis} />
+          <EmotionAnalysisResultComponent result={latestAnalysis.result || latestAnalysis} />
         </div>
       )}
 
