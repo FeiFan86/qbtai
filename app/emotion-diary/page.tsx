@@ -121,8 +121,16 @@ export default function SimpleEmotionDiaryPage() {
   const sortedDateKeys = Object.keys(groupedDiaries).sort((a, b) => new Date(b).getTime() - new Date(a).getTime())
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-pink-50 via-purple-50 to-indigo-50">
-      <Navigation />
+    <div className="min-h-screen bg-gradient-to-br from-pink-50 via-purple-50 to-indigo-50 relative overflow-hidden">
+      {/* 增强背景装饰元素 */}
+      <div className="absolute inset-0 bg-gradient-to-br from-pink-100/20 via-purple-100/20 to-indigo-100/20"></div>
+      <div className="absolute top-10 left-10 w-72 h-72 bg-gradient-to-r from-pink-300/30 to-purple-300/30 rounded-full blur-3xl animate-pulse"></div>
+      <div className="absolute bottom-10 right-10 w-96 h-96 bg-gradient-to-r from-indigo-300/30 to-blue-300/30 rounded-full blur-3xl animate-pulse"></div>
+      <div className="absolute top-1/4 right-1/4 w-64 h-64 bg-gradient-to-r from-rose-300/20 to-red-300/20 rounded-full blur-3xl animate-pulse delay-300"></div>
+      <div className="absolute bottom-1/3 left-1/3 w-80 h-80 bg-gradient-to-r from-yellow-300/20 to-amber-300/20 rounded-full blur-3xl animate-pulse delay-700"></div>
+      
+      <div className="relative z-10">
+        <Navigation />
       
       <main className="container mx-auto px-4 py-8">
         <div className="mx-auto max-w-6xl">

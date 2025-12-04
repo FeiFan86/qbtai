@@ -695,40 +695,52 @@ export default function ComplaintWallPage() {
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-orange-50 via-red-50 to-pink-50">
+    <div className="min-h-screen bg-gradient-to-br from-rose-50 via-pink-50 to-purple-50 relative overflow-hidden">
+      {/* 增强背景装饰元素 */}
+      <div className="absolute inset-0 bg-gradient-to-br from-rose-100/20 via-pink-100/20 to-purple-100/20"></div>
+      <div className="absolute top-10 left-10 w-72 h-72 bg-gradient-to-r from-rose-300/30 to-pink-300/30 rounded-full blur-3xl animate-pulse"></div>
+      <div className="absolute bottom-10 right-10 w-96 h-96 bg-gradient-to-r from-purple-300/30 to-blue-300/30 rounded-full blur-3xl animate-pulse"></div>
+      <div className="absolute top-1/3 left-1/4 w-64 h-64 bg-gradient-to-r from-orange-300/20 to-red-300/20 rounded-full blur-3xl animate-pulse delay-300"></div>
+      <div className="absolute bottom-1/4 right-1/3 w-80 h-80 bg-gradient-to-r from-yellow-300/20 to-amber-300/20 rounded-full blur-3xl animate-pulse delay-700"></div>
+      
       <Navigation />
       
-      <main className="container mx-auto px-4 py-8">
+      <main className="container mx-auto px-4 py-8 relative z-10">
         <div className="mb-6">
-            <Link href="/games" className="inline-flex items-center gap-2 text-orange-600 hover:text-orange-800 transition-colors mb-6">
-              <ArrowLeft className="h-4 w-4" />
-              返回游戏中心
-            </Link>
+          <Link href="/games/interactive-games" className="inline-flex items-center gap-2 text-rose-600 hover:text-rose-800 transition-colors mb-6 bg-white/70 backdrop-blur-sm px-4 py-2 rounded-lg shadow-sm">
+            <ArrowLeft className="h-4 w-4" />
+            返回互动游戏
+          </Link>
           
-          <div className="text-center mb-8">
-            <h1 className="text-4xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-orange-600 to-red-600 mb-4">
-              吐槽墙
-            </h1>
-            <p className="text-gray-600 max-w-2xl mx-auto text-lg">
-              匿名吐槽释放压力，获得共鸣和建议，这里是你的情绪出口
-            </p>
-          </div>
+            <div className="text-center mb-8">
+              <div className="inline-flex items-center justify-center mb-6 p-6 bg-gradient-to-r from-orange-500 via-red-500 to-pink-500 rounded-full shadow-2xl animate-bounce">
+                <MessageSquare className="h-12 w-12 text-white" />
+              </div>
+              <h1 className="text-6xl md:text-7xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-orange-600 via-red-600 to-pink-600 mb-6 tracking-tight">
+                吐槽墙
+              </h1>
+              <p className="text-gray-700 max-w-2xl mx-auto text-xl bg-white/80 backdrop-blur-md px-8 py-4 rounded-xl shadow-lg border border-white/30">
+                💬 匿名吐槽释放压力，获得共鸣和建议，这里是你的情绪出口
+              </p>
+            </div>
         </div>
 
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
           {/* 左侧发布区域 */}
           <div className="lg:col-span-1">
-            <Card className="bg-white/80 backdrop-blur-sm shadow-lg sticky top-6">
-              <CardHeader>
-                <CardTitle className="flex items-center gap-2">
-                  <MessageSquare className="h-5 w-5 text-orange-500" />
-                  发表吐槽
-                </CardTitle>
-                <CardDescription>
-                  匿名发表，尽情释放你的情绪
-                </CardDescription>
-              </CardHeader>
-              <CardContent className="space-y-4">
+            <Card className="bg-white/90 backdrop-blur-md shadow-xl sticky top-6 border-0">
+              <div className="bg-gradient-to-r from-orange-500 to-red-500 p-4">
+                <CardHeader className="text-white p-0">
+                  <CardTitle className="flex items-center gap-2 text-lg">
+                    <MessageSquare className="h-5 w-5" />
+                    💬 发表吐槽
+                  </CardTitle>
+                  <CardDescription className="text-orange-100">
+                    匿名发表，尽情释放你的情绪
+                  </CardDescription>
+                </CardHeader>
+              </div>
+              <CardContent className="space-y-4 p-6">
                 {/* 选择分类 */}
                 <div>
                   <label className="block text-sm font-medium mb-2">吐槽分类</label>
@@ -805,10 +817,10 @@ export default function ComplaintWallPage() {
                 <Button 
                   onClick={submitComplaint}
                   disabled={!newComplaint.trim()}
-                  className="w-full bg-gradient-to-r from-orange-500 to-red-500 hover:from-orange-600 hover:to-red-600"
+                  className="w-full bg-gradient-to-r from-orange-500 to-red-500 hover:from-orange-600 hover:to-red-600 text-white shadow-md hover:shadow-lg transition-all duration-300 transform hover:scale-105"
                 >
                   <Send className="h-4 w-4 mr-2" />
-                  发布吐槽
+                  ✨ 发布吐槽
                 </Button>
                 
                 {/* 提示 */}
@@ -824,33 +836,42 @@ export default function ComplaintWallPage() {
           {/* 右侧吐槽列表 */}
           <div className="lg:col-span-2">
             {/* 筛选和排序 */}
-            <Card className="bg-white/80 backdrop-blur-sm shadow-lg mb-6">
-              <CardContent className="p-4">
-                <div className="flex flex-col md:flex-row gap-4">
+            <Card className="bg-white/90 backdrop-blur-md shadow-xl border-0 mb-6">
+              <div className="bg-gradient-to-r from-orange-500 to-red-500 p-4">
+                <CardHeader className="text-white p-0">
+                  <CardTitle className="flex items-center gap-2 text-lg">
+                    <Filter className="h-5 w-5" />
+                    🔍 筛选和排序
+                  </CardTitle>
+                </CardHeader>
+              </div>
+              <CardContent className="p-6">
+                <div className="flex flex-col md:flex-row gap-6">
                   {/* 筛选 */}
                   <div className="flex-1">
-                    <label className="block text-sm font-medium mb-2">筛选分类</label>
+                    <label className="block text-sm font-medium mb-3 text-gray-700">筛选分类</label>
                     <div className="flex flex-wrap gap-2">
                       <button
                         onClick={() => setActiveFilter('all')}
-                        className={`px-3 py-1 rounded-full text-sm transition-colors ${
+                        className={`px-4 py-2 rounded-lg text-sm font-medium transition-all duration-300 shadow-sm hover:shadow-md ${
                           activeFilter === 'all' 
-                            ? 'bg-orange-100 text-orange-800 border-orange-200' 
-                            : 'bg-gray-100 text-gray-600 hover:bg-gray-200'
+                            ? 'bg-gradient-to-r from-orange-500 to-red-500 text-white shadow-lg' 
+                            : 'bg-white text-gray-600 hover:bg-gray-50 border border-gray-200'
                         }`}
                       >
-                        全部
+                        🔮 全部
                       </button>
                       {complaintCategories.map(category => (
                         <button
                           key={category.id}
                           onClick={() => setActiveFilter(category.id)}
-                          className={`px-3 py-1 rounded-full text-sm transition-colors ${
+                          className={`px-4 py-2 rounded-lg text-sm font-medium transition-all duration-300 shadow-sm hover:shadow-md ${
                             activeFilter === category.id 
-                              ? 'bg-orange-100 text-orange-800 border-orange-200' 
-                              : 'bg-gray-100 text-gray-600 hover:bg-gray-200'
+                              ? 'bg-gradient-to-r from-orange-500 to-red-500 text-white shadow-lg' 
+                              : 'bg-white text-gray-600 hover:bg-gray-50 border border-gray-200'
                           }`}
                         >
+                          {category.icon}
                           {category.name}
                         </button>
                       ))}
@@ -859,39 +880,39 @@ export default function ComplaintWallPage() {
                   
                   {/* 排序 */}
                   <div>
-                    <label className="block text-sm font-medium mb-2">排序方式</label>
+                    <label className="block text-sm font-medium mb-3 text-gray-700">排序方式</label>
                     <div className="flex gap-2">
                       <button
                         onClick={() => setSortBy('latest')}
-                        className={`px-3 py-1 rounded-full text-sm transition-colors ${
+                        className={`px-4 py-2 rounded-lg text-sm font-medium transition-all duration-300 shadow-sm hover:shadow-md ${
                           sortBy === 'latest' 
-                            ? 'bg-orange-100 text-orange-800 border-orange-200' 
-                            : 'bg-gray-100 text-gray-600 hover:bg-gray-200'
+                            ? 'bg-gradient-to-r from-orange-500 to-red-500 text-white shadow-lg' 
+                            : 'bg-white text-gray-600 hover:bg-gray-50 border border-gray-200'
                         }`}
                       >
-                        <Clock className="h-3 w-3 inline mr-1" />
+                        <Clock className="h-4 w-4 inline mr-1" />
                         最新
                       </button>
                       <button
                         onClick={() => setSortBy('popular')}
-                        className={`px-3 py-1 rounded-full text-sm transition-colors ${
+                        className={`px-4 py-2 rounded-lg text-sm font-medium transition-all duration-300 shadow-sm hover:shadow-md ${
                           sortBy === 'popular' 
-                            ? 'bg-orange-100 text-orange-800 border-orange-200' 
-                            : 'bg-gray-100 text-gray-600 hover:bg-gray-200'
+                            ? 'bg-gradient-to-r from-orange-500 to-red-500 text-white shadow-lg' 
+                            : 'bg-white text-gray-600 hover:bg-gray-50 border border-gray-200'
                         }`}
                       >
-                        <ThumbsUp className="h-3 w-3 inline mr-1" />
+                        <ThumbsUp className="h-4 w-4 inline mr-1" />
                         热门
                       </button>
                       <button
                         onClick={() => setSortBy('hot')}
-                        className={`px-3 py-1 rounded-full text-sm transition-colors ${
+                        className={`px-4 py-2 rounded-lg text-sm font-medium transition-all duration-300 shadow-sm hover:shadow-md ${
                           sortBy === 'hot' 
-                            ? 'bg-orange-100 text-orange-800 border-orange-200' 
-                            : 'bg-gray-100 text-gray-600 hover:bg-gray-200'
+                            ? 'bg-gradient-to-r from-orange-500 to-red-500 text-white shadow-lg' 
+                            : 'bg-white text-gray-600 hover:bg-gray-50 border border-gray-200'
                         }`}
                       >
-                        <Flame className="h-3 w-3 inline mr-1" />
+                        <Flame className="h-4 w-4 inline mr-1" />
                         热议
                       </button>
                     </div>

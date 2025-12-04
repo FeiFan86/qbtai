@@ -290,51 +290,56 @@ export default function GamesPage() {
   }), [filteredGames])
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-indigo-50 via-purple-50 to-pink-50">
+    <div className="min-h-screen bg-gradient-to-br from-violet-50 via-purple-50 to-pink-50 relative overflow-hidden">
+      {/* 增强背景装饰元素 */}
+      <div className="absolute inset-0 bg-gradient-to-br from-violet-100/20 via-purple-100/20 to-pink-100/20"></div>
+      <div className="absolute top-20 left-10 w-80 h-80 bg-gradient-to-r from-violet-300/30 to-purple-300/30 rounded-full blur-3xl animate-pulse"></div>
+      <div className="absolute bottom-20 right-10 w-96 h-96 bg-gradient-to-r from-pink-300/30 to-rose-300/30 rounded-full blur-3xl animate-pulse"></div>
+      <div className="absolute top-1/4 right-1/4 w-64 h-64 bg-gradient-to-r from-blue-300/20 to-cyan-300/20 rounded-full blur-3xl animate-pulse delay-500"></div>
+      <div className="absolute bottom-1/3 left-1/3 w-72 h-72 bg-gradient-to-r from-green-300/20 to-emerald-300/20 rounded-full blur-3xl animate-pulse delay-1000"></div>
+      
       <Navigation />
       
-      <main className="container mx-auto px-4 py-8">
+      <main className="container mx-auto px-4 py-8 relative z-10">
         <div className="mx-auto max-w-7xl">
           {/* 页面标题区域 */}
-          <div className="text-center mb-10">
-            <div className="inline-flex items-center justify-center mb-6 p-4 bg-white rounded-full shadow-lg">
-              <Gamepad2 className="h-12 w-12 text-transparent bg-clip-text bg-gradient-to-r from-purple-500 to-pink-500" />
+          <div className="text-center mb-12">
+            <div className="inline-flex items-center justify-center mb-8 p-6 bg-gradient-to-r from-purple-500 to-pink-500 rounded-full shadow-2xl">
+              <Gamepad2 className="h-16 w-16 text-white" />
             </div>
-            <h1 className="text-5xl md:text-7xl font-bold tracking-tight mb-4">
+            <h1 className="text-6xl md:text-8xl font-bold tracking-tight mb-6 bg-gradient-to-r from-purple-600 via-pink-600 to-rose-600 bg-clip-text text-transparent">
               情感互动
-              <span className="text-transparent bg-clip-text bg-gradient-to-r from-purple-500 to-pink-500 block md:inline">
-                游戏中心
-              </span>
+              <span className="block md:inline">游戏中心</span>
             </h1>
-            <p className="text-lg text-gray-600 max-w-3xl mx-auto mb-8">
-              探索丰富多彩的情感互动游戏，提升情商能力，增进亲密关系，享受游戏的乐趣
+            <p className="text-xl text-gray-700 max-w-4xl mx-auto mb-10 bg-white/80 backdrop-blur-sm px-8 py-4 rounded-xl shadow-lg">
+              🎮 探索丰富多彩的情感互动游戏，提升情商能力，增进亲密关系，享受游戏的乐趣
             </p>
             
             {/* 统计数据 */}
-            <div className="grid grid-cols-2 xs:grid-cols-3 md:grid-cols-5 gap-3 xs:gap-4 mb-8">
-              <div className="bg-white rounded-xl p-4 xs:p-6 shadow-md">
-                <div className="text-xl xs:text-2xl md:text-3xl font-bold text-purple-600">{gameStats.total}</div>
-                <div className="text-xs xs:text-sm text-gray-500">精选游戏</div>
+            <div className="grid grid-cols-2 xs:grid-cols-3 md:grid-cols-5 gap-4 mb-10">
+              <div className="bg-white/90 backdrop-blur-md rounded-2xl p-6 shadow-xl border border-white/50">
+                <div className="text-3xl md:text-4xl font-bold text-purple-600 mb-1">{gameStats.total}</div>
+                <div className="text-sm font-medium text-gray-600">🎯 精选游戏</div>
               </div>
-              <div className="bg-white rounded-xl p-4 xs:p-6 shadow-md">
-                <div className="text-xl xs:text-2xl md:text-3xl font-bold text-pink-600">{gameStats.new}</div>
-                <div className="text-xs xs:text-sm text-gray-500">最新上线</div>
+              <div className="bg-white/90 backdrop-blur-md rounded-2xl p-6 shadow-xl border border-white/50">
+                <div className="text-3xl md:text-4xl font-bold text-pink-600 mb-1">{gameStats.new}</div>
+                <div className="text-sm font-medium text-gray-600">✨ 最新上线</div>
               </div>
-              <div className="bg-white rounded-xl p-4 xs:p-6 shadow-md">
-                <div className="text-xl xs:text-2xl md:text-3xl font-bold text-blue-600">{gameStats.hot}</div>
-                <div className="text-xs xs:text-sm text-gray-500">热门推荐</div>
+              <div className="bg-white/90 backdrop-blur-md rounded-2xl p-6 shadow-xl border border-white/50">
+                <div className="text-3xl md:text-4xl font-bold text-blue-600 mb-1">{gameStats.hot}</div>
+                <div className="text-sm font-medium text-gray-600">🔥 热门推荐</div>
               </div>
-              <div className="bg-white rounded-xl p-4 xs:p-6 shadow-md">
-                <div className="text-xl xs:text-2xl md:text-3xl font-bold text-green-600">
+              <div className="bg-white/90 backdrop-blur-md rounded-2xl p-6 shadow-xl border border-white/50">
+                <div className="text-3xl md:text-4xl font-bold text-green-600 mb-1">
                   {gameData.reduce((sum, game) => sum + game.playCount, 0).toLocaleString()}
                 </div>
-                <div className="text-xs xs:text-sm text-gray-500">总游戏次数</div>
+                <div className="text-sm font-medium text-gray-600">👥 总游戏次数</div>
               </div>
-              <div className="bg-white rounded-xl p-4 xs:p-6 shadow-md">
-                <div className="text-xl xs:text-2xl md:text-3xl font-bold text-yellow-600">
+              <div className="bg-white/90 backdrop-blur-md rounded-2xl p-6 shadow-xl border border-white/50">
+                <div className="text-3xl md:text-4xl font-bold text-yellow-600 mb-1">
                   {(gameData.reduce((sum, game) => sum + game.rating, 0) / gameData.length).toFixed(1)}
                 </div>
-                <div className="text-xs xs:text-sm text-gray-500">平均评分</div>
+                <div className="text-sm font-medium text-gray-600">⭐ 平均评分</div>
               </div>
             </div>
           </div>
@@ -351,14 +356,20 @@ export default function GamesPage() {
           />
 
           {/* 游戏列表/网格 */}
-          <div className="mb-8">
-            <h2 className="text-2xl font-bold text-gray-800 mb-4 flex items-center gap-2">
-              <Gamepad2 className="h-6 w-6 text-purple-500" />
-              游戏列表
-              <Badge variant="secondary" className="ml-2">
-                {filteredGames.length} 个游戏
-              </Badge>
-            </h2>
+          <div className="mb-10">
+            <div className="flex items-center justify-between mb-6">
+              <div className="flex items-center gap-3">
+                <div className="bg-gradient-to-r from-purple-500 to-pink-500 p-2 rounded-lg">
+                  <Gamepad2 className="h-6 w-6 text-white" />
+                </div>
+                <h2 className="text-3xl font-bold text-gray-800">
+                  🎲 游戏列表
+                </h2>
+                <Badge variant="secondary" className="ml-3 px-3 py-1 text-base font-medium bg-gradient-to-r from-purple-100 to-pink-100 text-purple-800 border-purple-200">
+                  {filteredGames.length} 个游戏
+                </Badge>
+              </div>
+            </div>
             
             {viewMode === 'grid' ? (
               <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
@@ -388,51 +399,60 @@ export default function GamesPage() {
           </div>
 
           {/* 特色功能区域 */}
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
-            <Card className="bg-gradient-to-br from-purple-50 to-purple-100 border-purple-200">
-              <CardHeader>
-                <CardTitle className="flex items-center gap-2 text-purple-800">
-                  <Trophy className="h-5 w-5" />
-                  成就系统
-                </CardTitle>
-              </CardHeader>
-              <CardContent>
-                <p className="text-gray-700 mb-4">完成游戏挑战，解锁精美成就徽章，展示你的情感互动技能</p>
-                <div className="flex gap-2">
-                  <Badge variant="secondary">徽章收集</Badge>
-                  <Badge variant="secondary">排行榜</Badge>
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-8 mb-12">
+            <Card className="bg-white/90 backdrop-blur-md shadow-2xl border-0">
+              <div className="bg-gradient-to-r from-purple-500 to-pink-500 p-6">
+                <CardHeader className="text-white p-0">
+                  <CardTitle className="flex items-center gap-3 text-xl">
+                    <Trophy className="h-6 w-6" />
+                    🏆 成就系统
+                  </CardTitle>
+                </CardHeader>
+              </div>
+              <CardContent className="p-6">
+                <p className="text-gray-700 mb-6 text-lg leading-relaxed">完成游戏挑战，解锁精美成就徽章，展示你的情感互动技能</p>
+                <div className="flex flex-wrap gap-2">
+                  <Badge variant="secondary" className="bg-purple-100 text-purple-800 border-purple-200 px-3 py-1">徽章收集</Badge>
+                  <Badge variant="secondary" className="bg-pink-100 text-pink-800 border-pink-200 px-3 py-1">排行榜</Badge>
+                  <Badge variant="secondary" className="bg-blue-100 text-blue-800 border-blue-200 px-3 py-1">进度追踪</Badge>
                 </div>
               </CardContent>
             </Card>
             
-            <Card className="bg-gradient-to-br from-blue-50 to-blue-100 border-blue-200">
-              <CardHeader>
-                <CardTitle className="flex items-center gap-2 text-blue-800">
-                  <BarChart3 className="h-5 w-5" />
-                  数据分析
-                </CardTitle>
-              </CardHeader>
-              <CardContent>
-                <p className="text-gray-700 mb-4">深入分析你的情感互动数据，了解进步轨迹和情感特点</p>
-                <div className="flex gap-2">
-                  <Badge variant="secondary">数据可视化</Badge>
-                  <Badge variant="secondary">成长追踪</Badge>
+            <Card className="bg-white/90 backdrop-blur-md shadow-2xl border-0">
+              <div className="bg-gradient-to-r from-blue-500 to-cyan-500 p-6">
+                <CardHeader className="text-white p-0">
+                  <CardTitle className="flex items-center gap-3 text-xl">
+                    <BarChart3 className="h-6 w-6" />
+                    📊 数据分析
+                  </CardTitle>
+                </CardHeader>
+              </div>
+              <CardContent className="p-6">
+                <p className="text-gray-700 mb-6 text-lg leading-relaxed">深入分析你的情感互动数据，了解进步轨迹和情感特点</p>
+                <div className="flex flex-wrap gap-2">
+                  <Badge variant="secondary" className="bg-blue-100 text-blue-800 border-blue-200 px-3 py-1">数据可视化</Badge>
+                  <Badge variant="secondary" className="bg-green-100 text-green-800 border-green-200 px-3 py-1">成长追踪</Badge>
+                  <Badge variant="secondary" className="bg-cyan-100 text-cyan-800 border-cyan-200 px-3 py-1">智能建议</Badge>
                 </div>
               </CardContent>
             </Card>
             
-            <Card className="bg-gradient-to-br from-pink-50 to-pink-100 border-pink-200">
-              <CardHeader>
-                <CardTitle className="flex items-center gap-2 text-pink-800">
-                  <Users className="h-5 w-5" />
-                  社交互动
-                </CardTitle>
-              </CardHeader>
-              <CardContent>
-                <p className="text-gray-700 mb-4">与朋友一起游戏，分享经验，建立更深的情感连接</p>
-                <div className="flex gap-2">
-                  <Badge variant="secondary">好友系统</Badge>
-                  <Badge variant="secondary">分享功能</Badge>
+            <Card className="bg-white/90 backdrop-blur-md shadow-2xl border-0">
+              <div className="bg-gradient-to-r from-green-500 to-teal-500 p-6">
+                <CardHeader className="text-white p-0">
+                  <CardTitle className="flex items-center gap-3 text-xl">
+                    <Users className="h-6 w-6" />
+                    👥 社交互动
+                  </CardTitle>
+                </CardHeader>
+              </div>
+              <CardContent className="p-6">
+                <p className="text-gray-700 mb-6 text-lg leading-relaxed">与朋友一起游戏，分享经验，建立更深的情感连接</p>
+                <div className="flex flex-wrap gap-2">
+                  <Badge variant="secondary" className="bg-green-100 text-green-800 border-green-200 px-3 py-1">好友系统</Badge>
+                  <Badge variant="secondary" className="bg-teal-100 text-teal-800 border-teal-200 px-3 py-1">分享功能</Badge>
+                  <Badge variant="secondary" className="bg-emerald-100 text-emerald-800 border-emerald-200 px-3 py-1">社区互动</Badge>
                 </div>
               </CardContent>
             </Card>

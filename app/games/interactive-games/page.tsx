@@ -438,57 +438,67 @@ export default function InteractiveGamesPage() {
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-purple-50 via-pink-50 to-indigo-100">
+    <div className="min-h-screen bg-gradient-to-br from-violet-50 via-purple-50 to-pink-50 relative overflow-hidden">
+      {/* 增强背景装饰元素 */}
+      <div className="absolute inset-0 bg-gradient-to-br from-violet-100/20 via-purple-100/20 to-pink-100/20"></div>
+      <div className="absolute top-10 left-10 w-72 h-72 bg-gradient-to-r from-violet-300/30 to-purple-300/30 rounded-full blur-3xl animate-pulse"></div>
+      <div className="absolute bottom-10 right-10 w-96 h-96 bg-gradient-to-r from-pink-300/30 to-rose-300/30 rounded-full blur-3xl animate-pulse"></div>
+      <div className="absolute top-1/3 right-1/4 w-64 h-64 bg-gradient-to-r from-blue-300/20 to-cyan-300/20 rounded-full blur-3xl animate-pulse delay-500"></div>
+      <div className="absolute bottom-1/4 left-1/3 w-80 h-80 bg-gradient-to-r from-green-300/20 to-emerald-300/20 rounded-full blur-3xl animate-pulse delay-1000"></div>
+      
       <Navigation />
       
-      <main className="container mx-auto px-4 py-8">
+      <main className="container mx-auto px-4 py-8 relative z-10">
         <div className="mb-8">
-          <Link href="/games" className="inline-flex items-center gap-2 text-purple-600 hover:text-purple-800 transition-colors mb-6">
+          <Link href="/games" className="inline-flex items-center gap-2 text-violet-600 hover:text-violet-800 transition-colors mb-6 bg-white/70 backdrop-blur-sm px-4 py-2 rounded-lg shadow-sm">
             <ArrowLeft className="h-4 w-4" />
-            返回游戏中心
+            🎮 返回游戏中心
           </Link>
           
-          <div className="text-center mb-8">
-            <h1 className="text-5xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-purple-600 to-pink-600 mb-4">
+          <div className="text-center mb-10">
+            <div className="inline-flex items-center justify-center mb-6 p-5 bg-gradient-to-r from-purple-500 to-pink-500 rounded-full shadow-2xl">
+              <Gamepad2 className="h-14 w-14 text-white" />
+            </div>
+            <h1 className="text-6xl md:text-7xl font-bold tracking-tight mb-6 bg-gradient-to-r from-purple-600 via-pink-600 to-rose-600 bg-clip-text text-transparent">
               互动游戏集合
             </h1>
-            <p className="text-gray-600 max-w-2xl mx-auto text-lg">
-              探索精心设计的情感互动游戏，与朋友或伴侣一起创造美好回忆，深化彼此的情感连接
+            <p className="text-xl text-gray-700 max-w-3xl mx-auto bg-white/80 backdrop-blur-sm px-8 py-4 rounded-xl shadow-lg">
+              🎯 探索精心设计的情感互动游戏，与朋友或伴侣一起创造美好回忆，深化彼此的情感连接
             </p>
           </div>
         </div>
 
         {/* 统计数据展示 */}
-        <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-8">
-          <Card className="bg-white/80 backdrop-blur-sm border-0 shadow-md hover:shadow-lg transition-shadow">
-            <CardContent className="p-6 text-center">
-              <div className="text-3xl font-bold text-purple-600 mb-2">{interactiveGames.filter(g => g.status === 'completed').length}</div>
-              <div className="text-sm text-gray-600">已上线游戏</div>
+        <div className="grid grid-cols-2 md:grid-cols-4 gap-6 mb-10">
+          <Card className="bg-white/90 backdrop-blur-md rounded-2xl p-6 shadow-xl border-0 hover:scale-105 transition-all duration-300">
+            <CardContent className="p-0 text-center">
+              <div className="text-4xl font-bold text-purple-600 mb-2">{interactiveGames.filter(g => g.status === 'completed').length}</div>
+              <div className="text-sm font-medium text-gray-700">🎯 已上线游戏</div>
               <div className="text-xs text-gray-500 mt-1">持续更新中</div>
             </CardContent>
           </Card>
-          <Card className="bg-white/80 backdrop-blur-sm border-0 shadow-md hover:shadow-lg transition-shadow">
-            <CardContent className="p-6 text-center">
-              <div className="text-3xl font-bold text-pink-600 mb-2">{interactiveGames.filter(g => g.isHot).length}</div>
-              <div className="text-sm text-gray-600">热门游戏</div>
+          <Card className="bg-white/90 backdrop-blur-md rounded-2xl p-6 shadow-xl border-0 hover:scale-105 transition-all duration-300">
+            <CardContent className="p-0 text-center">
+              <div className="text-4xl font-bold text-pink-600 mb-2">{interactiveGames.filter(g => g.isHot).length}</div>
+              <div className="text-sm font-medium text-gray-700">🔥 热门游戏</div>
               <div className="text-xs text-gray-500 mt-1">用户最爱</div>
             </CardContent>
           </Card>
-          <Card className="bg-white/80 backdrop-blur-sm border-0 shadow-md hover:shadow-lg transition-shadow">
-            <CardContent className="p-6 text-center">
-              <div className="text-3xl font-bold text-indigo-600 mb-2">
+          <Card className="bg-white/90 backdrop-blur-md rounded-2xl p-6 shadow-xl border-0 hover:scale-105 transition-all duration-300">
+            <CardContent className="p-0 text-center">
+              <div className="text-4xl font-bold text-indigo-600 mb-2">
                 {interactiveGames.reduce((sum, game) => sum + game.likes, 0).toLocaleString()}
               </div>
-              <div className="text-sm text-gray-600">总点赞数</div>
+              <div className="text-sm font-medium text-gray-700">❤️ 总点赞数</div>
               <div className="text-xs text-gray-500 mt-1">社区认可</div>
             </CardContent>
           </Card>
-          <Card className="bg-white/80 backdrop-blur-sm border-0 shadow-md hover:shadow-lg transition-shadow">
-            <CardContent className="p-6 text-center">
-              <div className="text-3xl font-bold text-green-600 mb-2">
+          <Card className="bg-white/90 backdrop-blur-md rounded-2xl p-6 shadow-xl border-0 hover:scale-105 transition-all duration-300">
+            <CardContent className="p-0 text-center">
+              <div className="text-4xl font-bold text-green-600 mb-2">
                 {interactiveGames.reduce((sum, game) => sum + game.plays, 0).toLocaleString()}
               </div>
-              <div className="text-sm text-gray-600">总游戏次数</div>
+              <div className="text-sm font-medium text-gray-700">👥 总游戏次数</div>
               <div className="text-xs text-gray-500 mt-1">活跃参与</div>
             </CardContent>
           </Card>

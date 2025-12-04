@@ -8,6 +8,7 @@ interface BaseFormInputProps {
   containerClassName?: string
   multiline?: boolean
   rows?: number
+  icon?: React.ReactNode
 }
 
 interface InputProps extends BaseFormInputProps, React.InputHTMLAttributes<HTMLInputElement> {
@@ -31,6 +32,7 @@ export function FormInput(props: FormInputProps) {
     id, 
     multiline, 
     rows = 3,
+    icon,
     ...inputProps 
   } = props
 
@@ -46,28 +48,37 @@ export function FormInput(props: FormInputProps) {
           {label}
         </label>
       )}
-      {multiline ? (
-        <textarea
-          id={inputId}
-          rows={rows}
-          className={cn(
-            'block w-full rounded-md border-gray-300 shadow-sm focus:border-purple-500 focus:ring-purple-500 sm:text-sm',
-            error && 'border-red-500 focus:border-red-500 focus:ring-red-500',
-            className
-          )}
-          {...inputProps as React.TextareaHTMLAttributes<HTMLTextAreaElement>}
-        />
-      ) : (
-        <input
-          id={inputId}
-          className={cn(
-            'block w-full rounded-md border-gray-300 shadow-sm focus:border-purple-500 focus:ring-purple-500 sm:text-sm',
-            error && 'border-red-500 focus:border-red-500 focus:ring-red-500',
-            className
-          )}
-          {...inputProps as React.InputHTMLAttributes<HTMLInputElement>}
-        />
-      )}
+      <div className="relative">
+        {icon && (
+          <div className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400 pointer-events-none">
+            {icon}
+          </div>
+        )}
+        {multiline ? (
+          <textarea
+            id={inputId}
+            rows={rows}
+            className={cn(
+              'block w-full rounded-md border-gray-300 shadow-sm focus:border-purple-500 focus:ring-purple-500 sm:text-sm',
+              error && 'border-red-500 focus:border-red-500 focus:ring-red-500',
+              icon && 'pl-10',
+              className
+            )}
+            {...inputProps as React.TextareaHTMLAttributes<HTMLTextAreaElement>}
+          />
+        ) : (
+          <input
+            id={inputId}
+            className={cn(
+              'block w-full rounded-md border-gray-300 shadow-sm focus:border-purple-500 focus:ring-purple-500 sm:text-sm px-4 py-3',
+              error && 'border-red-500 focus:border-red-500 focus:ring-red-500',
+              icon && 'pl-10',
+              className
+            )}
+            {...inputProps as React.InputHTMLAttributes<HTMLInputElement>}
+          />
+        )}
+      </div>
       {error && (
         <p className="text-sm text-red-600">{error}</p>
       )}
