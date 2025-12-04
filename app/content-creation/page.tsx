@@ -424,9 +424,12 @@ export default function ContentCreationPage() {
         {generatedContent && (
           <div ref={resultRef} className={`mt-12 transition-all duration-500 ${generatedContent ? 'translate-y-0 opacity-100' : 'translate-y-8 opacity-0'}`}>
             <GeneratedContent 
-              content={generatedContent} 
-              onCopy={() => copyToClipboard(generatedContent.text)}
-              showCopySuccess={showCopySuccess}
+              content={{
+                content: generatedContent.text || generatedContent.content || '',
+                suggestions: generatedContent.suggestions || []
+              }} 
+              onCopy={(text) => copyToClipboard(text)}
+              onRegenerate={() => {}}
             />
           </div>
         )}
