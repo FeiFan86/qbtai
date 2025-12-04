@@ -333,7 +333,7 @@ export default function EmotionAnalysisPage() {
         {/* 社交建议 */}
         {latestAnalysis && (
           <div className="mt-8">
-            <SocialSuggestions analysis={latestAnalysis} />
+            <SocialSuggestions result={latestAnalysis.result || latestAnalysis} />
           </div>
         )}
       </div>
