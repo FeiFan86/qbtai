@@ -3,7 +3,6 @@
 import React, { useState } from 'react'
 import { PenTool, Sparkles, Download, Share2 } from 'lucide-react'
 import GlobalNavbar from '@/components/global-navbar'
-import UsageGuard, { UsageStatus } from '@/components/usage-guard'
 
 interface GenerationResult {
   content: string;
@@ -39,27 +38,8 @@ export default function ContentCreationPage() {
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-rose-50 via-white to-pink-50">
-      {/* 导航栏 */}
-      <nav className="fixed top-0 left-0 right-0 z-50 bg-white/80 backdrop-blur-md border-b border-gray-100">
-        <div className="container">
-          <div className="flex justify-between items-center h-16">
-            <a href="/" className="flex items-center space-x-3">
-              <div className="w-8 h-8 bg-gradient-to-r from-rose-500 to-pink-500 rounded-full flex items-center justify-center">
-                <PenTool className="h-4 w-4 text-white" />
-              </div>
-              <span className="text-lg font-bold text-gray-900">丘比特AI</span>
-            </a>
-            <div className="flex items-center space-x-4">
-              <a href="/" className="text-gray-600 hover:text-rose-600 transition-colors">
-                返回首页
-              </a>
-              <a href="/login" className="text-gray-600 hover:text-rose-600 transition-colors">
-                登录
-              </a>
-            </div>
-          </div>
-        </div>
-      </nav>
+      {/* 全局导航栏 */}
+      <GlobalNavbar />
 
       {/* 主要内容 */}
       <main className="pt-16">

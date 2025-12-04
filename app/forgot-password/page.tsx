@@ -47,7 +47,7 @@ export default function ForgotPasswordPage() {
     <UnifiedLayout 
       title="找回密码"
       subtitle="重置您的密码"
-      icon={<Lock className="h-4 w-4 text-primary-500" />}
+      icon={<Lock className="h-4 w-4 text-rose-500" />}
       showBackButton={true}
       showAuthButtons={false}
     >
