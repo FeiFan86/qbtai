@@ -5,10 +5,24 @@ import { Users, MessageCircle, TrendingUp, Award } from 'lucide-react'
 import GlobalNavbar from '@/components/global-navbar'
 import UsageGuard, { UsageStatus } from '@/components/usage-guard'
 
+interface AnalysisResult {
+  overallScore: number;
+  communicationStyle: string;
+  emotionalIntelligence: number;
+  suggestions: string[];
+}
+
+interface AnalysisResult {
+  overallScore: number;
+  communicationStyle: string;
+  emotionalIntelligence: number;
+  suggestions: string[];
+}
+
 export default function SocialAssistantPage() {
   const [conversation, setConversation] = useState('')
   const [isAnalyzing, setIsAnalyzing] = useState(false)
-  const [result, setResult] = useState(null)
+  const [result, setResult] = useState<AnalysisResult | null>(null)
 
   const handleAnalyze = async (onRecordUsage: () => Promise<void>) => {
     if (!conversation.trim()) return
