@@ -68,12 +68,32 @@ GameProgressSchema.virtual('lastPlayedFormatted').get(function() {
   return this.lastPlayed.toLocaleDateString('zh-CN')
 })
 
-// 静态方法接口
-export interface GameProgressModel extends mongoose.Model<any> {
-  getUserProgress(userId: string): Promise<any[]>;
-  getLeaderboard(gameType: string, limit?: number): Promise<any[]>;
-  updateScore(userId: string, gameType: string, newScore: number): Promise<any>;
+// 定义文档接口
+interface IGameProgress {
+  userId: string;
+  gameType: 'emotion-tree-hole' | 'emotion-diary' | 'conversation-challenge' | 'personality-analysis' | 'social-simulation' | 'emotion-analysis' | 'content-creation' | 'data-visualization' | 'social-assistant';
+  progress: number;
+  currentLevel: number;
+  score: number;
+  highScore: number;
+  playCount: number;
+  totalPlayTime: number;
+  unlockedFeatures: string[];
+  saveData: any;
+  lastPlayed: Date;
+  createdAt: Date;
+  updatedAt: Date;
 }
+
+// 静态方法接口
+interface GameProgressStatics {
+  getUserProgress(userId: string): Promise<IGameProgress[]>;
+  getLeaderboard(gameType: string, limit?: number): Promise<IGameProgress[]>;
+  updateScore(userId: string, gameType: string, newScore: number): Promise<IGameProgress>;
+}
+
+// 创建模型类型
+export type GameProgressModel = mongoose.Model<IGameProgress> & GameProgressStatics;
 
 // 静态方法
 GameProgressSchema.statics.getUserProgress = function(userId: string) {
@@ -110,4 +130,4 @@ GameProgressSchema.statics.updateScore = async function(userId: string, gameType
   })
 }
 
-export default mongoose.models.GameProgress || mongoose.model('GameProgress', GameProgressSchema) as GameProgressModel
+export default (mongoose.models.GameProgress as GameProgressModel) || mongoose.model<IGameProgress, GameProgressModel>('GameProgress', GameProgressSchema)
