@@ -131,6 +131,7 @@ export default function SimpleEmotionDiaryPage() {
       
       <div className="relative z-10">
         <Navigation />
+      </div>
       
       <main className="container mx-auto px-4 py-8">
         <div className="mx-auto max-w-6xl">
