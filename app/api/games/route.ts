@@ -115,11 +115,11 @@ export async function POST(request: NextRequest) {
         
         // 从数据库查询
         await dbConnect()
-        const progress = await GameProgress.findOne({ userId, gameId, gameType })
+        const gameProgressData = await GameProgress.findOne({ userId, gameId, gameType })
         
         return NextResponse.json({
           success: true,
-          data: progress || {
+          data: gameProgressData || {
             gameId,
             gameType,
             userId,
