@@ -213,7 +213,7 @@
   
   /* 输入框组件 */
   .input {
-    @apply w-full px-4 py-3 text-base border border-gray-200 rounded-xl bg-white/50 backdrop-blur-sm focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-transparent transition-all duration-200;
+    @apply w-full px-4 py-3 text-base border border-gray-200 rounded-xl bg-white/50 backdrop-blur-sm focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-transparent transition-all duration-200;
     min-height: 44px;
     box-shadow: inset 0 1px 3px rgba(0, 0, 0, 0.1);
   }
@@ -413,7 +413,7 @@
   
   /* 焦点陷阱 */
   .focus-trap {
-    @apply focus:outline-none focus:ring-2 focus:ring-primary-500 focus:ring-offset-2;
+    @apply focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2;
   }
   
   /* 过渡效果 */

@@ -138,7 +138,7 @@ export function LoginForm() {
             <label className="flex items-center">
               <input
                 type="checkbox"
-                className="w-4 h-4 text-primary-600 border-gray-300 rounded focus:ring-primary-500"
+                className="w-4 h-4 text-primary-600 border-gray-300 rounded focus:ring-indigo-500"
               />
               <span className="ml-2 text-sm text-gray-600">记住我</span>
             </label>

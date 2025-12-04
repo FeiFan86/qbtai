@@ -319,7 +319,7 @@ export function RegisterForm() {
                     setErrors(prev => ({ ...prev, terms: '' }))
                   }
                 }}
-                className="w-4 h-4 text-primary-600 border-gray-300 rounded focus:ring-primary-500 mt-0.5"
+                className="w-4 h-4 text-primary-600 border-gray-300 rounded focus:ring-indigo-500 mt-0.5"
               />
               <span className="text-sm text-gray-600">
                 我已阅读并同意
