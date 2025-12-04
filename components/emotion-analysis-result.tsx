@@ -123,17 +123,30 @@ export function EmotionAnalysisResult({ result, compact = false }: EmotionAnalys
   
   // 获取情感图标
   const getEmotionIconComponent = (emotionType: string) => {
-    const iconType = result.emotions?.find(e => e.type === emotionType)?.icon
-    if (iconType) {
-      switch (iconType) {
-        case 'Smile': return <Smile className="h-4 w-4" />
-        case 'Frown': return <Frown className="h-4 w-4" />
-        case 'Laugh': return <Laugh className="h-4 w-4" />
-        case 'Meh': return <Meh className="h-4 w-4" />
-        default: return <Heart className="h-4 w-4" />
-      }
+    // 根据情感类型返回相应的图标
+    switch (emotionType.toLowerCase()) {
+      case 'happy':
+      case '开心':
+      case '快乐': 
+        return <Laugh className="h-4 w-4" />
+      case 'sad':
+      case '悲伤':
+        return <Frown className="h-4 w-4" />
+      case 'angry':
+      case '愤怒':
+        return <Heart className="h-4 w-4" />
+      case 'anxious':
+      case '焦虑':
+        return <Meh className="h-4 w-4" />
+      case 'love':
+      case '爱':
+        return <Heart className="h-4 w-4" />
+      case 'excited':
+      case '兴奋':
+        return <Laugh className="h-4 w-4" />
+      default:
+        return <Heart className="h-4 w-4" />
     }
-    return <Heart className="h-4 w-4" />
   }
 
   return (
