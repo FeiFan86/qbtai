@@ -90,7 +90,7 @@ export default function GlobalNavbar({ className = '' }: GlobalNavbarProps) {
                   >
                     <User className="h-4 w-4" />
                     <span className="text-sm font-medium">
-                      {user?.name || user?.username || '用户'}
+                      {user?.username || '用户'}
                     </span>
                   </Link>
                   <button
