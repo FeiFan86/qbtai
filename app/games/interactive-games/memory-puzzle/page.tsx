@@ -1,7 +1,7 @@
 'use client'
 
 import { useState, useEffect, useCallback } from 'react'
-import { Navigation } from '@/components/navigation'
+import Navigation from '../../../../components/navigation'
 import { Footer } from '@/components/footer'
 import { useAuth } from '@/components/auth-provider'
 import { dataService } from '@/lib/data-service'
