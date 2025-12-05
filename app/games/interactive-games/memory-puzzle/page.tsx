@@ -485,7 +485,7 @@ export default function MemoryPuzzlePage() {
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-purple-50 via-pink-50 to-indigo-100">
-      <Navigation />
+      <GlobalNavbar />
       
       {/* 加载状态提示 */}
       {isLoading && (
