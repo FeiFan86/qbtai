@@ -211,7 +211,7 @@ export class MembershipService {
     const userPermissions = user.permissions || []
     const rolePermissions = ROLE_PERMISSIONS[user.role as keyof typeof ROLE_PERMISSIONS] || []
     
-    return userPermissions.includes(permission) || rolePermissions.includes(permission)
+    return userPermissions.includes(permission as any) || rolePermissions.includes(permission as any)
   }
 
   // 检查用户是否是管理员
