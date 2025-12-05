@@ -170,7 +170,7 @@ export class VolcanoAIClient {
       max_tokens: request.max_tokens || 500
     });
 
-    return response.choices?.[0]?.message?.content || '';
+    return response.data?.choices?.[0]?.message?.content || '';
   }
 
   // 对话建议
@@ -190,7 +190,7 @@ export class VolcanoAIClient {
       max_tokens: 300
     });
 
-    return response.choices?.[0]?.message?.content || '';
+    return response.data?.choices?.[0]?.message?.content || '';
   }
 
   // 检查API连接状态
