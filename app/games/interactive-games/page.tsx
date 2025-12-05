@@ -446,7 +446,7 @@ export default function InteractiveGamesPage() {
       <div className="absolute top-1/3 right-1/4 w-64 h-64 bg-gradient-to-r from-blue-300/20 to-cyan-300/20 rounded-full blur-3xl animate-pulse delay-500"></div>
       <div className="absolute bottom-1/4 left-1/3 w-80 h-80 bg-gradient-to-r from-green-300/20 to-emerald-300/20 rounded-full blur-3xl animate-pulse delay-1000"></div>
       
-      <Navigation />
+      <GlobalNavbar />
       
       <main className="container mx-auto px-4 py-8 relative z-10">
         <div className="mb-8">
