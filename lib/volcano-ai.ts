@@ -135,7 +135,7 @@ export class VolcanoAIClient {
 
       // 尝试解析JSON
       try {
-        const jsonMatch = content.match(/\{.*\}/s);
+        const jsonMatch = content.match(/\{[\s\S]*\}/);
         if (jsonMatch) {
           return JSON.parse(jsonMatch[0]);
         }
