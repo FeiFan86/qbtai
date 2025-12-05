@@ -1,16 +1,17 @@
 import { NextResponse } from 'next/server'
-import { connectToDatabase } from '@/lib/mongodb'
+import dbConnect from '@/lib/db-connection'
 import bcrypt from 'bcryptjs'
+import User from '@/lib/models/User'
 
 export async function POST() {
   try {
-    const { db } = await connectToDatabase()
+    await dbConnect()
     
     // 检查是否已存在管理员账号
-    const existingAdmin = await db.collection('users').findOne({ 
+    const existingAdmin = await User.findOne({ 
       $or: [
         { username: 'admin' },
-        { email: 'admin@cupidai.com' }
+        { email: 'admin@cupid-ai.com' }
       ]
     })
     
@@ -29,31 +30,34 @@ export async function POST() {
     // 创建新的管理员账号
     const hashedPassword = await bcrypt.hash('admin123456', 10)
     
-    const adminUser = {
+    const adminUser = new User({
       username: 'admin',
-      email: 'admin@cupidai.com',
-      password: hashedPassword,
-      role: 'superadmin',
+      email: 'admin@cupid-ai.com',
+      passwordHash: hashedPassword,
+      role: 'admin',
+      permissions: ['manage_users', 'manage_content', 'view_analytics', 'system_settings'],
       membership: {
         level: 'vip',
-        expiryDate: new Date('2030-12-31')
+        startDate: new Date(),
+        expiryDate: new Date('2030-12-31'),
+        autoRenew: true
       },
       isActive: true,
-      createdAt: new Date(),
+      emailVerified: true,
       lastLogin: new Date()
-    }
+    })
     
-    const result = await db.collection('users').insertOne(adminUser)
+    const savedAdmin = await adminUser.save()
     
-    if (result.insertedId) {
+    if (savedAdmin._id) {
       return NextResponse.json({
         success: true,
         message: '管理员账号创建成功',
         admin: {
-          username: adminUser.username,
-          email: adminUser.email,
+          username: savedAdmin.username,
+          email: savedAdmin.email,
           password: 'admin123456',
-          role: adminUser.role
+          role: savedAdmin.role
         }
       })
     } else {
@@ -74,13 +78,13 @@ export async function POST() {
 
 export async function GET() {
   try {
-    const { db } = await connectToDatabase()
+    await dbConnect()
     
     // 检查管理员账号状态
-    const adminUser = await db.collection('users').findOne({ 
+    const adminUser = await User.findOne({ 
       $or: [
         { username: 'admin' },
-        { email: 'admin@cupidai.com' }
+        { email: 'admin@cupid-ai.com' }
       ]
     })
     
