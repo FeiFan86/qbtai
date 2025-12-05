@@ -503,7 +503,7 @@ export default function CollaborativeDoodlePage() {
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-blue-50 via-purple-50 to-pink-50">
-      <Navigation />
+      <GlobalNavbar />
       
       <main className="container mx-auto px-4 py-8">
         <div className="mb-6">
