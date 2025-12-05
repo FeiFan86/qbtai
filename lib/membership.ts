@@ -174,8 +174,9 @@ export class MembershipService {
       return { canUse: guestLimit > 0, remaining: guestLimit, maxUsage: guestLimit }
     }
 
-    const membershipLevel = user.membership?.level || 'free'
-    const maxUsage = MEMBERSHIP_LEVELS[membershipLevel]?.maxDailyUsage[feature as keyof typeof MEMBERSHIP_LEVELS.free.maxDailyUsage] || 0
+    const membershipLevel = (user.membership?.level || 'free') as keyof typeof MEMBERSHIP_LEVELS
+    const membershipData = MEMBERSHIP_LEVELS[membershipLevel]
+    const maxUsage = membershipData?.maxDailyUsage[feature as keyof typeof MEMBERSHIP_LEVELS.free.maxDailyUsage] || 0
     
     // -1 表示无限制
     if (maxUsage === -1) {
@@ -232,7 +233,7 @@ export class MembershipService {
     // 检查各个功能的使用情况
     Object.entries(FEATURE_LIMITS).forEach(([feature, limits]) => {
       const dailyUsage = usageStats.dailyUsage?.[feature] || 0
-      const currentMax = MEMBERSHIP_LEVELS[currentLevel].maxDailyUsage[feature as keyof typeof MEMBERSHIP_LEVELS.free.maxDailyUsage]
+      const currentMax = MEMBERSHIP_LEVELS[currentLevel as keyof typeof MEMBERSHIP_LEVELS].maxDailyUsage[feature as keyof typeof MEMBERSHIP_LEVELS.free.maxDailyUsage]
       
       if (currentMax > 0 && dailyUsage >= currentMax * 0.8) {
         reasons.push(`${limits.name} 使用接近上限`)
