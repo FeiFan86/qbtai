@@ -338,7 +338,7 @@ export default function CoupleBlindBoxPage() {
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-pink-50 to-rose-100">
-      <Navigation />
+      <GlobalNavbar />
       
       <main className="container mx-auto px-4 py-8">
         <div className="mx-auto max-w-6xl">
