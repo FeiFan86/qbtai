@@ -703,7 +703,7 @@ export default function ComplaintWallPage() {
       <div className="absolute top-1/3 left-1/4 w-64 h-64 bg-gradient-to-r from-orange-300/20 to-red-300/20 rounded-full blur-3xl animate-pulse delay-300"></div>
       <div className="absolute bottom-1/4 right-1/3 w-80 h-80 bg-gradient-to-r from-yellow-300/20 to-amber-300/20 rounded-full blur-3xl animate-pulse delay-700"></div>
       
-      <Navigation />
+      <GlobalNavbar />
       
       <main className="container mx-auto px-4 py-8 relative z-10">
         <div className="mb-6">
