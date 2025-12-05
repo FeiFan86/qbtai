@@ -1,7 +1,7 @@
 'use client'
 
 import { useState, useEffect } from 'react'
-import Navigation from '../../components/navigation'
+import GlobalNavbar from '@/components/global-navbar'
 import { Footer } from '@/components/footer'
 import { Button } from '@/components/ui/button'
 import { Textarea } from '@/components/ui/textarea'

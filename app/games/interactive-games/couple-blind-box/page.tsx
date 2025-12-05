@@ -1,7 +1,7 @@
 'use client'
 
 import React, { useState, useEffect } from 'react'
-import Navigation from '../../../../components/navigation'
+import GlobalNavbar from '@/components/global-navbar'
 import { Footer } from '@/components/footer'
 import { useAuth } from '@/components/auth-provider'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
