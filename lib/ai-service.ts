@@ -120,6 +120,7 @@ export class AIService {
 
       return {
         content,
+        suggestions: ['内容生成成功，建议继续深入交流', '可以尝试不同的表达方式', '分享给朋友获得更多反馈'],
         type,
         length: content.length,
         createdAt: new Date().toISOString()
