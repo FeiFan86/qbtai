@@ -213,7 +213,7 @@ export default function ConversationChallengePage() {
   if (gameCompleted) {
     return (
       <div className="min-h-screen bg-gradient-to-br from-indigo-50 via-pink-50 to-purple-50">
-        <Navigation />
+        <GlobalNavbar />
         
         <main className="container mx-auto px-4 py-8">
           <div className="mx-auto max-w-4xl">
@@ -323,7 +323,7 @@ export default function ConversationChallengePage() {
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-indigo-50 via-pink-50 to-purple-50">
-      <Navigation />
+      <GlobalNavbar />
       
       <main className="container mx-auto px-4 py-8">
         <div className="mx-auto max-w-4xl">
