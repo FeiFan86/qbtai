@@ -105,12 +105,20 @@ export async function POST(request: NextRequest) {
       id: user._id,
       username: user.username,
       email: user.email,
+      phone: user.phone,
       avatar: user.avatar,
       bio: user.bio,
       preferences: user.preferences,
       stats: user.stats,
-      lastLogin: user.lastLogin,
-      emailVerified: user.emailVerified
+      membership: user.membership,
+      role: user.role,
+      permissions: user.permissions,
+      isActive: user.isActive,
+      emailVerified: user.emailVerified,
+      phoneVerified: user.phoneVerified,
+      usageStats: user.usageStats,
+      createdAt: user.createdAt,
+      lastLogin: user.lastLogin
     }
 
     return NextResponse.json({

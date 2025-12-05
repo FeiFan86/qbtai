@@ -4,6 +4,8 @@ import { useState, useEffect } from 'react'
 import Link from 'next/link'
 import { usePathname } from 'next/navigation'
 import { Button } from './ui/button'
+import { useAuth } from './auth-provider'
+import { MembershipService } from '../lib/membership'
 import { 
   Heart, 
   MessageCircle, 
@@ -16,13 +18,15 @@ import {
   X, 
   Star,
   Target,
-  Award
+  Award,
+  Shield
 } from 'lucide-react'
 
 export function Navigation() {
   const [isScrolled, setIsScrolled] = useState(false)
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false)
   const pathname = usePathname()
+  const { user, isAuthenticated, logout } = useAuth()
 
   useEffect(() => {
     const handleScroll = () => {
@@ -127,29 +131,77 @@ export function Navigation() {
           {/* 右侧操作区域 */}
           <div className="flex items-center space-x-3">
             {/* 用户状态指示器 */}
-            <div className="hidden sm:flex items-center space-x-2 px-3 py-2 rounded-lg bg-gray-50 text-gray-600">
-              <div className="w-2 h-2 bg-green-400 rounded-full animate-pulse"></div>
-              <span className="text-sm font-medium">在线</span>
-            </div>
-            
-            {/* 用户操作按钮 */}
-            <div className="flex items-center space-x-2">
-              <Button 
-                variant="ghost" 
-                size="sm"
-                className="text-gray-600 hover:text-rose-600 hover:bg-rose-50"
-                onClick={() => window.location.href = '/login'}
-              >
-                登录
-              </Button>
-              <Button 
-                size="sm"
-                className="bg-gradient-to-r from-rose-500 to-pink-500 hover:from-rose-600 hover:to-pink-600 text-white shadow-lg"
-                onClick={() => window.location.href = '/register'}
-              >
-                注册
-              </Button>
-            </div>
+            {isAuthenticated ? (
+              <div className="hidden sm:flex items-center space-x-3">
+                {/* 会员状态显示 */}
+                <div className={`flex items-center space-x-2 px-3 py-2 rounded-lg text-sm font-medium ${
+                  user?.membership?.level === 'vip' 
+                    ? 'bg-yellow-100 text-yellow-700' 
+                    : user?.membership?.level === 'premium' 
+                    ? 'bg-purple-100 text-purple-700'
+                    : 'bg-gray-100 text-gray-600'
+                }`}>
+                  <Star className="h-3 w-3" fill="currentColor" />
+                  <span>{MembershipService.getPricingInfo(user?.membership?.level || 'free')?.name}</span>
+                </div>
+                
+                {/* 管理员入口 */}
+                {MembershipService.isAdmin(user) && (
+                  <Link 
+                    href="/admin"
+                    className="flex items-center space-x-2 px-3 py-2 rounded-lg bg-purple-100 text-purple-700 hover:bg-purple-200 transition-colors"
+                  >
+                    <Shield className="h-3 w-3" />
+                    <span className="text-sm font-medium">管理员</span>
+                  </Link>
+                )}
+                
+                {/* 用户信息 */}
+                <div className="flex items-center space-x-2">
+                  <Link 
+                    href="/profile"
+                    className="flex items-center space-x-2 px-3 py-2 rounded-lg bg-rose-100 text-rose-700 hover:bg-rose-200 transition-colors"
+                  >
+                    <User className="h-3 w-3" />
+                    <span className="text-sm font-medium">{user?.username}</span>
+                  </Link>
+                  <Button 
+                    variant="ghost" 
+                    size="sm"
+                    className="text-gray-600 hover:text-red-600 hover:bg-red-50"
+                    onClick={logout}
+                  >
+                    退出
+                  </Button>
+                </div>
+              </div>
+            ) : (
+              <>
+                <div className="hidden sm:flex items-center space-x-2 px-3 py-2 rounded-lg bg-gray-50 text-gray-600">
+                  <div className="w-2 h-2 bg-green-400 rounded-full animate-pulse"></div>
+                  <span className="text-sm font-medium">在线</span>
+                </div>
+                
+                {/* 用户操作按钮 */}
+                <div className="flex items-center space-x-2">
+                  <Button 
+                    variant="ghost" 
+                    size="sm"
+                    className="text-gray-600 hover:text-rose-600 hover:bg-rose-50"
+                    onClick={() => window.location.href = '/login'}
+                  >
+                    登录
+                  </Button>
+                  <Button 
+                    size="sm"
+                    className="bg-gradient-to-r from-rose-500 to-pink-500 hover:from-rose-600 hover:to-pink-600 text-white shadow-lg"
+                    onClick={() => window.location.href = '/register'}
+                  >
+                    注册
+                  </Button>
+                </div>
+              </>
+            )}
 
             {/* 移动端菜单按钮 */}
             <Button
@@ -197,28 +249,78 @@ export function Navigation() {
               ))}
               
               {/* 移动端操作按钮 */}
-              <div className="flex space-x-2 pt-2 border-t border-rose-100/40">
-                <Button 
-                  variant="outline" 
-                  size="sm"
-                  className="flex-1 text-gray-600 border-gray-200"
-                  onClick={() => {
-                    window.location.href = '/login'
-                    setIsMobileMenuOpen(false)
-                  }}
-                >
-                  登录
-                </Button>
-                <Button 
-                  size="sm"
-                  className="flex-1 bg-gradient-to-r from-rose-500 to-pink-500 text-white"
-                  onClick={() => {
-                    window.location.href = '/register'
-                    setIsMobileMenuOpen(false)
-                  }}
-                >
-                  注册
-                </Button>
+              <div className="pt-2 border-t border-rose-100/40">
+                {isAuthenticated ? (
+                  <div className="space-y-3">
+                    {/* 用户信息 */}
+                    <div className="flex items-center justify-between px-4 py-3 bg-rose-50 rounded-lg">
+                      <div className="flex items-center space-x-3">
+                        <User className="h-4 w-4 text-rose-600" />
+                        <div>
+                          <div className="font-medium text-rose-700">{user?.username}</div>
+                          <div className="text-xs text-rose-600">
+                            {MembershipService.getPricingInfo(user?.membership?.level || 'free')?.name}
+                          </div>
+                        </div>
+                      </div>
+                      {MembershipService.isAdmin(user) && (
+                        <Link 
+                          href="/admin"
+                          className="flex items-center space-x-1 px-2 py-1 bg-purple-100 text-purple-700 rounded text-xs"
+                          onClick={() => setIsMobileMenuOpen(false)}
+                        >
+                          <Shield className="h-3 w-3" />
+                          <span>管理员</span>
+                        </Link>
+                      )}
+                    </div>
+                    
+                    <div className="flex space-x-2">
+                      <Link 
+                        href="/profile"
+                        className="flex-1 text-center px-3 py-2 bg-gray-100 text-gray-600 rounded text-sm"
+                        onClick={() => setIsMobileMenuOpen(false)}
+                      >
+                        个人中心
+                      </Link>
+                      <Button 
+                        variant="outline" 
+                        size="sm"
+                        className="flex-1 text-red-600 border-red-200"
+                        onClick={() => {
+                          logout()
+                          setIsMobileMenuOpen(false)
+                        }}
+                      >
+                        退出
+                      </Button>
+                    </div>
+                  </div>
+                ) : (
+                  <div className="flex space-x-2">
+                    <Button 
+                      variant="outline" 
+                      size="sm"
+                      className="flex-1 text-gray-600 border-gray-200"
+                      onClick={() => {
+                        window.location.href = '/login'
+                        setIsMobileMenuOpen(false)
+                      }}
+                    >
+                      登录
+                    </Button>
+                    <Button 
+                      size="sm"
+                      className="flex-1 bg-gradient-to-r from-rose-500 to-pink-500 text-white"
+                      onClick={() => {
+                        window.location.href = '/register'
+                        setIsMobileMenuOpen(false)
+                      }}
+                    >
+                      注册
+                    </Button>
+                  </div>
+                )}
               </div>
             </div>
           </div>

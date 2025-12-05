@@ -16,6 +16,10 @@ const UserSchema = new mongoose.Schema({
     trim: true,
     lowercase: true
   },
+  phone: {
+    type: String,
+    default: null
+  },
   passwordHash: {
     type: String,
     required: true
@@ -49,6 +53,44 @@ const UserSchema = new mongoose.Schema({
       unlockedAt: Date
     }]
   },
+  // 会员系统相关字段
+  membership: {
+    level: {
+      type: String,
+      enum: ['free', 'basic', 'premium', 'vip'],
+      default: 'free'
+    },
+    startDate: {
+      type: Date,
+      default: Date.now
+    },
+    expiryDate: {
+      type: Date,
+      default: null
+    },
+    autoRenew: {
+      type: Boolean,
+      default: false
+    },
+    paymentMethod: {
+      type: String,
+      default: null
+    },
+    subscriptionId: {
+      type: String,
+      default: null
+    }
+  },
+  // 权限和角色相关字段
+  role: {
+    type: String,
+    enum: ['user', 'moderator', 'admin', 'superadmin'],
+    default: 'user'
+  },
+  permissions: [{
+    type: String,
+    enum: ['manage_users', 'manage_content', 'view_analytics', 'system_settings']
+  }],
   isActive: {
     type: Boolean,
     default: true
@@ -57,17 +99,12 @@ const UserSchema = new mongoose.Schema({
     type: Date,
     default: Date.now
   },
-  // 密码重置相关字段
-  resetToken: {
-    type: String,
-    default: null
-  },
-  resetTokenExpiry: {
-    type: Date,
-    default: null
-  },
-  // 邮箱验证相关字段
+  // 验证相关字段
   emailVerified: {
+    type: Boolean,
+    default: false
+  },
+  phoneVerified: {
     type: Boolean,
     default: false
   },
@@ -79,7 +116,23 @@ const UserSchema = new mongoose.Schema({
     type: Date,
     default: null
   },
-  // 登录尝试相关字段
+  phoneVerificationCode: {
+    type: String,
+    default: null
+  },
+  phoneVerificationExpiry: {
+    type: Date,
+    default: null
+  },
+  // 安全相关字段
+  resetToken: {
+    type: String,
+    default: null
+  },
+  resetTokenExpiry: {
+    type: Date,
+    default: null
+  },
   loginAttempts: {
     type: Number,
     default: 0
@@ -88,10 +141,26 @@ const UserSchema = new mongoose.Schema({
     type: Date,
     default: null
   },
-  // 最后一次密码更改时间
   passwordChangedAt: {
     type: Date,
     default: Date.now
+  },
+  // 使用统计
+  usageStats: {
+    dailyUsage: {
+      type: Map,
+      of: Number,
+      default: {}
+    },
+    monthlyUsage: {
+      type: Map,
+      of: Number,
+      default: {}
+    },
+    lastReset: {
+      type: Date,
+      default: Date.now
+    }
   }
 }, {
   timestamps: true

@@ -8,12 +8,20 @@ export async function POST(request: NextRequest) {
   try {
     await dbConnect()
     
-    const { username, email, password } = await request.json()
+    const { username, email, password, phone } = await request.json()
 
     // 验证必需字段
     if (!username || !email || !password) {
       return NextResponse.json(
         { success: false, error: '用户名、邮箱和密码为必填项' },
+        { status: 400 }
+      )
+    }
+
+    // 验证手机号码格式（如果提供）
+    if (phone && !/^1[3-9]\d{9}$/.test(phone)) {
+      return NextResponse.json(
+        { success: false, error: '请输入有效的手机号码' },
         { status: 400 }
       )
     }
@@ -74,6 +82,17 @@ export async function POST(request: NextRequest) {
       )
     }
 
+    // 检查手机号码是否已存在（如果提供）
+    if (phone) {
+      const existingUserByPhone = await User.findOne({ phone })
+      if (existingUserByPhone) {
+        return NextResponse.json(
+          { success: false, error: '手机号码已存在' },
+          { status: 400 }
+        )
+      }
+    }
+
     // 密码加密
     const saltRounds = 12
     const passwordHash = await bcrypt.hash(password, saltRounds)
@@ -82,6 +101,7 @@ export async function POST(request: NextRequest) {
     const newUser = await User.create({
       username,
       email,
+      phone: phone || null,
       passwordHash,
       avatar: '',
       bio: '',
@@ -97,6 +117,19 @@ export async function POST(request: NextRequest) {
         totalScore: 0,
         totalPlayTime: 0,
         achievements: []
+      },
+      membership: {
+        level: 'free',
+        startDate: new Date(),
+        expiryDate: null,
+        autoRenew: false
+      },
+      role: 'user',
+      permissions: [],
+      usageStats: {
+        dailyUsage: {},
+        monthlyUsage: {},
+        lastReset: new Date()
       }
     })
 
@@ -126,11 +159,20 @@ export async function POST(request: NextRequest) {
       id: newUser._id,
       username: newUser.username,
       email: newUser.email,
+      phone: newUser.phone,
       avatar: newUser.avatar,
       bio: newUser.bio,
       preferences: newUser.preferences,
       stats: newUser.stats,
-      createdAt: newUser.createdAt
+      membership: newUser.membership,
+      role: newUser.role,
+      permissions: newUser.permissions,
+      isActive: newUser.isActive,
+      emailVerified: newUser.emailVerified,
+      phoneVerified: newUser.phoneVerified,
+      usageStats: newUser.usageStats,
+      createdAt: newUser.createdAt,
+      lastLogin: newUser.lastLogin
     }
 
     return NextResponse.json({

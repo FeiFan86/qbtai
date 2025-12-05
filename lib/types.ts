@@ -36,12 +36,37 @@ export interface User {
   id: string;
   username: string;
   email: string;
+  phone?: string;
   avatar: string;
   bio: string;
   preferences: UserPreferences;
   stats: UserStats;
+  membership: MembershipInfo;
+  role: 'user' | 'moderator' | 'admin' | 'superadmin';
+  permissions: string[];
+  isActive: boolean;
+  emailVerified: boolean;
+  phoneVerified: boolean;
   createdAt: string;
   lastLogin: string;
+  usageStats: UsageStats;
+}
+
+// 会员信息接口
+export interface MembershipInfo {
+  level: 'free' | 'basic' | 'premium' | 'vip';
+  startDate: string;
+  expiryDate?: string;
+  autoRenew: boolean;
+  paymentMethod?: string;
+  subscriptionId?: string;
+}
+
+// 使用统计接口
+export interface UsageStats {
+  dailyUsage: Record<string, number>;
+  monthlyUsage: Record<string, number>;
+  lastReset: string;
 }
 
 export interface UserPreferences {

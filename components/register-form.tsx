@@ -3,7 +3,7 @@
 import React, { useState } from 'react'
 import { useAuth } from './auth-provider'
 import { useRouter } from 'next/navigation'
-import { Heart, User, Mail, Lock, Sparkles, CheckCircle, Eye, EyeOff, ArrowRight, Shield, Check } from 'lucide-react'
+import { Heart, User, Mail, Lock, Sparkles, CheckCircle, Eye, EyeOff, ArrowRight, Shield, Check, Phone } from 'lucide-react'
 
 export function RegisterForm() {
   const { register, isLoading } = useAuth()
@@ -11,6 +11,7 @@ export function RegisterForm() {
   const [formData, setFormData] = useState({
     username: '',
     email: '',
+    phone: '',
     password: '',
     confirmPassword: '',
   })
@@ -35,6 +36,13 @@ export function RegisterForm() {
       newErrors.email = '邮箱不能为空'
     } else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(formData.email)) {
       newErrors.email = '请输入有效的邮箱地址'
+    }
+
+    // 手机号码验证（可选）
+    if (formData.phone.trim()) {
+      if (!/^1[3-9]\d{9}$/.test(formData.phone)) {
+        newErrors.phone = '请输入有效的手机号码'
+      }
     }
 
     if (!formData.password) {
@@ -182,36 +190,66 @@ export function RegisterForm() {
             <p className="text-xs text-gray-500">用户名将显示在游戏中</p>
           </div>
           
-          {/* 邮箱输入框 */}
-          <div className="space-y-2">
-            <label htmlFor="email" className="block text-sm font-medium text-gray-700">
-              邮箱地址
-            </label>
-            <div className={`relative transition-all duration-200 ${focusedField === 'email' ? 'transform scale-105' : ''}`}>
-              <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                <Mail className="h-5 w-5 text-gray-400" />
+            {/* 邮箱输入框 */}
+            <div className="space-y-2">
+              <label htmlFor="email" className="block text-sm font-medium text-gray-700">
+                邮箱地址
+              </label>
+              <div className={`relative transition-all duration-200 ${focusedField === 'email' ? 'transform scale-105' : ''}`}>
+                <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                  <Mail className="h-5 w-5 text-gray-400" />
+                </div>
+                <input
+                  id="email"
+                  name="email"
+                  type="email"
+                  placeholder="请输入邮箱地址"
+                  value={formData.email}
+                  onChange={handleChange}
+                  onFocus={() => setFocusedField('email')}
+                  onBlur={() => setFocusedField(null)}
+                  className={`input pl-10 pr-4 py-3 w-full ${errors.email ? 'border-red-300' : ''}`}
+                  required
+                />
               </div>
-              <input
-                id="email"
-                name="email"
-                type="email"
-                placeholder="请输入邮箱地址"
-                value={formData.email}
-                onChange={handleChange}
-                onFocus={() => setFocusedField('email')}
-                onBlur={() => setFocusedField(null)}
-                className={`input pl-10 pr-4 py-3 w-full ${errors.email ? 'border-red-300' : ''}`}
-                required
-              />
+              {errors.email && (
+                <p className="text-sm text-red-600 flex items-center gap-1 mt-1">
+                  <Sparkles className="h-3 w-3" />
+                  {errors.email}
+                </p>
+              )}
+              <p className="text-xs text-gray-500">用于找回密码和接收通知</p>
             </div>
-            {errors.email && (
-              <p className="text-sm text-red-600 flex items-center gap-1 mt-1">
-                <Sparkles className="h-3 w-3" />
-                {errors.email}
-              </p>
-            )}
-            <p className="text-xs text-gray-500">用于找回密码和接收通知</p>
-          </div>
+            
+            {/* 手机号码输入框 */}
+            <div className="space-y-2">
+              <label htmlFor="phone" className="block text-sm font-medium text-gray-700">
+                手机号码（可选）
+              </label>
+              <div className={`relative transition-all duration-200 ${focusedField === 'phone' ? 'transform scale-105' : ''}`}>
+                <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                  <Phone className="h-5 w-5 text-gray-400" />
+                </div>
+                <input
+                  id="phone"
+                  name="phone"
+                  type="tel"
+                  placeholder="请输入手机号码（可选）"
+                  value={formData.phone}
+                  onChange={handleChange}
+                  onFocus={() => setFocusedField('phone')}
+                  onBlur={() => setFocusedField(null)}
+                  className={`input pl-10 pr-4 py-3 w-full ${errors.phone ? 'border-red-300' : ''}`}
+                />
+              </div>
+              {errors.phone && (
+                <p className="text-sm text-red-600 flex items-center gap-1 mt-1">
+                  <Sparkles className="h-3 w-3" />
+                  {errors.phone}
+                </p>
+              )}
+              <p className="text-xs text-gray-500">用于重要通知和安全验证</p>
+            </div>
           
           {/* 密码输入框 */}
           <div className="space-y-2">

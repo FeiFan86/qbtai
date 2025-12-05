@@ -13,21 +13,53 @@ export default function ProfilePage() {
   const { user, isAuthenticated } = useAuth()
   const [activeTab, setActiveTab] = useState('overview')
   
-  // 模拟使用统计数据
+  // 获取真实的用户数据
   const usageStats = {
-    'emotion-analysis': { daily: 3, monthly: 45, total: 128 },
-    'social-assistant': { daily: 1, monthly: 12, total: 67 },
-    'content-creation': { daily: 2, monthly: 28, total: 89 },
-    'emotion-diary': { daily: 1, monthly: 15, total: 42 },
-    'data-insights': { daily: 0, monthly: 8, total: 23 },
-    'games': { daily: 5, monthly: 65, total: 156 }
+    'emotion-analysis': { 
+      daily: user?.usageStats?.dailyUsage?.['emotion-analysis'] || 0,
+      monthly: user?.usageStats?.monthlyUsage?.['emotion-analysis'] || 0,
+      total: user?.stats?.totalGames || 0
+    },
+    'social-assistant': { 
+      daily: user?.usageStats?.dailyUsage?.['social-assistant'] || 0,
+      monthly: user?.usageStats?.monthlyUsage?.['social-assistant'] || 0,
+      total: 0
+    },
+    'content-creation': { 
+      daily: user?.usageStats?.dailyUsage?.['content-creation'] || 0,
+      monthly: user?.usageStats?.monthlyUsage?.['content-creation'] || 0,
+      total: 0
+    },
+    'emotion-diary': { 
+      daily: user?.usageStats?.dailyUsage?.['emotion-diary'] || 0,
+      monthly: user?.usageStats?.monthlyUsage?.['emotion-diary'] || 0,
+      total: 0
+    },
+    'data-insights': { 
+      daily: user?.usageStats?.dailyUsage?.['data-insights'] || 0,
+      monthly: user?.usageStats?.monthlyUsage?.['data-insights'] || 0,
+      total: 0
+    },
+    'games': { 
+      daily: user?.usageStats?.dailyUsage?.['games'] || 0,
+      monthly: user?.usageStats?.monthlyUsage?.['games'] || 0,
+      total: user?.stats?.totalGames || 0
+    }
   }
 
-  // 会员信息
+  // 会员信息映射
+  const membershipLevels = {
+    'free': { name: '免费会员', benefits: ['基础功能使用', '每日限制使用次数'] },
+    'basic': { name: '基础会员', benefits: ['更多使用次数', '基础分析功能'] },
+    'premium': { name: '高级会员', benefits: ['无限使用次数', '专属客服', '高级功能'] },
+    'vip': { name: 'VIP会员', benefits: ['所有高级功能', '专属客服', '数据分析报告', '优先技术支持'] }
+  }
+
   const membershipInfo = {
-    level: '高级会员',
-    expires: '2025-12-31',
-    benefits: ['无限使用次数', '专属客服', '高级功能', '数据分析报告']
+    level: membershipLevels[user?.membership?.level || 'free']?.name || '免费会员',
+    expires: user?.membership?.expiryDate ? 
+      new Date(user.membership.expiryDate).toLocaleDateString('zh-CN') : '永久有效',
+    benefits: membershipLevels[user?.membership?.level || 'free']?.benefits || []
   }
 
   if (!isAuthenticated || !user) {
