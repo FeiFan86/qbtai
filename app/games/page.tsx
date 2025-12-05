@@ -2,11 +2,13 @@
 
 import React, { useState } from 'react'
 import Link from 'next/link'
+import { useRouter } from 'next/navigation'
 import { Gamepad2, Heart, MessageCircle, Users, Trophy, Star } from 'lucide-react'
 import GlobalNavbar from '@/components/global-navbar'
 import UsageGuard, { UsageStatus } from '@/components/usage-guard'
 
 export default function GamesPage() {
+  const router = useRouter()
   const games = [
     {
       id: 1,
@@ -116,6 +118,22 @@ export default function GamesPage() {
                 <button 
                   className="w-full bg-gradient-to-r from-rose-500 to-pink-500 text-white py-2 rounded-lg font-medium hover:from-rose-600 hover:to-pink-600 transition-all group-hover:shadow-md disabled:opacity-50 disabled:cursor-not-allowed"
                   disabled={!canUse}
+                  onClick={() => {
+                    onUse()
+                    // 根据游戏ID跳转到对应的游戏页面
+                    const gameRoutes = {
+                      1: '/games/interactive-games/emotion-tree-hole',
+                      2: '/games/interactive-games/truth-or-dare',
+                      3: '/games/interactive-games/tacit-challenge',
+                      4: '/games/interactive-games/memory-puzzle',
+                      5: '/games/interactive-games/collaborative-doodle',
+                      6: '/games/interactive-games/relationship-chess'
+                    }
+                    const route = gameRoutes[game.id as keyof typeof gameRoutes]
+                    if (route) {
+                      router.push(route)
+                    }
+                  }}
                 >
                   {isLoading ? '加载中...' : '开始游戏'}
                 </button>
