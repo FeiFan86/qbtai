@@ -1,42 +1,43 @@
 # 丘比特AI情感助手
 
-基于火山引擎方舟DeepSeek模型的智能情感分析和社交助手，帮助用户理解情感、改善关系。
+基于火山引擎方舟DeepSeek模型的智能情感分析和社交助手，专为情侣设计的情感支持平台。
 
 ## 功能特色
 
 ### 🔍 智能情感分析
-- 多维度情感识别（文本、语音、图像）
-- 情感趋势分析和预测
-- 情感关键词提取和总结
+- 基于对话内容的情感识别和分析
+- 情感趋势可视化分析
+- 个性化情感建议和指导
 
 ### 🤝 社交互动优化
 - 对话内容智能分析
 - 沟通策略和话术建议
-- 冲突调解和关系改善方案
+- 关系改善方案提供
 
 ### ✍️ 情感内容创作
 - AI辅助生成情感化内容
 - 多种风格和长度选项
-- 个性化建议和改进方向
+- 个性化内容定制
 
 ### 📊 情感数据洞察
-- 可视化情感变化趋势
+- 情感变化趋势图表
 - 情感分布和雷达图分析
 - 个人情感模式识别
 
-### 📖 情感日记
-- 记录日常情感变化
-- 自动分析和归档
-- 情感历史追踪
+### 🎮 情感游戏互动
+- 情感树洞游戏
+- 情感认知测试
+- 互动式情感学习
 
 ## 技术架构
 
 - **前端框架**: Next.js 14 (App Router)
-- **UI组件**: shadcn/ui + Tailwind CSS
+- **UI组件**: shadcn/ui + Tailwind CSS + Lucide React
 - **状态管理**: Zustand
-- **AI服务**: 火山引擎方舟 DeepSeek 模型
+- **数据库**: MongoDB
 - **数据可视化**: Recharts
 - **部署平台**: Vercel
+- **认证系统**: 自定义JWT认证
 
 ## 快速开始
 
@@ -52,21 +53,17 @@ npm install
 ### 配置环境变量
 复制 `.env.local` 文件并配置以下变量：
 ```env
-# 火山引擎API配置
-VOLCANO_API_KEY=your_volcano_api_key_here
-VOLCANO_BASE_URL=https://ark.cn-beijing.volces.com/api/v3
-DEEPSEEK_MODEL=deepseek-chat
+# MongoDB 数据库连接
+MONGODB_URI=mongodb://root:qq116121@183.87.130.22:27017/cupid-ai?authSource=admin
 
 # 应用配置
-NEXTAUTH_URL=http://localhost:3000
-NEXTAUTH_SECRET=your_nextauth_secret_here
+APP_NAME=丘比特AI情感助手
+APP_VERSION=1.0.0
+NODE_ENV=development
 
-# 数据库配置 (可选)
-DATABASE_URL=your_database_url_here
-
-# 其他服务配置
-UPSTASH_REDIS_REST_URL=your_upstash_redis_url_here
-UPSTASH_REDIS_REST_TOKEN=your_upstash_redis_token_here
+# 安全配置
+JWT_SECRET=cupid-ai-jwt-secret-20251204-change-in-production
+ENCRYPTION_KEY=cupid-ai-encryption-key-32-chars-long
 ```
 
 ### 启动开发服务器
@@ -78,103 +75,133 @@ npm run dev
 
 ## 部署到Vercel
 
-### 方法一：直接从Vercel部署（推荐）
+### 部署步骤
 
-1. 点击下方按钮直接部署到Vercel：
-   
-2. 在部署页面配置环境变量：
-   - `VOLCANO_API_KEY`: 您的火山引擎API密钥
-   - `VOLCANO_BASE_URL`: `https://ark.cn-beijing.volces.com/api/v3`
-   - `DEEPSEEK_MODEL`: `deepseek-chat`
+1. **准备项目**：确保所有依赖项已安装
+2. **配置环境变量**：在Vercel项目设置中添加以下变量：
+   - `MONGODB_URI`: `mongodb://root:qq116121@183.87.130.22:27017/cupid-ai?authSource=admin`
+   - `JWT_SECRET`: 设置一个安全的JWT密钥
+   - `ENCRYPTION_KEY`: 设置32位加密密钥
 
-3. 点击"Deploy"完成部署
+3. **部署命令**：
+   ```bash
+   npm run build
+   ```
 
-### 方法二：从GitHub部署
+### Vercel配置
+项目已包含 `vercel.json` 配置文件，会自动使用Next.js构建命令。
 
-1. 将代码推送到GitHub仓库
-2. 在Vercel中导入项目
-3. 配置环境变量
-4. 部署完成
+### 部署后访问
+- **主网站**: `https://您的域名.vercel.app`
+- **后台管理**: `https://您的域名.vercel.app/admin`
+- **管理员账号**: 用户名 `admin`，密码 `admin123456`
 
-### 环境变量配置
-在Vercel项目设置中添加以下环境变量：
-- `VOLCANO_API_KEY`: 火山引擎API密钥
-- `VOLCANO_BASE_URL`: 火山引擎API基础URL
-- `DEEPSEEK_MODEL`: 使用的模型名称（默认: deepseek-chat）
-
-## 项目结构
+## 项目结构（已优化）
 
 ```
 cupid-ai/
 ├── app/                    # Next.js 14 App Router
-│   ├── (dashboard)/       # 仪表板页面
-│   ├── api/              # API路由
-│   │   ├── emotion/      # 情感分析API
-│   │   ├── chat/         # 聊天API
-│   │   └── content/      # 内容生成API
-│   ├── components/       # 可复用组件
-│   │   ├── ui/          # shadcn/ui组件
-│   │   ├── emotion/     # 情感相关组件
-│   │   └── charts/      # 图表组件
-│   ├── lib/             # 工具函数
-│   └── store/           # Zustand状态管理
-├── components/           # 全局组件
-├── lib/                 # 工具函数和服务
-└── public/              # 静态资源
+│   ├── api/               # API路由 (43个端点)
+│   │   ├── auth/          # 认证相关API
+│   │   ├── emotion/       # 情感分析API
+│   │   ├── games/         # 游戏相关API
+│   │   ├── analytics/     # 数据分析API
+│   │   └── users/         # 用户管理API
+│   ├── admin/             # 后台管理页面
+│   ├── dashboard/         # 用户仪表板
+│   ├── login/             # 登录页面
+│   ├── register/          # 注册页面
+│   └── games/             # 情感游戏页面
+├── components/            # 可复用组件 (61个组件)
+│   ├── ui/               # shadcn/ui组件
+│   ├── auth-provider.tsx # 认证提供者
+│   ├── global-navbar.tsx # 全局导航栏
+│   └── 各种功能组件
+├── lib/                  # 工具函数和服务
+├── scripts/              # 实用脚本
+│   └── create-admin.js   # 管理员账号创建脚本
+├── types/                # TypeScript类型定义
+└── 配置文件
 ```
 
-## API接口
+### 主要功能模块
+- **用户认证**: 注册、登录、密码重置
+- **情感分析**: 对话分析、情感识别、建议生成
+- **游戏互动**: 情感树洞、认知测试、进度追踪
+- **数据分析**: 情感趋势、用户统计、可视化图表
+- **后台管理**: 用户管理、数据分析、系统监控
+
+## 主要API接口
+
+### 用户认证
+- `POST /api/auth/register` - 用户注册
+- `POST /api/auth/login` - 用户登录
+- `POST /api/auth/verify` - 令牌验证
+- `POST /api/auth/reset-password` - 密码重置
 
 ### 情感分析
-```
-POST /api/emotion/analyze
-{
-  "input": "要分析的文本内容",
-  "type": "text",
-  "context": []
-}
-```
+- `POST /api/emotion/analyze` - 情感内容分析
+- `POST /api/ai/emotion-analysis` - AI情感分析
+- `GET /api/emotion-posts` - 获取情感帖子
 
-### 内容生成
-```
-POST /api/content/generate
-{
-  "prompt": "生成内容的描述",
-  "style": "casual",
-  "length": "medium",
-  "context": "背景信息"
-}
-```
+### 游戏相关
+- `GET /api/games` - 获取游戏列表和统计
+- `POST /api/games/save-progress` - 保存游戏进度
+- `GET /api/game-progress` - 获取用户游戏进度
+- `GET /api/leaderboards` - 获取排行榜
 
-### 社交分析
-```
-POST /api/social/analyze
-{
-  "conversation": "对话内容",
-  "context": "背景信息",
-  "scenario": "场景类型"
-}
-```
+### 数据分析
+- `GET /api/analytics` - 获取系统统计
+- `GET /api/achievements` - 获取用户成就
 
-## 贡献指南
+### 管理员接口
+- `GET /api/admin/init` - 检查管理员状态
+- `POST /api/admin/init` - 创建管理员账号
 
-1. Fork 项目
-2. 创建功能分支 (`git checkout -b feature/AmazingFeature`)
-3. 提交更改 (`git commit -m 'Add some AmazingFeature'`)
-4. 推送到分支 (`git push origin feature/AmazingFeature`)
-5. 开启 Pull Request
+## 管理员功能
+
+### 后台管理
+- 访问 `/admin` 路径进入后台管理界面
+- 支持用户管理、数据统计、系统监控
+- 需要管理员权限才能访问
+
+### 预设管理员账号
+- **用户名**: `admin`
+- **密码**: `admin123456`
+- **邮箱**: `admin@cupidai.com`
+- **角色**: `superadmin`
+
+### 创建管理员账号
+1. 运行 `node scripts/create-admin.js` 创建账号
+2. 或访问 `/admin-init` 页面通过界面创建
+
+## 开发说明
+
+### 项目状态
+- ✅ 已完成文件清理和优化
+- ✅ 移除所有测试和调试文件
+- ✅ 统一配色和界面风格
+- ✅ 完善API文档
+- ✅ 配置Vercel部署
+
+### 技术特点
+- 使用现代Next.js 14 App Router
+- TypeScript类型安全
+- MongoDB数据库集成
+- 响应式设计，支持移动端
+- JWT认证系统
+- 数据可视化图表
 
 ## 许可证
 
-本项目采用 MIT 许可证 - 查看 [LICENSE](LICENSE) 文件了解详情。
+本项目采用 MIT 许可证。
 
 ## 支持
 
 如有问题或建议，请通过以下方式联系：
-
 - 提交 Issue
-- 发送邮件至 support@cupidai.com
+- 发送邮件至 admin@cupidai.com
 
 ---
 
-© 2024 丘比特AI情感助手. 用❤️打造，助力每一段关系.
+© 2024 丘比特AI情感助手. 专为情侣设计的情感支持平台.
