@@ -295,8 +295,23 @@ export const mockData: Database = {
         totalPlayTime: 0,
         achievements: []
       },
+      membership: {
+        level: 'free',
+        startDate: '2024-01-01T00:00:00.000Z',
+        autoRenew: false
+      },
+      role: 'user',
+      permissions: [],
+      isActive: true,
+      emailVerified: false,
+      phoneVerified: false,
       createdAt: '2024-01-01T00:00:00.000Z',
-      lastLogin: '2024-01-01T00:00:00.000Z'
+      lastLogin: '2024-01-01T00:00:00.000Z',
+      usageStats: {
+        dailyUsage: {},
+        monthlyUsage: {},
+        lastReset: '2024-01-01T00:00:00.000Z'
+      }
     }
   ],
   games: [
