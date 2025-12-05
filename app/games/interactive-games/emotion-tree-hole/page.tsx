@@ -1,8 +1,7 @@
 'use client'
 
 import React, { useState, useEffect, useRef } from 'react'
-import { Navigation } from '@/components/navigation'
-import { Footer } from '@/components/footer'
+import GlobalNavbar from '@/components/global-navbar'
 import { useAuth } from '@/components/auth-provider'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
 import { Button } from '@/components/ui/button'
@@ -300,7 +299,7 @@ export default function EmotionTreeHolePage() {
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-green-50 to-emerald-100">
-      <Navigation />
+      <GlobalNavbar />
       
       <main className="container mx-auto px-4 py-8">
         <div className="mx-auto max-w-4xl">
@@ -490,7 +489,24 @@ export default function EmotionTreeHolePage() {
         </div>
       </main>
       
-      <Footer />
+      {/* 页脚 */}
+      <footer className="bg-gray-50 border-t border-gray-200">
+        <div className="container py-8">
+          <div className="text-center">
+            <div className="flex items-center justify-center space-x-2 mb-4">
+              <div className="w-6 h-6 bg-gradient-to-r from-rose-500 to-pink-500 rounded-full flex items-center justify-center">
+                <svg className="h-3 w-3 text-white" fill="currentColor" viewBox="0 0 20 20">
+                  <path fillRule="evenodd" d="M3.172 5.172a4 4 0 015.656 0L10 6.343l1.172-1.171a4 4 0 115.656 5.656L10 17.657l-6.828-6.829a4 4 0 010-5.656z" clipRule="evenodd" />
+                </svg>
+              </div>
+              <span className="text-gray-900 font-semibold">丘比特AI情感助手</span>
+            </div>
+            <p className="text-gray-600 text-sm">
+              © 2024 专为情侣设计的情感助手平台. 让爱更美好.
+            </p>
+          </div>
+        </div>
+      </footer>
     </div>
   )
 }
