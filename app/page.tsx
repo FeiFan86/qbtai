@@ -4,6 +4,7 @@ import React, { useState, useEffect } from 'react'
 import Link from 'next/link'
 import { useRouter } from 'next/navigation'
 import { Heart, Brain, PenTool, MessageCircle, BarChart3, Gamepad2, ArrowRight } from 'lucide-react'
+import GlobalNavbar from '@/components/global-navbar'
 
 export default function HomePage() {
   const router = useRouter()
@@ -61,33 +62,8 @@ export default function HomePage() {
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-rose-50 via-white to-pink-50">
-      {/* 导航栏 */}
-      <nav className="fixed top-0 left-0 right-0 z-50 bg-white/80 backdrop-blur-md border-b border-gray-100">
-        <div className="container">
-          <div className="flex justify-between items-center h-16">
-            <Link href="/" className="flex items-center space-x-3">
-              <div className="w-8 h-8 bg-gradient-to-r from-rose-500 to-pink-500 rounded-full flex items-center justify-center">
-                <Heart className="h-4 w-4 text-white" fill="currentColor" />
-              </div>
-              <span className="text-lg font-bold text-gray-900">丘比特AI</span>
-            </Link>
-            <div className="flex items-center space-x-4">
-              <Link 
-                href="/login" 
-                className="text-gray-600 hover:text-rose-600 transition-colors"
-              >
-                登录
-              </Link>
-              <Link 
-                href="/register" 
-                className="bg-gradient-to-r from-rose-500 to-pink-500 text-white px-4 py-2 rounded-lg hover:from-rose-600 hover:to-pink-600 transition-all"
-              >
-                立即体验
-              </Link>
-            </div>
-          </div>
-        </div>
-      </nav>
+      {/* 全局导航栏 */}
+      <GlobalNavbar />
 
       {/* 主要内容 */}
       <main className="pt-16">
