@@ -123,8 +123,12 @@ export class VolcanoAIClient {
         max_tokens: 500
       });
 
-      // 解析AI返回的内容
-      const content = response.choices?.[0]?.message?.content;
+      // 解析火山引擎API返回的内容
+      if (response.code !== 0) {
+        throw new Error(`情感分析失败：${response.message}`);
+      }
+      
+      const content = response.data?.choices?.[0]?.message?.content;
       if (!content) {
         throw new Error('情感分析失败：无法获取分析结果');
       }
