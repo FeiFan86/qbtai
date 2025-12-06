@@ -1,173 +1,432 @@
 'use client'
 
 import React, { useState } from 'react'
-import Link from 'next/link'
 import { useRouter } from 'next/navigation'
-import { Gamepad2, Heart, MessageCircle, Users, Trophy, Star } from 'lucide-react'
+import { 
+  Gamepad2, Heart, MessageCircle, Users, Trophy, Star, 
+  Search, Filter, Play, Award, Clock, TrendingUp, 
+  Share2, Download, ThumbsUp, Users2
+} from 'lucide-react'
 import GlobalNavbar from '@/components/global-navbar'
 import UsageGuard, { UsageStatus } from '@/components/usage-guard'
 
+interface Game {
+  id: number;
+  title: string;
+  description: string;
+  icon: JSX.Element;
+  color: string;
+  players: string;
+  difficulty: string;
+  category: 'communication' | 'fun' | 'emotional' | 'challenge';
+  duration: string;
+  popularity: number;
+  rating: number;
+  features: string[];
+}
+
 export default function GamesPage() {
   const router = useRouter()
-  const games = [
+  const [searchTerm, setSearchTerm] = useState('')
+  const [selectedCategory, setSelectedCategory] = useState('all')
+  const [selectedDifficulty, setSelectedDifficulty] = useState('all')
+  
+  const games: Game[] = [
     {
       id: 1,
       title: '情感树洞',
-      description: '安全私密的情感分享空间',
+      description: '安全私密的情感分享空间，增进彼此理解与信任',
       icon: <Heart className="h-6 w-6" />,
       color: 'from-rose-400 to-pink-600',
       players: '2人+',
-      difficulty: '简单'
+      difficulty: '简单',
+      category: 'emotional',
+      duration: '15-30分钟',
+      popularity: 95,
+      rating: 4.8,
+      features: ['情感分享', '隐私保护', '深度交流']
     },
     {
       id: 2,
       title: '真心话大冒险',
-      description: '增进了解的互动游戏',
+      description: '增进了解的互动游戏，突破沟通障碍',
       icon: <MessageCircle className="h-6 w-6" />,
       color: 'from-purple-400 to-indigo-600',
       players: '2人',
-      difficulty: '中等'
+      difficulty: '中等',
+      category: 'communication',
+      duration: '20-45分钟',
+      popularity: 92,
+      rating: 4.7,
+      features: ['深度了解', '趣味挑战', '关系突破']
     },
     {
       id: 3,
       title: '默契挑战',
-      description: '测试情侣默契度',
+      description: '测试情侣默契度，发现彼此的相似之处',
       icon: <Users className="h-6 w-6" />,
       color: 'from-blue-400 to-cyan-600',
       players: '2人',
-      difficulty: '中等'
+      difficulty: '中等',
+      category: 'challenge',
+      duration: '25-40分钟',
+      popularity: 88,
+      rating: 4.6,
+      features: ['默契测试', '相似度分析', '关系评估']
     },
     {
       id: 4,
       title: '情感记忆拼图',
-      description: '重温美好回忆',
+      description: '重温美好回忆，强化情感连接',
       icon: <Trophy className="h-6 w-6" />,
       color: 'from-green-400 to-teal-600',
       players: '2人',
-      difficulty: '简单'
+      difficulty: '简单',
+      category: 'emotional',
+      duration: '30-60分钟',
+      popularity: 90,
+      rating: 4.9,
+      features: ['回忆重温', '情感强化', '美好时光']
     },
     {
       id: 5,
       title: '协作涂鸦板',
-      description: '共同创作艺术作品',
+      description: '共同创作艺术作品，培养协作精神',
       icon: <Star className="h-6 w-6" />,
       color: 'from-orange-400 to-red-600',
       players: '2人+',
-      difficulty: '简单'
+      difficulty: '简单',
+      category: 'fun',
+      duration: '20-50分钟',
+      popularity: 85,
+      rating: 4.5,
+      features: ['创意协作', '艺术表达', '团队配合']
     },
     {
       id: 6,
       title: '关系飞行棋',
-      description: '情感话题棋盘游戏',
+      description: '情感话题棋盘游戏，深度探索彼此内心',
       icon: <Gamepad2 className="h-6 w-6" />,
       color: 'from-pink-400 to-purple-600',
       players: '2人',
-      difficulty: '中等'
+      difficulty: '中等',
+      category: 'challenge',
+      duration: '40-90分钟',
+      popularity: 87,
+      rating: 4.7,
+      features: ['深度话题', '棋盘游戏', '情感探索']
     }
   ]
+
+  const categories = [
+    { value: 'all', label: '全部类型' },
+    { value: 'communication', label: '沟通交流' },
+    { value: 'emotional', label: '情感表达' },
+    { value: 'fun', label: '趣味游戏' },
+    { value: 'challenge', label: '挑战任务' }
+  ]
+
+  const difficulties = [
+    { value: 'all', label: '全部难度' },
+    { value: 'simple', label: '简单' },
+    { value: 'medium', label: '中等' },
+    { value: 'hard', label: '困难' }
+  ]
+
+  const filteredGames = games.filter(game => {
+    const matchesSearch = game.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
+                         game.description.toLowerCase().includes(searchTerm.toLowerCase()) ||
+                         game.features.some(feature => feature.toLowerCase().includes(searchTerm.toLowerCase()))
+    
+    const matchesCategory = selectedCategory === 'all' || game.category === selectedCategory
+    
+    const matchesDifficulty = selectedDifficulty === 'all' || 
+      (selectedDifficulty === 'simple' && game.difficulty === '简单') ||
+      (selectedDifficulty === 'medium' && game.difficulty === '中等') ||
+      (selectedDifficulty === 'hard' && game.difficulty === '困难')
+    
+    return matchesSearch && matchesCategory && matchesDifficulty
+  })
+
+  const startGame = async (gameId: number, onUse: () => Promise<void>) => {
+    await onUse()
+    
+    // 根据游戏ID启动对应的游戏
+    const gameRoutes = {
+      1: '/games/emotion-tree-hole',
+      2: '/games/truth-or-dare',
+      3: '/games/tacit-challenge',
+      4: '/games/memory-puzzle',
+      5: '/games/collaborative-doodle',
+      6: '/games/relationship-chess'
+    }
+    
+    const route = gameRoutes[gameId as keyof typeof gameRoutes]
+    if (route) {
+      router.push(route)
+    } else {
+      // 如果路由不存在，显示游戏预览
+      alert(`即将开始游戏: ${games.find(g => g.id === gameId)?.title}`)
+    }
+  }
+
+  const shareGame = (game: Game) => {
+    const shareText = `🎮 推荐一个好玩的游戏：${game.title}
+
+${game.description}
+
+适合：${game.players} | 时长：${game.duration}
+难度：${game.difficulty} | 评分：${game.rating}/5
+
+#丘比特AI #情感游戏`
+    
+    if (navigator.share) {
+      navigator.share({
+        title: game.title,
+        text: shareText
+      })
+    } else {
+      navigator.clipboard.writeText(shareText)
+      alert('游戏信息已复制到剪贴板，可以分享给朋友！')
+    }
+  }
+
+  const generateGamesReport = () => {
+    const reportContent = `
+# 情感游戏推荐报告
+
+## 游戏概览
+- 总游戏数: ${games.length}
+- 平均评分: ${(games.reduce((sum, g) => sum + g.rating, 0) / games.length).toFixed(1)}/5
+- 最受欢迎: ${games.sort((a, b) => b.popularity - a.popularity)[0].title}
+- 最高评分: ${games.sort((a, b) => b.rating - a.rating)[0].title}
+
+## 推荐游戏
+${games.map(game => `
+### ${game.title}
+**类型**: ${game.category === 'communication' ? '沟通交流' : 
+                game.category === 'emotional' ? '情感表达' : 
+                game.category === 'fun' ? '趣味游戏' : '挑战任务'}
+**难度**: ${game.difficulty} | **时长**: ${game.duration}
+**评分**: ${game.rating}/5 | **热度**: ${game.popularity}%
+
+${game.description}
+
+特色功能: ${game.features.join(', ')}
+
+---
+`).join('')}
+
+分析时间: ${new Date().toLocaleString()}
+工具: 丘比特AI情感游戏
+    `.trim()
+
+    const blob = new Blob([reportContent], { type: 'text/plain' })
+    const url = URL.createObjectURL(blob)
+    const a = document.createElement('a')
+    a.href = url
+    a.download = `情感游戏推荐报告_${new Date().getTime()}.txt`
+    document.body.appendChild(a)
+    a.click()
+    document.body.removeChild(a)
+    URL.revokeObjectURL(url)
+  }
 
   return (
     <UsageGuard feature="games">
       {({ canUse, remainingUses, onUse, isLoading, usageText }) => (
         <div className="min-h-screen bg-gradient-to-br from-rose-50 via-white to-pink-50">
-          {/* 导航栏 */}
           <GlobalNavbar />
 
-      {/* 主要内容 */}
-      <main className="pt-16">
-        <div className="container py-12">
-          {/* 页面标题 */}
-          <div className="text-center mb-12">
-            <div className="inline-flex items-center px-4 py-2 rounded-full bg-white/80 backdrop-blur-sm border border-gray-200 mb-4">
-              <Gamepad2 className="h-5 w-5 text-rose-500 mr-2" />
-              <span className="text-sm font-medium text-gray-700">互动游戏</span>
-            </div>
-            <h1 className="text-3xl md:text-4xl font-bold text-gray-900 mb-4">
-              情感互动游戏
-            </h1>
-            <p className="text-lg text-gray-600 max-w-2xl mx-auto">
-              通过精心设计的互动游戏，增进感情深度，创造美好回忆
-            </p>
-          </div>
-
-          {/* 使用状态提示 */}
-          <div className="max-w-4xl mx-auto mb-6">
-            <UsageStatus feature="games" className="justify-center" />
-          </div>
-
-          {/* 游戏列表 */}
-          <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6 mb-12">
-            {games.map((game) => (
-              <div
-                key={game.id}
-                className="bg-white rounded-xl shadow-sm border border-gray-200 p-6 hover:shadow-lg transition-all duration-300 hover:-translate-y-1 group"
-              >
-                <div className={`inline-flex p-3 rounded-lg bg-gradient-to-r ${game.color} text-white mb-4`}>
-                  {game.icon}
+          <main className="pt-16">
+            <div className="container py-12">
+              {/* 页面标题 */}
+              <div className="text-center mb-12">
+                <div className="inline-flex items-center px-4 py-2 rounded-full bg-white/80 backdrop-blur-sm border border-gray-200 mb-4">
+                  <Gamepad2 className="h-5 w-5 text-rose-500 mr-2" />
+                  <span className="text-sm font-medium text-gray-700">互动游戏</span>
                 </div>
-                <h3 className="text-lg font-semibold text-gray-900 mb-2">
-                  {game.title}
-                </h3>
-                <p className="text-gray-600 text-sm mb-4">
-                  {game.description}
+                <h1 className="text-3xl md:text-4xl font-bold text-gray-900 mb-4">
+                  情感互动游戏
+                </h1>
+                <p className="text-lg text-gray-600 max-w-2xl mx-auto">
+                  通过精心设计的互动游戏，增进感情深度，创造美好回忆
                 </p>
-                <div className="flex items-center justify-between text-sm text-gray-500 mb-4">
-                  <span>{game.players}</span>
-                  <span>{game.difficulty}</span>
-                </div>
-                <button 
-                  className="w-full bg-gradient-to-r from-rose-500 to-pink-500 text-white py-2 rounded-lg font-medium hover:from-rose-600 hover:to-pink-600 transition-all group-hover:shadow-md disabled:opacity-50 disabled:cursor-not-allowed"
-                  disabled={!canUse}
-                  onClick={() => {
-                    onUse()
-                    // 根据游戏ID跳转到对应的游戏页面
-                    const gameRoutes = {
-                      1: '/games/interactive-games/emotion-tree-hole',
-                      2: '/games/interactive-games/truth-or-dare',
-                      3: '/games/interactive-games/tacit-challenge',
-                      4: '/games/interactive-games/memory-puzzle',
-                      5: '/games/interactive-games/collaborative-doodle',
-                      6: '/games/interactive-games/relationship-chess'
-                    }
-                    const route = gameRoutes[game.id as keyof typeof gameRoutes]
-                    if (route) {
-                      router.push(route)
-                    }
-                  }}
-                >
-                  {isLoading ? '加载中...' : '开始游戏'}
-                </button>
-                {!canUse && (
-                  <p className="text-sm text-amber-600 mt-2 text-center">
-                    使用次数已用完，请登录或等待重置
-                  </p>
-                )}
               </div>
-            ))}
-          </div>
 
-          {/* 游戏统计 */}
-          <div className="bg-white rounded-xl shadow-sm border border-gray-200 p-8 text-center">
-            <h2 className="text-xl font-semibold text-gray-900 mb-6">游戏数据</h2>
-            <div className="grid grid-cols-2 md:grid-cols-4 gap-6">
-              <div>
-                <div className="text-2xl font-bold text-rose-600 mb-1">6</div>
-                <div className="text-sm text-gray-500">游戏总数</div>
+              {/* 使用状态提示 */}
+              <div className="max-w-4xl mx-auto mb-6">
+                <UsageStatus feature="games" className="justify-center" />
               </div>
-              <div>
-                <div className="text-2xl font-bold text-purple-600 mb-1">20K+</div>
-                <div className="text-sm text-gray-500">活跃玩家</div>
+
+              {/* 搜索和筛选 */}
+              <div className="max-w-4xl mx-auto mb-8">
+                <div className="bg-white rounded-xl shadow-sm border border-gray-200 p-6">
+                  <div className="grid md:grid-cols-4 gap-4">
+                    <div className="md:col-span-2 relative">
+                      <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-gray-400" />
+                      <input
+                        type="text"
+                        value={searchTerm}
+                        onChange={(e) => setSearchTerm(e.target.value)}
+                        placeholder="搜索游戏名称、描述或功能..."
+                        className="w-full pl-10 pr-4 py-3 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-rose-500"
+                      />
+                    </div>
+                    <div className="flex items-center space-x-2">
+                      <Filter className="h-4 w-4 text-gray-500" />
+                      <select
+                        value={selectedCategory}
+                        onChange={(e) => setSelectedCategory(e.target.value)}
+                        className="w-full border border-gray-200 rounded-lg px-3 py-3 focus:outline-none focus:ring-2 focus:ring-rose-500"
+                      >
+                        {categories.map(cat => (
+                          <option key={cat.value} value={cat.value}>{cat.label}</option>
+                        ))}
+                      </select>
+                    </div>
+                    <div className="flex items-center space-x-2">
+                      <Filter className="h-4 w-4 text-gray-500" />
+                      <select
+                        value={selectedDifficulty}
+                        onChange={(e) => setSelectedDifficulty(e.target.value)}
+                        className="w-full border border-gray-200 rounded-lg px-3 py-3 focus:outline-none focus:ring-2 focus:ring-rose-500"
+                      >
+                        {difficulties.map(diff => (
+                          <option key={diff.value} value={diff.value}>{diff.label}</option>
+                        ))}
+                      </select>
+                    </div>
+                  </div>
+                </div>
               </div>
-              <div>
-                <div className="text-2xl font-bold text-blue-600 mb-1">98%</div>
-                <div className="text-sm text-gray-500">满意度</div>
+
+              {/* 游戏统计概览 */}
+              <div className="max-w-4xl mx-auto grid md:grid-cols-4 gap-6 mb-8">
+                <div className="bg-white rounded-xl shadow-sm border border-gray-200 p-6 text-center">
+                  <div className="text-2xl font-bold text-rose-600 mb-2">{games.length}</div>
+                  <div className="text-sm text-gray-500">游戏总数</div>
+                </div>
+                <div className="bg-white rounded-xl shadow-sm border border-gray-200 p-6 text-center">
+                  <div className="text-2xl font-bold text-purple-600 mb-2">
+                    {(games.reduce((sum, g) => sum + g.rating, 0) / games.length).toFixed(1)}/5
+                  </div>
+                  <div className="text-sm text-gray-500">平均评分</div>
+                </div>
+                <div className="bg-white rounded-xl shadow-sm border border-gray-200 p-6 text-center">
+                  <div className="text-2xl font-bold text-blue-600 mb-2">
+                    {Math.max(...games.map(g => g.popularity))}%
+                  </div>
+                  <div className="text-sm text-gray-500">最高热度</div>
+                </div>
+                <div className="bg-white rounded-xl shadow-sm border border-gray-200 p-6 text-center">
+                  <div className="text-2xl font-bold text-green-600 mb-2">
+                    {games.filter(g => g.difficulty === '简单').length}
+                  </div>
+                  <div className="text-sm text-gray-500">简单游戏</div>
+                </div>
               </div>
-              <div>
-                <div className="text-2xl font-bold text-green-600 mb-1">24/7</div>
-                <div className="text-sm text-gray-500">在线支持</div>
+
+              {/* 游戏列表 */}
+              <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6 mb-12">
+                {filteredGames.map((game) => (
+                  <div
+                    key={game.id}
+                    className="bg-white rounded-xl shadow-sm border border-gray-200 p-6 hover:shadow-lg transition-all duration-300 hover:-translate-y-1 group"
+                  >
+                    <div className="flex items-start justify-between mb-4">
+                      <div className={`inline-flex p-3 rounded-lg bg-gradient-to-r ${game.color} text-white`}>
+                        {game.icon}
+                      </div>
+                      <button
+                        onClick={() => shareGame(game)}
+                        className="p-2 text-gray-400 hover:text-blue-500 transition-colors"
+                        title="分享游戏"
+                      >
+                        <Share2 className="h-4 w-4" />
+                      </button>
+                    </div>
+                    
+                    <h3 className="text-lg font-semibold text-gray-900 mb-2">
+                      {game.title}
+                    </h3>
+                    <p className="text-gray-600 text-sm mb-4">
+                      {game.description}
+                    </p>
+                    
+                    {/* 游戏信息 */}
+                    <div className="space-y-2 mb-4">
+                      <div className="flex items-center justify-between text-xs text-gray-500">
+                        <span className="flex items-center">
+                          <Users2 className="h-3 w-3 mr-1" />
+                          {game.players}
+                        </span>
+                        <span className="flex items-center">
+                          <Clock className="h-3 w-3 mr-1" />
+                          {game.duration}
+                        </span>
+                      </div>
+                      <div className="flex items-center justify-between text-xs">
+                        <span className={`px-2 py-1 rounded-full ${
+                          game.difficulty === '简单' ? 'bg-green-100 text-green-700' :
+                          game.difficulty === '中等' ? 'bg-yellow-100 text-yellow-700' :
+                          'bg-red-100 text-red-700'
+                        }`}>
+                          {game.difficulty}
+                        </span>
+                        <span className="flex items-center text-gray-600">
+                          <ThumbsUp className="h-3 w-3 mr-1" />
+                          {game.rating}/5
+                        </span>
+                      </div>
+                    </div>
+                    
+                    {/* 特色功能 */}
+                    <div className="flex flex-wrap gap-1 mb-4">
+                      {game.features.map((feature, index) => (
+                        <span key={index} className="px-2 py-1 bg-rose-50 text-rose-700 rounded-full text-xs">
+                          {feature}
+                        </span>
+                      ))}
+                    </div>
+                    
+                    {/* 开始游戏按钮 */}
+                    <button 
+                      onClick={() => startGame(game.id, onUse)}
+                      disabled={!canUse}
+                      className="w-full bg-gradient-to-r from-rose-500 to-pink-500 text-white py-3 rounded-lg font-medium hover:from-rose-600 hover:to-pink-600 transition-all group-hover:shadow-md disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center"
+                    >
+                      <Play className="h-4 w-4 mr-2" />
+                      {isLoading ? '加载中...' : '开始游戏'}
+                    </button>
+                    
+                    {!canUse && (
+                      <p className="text-sm text-amber-600 mt-2 text-center">
+                        使用次数已用完，请登录或等待重置
+                      </p>
+                    )}
+                  </div>
+                ))}
               </div>
-            </div>
-          </div>
+
+              {filteredGames.length === 0 && (
+                <div className="text-center py-12 text-gray-500">
+                  <Search className="h-12 w-12 mx-auto mb-4 text-gray-300" />
+                  <p>没有找到匹配的游戏</p>
+                  <p className="text-sm">尝试调整搜索条件</p>
+                </div>
+              )}
+
+              {/* 推荐和导出 */}
+              <div className="max-w-4xl mx-auto flex justify-center space-x-4">
+                <button
+                  onClick={generateGamesReport}
+                  className="flex items-center space-x-2 bg-green-500 text-white px-6 py-3 rounded-lg font-medium hover:bg-green-600 transition-colors"
+                >
+                  <Download className="h-4 w-4" />
+                  <span>导出游戏报告</span>
+                </button>
+              </div>
             </div>
           </main>
 

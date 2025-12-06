@@ -1,0 +1,254 @@
+{
+  "database": "cupid-ai",
+  "collections": [
+    {
+      "name": "users",
+      "documents": [
+        {
+          "_id": {"$oid": "admin001"},
+          "username": "admin",
+          "email": "admin@cupid-ai.com",
+          "passwordHash": "$2b$10$rQ8hN5yU6Z3V7wM9xP2Q3u4v5w6x7y8z9a0b1c2d3e4f5g6h7i8j9k0l1m",
+          "role": "admin",
+          "isActive": true,
+          "emailVerified": true,
+          "permissions": ["manage_users", "manage_content", "view_analytics", "system_settings"],
+          "membership": {
+            "level": "vip",
+            "startDate": {"$date": "2024-01-01T00:00:00Z"},
+            "expiryDate": {"$date": "2025-12-31T23:59:59Z"},
+            "autoRenew": true
+          },
+          "createdAt": {"$date": "2024-01-01T00:00:00Z"},
+          "updatedAt": {"$date": "2024-01-01T00:00:00Z"}
+        },
+        {
+          "_id": {"$oid": "user001"},
+          "username": "testuser",
+          "email": "test@cupid-ai.com",
+          "passwordHash": "$2b$10$rQ8hN5yU6Z3V7wM9xP2Q3u4v5w6x7y8z9a0b1c2d3e4f5g6h7i8j9k0l1m",
+          "role": "user",
+          "isActive": true,
+          "emailVerified": true,
+          "membership": {
+            "level": "free",
+            "startDate": {"$date": "2024-01-01T00:00:00Z"}
+          },
+          "createdAt": {"$date": "2024-01-01T00:00:00Z"},
+          "updatedAt": {"$date": "2024-01-01T00:00:00Z"}
+        },
+        {
+          "_id": {"$oid": "user002"},
+          "username": "情侣测试",
+          "email": "couple@cupid-ai.com",
+          "passwordHash": "$2b$10$rQ8hN5yU6Z3V7wM9xP2Q3u4v5w6x7y8z9a0b1c2d3e4f5g6h7i8j9k0l1m",
+          "role": "user",
+          "isActive": true,
+          "emailVerified": true,
+          "membership": {
+            "level": "premium",
+            "startDate": {"$date": "2024-01-01T00:00:00Z"},
+            "expiryDate": {"$date": "2024-12-31T23:59:59Z"}
+          },
+          "createdAt": {"$date": "2024-01-01T00:00:00Z"},
+          "updatedAt": {"$date": "2024-01-01T00:00:00Z"}
+        }
+      ]
+    },
+    {
+      "name": "emotionposts",
+      "documents": [
+        {
+          "_id": {"$oid": "post001"},
+          "gameType": "emotion-tree-hole",
+          "userId": {"$oid": "user001"},
+          "username": "testuser",
+          "title": "今天和伴侣吵架了",
+          "content": "今天因为一点小事和伴侣发生了争执，心情很糟糕。",
+          "category": "sad",
+          "tags": ["吵架", "情侣", "情绪"],
+          "isAnonymous": false,
+          "likes": [{"$oid": "user002"}],
+          "replies": [
+            {
+              "userId": {"$oid": "user002"},
+              "username": "情侣测试",
+              "content": "别担心，吵架是正常的，重要的是沟通和解决。",
+              "likes": [],
+              "isAnonymous": false,
+              "createdAt": {"$date": "2024-01-02T10:00:00Z"}
+            },
+            {
+              "userId": {"$oid": "admin001"},
+              "username": "admin",
+              "content": "建议冷静下来好好谈谈，理解对方的想法。",
+              "likes": [{"$oid": "user001"}],
+              "isAnonymous": false,
+              "createdAt": {"$date": "2024-01-02T11:00:00Z"}
+            }
+          ],
+          "replyCount": 2,
+          "isFeatured": false,
+          "createdAt": {"$date": "2024-01-01T09:00:00Z"},
+          "updatedAt": {"$date": "2024-01-02T11:00:00Z"}
+        },
+        {
+          "_id": {"$oid": "post002"},
+          "gameType": "emotion-tree-hole",
+          "userId": {"$oid": "user002"},
+          "username": "情侣测试",
+          "title": "恋爱纪念日",
+          "content": "今天是我们恋爱一周年的纪念日，感觉特别幸福！",
+          "category": "happy",
+          "tags": ["纪念日", "幸福", "恋爱"],
+          "isAnonymous": false,
+          "likes": [{"$oid": "user001"}],
+          "replies": [
+            {
+              "userId": {"$oid": "user001"},
+              "username": "testuser",
+              "content": "恭喜恭喜！祝你们永远幸福！",
+              "likes": [],
+              "isAnonymous": false,
+              "createdAt": {"$date": "2024-01-01T15:00:00Z"}
+            }
+          ],
+          "replyCount": 1,
+          "isFeatured": true,
+          "createdAt": {"$date": "2024-01-01T14:00:00Z"},
+          "updatedAt": {"$date": "2024-01-01T15:00:00Z"}
+        },
+        {
+          "_id": {"$oid": "post003"},
+          "gameType": "emotion-diary",
+          "userId": {"$oid": "user001"},
+          "username": "testuser",
+          "title": "第一次约会",
+          "content": "记录我们第一次约会的点点滴滴，真的很美好。",
+          "category": "love",
+          "tags": ["约会", "回忆", "恋爱"],
+          "isAnonymous": false,
+          "likes": [],
+          "replies": [],
+          "replyCount": 0,
+          "isFeatured": false,
+          "createdAt": {"$date": "2024-01-03T08:00:00Z"},
+          "updatedAt": {"$date": "2024-01-03T08:00:00Z"}
+        }
+      ]
+    },
+    {
+      "name": "gameprogresses",
+      "documents": [
+        {
+          "_id": {"$oid": "progress001"},
+          "userId": {"$oid": "user001"},
+          "gameType": "emotion-tree-hole",
+          "progress": 75.5,
+          "currentLevel": 3,
+          "score": 850,
+          "highScore": 850,
+          "playCount": 5,
+          "totalPlayTime": 4200,
+          "unlockedFeatures": ["level1", "level2", "level3"],
+          "saveData": {"currentLevel": 3, "completedLevels": [1, 2]},
+          "lastPlayed": {"$date": "2024-01-03T10:00:00Z"},
+          "createdAt": {"$date": "2024-01-01T00:00:00Z"},
+          "updatedAt": {"$date": "2024-01-03T10:00:00Z"}
+        },
+        {
+          "_id": {"$oid": "progress002"},
+          "userId": {"$oid": "user001"},
+          "gameType": "conversation-challenge",
+          "progress": 45.0,
+          "currentLevel": 2,
+          "score": 320,
+          "highScore": 320,
+          "playCount": 3,
+          "totalPlayTime": 1800,
+          "unlockedFeatures": ["level1"],
+          "saveData": {"currentLevel": 2, "completedLevels": [1]},
+          "lastPlayed": {"$date": "2024-01-02T15:00:00Z"},
+          "createdAt": {"$date": "2024-01-01T00:00:00Z"},
+          "updatedAt": {"$date": "2024-01-02T15:00:00Z"}
+        },
+        {
+          "_id": {"$oid": "progress003"},
+          "userId": {"$oid": "user002"},
+          "gameType": "emotion-tree-hole",
+          "progress": 90.0,
+          "currentLevel": 5,
+          "score": 1200,
+          "highScore": 1200,
+          "playCount": 8,
+          "totalPlayTime": 7200,
+          "unlockedFeatures": ["level1", "level2", "level3", "level4", "level5"],
+          "saveData": {"currentLevel": 5, "completedLevels": [1, 2, 3, 4]},
+          "lastPlayed": {"$date": "2024-01-03T14:00:00Z"},
+          "createdAt": {"$date": "2024-01-01T00:00:00Z"},
+          "updatedAt": {"$date": "2024-01-03T14:00:00Z"}
+        },
+        {
+          "_id": {"$oid": "progress004"},
+          "userId": {"$oid": "user002"},
+          "gameType": "emotion-diary",
+          "progress": 60.0,
+          "currentLevel": 3,
+          "score": 500,
+          "highScore": 500,
+          "playCount": 4,
+          "totalPlayTime": 2400,
+          "unlockedFeatures": ["level1", "level2", "level3"],
+          "saveData": {"currentLevel": 3, "completedLevels": [1, 2]},
+          "lastPlayed": {"$date": "2024-01-02T16:00:00Z"},
+          "createdAt": {"$date": "2024-01-01T00:00:00Z"},
+          "updatedAt": {"$date": "2024-01-02T16:00:00Z"}
+        }
+      ]
+    },
+    {
+      "name": "gamesessions",
+      "documents": [
+        {
+          "_id": {"$oid": "session001"},
+          "userId": {"$oid": "user001"},
+          "gameId": "emotion-tree-hole",
+          "startTime": {"$date": "2024-01-01T10:00:00Z"},
+          "endTime": {"$date": "2024-01-01T10:30:00Z"},
+          "duration": 1800,
+          "score": 150,
+          "completion": 25.0,
+          "data": {"level": 1, "difficulty": "easy"},
+          "createdAt": {"$date": "2024-01-01T10:00:00Z"},
+          "updatedAt": {"$date": "2024-01-01T10:30:00Z"}
+        },
+        {
+          "_id": {"$oid": "session002"},
+          "userId": {"$oid": "user001"},
+          "gameId": "emotion-tree-hole",
+          "startTime": {"$date": "2024-01-02T11:00:00Z"},
+          "endTime": {"$date": "2024-01-02T11:40:00Z"},
+          "duration": 2400,
+          "score": 300,
+          "completion": 50.0,
+          "data": {"level": 2, "difficulty": "medium"},
+          "createdAt": {"$date": "2024-01-02T11:00:00Z"},
+          "updatedAt": {"$date": "2024-01-02T11:40:00Z"}
+        },
+        {
+          "_id": {"$oid": "session003"},
+          "userId": {"$oid": "user002"},
+          "gameId": "conversation-challenge",
+          "startTime": {"$date": "2024-01-01T14:00:00Z"},
+          "endTime": {"$date": "2024-01-01T14:20:00Z"},
+          "duration": 1200,
+          "score": 200,
+          "completion": 40.0,
+          "data": {"level": 1, "difficulty": "easy"},
+          "createdAt": {"$date": "2024-01-01T14:00:00Z"},
+          "updatedAt": {"$date": "2024-01-01T14:20:00Z"}
+        }
+      ]
+    }
+  ]
+}
