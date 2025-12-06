@@ -6,7 +6,7 @@ import {
   Gamepad2, Heart, MessageCircle, Users, Trophy, Star, 
   Search, Filter, Play, Award, Clock, TrendingUp, 
   Share2, Download, ThumbsUp, Users2, Lock, Gift,
-  Dice, Utensils
+  Utensils
 } from 'lucide-react'
 import GlobalNavbar from '@/components/global-navbar'
 import UsageGuard, { UsageStatus } from '@/components/usage-guard'
@@ -205,7 +205,7 @@ export default function GamesPage() {
       id: 13,
       title: '爱情冒险卡牌',
       description: '随机抽取任务卡，完成挑战获得积分增进感情',
-      icon: <Dice className="h-6 w-6" />,
+      icon: <Heart className="h-6 w-6" />,
       color: 'from-purple-400 to-pink-600',
       players: '2人',
       difficulty: '中等',
@@ -233,7 +233,7 @@ export default function GamesPage() {
       id: 13,
       title: '爱情冒险卡牌',
       description: '随机抽取任务卡，完成挑战获得积分增进感情',
-      icon: <Dice className="h-6 w-6" />,
+      icon: <Heart className="h-6 w-6" />,
       color: 'from-purple-400 to-pink-600',
       players: '2人',
       difficulty: '中等',

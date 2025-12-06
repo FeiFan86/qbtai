@@ -192,7 +192,7 @@ ${currentCard.description}
               {/* 页面标题 */}
               <div className="text-center mb-8">
                 <div className="inline-flex items-center px-4 py-2 rounded-full bg-white/80 backdrop-blur-sm border border-purple-200 mb-4">
-                  <Cards className="h-5 w-5 text-purple-500 mr-2" />
+                  <Heart className="h-5 w-5 text-purple-500 mr-2" />
                   <span className="text-sm font-medium text-purple-700">爱情冒险卡牌</span>
                 </div>
                 <h1 className="text-3xl font-bold text-gray-900 mb-2">
@@ -230,7 +230,7 @@ ${currentCard.description}
                   // 抽卡界面
                   <div className="bg-white rounded-xl shadow-lg border border-purple-200 p-8 text-center">
                     <div className="w-32 h-48 mx-auto mb-6 bg-gradient-to-br from-purple-400 to-pink-500 rounded-2xl shadow-lg flex items-center justify-center">
-                      <Cards className="h-12 w-12 text-white" />
+                      <Heart className="h-12 w-12 text-white" />
                     </div>
                     <h3 className="text-xl font-semibold text-gray-900 mb-4">
                       准备抽取任务卡牌
