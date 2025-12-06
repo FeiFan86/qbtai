@@ -104,7 +104,7 @@ export default function EmotionDiaryPage() {
         ? {
             ...diary,
             ...editData,
-            tags: typeof editData.tags === 'string' ? editData.tags.split(',').map(tag => tag.trim()).filter(tag => tag) : diary.tags,
+            tags: editData.tags ? (typeof editData.tags === 'string' ? editData.tags.split(',').map(tag => tag.trim()).filter(tag => tag) : editData.tags) : diary.tags,
             mood: editData.emotion === '低落' ? 'negative' : 
                   editData.emotion === '复杂' ? 'neutral' : 'positive'
           }
