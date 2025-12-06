@@ -5,7 +5,8 @@ import { useRouter } from 'next/navigation'
 import { 
   Gamepad2, Heart, MessageCircle, Users, Trophy, Star, 
   Search, Filter, Play, Award, Clock, TrendingUp, 
-  Share2, Download, ThumbsUp, Users2, Lock, Gift
+  Share2, Download, ThumbsUp, Users2, Lock, Gift,
+  Cards, Utensils
 } from 'lucide-react'
 import GlobalNavbar from '@/components/global-navbar'
 import UsageGuard, { UsageStatus } from '@/components/usage-guard'
@@ -199,6 +200,62 @@ export default function GamesPage() {
       popularity: 88,
       rating: 4.7,
       features: ['定时开启', '多人协作', '回忆封存']
+    },
+    {
+      id: 13,
+      title: '爱情冒险卡牌',
+      description: '随机抽取任务卡，完成挑战获得积分增进感情',
+      icon: <Cards className="h-6 w-6" />,
+      color: 'from-purple-400 to-pink-600',
+      players: '2人',
+      difficulty: '中等',
+      category: 'fun',
+      duration: '15-45分钟',
+      popularity: 91,
+      rating: 4.8,
+      features: ['随机任务', '积分系统', '分享挑战']
+    },
+    {
+      id: 14,
+      title: '今天吃什么',
+      description: '解决情侣美食选择困难，智能推荐适合的餐厅',
+      icon: <Utensils className="h-6 w-6" />,
+      color: 'from-orange-400 to-red-600',
+      players: '2人',
+      difficulty: '简单',
+      category: 'fun',
+      duration: '10-30分钟',
+      popularity: 93,
+      rating: 4.9,
+      features: ['智能推荐', '筛选条件', '美食分享']
+    },
+    {
+      id: 13,
+      title: '爱情冒险卡牌',
+      description: '随机抽取任务卡，完成挑战获得积分增进感情',
+      icon: <Cards className="h-6 w-6" />,
+      color: 'from-purple-400 to-pink-600',
+      players: '2人',
+      difficulty: '中等',
+      category: 'fun',
+      duration: '15-45分钟',
+      popularity: 91,
+      rating: 4.8,
+      features: ['随机任务', '积分系统', '分享挑战']
+    },
+    {
+      id: 14,
+      title: '今天吃什么',
+      description: '解决情侣美食选择困难，智能推荐适合的餐厅',
+      icon: <Utensils className="h-6 w-6" />,
+      color: 'from-orange-400 to-red-600',
+      players: '2人',
+      difficulty: '简单',
+      category: 'fun',
+      duration: '10-30分钟',
+      popularity: 93,
+      rating: 4.9,
+      features: ['智能推荐', '筛选条件', '美食分享']
     }
   ]
 
@@ -248,7 +305,9 @@ export default function GamesPage() {
       9: '/games/personality-analysis',
       10: '/games/conversation-challenge',
       11: '/games/secret-love-letter',
-      12: '/games/time-capsule'
+      12: '/games/time-capsule',
+      13: '/games/love-adventure-cards',
+      14: '/games/what-to-eat-today'
     }
     
     const route = gameRoutes[gameId as keyof typeof gameRoutes]
