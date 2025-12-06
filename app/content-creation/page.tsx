@@ -407,5 +407,7 @@ export default function ContentCreationPage() {
         </div>
       </footer>
     </div>
+      )}
+    </UsageGuard>
   )
 }
