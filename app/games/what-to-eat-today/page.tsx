@@ -11,7 +11,7 @@ import UsageGuard, { UsageStatus } from '@/components/usage-guard'
 
 type CuisineType = 'chinese' | 'western' | 'japanese' | 'korean' | 'thai' | 'fastfood'
 type BudgetType = 'cheap' | 'medium' | 'expensive'
-time MealType = 'breakfast' | 'lunch' | 'dinner' | 'snack'
+type MealType = 'breakfast' | 'lunch' | 'dinner' | 'snack'
 
 interface FoodOption {
   id: number
