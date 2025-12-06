@@ -3,8 +3,8 @@
 import React, { useState } from 'react'
 import { useRouter } from 'next/navigation'
 import { 
-  Cards, Heart, Sparkles, Trophy, Share2, 
-  RotateCcw, Users, Clock, Star, Zap 
+  Heart, Sparkles, Trophy, Share2,
+  RotateCcw, Users, Clock, Star, Zap
 } from 'lucide-react'
 import GlobalNavbar from '@/components/global-navbar'
 import UsageGuard, { UsageStatus } from '@/components/usage-guard'
