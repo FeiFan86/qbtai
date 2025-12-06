@@ -91,7 +91,7 @@ export default function EmotionDiaryPage() {
       title: diary.title,
       emotion: diary.emotion,
       content: diary.content,
-      tags: diary.tags.join(','),
+      tags: diary.tags,
       rating: diary.rating
     })
   }
