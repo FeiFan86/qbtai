@@ -115,6 +115,62 @@ export default function GamesPage() {
       popularity: 87,
       rating: 4.7,
       features: ['深度话题', '棋盘游戏', '情感探索']
+    },
+    {
+      id: 7,
+      title: '情感温度计',
+      description: '测量当前情感状态，了解彼此情绪变化',
+      icon: <TrendingUp className="h-6 w-6" />,
+      color: 'from-red-400 to-orange-600',
+      players: '2人',
+      difficulty: '简单',
+      category: 'emotional',
+      duration: '10-20分钟',
+      popularity: 82,
+      rating: 4.4,
+      features: ['情绪测量', '状态跟踪', '情感分析']
+    },
+    {
+      id: 8,
+      title: '未来规划师',
+      description: '共同规划未来生活，建立共同目标',
+      icon: <Award className="h-6 w-6" />,
+      color: 'from-teal-400 to-green-600',
+      players: '2人',
+      difficulty: '中等',
+      category: 'communication',
+      duration: '30-60分钟',
+      popularity: 89,
+      rating: 4.6,
+      features: ['未来规划', '目标设定', '共同愿景']
+    },
+    {
+      id: 9,
+      title: '情感拼图',
+      description: '拼凑情感碎片，发现完整的情感图景',
+      icon: <ThumbsUp className="h-6 w-6" />,
+      color: 'from-indigo-400 to-purple-600',
+      players: '2人',
+      difficulty: '简单',
+      category: 'fun',
+      duration: '15-30分钟',
+      popularity: 84,
+      rating: 4.5,
+      features: ['拼图游戏', '情感发现', '趣味互动']
+    },
+    {
+      id: 10,
+      title: '双人舞会',
+      description: '通过舞蹈表达情感，增进身体协调与默契',
+      icon: <Users2 className="h-6 w-6" />,
+      color: 'from-yellow-400 to-amber-600',
+      players: '2人',
+      difficulty: '中等',
+      category: 'fun',
+      duration: '25-45分钟',
+      popularity: 86,
+      rating: 4.7,
+      features: ['舞蹈互动', '身体协调', '情感表达']
     }
   ]
 
@@ -158,7 +214,11 @@ export default function GamesPage() {
       3: '/games/tacit-challenge',
       4: '/games/memory-puzzle',
       5: '/games/collaborative-doodle',
-      6: '/games/relationship-chess'
+      6: '/games/relationship-chess',
+      7: '/games/emotion-thermometer',
+      8: '/games/future-planner',
+      9: '/games/emotion-puzzle',
+      10: '/games/dance-party'
     }
     
     const route = gameRoutes[gameId as keyof typeof gameRoutes]
@@ -417,16 +477,7 @@ ${game.description}
                 </div>
               )}
 
-              {/* 推荐和导出 */}
-              <div className="max-w-4xl mx-auto flex justify-center space-x-4">
-                <button
-                  onClick={generateGamesReport}
-                  className="flex items-center space-x-2 bg-green-500 text-white px-6 py-3 rounded-lg font-medium hover:bg-green-600 transition-colors"
-                >
-                  <Download className="h-4 w-4" />
-                  <span>导出游戏报告</span>
-                </button>
-              </div>
+
             </div>
           </main>
 
