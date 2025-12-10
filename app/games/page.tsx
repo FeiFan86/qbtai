@@ -9,8 +9,6 @@ import {
   Utensils
 } from 'lucide-react'
 import GlobalNavbar from '@/components/global-navbar'
-import UsageGuard, { UsageStatus } from '@/components/usage-guard'
-
 interface Game {
   id: number;
   title: string;
@@ -261,9 +259,7 @@ export default function GamesPage() {
     return matchesSearch && matchesCategory && matchesDifficulty
   })
 
-  const startGame = async (gameId: number, onUse: () => Promise<void>) => {
-    await onUse()
-    
+  const startGame = async (gameId: number) => {
     // 根据游戏ID启动对应的游戏
     const gameRoutes = {
       1: '/games/interactive-games/emotion-tree-hole',
@@ -361,35 +357,28 @@ export default function GamesPage() {
   }
 
   return (
-    <UsageGuard feature="games">
-      {({ canUse, remainingUses, onUse, isLoading, usageText }) => (
-        <div className="min-h-screen bg-gradient-to-br from-rose-50 via-white to-pink-50">
-          <GlobalNavbar />
+    <div className="min-h-screen bg-gradient-to-br from-rose-50 via-white to-pink-50">
+      <GlobalNavbar />
 
-          <main className="pt-16">
-            <div className="container py-12">
-              {/* 页面标题 */}
-              <div className="text-center mb-12 relative">
-                <div className="inline-flex items-center px-4 py-2 rounded-full bg-white/80 backdrop-blur-sm border border-rose-200 mb-4 shadow-sm">
-                  <Gamepad2 className="h-5 w-5 text-rose-500 mr-2" />
-                  <span className="text-sm font-medium text-rose-700">互动游戏</span>
-                </div>
-                <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold text-gray-900 mb-4 bg-gradient-to-r from-rose-600 via-pink-600 to-purple-600 bg-clip-text text-transparent">
-                  情感互动游戏
-                </h1>
-                <p className="text-lg md:text-xl text-gray-600 max-w-3xl mx-auto leading-relaxed">
-                  🎯 通过精心设计的互动游戏，增进感情深度，创造美好回忆
-                </p>
-                
-                {/* 装饰元素 */}
-                <div className="absolute -top-8 -left-8 w-16 h-16 bg-gradient-to-r from-rose-200 to-pink-200 rounded-full blur-xl opacity-60"></div>
-                <div className="absolute -bottom-8 -right-8 w-24 h-24 bg-gradient-to-r from-purple-200 to-blue-200 rounded-full blur-xl opacity-60"></div>
-              </div>
-
-              {/* 使用状态提示 */}
-              <div className="max-w-4xl mx-auto mb-6">
-                <UsageStatus feature="games" className="justify-center" />
-              </div>
+      <main className="pt-16">
+        <div className="container py-12">
+          {/* 页面标题 */}
+          <div className="text-center mb-12 relative">
+            <div className="inline-flex items-center px-4 py-2 rounded-full bg-white/80 backdrop-blur-sm border border-rose-200 mb-4 shadow-sm">
+              <Gamepad2 className="h-5 w-5 text-rose-500 mr-2" />
+              <span className="text-sm font-medium text-rose-700">互动游戏</span>
+            </div>
+            <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold text-gray-900 mb-4 bg-gradient-to-r from-rose-600 via-pink-600 to-purple-600 bg-clip-text text-transparent">
+              情感互动游戏
+            </h1>
+            <p className="text-lg md:text-xl text-gray-600 max-w-3xl mx-auto leading-relaxed">
+              🎯 通过精心设计的互动游戏，增进感情深度，创造美好回忆
+            </p>
+            
+            {/* 装饰元素 */}
+            <div className="absolute -top-8 -left-8 w-16 h-16 bg-gradient-to-r from-rose-200 to-pink-200 rounded-full blur-xl opacity-60"></div>
+            <div className="absolute -bottom-8 -right-8 w-24 h-24 bg-gradient-to-r from-purple-200 to-blue-200 rounded-full blur-xl opacity-60"></div>
+          </div>
 
               {/* 搜索和筛选 */}
               <div className="max-w-4xl mx-auto mb-8">
@@ -530,21 +519,14 @@ export default function GamesPage() {
                     
                     {/* 开始游戏按钮 */}
                     <button 
-                      onClick={() => startGame(game.id, onUse)}
-                      disabled={!canUse}
-                      className="w-full bg-gradient-to-r from-rose-500 to-pink-500 text-white py-3 rounded-lg font-medium hover:from-rose-600 hover:to-pink-600 transition-all group-hover:shadow-lg disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center relative overflow-hidden group/btn"
+                      onClick={() => startGame(game.id)}
+                      className="w-full bg-gradient-to-r from-rose-500 to-pink-500 text-white py-3 rounded-lg font-medium hover:from-rose-600 hover:to-pink-600 transition-all group-hover:shadow-lg flex items-center justify-center relative overflow-hidden group/btn"
                     >
                       {/* 按钮特效 */}
                       <div className="absolute inset-0 bg-gradient-to-r from-white/20 to-transparent opacity-0 group-hover/btn:opacity-100 transition-opacity duration-300"></div>
                       <Play className="h-4 w-4 mr-2 relative z-10" />
-                      <span className="relative z-10">{isLoading ? '加载中...' : '开始游戏'}</span>
+                      <span className="relative z-10">开始游戏</span>
                     </button>
-                    
-                    {!canUse && (
-                      <p className="text-sm text-amber-600 mt-2 text-center relative z-10">
-                        使用次数已用完，请登录或等待重置
-                      </p>
-                    )}
                   </div>
                 ))}
               </div>
@@ -557,27 +539,26 @@ export default function GamesPage() {
                 </div>
               )}
 
-            </div>
-          </main>
-
-          {/* 页脚 */}
-          <footer className="bg-gray-50 border-t border-gray-200">
-            <div className="container py-8">
-              <div className="text-center">
-                <div className="flex items-center justify-center space-x-2 mb-4">
-                  <div className="w-6 h-6 bg-gradient-to-r from-rose-500 to-pink-500 rounded-full flex items-center justify-center">
-                    <Gamepad2 className="h-3 w-3 text-white" />
-                  </div>
-                  <span className="text-gray-900 font-semibold">丘比特AI情感助手</span>
-                </div>
-                <p className="text-gray-600 text-sm">
-                  © 2024 专为情侣设计的情感助手平台. 让爱更美好.
-                </p>
-              </div>
-            </div>
-          </footer>
         </div>
-      )}
+      </main>
+
+      {/* 页脚 */}
+      <footer className="bg-gray-50 border-t border-gray-200">
+        <div className="container py-8">
+          <div className="text-center">
+            <div className="flex items-center justify-center space-x-2 mb-4">
+              <div className="w-6 h-6 bg-gradient-to-r from-rose-500 to-pink-500 rounded-full flex items-center justify-center">
+                <Gamepad2 className="h-3 w-3 text-white" />
+              </div>
+              <span className="text-gray-900 font-semibold">丘比特AI情感助手</span>
+            </div>
+            <p className="text-gray-600 text-sm">
+              © 2024 专为情侣设计的情感助手平台. 让爱更美好.
+            </p>
+          </div>
+        </div>
+      </footer>
+    </div>
     </UsageGuard>
   )
 }
