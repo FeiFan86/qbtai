@@ -182,7 +182,7 @@ export default function ProfilePage() {
                     <div className="flex items-center justify-between mb-2">
                       <Award className="h-5 w-5 text-purple-500" />
                       <span className="text-2xl font-bold text-gray-900">
-                        {user?.stats?.achievements || 0}
+                        {user?.stats?.achievements?.length || 0}
                       </span>
                     </div>
                     <div className="text-sm text-gray-600">完成成就</div>
