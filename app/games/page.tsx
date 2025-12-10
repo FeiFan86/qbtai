@@ -381,164 +381,165 @@ export default function GamesPage() {
             <div className="absolute -bottom-8 -right-8 w-24 h-24 bg-gradient-to-r from-purple-200 to-blue-200 rounded-full blur-xl opacity-60"></div>
           </div>
 
-              {/* 搜索和筛选 */}
-              <div className="max-w-4xl mx-auto mb-8">
-                <div className="bg-white/80 backdrop-blur-md rounded-xl shadow-lg border border-rose-100 p-6 relative overflow-hidden">
-                  <div className="absolute inset-0 bg-gradient-to-r from-rose-50 to-pink-50 opacity-30"></div>
-                  <div className="relative z-10">
-                    <div className="grid md:grid-cols-4 gap-4">
-                      <div className="md:col-span-2 relative">
-                        <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-rose-400" />
-                        <input
-                          type="text"
-                          value={searchTerm}
-                          onChange={(e) => setSearchTerm(e.target.value)}
-                          placeholder="搜索游戏名称、描述或功能..."
-                          className="w-full pl-10 pr-4 py-3 border border-rose-200 rounded-lg bg-white/80 focus:outline-none focus:ring-2 focus:ring-rose-500 focus:border-rose-300 transition-all"
-                        />
-                      </div>
-                      <div className="flex items-center space-x-2">
-                        <Filter className="h-4 w-4 text-rose-500" />
-                        <select
-                          value={selectedCategory}
-                          onChange={(e) => setSelectedCategory(e.target.value)}
-                          className="w-full border border-rose-200 rounded-lg px-3 py-3 bg-white/80 focus:outline-none focus:ring-2 focus:ring-rose-500 focus:border-rose-300 transition-all"
-                        >
-                          {categories.map(cat => (
-                            <option key={cat.value} value={cat.value}>{cat.label}</option>
-                          ))}
-                        </select>
-                      </div>
-                      <div className="flex items-center space-x-2">
-                        <Filter className="h-4 w-4 text-rose-500" />
-                        <select
-                          value={selectedDifficulty}
-                          onChange={(e) => setSelectedDifficulty(e.target.value)}
-                          className="w-full border border-rose-200 rounded-lg px-3 py-3 bg-white/80 focus:outline-none focus:ring-2 focus:ring-rose-500 focus:border-rose-300 transition-all"
-                        >
-                          {difficulties.map(diff => (
-                            <option key={diff.value} value={diff.value}>{diff.label}</option>
-                          ))}
-                        </select>
-                      </div>
-                    </div>
+          {/* 搜索和筛选 */}
+          <div className="max-w-4xl mx-auto mb-8">
+            <div className="bg-white/80 backdrop-blur-md rounded-xl shadow-lg border border-rose-100 p-6 relative overflow-hidden">
+              <div className="absolute inset-0 bg-gradient-to-r from-rose-50 to-pink-50 opacity-30"></div>
+              <div className="relative z-10">
+                <div className="grid md:grid-cols-4 gap-4">
+                  <div className="md:col-span-2 relative">
+                    <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-rose-400" />
+                    <input
+                      type="text"
+                      value={searchTerm}
+                      onChange={(e) => setSearchTerm(e.target.value)}
+                      placeholder="搜索游戏名称、描述或功能..."
+                      className="w-full pl-10 pr-4 py-3 border border-rose-200 rounded-lg bg-white/80 focus:outline-none focus:ring-2 focus:ring-rose-500 focus:border-rose-300 transition-all"
+                    />
                   </div>
-                </div>
-              </div>
-
-              {/* 游戏统计概览 */}
-              <div className="max-w-4xl mx-auto grid md:grid-cols-4 gap-6 mb-8">
-                <div className="bg-white rounded-xl shadow-sm border border-gray-200 p-6 text-center">
-                  <div className="text-2xl font-bold text-rose-600 mb-2">{games.length}</div>
-                  <div className="text-sm text-gray-500">游戏总数</div>
-                </div>
-                <div className="bg-white rounded-xl shadow-sm border border-gray-200 p-6 text-center">
-                  <div className="text-2xl font-bold text-purple-600 mb-2">
-                    {(games.reduce((sum, g) => sum + g.rating, 0) / games.length).toFixed(1)}/5
-                  </div>
-                  <div className="text-sm text-gray-500">平均评分</div>
-                </div>
-                <div className="bg-white rounded-xl shadow-sm border border-gray-200 p-6 text-center">
-                  <div className="text-2xl font-bold text-blue-600 mb-2">
-                    {Math.max(...games.map(g => g.popularity))}%
-                  </div>
-                  <div className="text-sm text-gray-500">最高热度</div>
-                </div>
-                <div className="bg-white rounded-xl shadow-sm border border-gray-200 p-6 text-center">
-                  <div className="text-2xl font-bold text-green-600 mb-2">
-                    {games.filter(g => g.difficulty === '简单').length}
-                  </div>
-                  <div className="text-sm text-gray-500">简单游戏</div>
-                </div>
-              </div>
-
-              {/* 游戏列表 */}
-              <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6 mb-12">
-                {filteredGames.map((game) => (
-                  <div
-                    key={game.id}
-                    className="bg-white/80 backdrop-blur-sm rounded-xl shadow-lg border border-rose-100 p-6 hover:shadow-2xl transition-all duration-500 hover:-translate-y-2 group relative overflow-hidden"
-                  >
-                    {/* 渐变背景 */}
-                    <div className="absolute inset-0 bg-gradient-to-br from-rose-50 to-pink-50 opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
-                    <div className="relative z-10">
-                    <div className="flex items-start justify-between mb-4">
-                      <div className={'inline-flex p-3 rounded-lg bg-gradient-to-r ' + game.color + ' text-white'}>
-                        {game.icon}
-                      </div>
-                      <button
-                        onClick={() => shareGame(game)}
-                        className="p-2 text-gray-400 hover:text-blue-500 transition-colors"
-                        title="分享游戏"
-                      >
-                        <Share2 className="h-4 w-4" />
-                      </button>
-                    </div>
-                    
-                    <h3 className="text-lg font-semibold text-gray-900 mb-2">
-                      {game.title}
-                    </h3>
-                    <p className="text-gray-600 text-sm mb-4">
-                      {game.description}
-                    </p>
-                    
-                    {/* 游戏信息 */}
-                    <div className="space-y-2 mb-4">
-                      <div className="flex items-center justify-between text-xs text-gray-500">
-                        <span className="flex items-center">
-                          <Users2 className="h-3 w-3 mr-1" />
-                          {game.players}
-                        </span>
-                        <span className="flex items-center">
-                          <Clock className="h-3 w-3 mr-1" />
-                          {game.duration}
-                        </span>
-                      </div>
-                      <div className="flex items-center justify-between text-xs">
-                        <span className={'px-2 py-1 rounded-full ' + (
-                          game.difficulty === '简单' ? 'bg-green-100 text-green-700' :
-                          game.difficulty === '中等' ? 'bg-yellow-100 text-yellow-700' :
-                          'bg-red-100 text-red-700'
-                        )}>
-                          {game.difficulty}
-                        </span>
-                        <span className="flex items-center text-gray-600">
-                          <ThumbsUp className="h-3 w-3 mr-1" />
-                          {game.rating}/5
-                        </span>
-                      </div>
-                    </div>
-                    
-                    {/* 特色功能 */}
-                    <div className="flex flex-wrap gap-1 mb-4">
-                      {game.features.map((feature, index) => (
-                        <span key={index} className="px-2 py-1 bg-rose-50 text-rose-700 rounded-full text-xs">
-                          {feature}
-                        </span>
-                      ))}
-                    </div>
-                    
-                    {/* 开始游戏按钮 */}
-                    <button 
-                      onClick={() => startGame(game.id)}
-                      className="w-full bg-gradient-to-r from-rose-500 to-pink-500 text-white py-3 rounded-lg font-medium hover:from-rose-600 hover:to-pink-600 transition-all group-hover:shadow-lg flex items-center justify-center relative overflow-hidden group/btn"
+                  <div className="flex items-center space-x-2">
+                    <Filter className="h-4 w-4 text-rose-500" />
+                    <select
+                      value={selectedCategory}
+                      onChange={(e) => setSelectedCategory(e.target.value)}
+                      className="w-full border border-rose-200 rounded-lg px-3 py-3 bg-white/80 focus:outline-none focus:ring-2 focus:ring-rose-500 focus:border-rose-300 transition-all"
                     >
-                      {/* 按钮特效 */}
-                      <div className="absolute inset-0 bg-gradient-to-r from-white/20 to-transparent opacity-0 group-hover/btn:opacity-100 transition-opacity duration-300"></div>
-                      <Play className="h-4 w-4 mr-2 relative z-10" />
-                      <span className="relative z-10">开始游戏</span>
+                      {categories.map(cat => (
+                        <option key={cat.value} value={cat.value}>{cat.label}</option>
+                      ))}
+                    </select>
+                  </div>
+                  <div className="flex items-center space-x-2">
+                    <Filter className="h-4 w-4 text-rose-500" />
+                    <select
+                      value={selectedDifficulty}
+                      onChange={(e) => setSelectedDifficulty(e.target.value)}
+                      className="w-full border border-rose-200 rounded-lg px-3 py-3 bg-white/80 focus:outline-none focus:ring-2 focus:ring-rose-500 focus:border-rose-300 transition-all"
+                    >
+                      {difficulties.map(diff => (
+                        <option key={diff.value} value={diff.value}>{diff.label}</option>
+                      ))}
+                    </select>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          {/* 游戏统计概览 */}
+          <div className="max-w-4xl mx-auto grid md:grid-cols-4 gap-6 mb-8">
+            <div className="bg-white rounded-xl shadow-sm border border-gray-200 p-6 text-center">
+              <div className="text-2xl font-bold text-rose-600 mb-2">{games.length}</div>
+              <div className="text-sm text-gray-500">游戏总数</div>
+            </div>
+            <div className="bg-white rounded-xl shadow-sm border border-gray-200 p-6 text-center">
+              <div className="text-2xl font-bold text-purple-600 mb-2">
+                {(games.reduce((sum, g) => sum + g.rating, 0) / games.length).toFixed(1)}/5
+              </div>
+              <div className="text-sm text-gray-500">平均评分</div>
+            </div>
+            <div className="bg-white rounded-xl shadow-sm border border-gray-200 p-6 text-center">
+              <div className="text-2xl font-bold text-blue-600 mb-2">
+                {Math.max(...games.map(g => g.popularity))}%
+              </div>
+              <div className="text-sm text-gray-500">最高热度</div>
+            </div>
+            <div className="bg-white rounded-xl shadow-sm border border-gray-200 p-6 text-center">
+              <div className="text-2xl font-bold text-green-600 mb-2">
+                {games.filter(g => g.difficulty === '简单').length}
+              </div>
+              <div className="text-sm text-gray-500">简单游戏</div>
+            </div>
+          </div>
+
+          {/* 游戏列表 */}
+          <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6 mb-12">
+            {filteredGames.map((game) => (
+              <div
+                key={game.id}
+                className="bg-white/80 backdrop-blur-sm rounded-xl shadow-lg border border-rose-100 p-6 hover:shadow-2xl transition-all duration-500 hover:-translate-y-2 group relative overflow-hidden"
+              >
+                {/* 渐变背景 */}
+                <div className="absolute inset-0 bg-gradient-to-br from-rose-50 to-pink-50 opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
+                <div className="relative z-10">
+                  <div className="flex items-start justify-between mb-4">
+                    <div className={'inline-flex p-3 rounded-lg bg-gradient-to-r ' + game.color + ' text-white'}>
+                      {game.icon}
+                    </div>
+                    <button
+                      onClick={() => shareGame(game)}
+                      className="p-2 text-gray-400 hover:text-blue-500 transition-colors"
+                      title="分享游戏"
+                    >
+                      <Share2 className="h-4 w-4" />
                     </button>
                   </div>
-                ))}
-              </div>
-
-              {filteredGames.length === 0 && (
-                <div className="text-center py-12 text-gray-500">
-                  <Search className="h-12 w-12 mx-auto mb-4 text-gray-300" />
-                  <p>没有找到匹配的游戏</p>
-                  <p className="text-sm">尝试调整搜索条件</p>
+                  
+                  <h3 className="text-lg font-semibold text-gray-900 mb-2">
+                    {game.title}
+                  </h3>
+                  <p className="text-gray-600 text-sm mb-4">
+                    {game.description}
+                  </p>
+                  
+                  {/* 游戏信息 */}
+                  <div className="space-y-2 mb-4">
+                    <div className="flex items-center justify-between text-xs text-gray-500">
+                      <span className="flex items-center">
+                        <Users2 className="h-3 w-3 mr-1" />
+                        {game.players}
+                      </span>
+                      <span className="flex items-center">
+                        <Clock className="h-3 w-3 mr-1" />
+                        {game.duration}
+                      </span>
+                    </div>
+                    <div className="flex items-center justify-between text-xs">
+                      <span className={'px-2 py-1 rounded-full ' + (
+                        game.difficulty === '简单' ? 'bg-green-100 text-green-700' :
+                        game.difficulty === '中等' ? 'bg-yellow-100 text-yellow-700' :
+                        'bg-red-100 text-red-700'
+                      )}>
+                        {game.difficulty}
+                      </span>
+                      <span className="flex items-center text-gray-600">
+                        <ThumbsUp className="h-3 w-3 mr-1" />
+                        {game.rating}/5
+                      </span>
+                    </div>
+                  </div>
+                  
+                  {/* 特色功能 */}
+                  <div className="flex flex-wrap gap-1 mb-4">
+                    {game.features.map((feature, index) => (
+                      <span key={index} className="px-2 py-1 bg-rose-50 text-rose-700 rounded-full text-xs">
+                        {feature}
+                      </span>
+                    ))}
+                  </div>
+                  
+                  {/* 开始游戏按钮 */}
+                  <button 
+                    onClick={() => startGame(game.id)}
+                    className="w-full bg-gradient-to-r from-rose-500 to-pink-500 text-white py-3 rounded-lg font-medium hover:from-rose-600 hover:to-pink-600 transition-all group-hover:shadow-lg flex items-center justify-center relative overflow-hidden group/btn"
+                  >
+                    {/* 按钮特效 */}
+                    <div className="absolute inset-0 bg-gradient-to-r from-white/20 to-transparent opacity-0 group-hover/btn:opacity-100 transition-opacity duration-300"></div>
+                    <Play className="h-4 w-4 mr-2 relative z-10" />
+                    <span className="relative z-10">开始游戏</span>
+                  </button>
                 </div>
-              )}
+              </div>
+            ))}
+          </div>
+
+          {filteredGames.length === 0 && (
+            <div className="text-center py-12 text-gray-500">
+              <Search className="h-12 w-12 mx-auto mb-4 text-gray-300" />
+              <p>没有找到匹配的游戏</p>
+              <p className="text-sm">尝试调整搜索条件</p>
+            </div>
+          )}
 
         </div>
       </main>
