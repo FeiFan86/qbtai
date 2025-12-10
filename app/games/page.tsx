@@ -9,6 +9,7 @@ import {
   Utensils
 } from 'lucide-react'
 import GlobalNavbar from '@/components/global-navbar'
+
 interface Game {
   id: number;
   title: string;
@@ -559,6 +560,5 @@ export default function GamesPage() {
         </div>
       </footer>
     </div>
-    </UsageGuard>
   )
 }
