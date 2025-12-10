@@ -323,11 +323,14 @@ ${game.description}
 - 最高评分: ${games.sort((a, b) => b.rating - a.rating)[0].title}
 
 ## 推荐游戏
-${games.map(game => `
+${games.map(game => {
+  const categoryText = game.category === 'communication' ? '沟通交流' : 
+                       game.category === 'emotional' ? '情感表达' : 
+                       game.category === 'fun' ? '趣味游戏' : '挑战任务';
+  
+  return `
 ### ${game.title}
-**类型**: ${game.category === 'communication' ? '沟通交流' : 
-                (game.category === 'emotional' ? '情感表达' : 
-                (game.category === 'fun' ? '趣味游戏' : '挑战任务'))}
+**类型**: ${categoryText}
 **难度**: ${game.difficulty} | **时长**: ${game.duration}
 **评分**: ${game.rating}/5 | **热度**: ${game.popularity}%
 
@@ -336,7 +339,8 @@ ${game.description}
 特色功能: ${game.features.join(', ')}
 
 ---
-`).join('')}
+`;
+}).join('')}
 
 分析时间: ${new Date().toLocaleString()}
 工具: 丘比特AI情感游戏
