@@ -83,6 +83,8 @@ export interface UserStats {
   totalGames: number;
   totalScore: number;
   totalPlayTime: number;
+  consecutiveDays: number;
+  averageRating: number;
   achievements: {
     id: string;
     unlockedAt: Date;
