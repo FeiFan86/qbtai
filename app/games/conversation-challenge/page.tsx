@@ -20,6 +20,7 @@ import {
   Brain
 } from 'lucide-react'
 import Link from 'next/link'
+import UsageGuard, { UsageStatus } from '@/components/usage-guard'
 
 // 模拟挑战数据
 const challenges = [

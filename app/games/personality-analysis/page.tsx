@@ -20,6 +20,7 @@ import {
   CheckCircle
 } from 'lucide-react'
 import Link from 'next/link'
+import UsageGuard, { UsageStatus } from '@/components/usage-guard'
 
 // 测试题目数据
 const testQuestions = [
@@ -307,10 +308,96 @@ export default function PersonalityAnalysisPage() {
 
   if (!testStarted) {
     return (
-      <div className="min-h-screen bg-gradient-to-br from-indigo-50 via-pink-50 to-purple-50">
-        <GlobalNavbar />
-        
-        <main className="container mx-auto px-4 py-8">
+      <UsageGuard feature="games">
+        {({ canUse, remainingUses, onUse, isLoading, usageText }) => (
+          <div className="min-h-screen bg-gradient-to-br from-indigo-50 via-pink-50 to-purple-50">
+            <GlobalNavbar />
+            
+            <main className="container mx-auto px-4 py-8">
+              <div className="mx-auto max-w-4xl">
+                <div className="mb-6">
+                  <Link href="/games">
+                    <Button variant="outline" className="mb-4">
+                      <ArrowLeft className="h-4 w-4 mr-2" />
+                      返回游戏中心
+                    </Button>
+                  </Link>
+                </div>
+                
+                {/* 使用状态提示 */}
+                <div className="mb-6">
+                  <UsageStatus feature="games" />
+                </div>
+                
+                <Card className="text-center py-12">
+                  <CardHeader>
+                    <div className="flex justify-center mb-4">
+                      <div className="p-4 rounded-full bg-purple-100">
+                        <Brain className="h-12 w-12 text-purple-500" />
+                      </div>
+                    </div>
+                    <CardTitle className="text-3xl font-bold mb-4">
+                      情感性格分析
+                    </CardTitle>
+                    <CardDescription className="text-lg max-w-2xl mx-auto">
+                      通过一系列精心设计的问题，探索你的情感气质类型和社交风格
+                    </CardDescription>
+                  </CardHeader>
+                  
+                  <CardContent className="space-y-8">
+                    <div className="grid grid-cols-1 md:grid-cols-3 gap-6 max-w-3xl mx-auto">
+                      <div className="text-center">
+                        <div className="text-3xl mb-2">💜</div>
+                        <h3 className="font-semibold mb-1">情感气质分析</h3>
+                        <p className="text-sm text-gray-600">了解你处理情感的方式</p>
+                      </div>
+                      <div className="text-center">
+                        <div className="text-3xl mb-2">💙</div>
+                        <h3 className="font-semibold mb-1">社交能量画像</h3>
+                        <p className="text-sm text-gray-600">识别你的社交能量类型</p>
+                      </div>
+                      <div className="text-center">
+                        <div className="text-3xl mb-2">💚</div>
+                        <h3 className="font-semibold mb-1">情感表达偏好</h3>
+                        <p className="text-sm text-gray-600">发现你表达情感的特点</p>
+                      </div>
+                    </div>
+                    
+                    <div className="bg-purple-50 p-6 rounded-lg max-w-lg mx-auto">
+                      <h4 className="font-semibold mb-2">测试说明</h4>
+                      <ul className="text-left space-y-1 text-sm text-gray-700">
+                        <li>• 共有8道问题，测试约需3-5分钟</li>
+                        <li>• 根据真实感受选择最符合的选项</li>
+                        <li>• 没有对错之分，选择最自然的反应</li>
+                        <li>• 结果基于情商理论和心理学研究</li>
+                      </ul>
+                    </div>
+                    
+                    <Button 
+                      onClick={handleStartTest}
+                      disabled={!canUse}
+                      size="lg" 
+                      className="px-8"
+                    >
+                      {isLoading ? '加载中...' : '开始测试'}
+                    </Button>
+                    
+                    {!canUse && (
+                      <p className="text-amber-600">
+                        使用次数已用完，请登录或等待重置
+                      </p>
+                    )}
+                  </CardContent>
+                </Card>
+              </div>
+            </main>
+            
+            <Footer />
+          </div>
+        )}
+      </UsageGuard>
+    )
+  }
           <div className="mx-auto max-w-4xl">
             <div className="mb-6">
               <Link href="/games">

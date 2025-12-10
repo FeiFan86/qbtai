@@ -228,34 +228,6 @@ export default function GamesPage() {
       popularity: 93,
       rating: 4.9,
       features: ['智能推荐', '筛选条件', '美食分享']
-    },
-    {
-      id: 13,
-      title: '爱情冒险卡牌',
-      description: '随机抽取任务卡，完成挑战获得积分增进感情',
-      icon: <Heart className="h-6 w-6" />,
-      color: 'from-purple-400 to-pink-600',
-      players: '2人',
-      difficulty: '中等',
-      category: 'fun',
-      duration: '15-45分钟',
-      popularity: 91,
-      rating: 4.8,
-      features: ['随机任务', '积分系统', '分享挑战']
-    },
-    {
-      id: 14,
-      title: '今天吃什么',
-      description: '解决情侣美食选择困难，智能推荐适合的餐厅',
-      icon: <Utensils className="h-6 w-6" />,
-      color: 'from-orange-400 to-red-600',
-      players: '2人',
-      difficulty: '简单',
-      category: 'fun',
-      duration: '10-30分钟',
-      popularity: 93,
-      rating: 4.9,
-      features: ['智能推荐', '筛选条件', '美食分享']
     }
   ]
 
