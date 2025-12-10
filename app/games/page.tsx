@@ -539,7 +539,6 @@ ${game.description}
                       </p>
                     )}
                   </div>
-                ))}
                 )}
               </div>
 
@@ -550,7 +549,6 @@ ${game.description}
                   <p className="text-sm">尝试调整搜索条件</p>
                 </div>
               )}
-
 
             </div>
           </main>
