@@ -313,23 +313,19 @@ ${game.description}
   }
 
   const generateGamesReport = () => {
-    const reportContent = `
-# 情感游戏推荐报告
-
-## 游戏概览
-- 总游戏数: ${games.length}
-- 平均评分: ${(games.reduce((sum, g) => sum + g.rating, 0) / games.length).toFixed(1)}/5
-- 最受欢迎: ${games.sort((a, b) => b.popularity - a.popularity)[0].title}
-- 最高评分: ${games.sort((a, b) => b.rating - a.rating)[0].title}
-
-## 推荐游戏
-${games.map(game => {
-  const categoryText = game.category === 'communication' ? '沟通交流' : 
-                       game.category === 'emotional' ? '情感表达' : 
-                       game.category === 'fun' ? '趣味游戏' : '挑战任务';
-  
-  return `
-### ${game.title}
+    // 计算统计数据
+    const totalGames = games.length;
+    const averageRating = (games.reduce((sum, g) => sum + g.rating, 0) / games.length).toFixed(1);
+    const mostPopular = games.sort((a, b) => b.popularity - a.popularity)[0].title;
+    const highestRated = games.sort((a, b) => b.rating - a.rating)[0].title;
+    
+    // 生成游戏列表
+    const gameList = games.map(game => {
+      const categoryText = game.category === 'communication' ? '沟通交流' : 
+                           game.category === 'emotional' ? '情感表达' : 
+                           game.category === 'fun' ? '趣味游戏' : '挑战任务';
+      
+      return `### ${game.title}
 **类型**: ${categoryText}
 **难度**: ${game.difficulty} | **时长**: ${game.duration}
 **评分**: ${game.rating}/5 | **热度**: ${game.popularity}%
@@ -338,13 +334,24 @@ ${game.description}
 
 特色功能: ${game.features.join(', ')}
 
----
-`;
-}).join('')}
+---`;
+    }).join('\n');
+    
+    // 组装完整报告
+    const reportContent = `# 情感游戏推荐报告
+
+## 游戏概览
+- 总游戏数: ${totalGames}
+- 平均评分: ${averageRating}/5
+- 最受欢迎: ${mostPopular}
+- 最高评分: ${highestRated}
+
+## 推荐游戏
+${gameList}
 
 分析时间: ${new Date().toLocaleString()}
 工具: 丘比特AI情感游戏
-    `.trim()
+`.trim();
 
     const blob = new Blob([reportContent], { type: 'text/plain' })
     const url = URL.createObjectURL(blob)
