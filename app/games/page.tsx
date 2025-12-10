@@ -287,7 +287,7 @@ export default function GamesPage() {
       router.push(route)
     } else {
       // 如果路由不存在，显示游戏预览
-      alert(`即将开始游戏: ${games.find(g => g.id === gameId)?.title}`)
+      alert('即将开始游戏: ' + (games.find(g => g.id === gameId)?.title || '未知游戏'))
     }
   }
 
