@@ -327,7 +327,7 @@ ${games.map(game => `
 ### ${game.title}
 **类型**: ${game.category === 'communication' ? '沟通交流' : 
                 game.category === 'emotional' ? '情感表达' : 
-                game.category === 'fun' ? '趣味游戏' : '挑战任务'}
+                game.category === 'fun' ? '趣味游戏' : '挑战任务')}
 **难度**: ${game.difficulty} | **时长**: ${game.duration}
 **评分**: ${game.rating}/5 | **热度**: ${game.popularity}%
 
