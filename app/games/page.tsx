@@ -472,7 +472,7 @@ export default function GamesPage() {
                     <div className="absolute inset-0 bg-gradient-to-br from-rose-50 to-pink-50 opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
                     <div className="relative z-10">
                     <div className="flex items-start justify-between mb-4">
-                      <div className={`inline-flex p-3 rounded-lg bg-gradient-to-r ${game.color} text-white`}>
+                      <div className={'inline-flex p-3 rounded-lg bg-gradient-to-r ' + game.color + ' text-white'}>
                         {game.icon}
                       </div>
                       <button
@@ -504,11 +504,11 @@ export default function GamesPage() {
                         </span>
                       </div>
                       <div className="flex items-center justify-between text-xs">
-                        <span className={`px-2 py-1 rounded-full ${
+                        <span className={'px-2 py-1 rounded-full ' + (
                           game.difficulty === '简单' ? 'bg-green-100 text-green-700' :
                           game.difficulty === '中等' ? 'bg-yellow-100 text-yellow-700' :
                           'bg-red-100 text-red-700'
-                        }`}>
+                        )}>
                           {game.difficulty}
                         </span>
                         <span className="flex items-center text-gray-600">
