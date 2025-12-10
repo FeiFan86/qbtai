@@ -2,7 +2,6 @@
 
 import { useState, useEffect } from 'react'
 import GlobalNavbar from '@/components/global-navbar'
-import { Footer } from '@/components/footer'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
 import { Button } from '@/components/ui/button'
 import { Badge } from '@/components/ui/badge'
@@ -254,395 +253,319 @@ export default function InteractiveGamesPage() {
     return matchesTab && matchesSearch
   })
 
-  const renderGameCard = (game: any, index: number) => {
-    if (viewMode === 'list') {
-      return (
-        <Card 
-          key={game.id} 
-          className={`overflow-hidden border-0 shadow-lg hover:shadow-xl transition-all duration-300 mb-4 ${isLoaded ? 'animate-fadeIn' : 'opacity-0'}`}
-          style={{ animationDelay: `${index * 50}ms` }}
-        >
-          <div className="flex">
-            <div className={`w-32 bg-gradient-to-r ${game.color} p-4 flex items-center justify-center`}>
-              {game.icon}
-            </div>
-            <div className="flex-1 p-4">
-              <div className="flex items-start justify-between mb-2">
-                <div>
-                  <h3 className="text-lg font-semibold text-gray-800">{game.title}</h3>
-                  <p className="text-sm text-gray-600">{game.description}</p>
-                </div>
-                <div className="flex gap-2">
-                  {game.isHot && (
-                    <Badge className="bg-red-500 text-white border-0 text-xs">
-                      <Flame className="h-3 w-3 mr-1" />
-                      热门
-                    </Badge>
-                  )}
-                  {game.isNew && (
-                    <Badge className="bg-green-500 text-white border-0 text-xs">
-                      <Sparkles className="h-3 w-3 mr-1" />
-                      新品
-                    </Badge>
-                  )}
-                </div>
-              </div>
-              
-              <div className="flex items-center gap-4 mb-3 text-sm text-gray-600">
-                <div className="flex items-center gap-1">
-                  <Users className="h-3 w-3" />
-                  <span>{game.players}</span>
-                </div>
-                <div className="flex items-center gap-1">
-                  <Target className="h-3 w-3" />
-                  <span>{game.difficulty}</span>
-                </div>
-                <div className="flex items-center gap-1">
-                  <Star className="h-3 w-3 text-yellow-500" />
-                  <span>{game.rating.toFixed(1)}</span>
-                </div>
-              </div>
-              
-              <div className="flex flex-wrap gap-1 mb-3">
-                {game.tags.slice(0, 3).map((tag: string, tagIndex: number) => (
-                  <Badge key={tagIndex} variant="secondary" className="text-xs">
-                    {tag}
-                  </Badge>
-                ))}
-              </div>
-              
-              <div className="flex items-center justify-between">
-                <div className="flex items-center gap-3 text-xs text-gray-500">
-                  <div className="flex items-center gap-1">
-                    <ThumbsUp className="h-3 w-3" />
-                    <span>{game.likes > 0 ? game.likes.toLocaleString() : '-'}</span>
+  return (
+    <UsageGuard feature="games">
+      {({ canUse, remainingUses, onUse, isLoading, usageText }) => {
+        // 在内部定义渲染游戏卡片的函数，可以访问canUse
+        const renderGameCard = (game: any, index: number) => {
+          if (viewMode === 'list') {
+            return (
+              <Card 
+                key={game.id} 
+                className={`overflow-hidden border-0 shadow-lg hover:shadow-xl transition-all duration-300 mb-4 ${isLoaded ? 'animate-fadeIn' : 'opacity-0'}`}
+                style={{ animationDelay: `${index * 50}ms` }}
+              >
+                <div className="flex">
+                  <div className={`w-32 bg-gradient-to-r ${game.color} p-4 flex items-center justify-center`}>
+                    {game.icon}
                   </div>
-                  <div className="flex items-center gap-1">
-                    <Play className="h-3 w-3" />
-                    <span>{game.plays > 0 ? game.plays.toLocaleString() : '-'}</span>
+                  <div className="flex-1 p-4">
+                    <div className="flex items-start justify-between mb-2">
+                      <div>
+                        <h3 className="text-lg font-semibold text-gray-800">{game.title}</h3>
+                        <p className="text-sm text-gray-600">{game.description}</p>
+                      </div>
+                      <div className="flex gap-2">
+                        {game.isHot && (
+                          <Badge className="bg-red-500 text-white border-0 text-xs">
+                            <Flame className="h-3 w-3 mr-1" />
+                            热门
+                          </Badge>
+                        )}
+                        {game.isNew && (
+                          <Badge className="bg-green-500 text-white border-0 text-xs">
+                            <Sparkles className="h-3 w-3 mr-1" />
+                            新品
+                          </Badge>
+                        )}
+                      </div>
+                    </div>
+                    
+                    <div className="flex items-center gap-4 mb-3 text-sm text-gray-600">
+                      <div className="flex items-center gap-1">
+                        <Users className="h-3 w-3" />
+                        <span>{game.players}</span>
+                      </div>
+                      <div className="flex items-center gap-1">
+                        <Target className="h-3 w-3" />
+                        <span>{game.difficulty}</span>
+                      </div>
+                      <div className="flex items-center gap-1">
+                        <Star className="h-3 w-3 text-yellow-500" />
+                        <span>{game.rating.toFixed(1)}</span>
+                      </div>
+                    </div>
+                    
+                    <div className="flex flex-wrap gap-1 mb-3">
+                      {game.tags.slice(0, 3).map((tag: string, tagIndex: number) => (
+                        <Badge key={tagIndex} variant="secondary" className="text-xs">
+                          {tag}
+                        </Badge>
+                      ))}
+                    </div>
+                    
+                    <div className="flex items-center justify-between">
+                      <div className="flex items-center gap-3 text-xs text-gray-500">
+                        <div className="flex items-center gap-1">
+                          <ThumbsUp className="h-3 w-3" />
+                          <span>{game.likes > 0 ? game.likes.toLocaleString() : '-'}</span>
+                        </div>
+                        <div className="flex items-center gap-1">
+                          <Play className="h-3 w-3" />
+                          <span>{game.plays > 0 ? game.plays.toLocaleString() : '-'}</span>
+                        </div>
+                      </div>
+                      
+                      {game.status === 'completed' ? (
+                        <Link href={game.href}>
+                          <Button disabled={!canUse} className={'bg-gradient-to-r ' + game.color + ' hover:opacity-90 text-white border-0 text-sm px-4 py-1 disabled:opacity-50 disabled:cursor-not-allowed'}>
+                            开始游戏
+                          </Button>
+                        </Link>
+                      ) : (
+                        <Button disabled className="bg-gray-100 text-gray-400 border-0 text-sm px-4 py-1">
+                          <Lock className="h-3 w-3 mr-1" />
+                          即将上线
+                        </Button>
+                      )}
+                    </div>
+                  </div>
+                </div>
+              </Card>
+            )
+          } else {
+            // 网格视图
+            return (
+              <Card 
+                key={game.id} 
+                className={`overflow-hidden border-0 shadow-lg hover:shadow-xl transition-all duration-500 hover:-translate-y-2 group ${isLoaded ? 'animate-fadeIn' : 'opacity-0'}`}
+                style={{ animationDelay: `${index * 100}ms` }}
+              >
+                <div className={`h-40 bg-gradient-to-r ${game.color} p-6 flex items-center justify-center relative overflow-hidden`}>
+                  <div className="absolute inset-0 bg-black/10 opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
+                  <div className="relative z-10 transform scale-100 group-hover:scale-110 transition-transform duration-300">
+                    {game.icon}
+                  </div>
+                  <div className="absolute top-2 right-2 flex gap-2">
+                    {game.isHot && (
+                      <Badge className="bg-red-500 text-white border-0 text-xs">
+                        <Flame className="h-3 w-3 mr-1" />
+                        热门
+                      </Badge>
+                    )}
+                    {game.isNew && (
+                      <Badge className="bg-green-500 text-white border-0 text-xs">
+                        <Sparkles className="h-3 w-3 mr-1" />
+                        新品
+                      </Badge>
+                    )}
                   </div>
                 </div>
                 
-            {game.status === 'completed' ? (
-              <Link href={game.href}>
-                <Button disabled={!canUse} className={`bg-gradient-to-r ${game.color} hover:opacity-90 text-white border-0 text-sm px-4 py-1 disabled:opacity-50 disabled:cursor-not-allowed`}>
-                  开始游戏
-                </Button>
-              </Link>
-            ) : (
-              <Button disabled className="bg-gray-100 text-gray-400 border-0 text-sm px-4 py-1">
-                <Lock className="h-3 w-3 mr-1" />
-                即将上线
-              </Button>
-            )}
-              </div>
-            </div>
-          </div>
-        </Card>
-      )
-    } else {
-      return (
-        <Card 
-          key={game.id} 
-          className={`overflow-hidden border-0 shadow-lg hover:shadow-xl transition-all duration-300 ${isLoaded ? 'animate-fadeIn' : 'opacity-0'}`}
-          style={{ animationDelay: `${index * 100}ms` }}
-        >
-          <CardHeader className={`bg-gradient-to-r ${game.color} p-6 relative`}>
-            <div className="absolute top-4 right-4 flex gap-2">
-              {game.isHot && (
-                <Badge className="bg-red-500 text-white border-0 text-xs">
-                  <Flame className="h-3 w-3 mr-1" />
-                  热门
-                </Badge>
-              )}
-              {game.isNew && (
-                <Badge className="bg-green-500 text-white border-0 text-xs">
-                  <Sparkles className="h-3 w-3 mr-1" />
-                  新品
-                </Badge>
-              )}
-            </div>
-            <div className="flex items-center gap-4">
-              <div className="p-3 bg-white/20 backdrop-blur-sm rounded-xl">
-                {game.icon}
-              </div>
-              <div className="flex-1">
-                <CardTitle className="text-white text-xl">{game.title}</CardTitle>
-                <div className="flex items-center gap-2 mt-1">
-                  <div className="flex items-center gap-1 text-white/80 text-sm">
-                    <Users className="h-3 w-3" />
-                    <span>{game.players}</span>
+                <CardContent className="p-5">
+                  <CardHeader className="p-0 pb-3 mb-3">
+                    <div className="flex items-center justify-between mb-2">
+                      <CardTitle className="text-lg text-gray-800 group-hover:text-purple-600 transition-colors duration-300">
+                        {game.title}
+                      </CardTitle>
+                    </div>
+                    <CardDescription className="text-sm text-gray-600">
+                      {game.description}
+                    </CardDescription>
+                  </CardHeader>
+                  
+                  <div className="flex items-center justify-between text-xs text-gray-500 mb-3">
+                    <div className="flex items-center gap-3">
+                      <div className="flex items-center gap-1">
+                        <Users className="h-3 w-3" />
+                        <span>{game.players}</span>
+                      </div>
+                      <div className="flex items-center gap-1">
+                        <Target className="h-3 w-3" />
+                        <span>{game.difficulty}</span>
+                      </div>
+                    </div>
+                    
+                    <div className="flex items-center gap-1">
+                      <Star className="h-3 w-3 text-yellow-500" />
+                      <span>{game.rating.toFixed(1)}</span>
+                    </div>
                   </div>
-                  <div className="flex items-center gap-1 text-white/80 text-sm">
-                    <Target className="h-3 w-3" />
-                    <span>{game.difficulty}</span>
+                  
+                  <div className="flex flex-wrap gap-1 mb-4">
+                    {game.tags.slice(0, 2).map((tag: string, tagIndex: number) => (
+                      <Badge key={tagIndex} variant="secondary" className="text-xs">
+                        {tag}
+                      </Badge>
+                    ))}
+                  </div>
+                  
+                  <div className="flex items-center justify-between">
+                    <div className="flex items-center gap-3 text-xs text-gray-500">
+                      <div className="flex items-center gap-1">
+                        <ThumbsUp className="h-3 w-3" />
+                        <span>{game.likes > 0 ? game.likes.toLocaleString() : '-'}</span>
+                      </div>
+                      <div className="flex items-center gap-1">
+                        <Play className="h-3 w-3" />
+                        <span>{game.plays > 0 ? game.plays.toLocaleString() : '-'}</span>
+                      </div>
+                    </div>
+                    
+                    {game.status === 'completed' ? (
+                      <Link href={game.href}>
+                        <Button disabled={!canUse} className={'w-full bg-gradient-to-r ' + game.color + ' hover:opacity-90 text-white border-0 shadow-md disabled:opacity-50 disabled:cursor-not-allowed'}>
+                          开始游戏
+                        </Button>
+                      </Link>
+                    ) : (
+                      <Button disabled className="w-full bg-gray-100 text-gray-400 border-0 shadow-md">
+                        <Lock className="h-3 w-3 mr-1" />
+                        即将上线
+                      </Button>
+                    )}
+                  </div>
+                </CardContent>
+              </Card>
+            )
+          }
+        }
+
+        return (
+          <div className="min-h-screen bg-gradient-to-br from-violet-50 via-purple-50 to-pink-50 relative overflow-hidden">
+            {/* 增强背景装饰元素 */}
+            <div className="absolute inset-0 bg-gradient-to-br from-violet-100/20 via-purple-100/20 to-pink-100/20"></div>
+            <div className="absolute top-10 left-10 w-72 h-72 bg-gradient-to-r from-violet-300/30 to-purple-300/30 rounded-full blur-3xl animate-pulse"></div>
+            <div className="absolute bottom-10 right-10 w-96 h-96 bg-gradient-to-r from-pink-300/30 to-rose-300/30 rounded-full blur-3xl animate-pulse"></div>
+            <div className="absolute top-1/3 right-1/4 w-64 h-64 bg-gradient-to-r from-blue-300/20 to-cyan-300/20 rounded-full blur-3xl animate-pulse delay-500"></div>
+            
+            <GlobalNavbar />
+            
+            <div className="relative z-10">
+              {/* 页面头部 */}
+              <div className="pt-20 pb-8 px-4 md:px-6 lg:px-8">
+                <div className="max-w-6xl mx-auto">
+                  <div className="flex items-center justify-between mb-6">
+                    <div className="flex items-center gap-2">
+                      <Link href="/games" className="flex items-center gap-2 text-gray-600 hover:text-purple-600 transition-colors">
+                        <ArrowLeft className="h-5 w-5" />
+                        <span>返回游戏列表</span>
+                      </Link>
+                    </div>
+                    
+                    <div className="flex items-center gap-4">
+                      <Button
+                        variant={viewMode === 'grid' ? 'default' : 'outline'}
+                        size="sm"
+                        onClick={() => setViewMode('grid')}
+                        className="flex items-center gap-2"
+                      >
+                        <Grid3X3 className="h-4 w-4" />
+                        <span className="hidden sm:inline">网格</span>
+                      </Button>
+                      <Button
+                        variant={viewMode === 'list' ? 'default' : 'outline'}
+                        size="sm"
+                        onClick={() => setViewMode('list')}
+                        className="flex items-center gap-2"
+                      >
+                        <List className="h-4 w-4" />
+                        <span className="hidden sm:inline">列表</span>
+                      </Button>
+                    </div>
+                  </div>
+                  
+                  <div className="text-center mb-8">
+                    <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-violet-600 via-purple-600 to-pink-600 mb-4">
+                      互动游戏中心
+                    </h1>
+                    <p className="text-lg text-gray-700 max-w-3xl mx-auto">
+                      通过精心设计的互动游戏，增进感情深度，创造美好回忆。每一个游戏都融合了心理学原理和趣味体验。
+                    </p>
+                  </div>
+                  
+                  <div className="flex justify-center mb-8">
+                    <UsageStatus feature="games" className="justify-center" />
                   </div>
                 </div>
               </div>
-            </div>
-          </CardHeader>
-          
-          <CardContent className={`p-6 ${game.bgPattern}`}>
-            <CardDescription className="text-gray-700 mb-4 text-sm leading-relaxed">
-              {game.description}
-            </CardDescription>
-            
-            <div className="flex flex-wrap gap-1 mb-4">
-              {game.tags.map((tag: string, tagIndex: number) => (
-                <Badge key={tagIndex} variant="secondary" className="text-xs">
-                  {tag}
-                </Badge>
-              ))}
-            </div>
-            
-            <div className="grid grid-cols-3 gap-2 mb-4 text-center text-sm">
-              <div className="bg-white/50 backdrop-blur-sm rounded-lg p-2">
-                <div className="flex items-center justify-center gap-1 text-pink-600">
-                  <ThumbsUp className="h-3 w-3" />
-                  <span className="font-semibold">{game.likes > 0 ? game.likes.toLocaleString() : '-'}</span>
+              
+              <div className="max-w-6xl mx-auto px-4 md:px-6 lg:px-8">
+                {/* 搜索和筛选区域 */}
+                <div className="bg-white/80 backdrop-blur-sm rounded-xl shadow-lg p-4 mb-6 border border-purple-100">
+                  <div className="flex flex-col sm:flex-row gap-4">
+                    <div className="flex-1 relative">
+                      <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-purple-500" />
+                      <input
+                        type="text"
+                        placeholder="搜索游戏名称、描述或标签..."
+                        value={searchTerm}
+                        onChange={(e) => setSearchTerm(e.target.value)}
+                        className="w-full pl-10 pr-4 py-2 border border-purple-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent"
+                      />
+                    </div>
+                    <div className="flex items-center gap-2">
+                      <Filter className="h-4 w-4 text-purple-500" />
+                      <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full sm:w-auto">
+                        <TabsList className="grid grid-cols-4 sm:grid-cols-6 w-full sm:w-auto">
+                          <TabsTrigger value="all" className="text-xs px-2 py-1">全部</TabsTrigger>
+                          <TabsTrigger value="completed" className="text-xs px-2 py-1">已上线</TabsTrigger>
+                          <TabsTrigger value="coming-soon" className="text-xs px-2 py-1">即将上线</TabsTrigger>
+                          <TabsTrigger value="hot" className="text-xs px-2 py-1 hidden sm:flex">热门</TabsTrigger>
+                          <TabsTrigger value="single" className="text-xs px-2 py-1 hidden md:flex">单人</TabsTrigger>
+                          <TabsTrigger value="multi" className="text-xs px-2 py-1 hidden md:flex">多人</TabsTrigger>
+                        </TabsList>
+                      </Tabs>
+                    </div>
+                  </div>
                 </div>
-                <div className="text-xs text-gray-600">点赞</div>
-              </div>
-              <div className="bg-white/50 backdrop-blur-sm rounded-lg p-2">
-                <div className="flex items-center justify-center gap-1 text-blue-600">
-                  <Play className="h-3 w-3" />
-                  <span className="font-semibold">{game.plays > 0 ? game.plays.toLocaleString() : '-'}</span>
+                
+                {/* 游戏展示区域 */}
+                <div className={viewMode === 'grid' ? "grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-8" : "mb-8"}>
+                  {filteredGames.length > 0 ? (
+                    filteredGames.map((game, index) => renderGameCard(game, index))
+                  ) : (
+                    <div className="col-span-full text-center py-12">
+                      <div className="text-gray-400 mb-4">
+                        <Search className="h-12 w-12 mx-auto" />
+                      </div>
+                      <h3 className="text-xl font-medium text-gray-600 mb-2">没有找到相关游戏</h3>
+                      <p className="text-gray-500">尝试调整搜索条件或筛选标签</p>
+                    </div>
+                  )}
                 </div>
-                <div className="text-xs text-gray-600">游戏次数</div>
               </div>
-              <div className="bg-white/50 backdrop-blur-sm rounded-lg p-2">
-                <div className="flex items-center justify-center gap-1 text-yellow-600">
-                  <Star className="h-3 w-3" />
-                  <span className="font-semibold">{game.rating > 0 ? game.rating.toFixed(1) : '-'}</span>
-                </div>
-                <div className="text-xs text-gray-600">评分</div>
-              </div>
-            </div>
-            
-            {game.status === 'completed' ? (
-              <Link href={game.href}>
-                <Button disabled={!canUse} className={`w-full bg-gradient-to-r ${game.color} hover:opacity-90 text-white border-0 shadow-md disabled:opacity-50 disabled:cursor-not-allowed`}>
-                  <Play className="h-4 w-4 mr-2" />
-                  开始游戏
-                </Button>
-              </Link>
-            ) : (
-              <Button disabled className="w-full bg-gray-100 text-gray-400 border-0">
-                <Lock className="h-4 w-4 mr-2" />
-                即将上线
-              </Button>
-            )}
-          </CardContent>
-        </Card>
-      )
-    }
-  }
-
-  return (
-    <UsageGuard feature="games">
-      {({ canUse, remainingUses, onUse, isLoading, usageText }) => (
-        <div className="min-h-screen bg-gradient-to-br from-violet-50 via-purple-50 to-pink-50 relative overflow-hidden">
-          {/* 增强背景装饰元素 */}
-          <div className="absolute inset-0 bg-gradient-to-br from-violet-100/20 via-purple-100/20 to-pink-100/20"></div>
-          <div className="absolute top-10 left-10 w-72 h-72 bg-gradient-to-r from-violet-300/30 to-purple-300/30 rounded-full blur-3xl animate-pulse"></div>
-          <div className="absolute bottom-10 right-10 w-96 h-96 bg-gradient-to-r from-pink-300/30 to-rose-300/30 rounded-full blur-3xl animate-pulse"></div>
-          <div className="absolute top-1/3 right-1/4 w-64 h-64 bg-gradient-to-r from-blue-300/20 to-cyan-300/20 rounded-full blur-3xl animate-pulse delay-500"></div>
-          <div className="absolute bottom-1/4 left-1/3 w-80 h-80 bg-gradient-to-r from-green-300/20 to-emerald-300/20 rounded-full blur-3xl animate-pulse delay-1000"></div>
-          
-          <GlobalNavbar />
-          
-          <main className="container mx-auto px-4 py-8 relative z-10">
-        <div className="mb-8">
-          <Link href="/games" className="inline-flex items-center gap-2 text-violet-600 hover:text-violet-800 transition-colors mb-6 bg-white/70 backdrop-blur-sm px-4 py-2 rounded-lg shadow-sm">
-            <ArrowLeft className="h-4 w-4" />
-            🎮 返回游戏中心
-          </Link>
-          
-          <div className="text-center mb-10">
-            <div className="inline-flex items-center justify-center mb-6 p-5 bg-gradient-to-r from-purple-500 to-pink-500 rounded-full shadow-2xl">
-              <Gamepad2 className="h-14 w-14 text-white" />
-            </div>
-            <h1 className="text-6xl md:text-7xl font-bold tracking-tight mb-6 bg-gradient-to-r from-purple-600 via-pink-600 to-rose-600 bg-clip-text text-transparent">
-              互动游戏集合
-            </h1>
-            <p className="text-xl text-gray-700 max-w-3xl mx-auto bg-white/80 backdrop-blur-sm px-8 py-4 rounded-xl shadow-lg">
-              🎯 探索精心设计的情感互动游戏，与朋友或伴侣一起创造美好回忆，深化彼此的情感连接
-            </p>
-          </div>
-        </div>
-
-        {/* 使用状态提示 */}
-        <div className="max-w-4xl mx-auto mb-6">
-          <UsageStatus feature="games" className="justify-center" />
-        </div>
-
-        {/* 统计数据展示 */}
-        <div className="grid grid-cols-2 md:grid-cols-4 gap-6 mb-10">
-          <Card className="bg-white/90 backdrop-blur-md rounded-2xl p-6 shadow-xl border-0 hover:scale-105 transition-all duration-300">
-            <CardContent className="p-0 text-center">
-              <div className="text-4xl font-bold text-purple-600 mb-2">{interactiveGames.filter(g => g.status === 'completed').length}</div>
-              <div className="text-sm font-medium text-gray-700">🎯 已上线游戏</div>
-              <div className="text-xs text-gray-500 mt-1">持续更新中</div>
-            </CardContent>
-          </Card>
-          <Card className="bg-white/90 backdrop-blur-md rounded-2xl p-6 shadow-xl border-0 hover:scale-105 transition-all duration-300">
-            <CardContent className="p-0 text-center">
-              <div className="text-4xl font-bold text-pink-600 mb-2">{interactiveGames.filter(g => g.isHot).length}</div>
-              <div className="text-sm font-medium text-gray-700">🔥 热门游戏</div>
-              <div className="text-xs text-gray-500 mt-1">用户最爱</div>
-            </CardContent>
-          </Card>
-          <Card className="bg-white/90 backdrop-blur-md rounded-2xl p-6 shadow-xl border-0 hover:scale-105 transition-all duration-300">
-            <CardContent className="p-0 text-center">
-              <div className="text-4xl font-bold text-indigo-600 mb-2">
-                {interactiveGames.reduce((sum, game) => sum + game.likes, 0).toLocaleString()}
-              </div>
-              <div className="text-sm font-medium text-gray-700">❤️ 总点赞数</div>
-              <div className="text-xs text-gray-500 mt-1">社区认可</div>
-            </CardContent>
-          </Card>
-          <Card className="bg-white/90 backdrop-blur-md rounded-2xl p-6 shadow-xl border-0 hover:scale-105 transition-all duration-300">
-            <CardContent className="p-0 text-center">
-              <div className="text-4xl font-bold text-green-600 mb-2">
-                {interactiveGames.reduce((sum, game) => sum + game.plays, 0).toLocaleString()}
-              </div>
-              <div className="text-sm font-medium text-gray-700">👥 总游戏次数</div>
-              <div className="text-xs text-gray-500 mt-1">活跃参与</div>
-            </CardContent>
-          </Card>
-        </div>
-
-        {/* 搜索和筛选控制 */}
-        <div className="bg-white/80 backdrop-blur-sm rounded-lg shadow-md p-4 mb-6">
-          <div className="flex flex-col md:flex-row gap-4 items-center justify-between">
-            <div className="flex items-center gap-2 flex-1">
-              <Search className="h-4 w-4 text-gray-500" />
-              <input
-                type="text"
-                placeholder="搜索游戏名称、描述或标签..."
-                value={searchTerm}
-                onChange={(e) => setSearchTerm(e.target.value)}
-                className="w-full px-3 py-2 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-500"
-              />
             </div>
             
-            <div className="flex items-center gap-2">
-              <span className="text-sm text-gray-600">视图:</span>
-              <Button
-                variant={viewMode === 'grid' ? 'default' : 'outline'}
-                size="sm"
-                onClick={() => setViewMode('grid')}
-                className="p-2"
-              >
-                <Grid3X3 className="h-4 w-4" />
-              </Button>
-              <Button
-                variant={viewMode === 'list' ? 'default' : 'outline'}
-                size="sm"
-                onClick={() => setViewMode('list')}
-                className="p-2"
-              >
-                <List className="h-4 w-4" />
-              </Button>
-            </div>
-          </div>
-        </div>
-
-        {/* 游戏分类标签 */}
-        <Tabs value={activeTab} onValueChange={setActiveTab} className="mb-8">
-          <TabsList className="grid w-full grid-cols-6 bg-white/80 backdrop-blur-sm">
-            <TabsTrigger value="all" className="data-[state=active]:bg-purple-100 data-[state=active]:text-purple-700">
-              全部
-            </TabsTrigger>
-            <TabsTrigger value="completed" className="data-[state=active]:bg-purple-100 data-[state=active]:text-purple-700">
-              已上线
-            </TabsTrigger>
-            <TabsTrigger value="coming-soon" className="data-[state=active]:bg-purple-100 data-[state=active]:text-purple-700">
-              即将上线
-            </TabsTrigger>
-            <TabsTrigger value="single" className="data-[state=active]:bg-purple-100 data-[state=active]:text-purple-700">
-              单人
-            </TabsTrigger>
-            <TabsTrigger value="multi" className="data-[state=active]:bg-purple-100 data-[state=active]:text-purple-700">
-              多人
-            </TabsTrigger>
-            <TabsTrigger value="hot" className="data-[state=active]:bg-purple-100 data-[state=active]:text-purple-700">
-              🔥 热门
-            </TabsTrigger>
-          </TabsList>
-        </Tabs>
-
-        {/* 游戏展示区域 */}
-        <div className={viewMode === 'grid' ? "grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-8" : "mb-8"}>
-          {filteredGames.length > 0 ? (
-            filteredGames.map((game, index) => renderGameCard(game, index))
-          ) : (
-            <div className="col-span-full text-center py-12">
-              <div className="text-gray-400 mb-4">
-                <Search className="h-12 w-12 mx-auto" />
-              </div>
-              <h3 className="text-xl font-medium text-gray-600 mb-2">没有找到相关游戏</h3>
-              <p className="text-gray-500">尝试调整搜索词或筛选条件</p>
-            </div>
-          )}
-        </div>
-
-        {/* 特色功能介绍 */}
-        <Card className="bg-gradient-to-r from-purple-100 to-pink-100 border-0 shadow-lg mb-8">
-          <CardHeader>
-            <CardTitle className="text-center text-2xl text-purple-800">
-              <Sparkles className="inline-block h-6 w-6 mr-2" />
-              特色功能
-            </CardTitle>
-          </CardHeader>
-          <CardContent>
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-              <div className="text-center">
-                <div className="w-16 h-16 bg-purple-200 rounded-full flex items-center justify-center mx-auto mb-3">
-                  <Trophy className="h-8 w-8 text-purple-600" />
-                </div>
-                <h3 className="font-semibold text-purple-800 mb-2">成就系统</h3>
-                <p className="text-sm text-gray-700">完成游戏挑战，解锁专属成就徽章，记录你的成长历程</p>
-              </div>
-              <div className="text-center">
-                <div className="w-16 h-16 bg-pink-200 rounded-full flex items-center justify-center mx-auto mb-3">
-                  <BarChart className="h-8 w-8 text-pink-600" />
-                </div>
-                <h3 className="font-semibold text-pink-800 mb-2">数据分析</h3>
-                <p className="text-sm text-gray-700">深入了解你的情感模式，获得个性化的改善建议</p>
-              </div>
-              <div className="text-center">
-                <div className="w-16 h-16 bg-indigo-200 rounded-full flex items-center justify-center mx-auto mb-3">
-                  <Users className="h-8 w-8 text-indigo-600" />
-                </div>
-                <h3 className="font-semibold text-indigo-800 mb-2">社交互动</h3>
-                <p className="text-sm text-gray-700">与朋友一起玩游戏，增进彼此了解，建立更深的情感连接</p>
-              </div>
-            </div>
-          </CardContent>
-        </Card>
-          </main>
-          
-          <Footer />
-          
-          <style jsx>{`
-            @keyframes fadeIn {
-              from {
-                opacity: 0;
-                transform: translateY(20px);
+            <style jsx>{`
+              .animate-fadeIn {
+                animation: fadeIn 0.6s ease-out forwards;
               }
-              to {
-                opacity: 1;
-                transform: translateY(0);
+              
+              @keyframes fadeIn {
+                from {
+                  opacity: 0;
+                  transform: translateY(20px);
+                }
+                to {
+                  opacity: 1;
+                  transform: translateY(0);
+                }
               }
-            }
-            
-            .animate-fadeIn {
-              animation: fadeIn 0.6s ease-out forwards;
-            }
-          `}</style>
-        </div>
-      )}
+            `}</style>
+          </div>
+        )
+      }}
     </UsageGuard>
   )
 }
