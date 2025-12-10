@@ -9,7 +9,7 @@ import {
   Utensils
 } from 'lucide-react'
 import GlobalNavbar from '@/components/global-navbar'
-import UsageGuard, { UsageStatus } from '@/components/usage-guard'
+import { UsageGuard, UsageStatus } from '@/components/usage-guard'
 
 interface Game {
   id: number;
