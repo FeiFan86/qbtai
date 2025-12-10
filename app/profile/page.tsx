@@ -151,7 +151,9 @@ export default function ProfilePage() {
                   <div className="bg-gradient-to-r from-rose-50 to-pink-50 p-4 rounded-lg">
                     <div className="flex items-center justify-between mb-2">
                       <Heart className="h-5 w-5 text-rose-500" />
-                      <span className="text-2xl font-bold text-gray-900">89</span>
+                      <span className="text-2xl font-bold text-gray-900">
+                        {Object.values(usageStats).reduce((sum, stats) => sum + stats.total, 0)}
+                      </span>
                     </div>
                     <div className="text-sm text-gray-600">总使用次数</div>
                   </div>
@@ -159,7 +161,9 @@ export default function ProfilePage() {
                   <div className="bg-gradient-to-r from-blue-50 to-cyan-50 p-4 rounded-lg">
                     <div className="flex items-center justify-between mb-2">
                       <Calendar className="h-5 w-5 text-blue-500" />
-                      <span className="text-2xl font-bold text-gray-900">30</span>
+                      <span className="text-2xl font-bold text-gray-900">
+                        {user?.stats?.consecutiveDays || 0}
+                      </span>
                     </div>
                     <div className="text-sm text-gray-600">连续使用天数</div>
                   </div>
@@ -167,7 +171,9 @@ export default function ProfilePage() {
                   <div className="bg-gradient-to-r from-green-50 to-teal-50 p-4 rounded-lg">
                     <div className="flex items-center justify-between mb-2">
                       <Star className="h-5 w-5 text-green-500" />
-                      <span className="text-2xl font-bold text-gray-900">4.8</span>
+                      <span className="text-2xl font-bold text-gray-900">
+                        {user?.stats?.averageRating?.toFixed(1) || '4.5'}
+                      </span>
                     </div>
                     <div className="text-sm text-gray-600">平均满意度</div>
                   </div>
@@ -175,7 +181,9 @@ export default function ProfilePage() {
                   <div className="bg-gradient-to-r from-purple-50 to-indigo-50 p-4 rounded-lg">
                     <div className="flex items-center justify-between mb-2">
                       <Award className="h-5 w-5 text-purple-500" />
-                      <span className="text-2xl font-bold text-gray-900">15</span>
+                      <span className="text-2xl font-bold text-gray-900">
+                        {user?.stats?.achievements || 0}
+                      </span>
                     </div>
                     <div className="text-sm text-gray-600">完成成就</div>
                   </div>
@@ -264,12 +272,48 @@ export default function ProfilePage() {
                     </div>
                     
                     <div>
-                      <h3 className="font-medium text-gray-900 mb-3">升级建议</h3>
-                      <p className="text-sm text-gray-600 mb-4">
-                        当前会员等级已满足您的使用需求，继续保持良好使用习惯即可。
+                      <h3 className="font-medium text-gray-900 mb-3">使用限制对比</h3>
+                      <div className="space-y-2 text-sm">
+                        <div className="flex items-center justify-between">
+                          <span className="text-gray-600">情感分析</span>
+                          <span className="font-medium">
+                            {user?.membership?.level === 'premium' || user?.membership?.level === 'vip' ? '无限' : '5次/天'}
+                          </span>
+                        </div>
+                        <div className="flex items-center justify-between">
+                          <span className="text-gray-600">内容创作</span>
+                          <span className="font-medium">
+                            {user?.membership?.level === 'premium' || user?.membership?.level === 'vip' ? '无限' : '3次/天'}
+                          </span>
+                        </div>
+                        <div className="flex items-center justify-between">
+                          <span className="text-gray-600">互动游戏</span>
+                          <span className="font-medium">
+                            {user?.membership?.level === 'free' ? '10次/天' : 
+                             user?.membership?.level === 'basic' ? '20次/天' : '无限'}
+                          </span>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                  
+                  <div className="mt-6 flex items-center justify-between">
+                    <div>
+                      <h3 className="font-medium text-gray-900 mb-1">升级会员</h3>
+                      <p className="text-sm text-gray-600">
+                        {user?.membership?.level === 'free' ? '升级会员解锁更多功能和更高使用限制' :
+                         user?.membership?.level === 'basic' ? '升级为高级会员享受无限使用权限' :
+                         '您已是高级会员，享受全部功能'}
                       </p>
-                      <button className="bg-gradient-to-r from-amber-500 to-orange-500 text-white px-4 py-2 rounded-lg text-sm font-medium hover:from-amber-600 hover:to-orange-600 transition-all">
-                        查看会员权益
+                    </div>
+                    <div className="space-x-2">
+                      {user?.membership?.level !== 'premium' && user?.membership?.level !== 'vip' && (
+                        <button className="bg-gradient-to-r from-amber-500 to-orange-500 text-white px-4 py-2 rounded-lg text-sm font-medium hover:from-amber-600 hover:to-orange-600 transition-all">
+                          立即升级
+                        </button>
+                      )}
+                      <button className="border border-amber-500 text-amber-600 px-4 py-2 rounded-lg text-sm font-medium hover:bg-amber-50 transition-all">
+                        查看详情
                       </button>
                     </div>
                   </div>
@@ -287,11 +331,52 @@ export default function ProfilePage() {
                     <div className="space-y-3">
                       <div className="flex items-center justify-between">
                         <span className="text-gray-600">用户名</span>
-                        <span className="font-medium">{user.username}</span>
+                        <div className="flex items-center space-x-2">
+                          <span className="font-medium">{user.username}</span>
+                          <button className="text-rose-600 hover:text-rose-700 text-sm">修改</button>
+                        </div>
                       </div>
                       <div className="flex items-center justify-between">
                         <span className="text-gray-600">邮箱</span>
-                        <span className="font-medium">{user.email || '未设置'}</span>
+                        <div className="flex items-center space-x-2">
+                          <span className="font-medium">{user.email || '未设置'}</span>
+                          <button className="text-rose-600 hover:text-rose-700 text-sm">
+                            {user.email ? '修改' : '添加'}
+                          </button>
+                        </div>
+                      </div>
+                      <div className="flex items-center justify-between">
+                        <span className="text-gray-600">手机号</span>
+                        <div className="flex items-center space-x-2">
+                          <span className="font-medium">{user.phone || '未绑定'}</span>
+                          <button className="text-rose-600 hover:text-rose-700 text-sm">
+                            {user.phone ? '修改' : '绑定'}
+                          </button>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                  
+                  <div className="border border-gray-200 rounded-lg p-4">
+                    <h3 className="font-medium text-gray-900 mb-3">通知设置</h3>
+                    <div className="space-y-3">
+                      <div className="flex items-center justify-between">
+                        <div>
+                          <div className="font-medium text-gray-900">邮件通知</div>
+                          <div className="text-sm text-gray-600">接收账户相关邮件通知</div>
+                        </div>
+                        <button className="relative inline-flex h-6 w-11 items-center rounded-full bg-rose-500">
+                          <span className="inline-block h-4 w-4 transform rounded-full bg-white transition translate-x-6"></span>
+                        </button>
+                      </div>
+                      <div className="flex items-center justify-between">
+                        <div>
+                          <div className="font-medium text-gray-900">推广信息</div>
+                          <div className="text-sm text-gray-600">接收产品更新和优惠信息</div>
+                        </div>
+                        <button className="relative inline-flex h-6 w-11 items-center rounded-full bg-gray-300">
+                          <span className="inline-block h-4 w-4 transform rounded-full bg-white transition translate-x-1"></span>
+                        </button>
                       </div>
                     </div>
                   </div>
@@ -300,12 +385,22 @@ export default function ProfilePage() {
                     <h3 className="font-medium text-gray-900 mb-3">隐私设置</h3>
                     <div className="space-y-3">
                       <div className="flex items-center justify-between">
-                        <span className="text-gray-600">数据收集</span>
-                        <span className="text-sm text-green-600">已开启（匿名）</span>
+                        <div>
+                          <div className="font-medium text-gray-900">数据分析</div>
+                          <div className="text-sm text-gray-600">允许匿名数据分析以改进服务</div>
+                        </div>
+                        <button className="relative inline-flex h-6 w-11 items-center rounded-full bg-rose-500">
+                          <span className="inline-block h-4 w-4 transform rounded-full bg-white transition translate-x-6"></span>
+                        </button>
                       </div>
                       <div className="flex items-center justify-between">
-                        <span className="text-gray-600">个性化推荐</span>
-                        <span className="text-sm text-green-600">已开启</span>
+                        <div>
+                          <div className="font-medium text-gray-900">个性化推荐</div>
+                          <div className="text-sm text-gray-600">基于使用习惯提供个性化内容</div>
+                        </div>
+                        <button className="relative inline-flex h-6 w-11 items-center rounded-full bg-rose-500">
+                          <span className="inline-block h-4 w-4 transform rounded-full bg-white transition translate-x-6"></span>
+                        </button>
                       </div>
                     </div>
                   </div>
@@ -313,8 +408,13 @@ export default function ProfilePage() {
                   <div className="border border-gray-200 rounded-lg p-4">
                     <h3 className="font-medium text-gray-900 mb-3">账户安全</h3>
                     <div className="space-y-3">
-                      <button className="w-full text-left py-2 text-rose-600 hover:text-rose-700">
-                        修改密码
+                      <button className="w-full text-left py-2 text-rose-600 hover:text-rose-700 flex items-center justify-between">
+                        <span>修改密码</span>
+                        <span className="text-sm text-gray-400">上次修改：{user?.passwordChangedAt ? new Date(user.passwordChangedAt).toLocaleDateString('zh-CN') : '从未修改'}</span>
+                      </button>
+                      <button className="w-full text-left py-2 text-rose-600 hover:text-rose-700 flex items-center justify-between">
+                        <span>两步验证</span>
+                        <span className="text-sm text-gray-400">{user?.twoFactorEnabled ? '已开启' : '未开启'}</span>
                       </button>
                       <button className="w-full text-left py-2 text-rose-600 hover:text-rose-700">
                         注销账户
