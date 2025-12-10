@@ -540,7 +540,7 @@ ${game.description}
                     )}
                   </div>
                 ))}
-                ))}
+                )}
               </div>
 
               {filteredGames.length === 0 && (
