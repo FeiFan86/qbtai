@@ -321,37 +321,35 @@ ${game.description}
     
     // 生成游戏列表
     const gameList = games.map(game => {
-      const categoryText = game.category === 'communication' ? '沟通交流' : 
-                           game.category === 'emotional' ? '情感表达' : 
-                           game.category === 'fun' ? '趣味游戏' : '挑战任务';
+      let categoryText = '挑战任务';
+      if (game.category === 'communication') categoryText = '沟通交流';
+      else if (game.category === 'emotional') categoryText = '情感表达';
+      else if (game.category === 'fun') categoryText = '趣味游戏';
       
-      return `### ${game.title}
-**类型**: ${categoryText}
-**难度**: ${game.difficulty} | **时长**: ${game.duration}
-**评分**: ${game.rating}/5 | **热度**: ${game.popularity}%
-
-${game.description}
-
-特色功能: ${game.features.join(', ')}
-
----`;
+      let gameInfo = '### ' + game.title + '\n';
+      gameInfo += '**类型**: ' + categoryText + '\n';
+      gameInfo += '**难度**: ' + game.difficulty + ' | **时长**: ' + game.duration + '\n';
+      gameInfo += '**评分**: ' + game.rating + '/5 | **热度**: ' + game.popularity + '%\n\n';
+      gameInfo += game.description + '\n\n';
+      gameInfo += '特色功能: ' + game.features.join(', ') + '\n\n';
+      gameInfo += '---';
+      
+      return gameInfo;
     }).join('\n');
     
     // 组装完整报告
-    const reportContent = `# 情感游戏推荐报告
-
-## 游戏概览
-- 总游戏数: ${totalGames}
-- 平均评分: ${averageRating}/5
-- 最受欢迎: ${mostPopular}
-- 最高评分: ${highestRated}
-
-## 推荐游戏
-${gameList}
-
-分析时间: ${new Date().toLocaleString()}
-工具: 丘比特AI情感游戏
-`.trim();
+    let reportContent = '# 情感游戏推荐报告\n\n';
+    reportContent += '## 游戏概览\n';
+    reportContent += '- 总游戏数: ' + totalGames + '\n';
+    reportContent += '- 平均评分: ' + averageRating + '/5\n';
+    reportContent += '- 最受欢迎: ' + mostPopular + '\n';
+    reportContent += '- 最高评分: ' + highestRated + '\n\n';
+    reportContent += '## 推荐游戏\n';
+    reportContent += gameList + '\n\n';
+    reportContent += '分析时间: ' + new Date().toLocaleString() + '\n';
+    reportContent += '工具: 丘比特AI情感游戏';
+    
+    reportContent = reportContent.trim();
 
     const blob = new Blob([reportContent], { type: 'text/plain' })
     const url = URL.createObjectURL(blob)
