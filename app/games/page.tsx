@@ -355,7 +355,7 @@ ${game.description}
     const url = URL.createObjectURL(blob)
     const a = document.createElement('a')
     a.href = url
-    a.download = `情感游戏推荐报告_${new Date().getTime()}.txt`
+    a.download = '情感游戏推荐报告_' + new Date().getTime() + '.txt'
     document.body.appendChild(a)
     a.click()
     document.body.removeChild(a)
