@@ -362,17 +362,21 @@ ${game.description}
           <main className="pt-16">
             <div className="container py-12">
               {/* 页面标题 */}
-              <div className="text-center mb-12">
-                <div className="inline-flex items-center px-4 py-2 rounded-full bg-white/80 backdrop-blur-sm border border-gray-200 mb-4">
+              <div className="text-center mb-12 relative">
+                <div className="inline-flex items-center px-4 py-2 rounded-full bg-white/80 backdrop-blur-sm border border-rose-200 mb-4 shadow-sm">
                   <Gamepad2 className="h-5 w-5 text-rose-500 mr-2" />
-                  <span className="text-sm font-medium text-gray-700">互动游戏</span>
+                  <span className="text-sm font-medium text-rose-700">互动游戏</span>
                 </div>
-                <h1 className="text-3xl md:text-4xl font-bold text-gray-900 mb-4">
+                <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold text-gray-900 mb-4 bg-gradient-to-r from-rose-600 via-pink-600 to-purple-600 bg-clip-text text-transparent">
                   情感互动游戏
                 </h1>
-                <p className="text-lg text-gray-600 max-w-2xl mx-auto">
-                  通过精心设计的互动游戏，增进感情深度，创造美好回忆
+                <p className="text-lg md:text-xl text-gray-600 max-w-3xl mx-auto leading-relaxed">
+                  🎯 通过精心设计的互动游戏，增进感情深度，创造美好回忆
                 </p>
+                
+                {/* 装饰元素 */}
+                <div className="absolute -top-8 -left-8 w-16 h-16 bg-gradient-to-r from-rose-200 to-pink-200 rounded-full blur-xl opacity-60"></div>
+                <div className="absolute -bottom-8 -right-8 w-24 h-24 bg-gradient-to-r from-purple-200 to-blue-200 rounded-full blur-xl opacity-60"></div>
               </div>
 
               {/* 使用状态提示 */}
@@ -382,41 +386,44 @@ ${game.description}
 
               {/* 搜索和筛选 */}
               <div className="max-w-4xl mx-auto mb-8">
-                <div className="bg-white rounded-xl shadow-sm border border-gray-200 p-6">
-                  <div className="grid md:grid-cols-4 gap-4">
-                    <div className="md:col-span-2 relative">
-                      <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-gray-400" />
-                      <input
-                        type="text"
-                        value={searchTerm}
-                        onChange={(e) => setSearchTerm(e.target.value)}
-                        placeholder="搜索游戏名称、描述或功能..."
-                        className="w-full pl-10 pr-4 py-3 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-rose-500"
-                      />
-                    </div>
-                    <div className="flex items-center space-x-2">
-                      <Filter className="h-4 w-4 text-gray-500" />
-                      <select
-                        value={selectedCategory}
-                        onChange={(e) => setSelectedCategory(e.target.value)}
-                        className="w-full border border-gray-200 rounded-lg px-3 py-3 focus:outline-none focus:ring-2 focus:ring-rose-500"
-                      >
-                        {categories.map(cat => (
-                          <option key={cat.value} value={cat.value}>{cat.label}</option>
-                        ))}
-                      </select>
-                    </div>
-                    <div className="flex items-center space-x-2">
-                      <Filter className="h-4 w-4 text-gray-500" />
-                      <select
-                        value={selectedDifficulty}
-                        onChange={(e) => setSelectedDifficulty(e.target.value)}
-                        className="w-full border border-gray-200 rounded-lg px-3 py-3 focus:outline-none focus:ring-2 focus:ring-rose-500"
-                      >
-                        {difficulties.map(diff => (
-                          <option key={diff.value} value={diff.value}>{diff.label}</option>
-                        ))}
-                      </select>
+                <div className="bg-white/80 backdrop-blur-md rounded-xl shadow-lg border border-rose-100 p-6 relative overflow-hidden">
+                  <div className="absolute inset-0 bg-gradient-to-r from-rose-50 to-pink-50 opacity-30"></div>
+                  <div className="relative z-10">
+                    <div className="grid md:grid-cols-4 gap-4">
+                      <div className="md:col-span-2 relative">
+                        <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-rose-400" />
+                        <input
+                          type="text"
+                          value={searchTerm}
+                          onChange={(e) => setSearchTerm(e.target.value)}
+                          placeholder="搜索游戏名称、描述或功能..."
+                          className="w-full pl-10 pr-4 py-3 border border-rose-200 rounded-lg bg-white/80 focus:outline-none focus:ring-2 focus:ring-rose-500 focus:border-rose-300 transition-all"
+                        />
+                      </div>
+                      <div className="flex items-center space-x-2">
+                        <Filter className="h-4 w-4 text-rose-500" />
+                        <select
+                          value={selectedCategory}
+                          onChange={(e) => setSelectedCategory(e.target.value)}
+                          className="w-full border border-rose-200 rounded-lg px-3 py-3 bg-white/80 focus:outline-none focus:ring-2 focus:ring-rose-500 focus:border-rose-300 transition-all"
+                        >
+                          {categories.map(cat => (
+                            <option key={cat.value} value={cat.value}>{cat.label}</option>
+                          ))}
+                        </select>
+                      </div>
+                      <div className="flex items-center space-x-2">
+                        <Filter className="h-4 w-4 text-rose-500" />
+                        <select
+                          value={selectedDifficulty}
+                          onChange={(e) => setSelectedDifficulty(e.target.value)}
+                          className="w-full border border-rose-200 rounded-lg px-3 py-3 bg-white/80 focus:outline-none focus:ring-2 focus:ring-rose-500 focus:border-rose-300 transition-all"
+                        >
+                          {difficulties.map(diff => (
+                            <option key={diff.value} value={diff.value}>{diff.label}</option>
+                          ))}
+                        </select>
+                      </div>
                     </div>
                   </div>
                 </div>
@@ -453,8 +460,11 @@ ${game.description}
                 {filteredGames.map((game) => (
                   <div
                     key={game.id}
-                    className="bg-white rounded-xl shadow-sm border border-gray-200 p-6 hover:shadow-lg transition-all duration-300 hover:-translate-y-1 group"
+                    className="bg-white/80 backdrop-blur-sm rounded-xl shadow-lg border border-rose-100 p-6 hover:shadow-2xl transition-all duration-500 hover:-translate-y-2 group relative overflow-hidden"
                   >
+                    {/* 渐变背景 */}
+                    <div className="absolute inset-0 bg-gradient-to-br from-rose-50 to-pink-50 opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
+                    <div className="relative z-10">
                     <div className="flex items-start justify-between mb-4">
                       <div className={`inline-flex p-3 rounded-lg bg-gradient-to-r ${game.color} text-white`}>
                         {game.icon}
@@ -515,18 +525,21 @@ ${game.description}
                     <button 
                       onClick={() => startGame(game.id, onUse)}
                       disabled={!canUse}
-                      className="w-full bg-gradient-to-r from-rose-500 to-pink-500 text-white py-3 rounded-lg font-medium hover:from-rose-600 hover:to-pink-600 transition-all group-hover:shadow-md disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center"
+                      className="w-full bg-gradient-to-r from-rose-500 to-pink-500 text-white py-3 rounded-lg font-medium hover:from-rose-600 hover:to-pink-600 transition-all group-hover:shadow-lg disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center relative overflow-hidden group/btn"
                     >
-                      <Play className="h-4 w-4 mr-2" />
-                      {isLoading ? '加载中...' : '开始游戏'}
+                      {/* 按钮特效 */}
+                      <div className="absolute inset-0 bg-gradient-to-r from-white/20 to-transparent opacity-0 group-hover/btn:opacity-100 transition-opacity duration-300"></div>
+                      <Play className="h-4 w-4 mr-2 relative z-10" />
+                      <span className="relative z-10">{isLoading ? '加载中...' : '开始游戏'}</span>
                     </button>
                     
                     {!canUse && (
-                      <p className="text-sm text-amber-600 mt-2 text-center">
+                      <p className="text-sm text-amber-600 mt-2 text-center relative z-10">
                         使用次数已用完，请登录或等待重置
                       </p>
                     )}
                   </div>
+                ))}
                 ))}
               </div>
 

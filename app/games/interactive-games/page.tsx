@@ -7,6 +7,7 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/com
 import { Button } from '@/components/ui/button'
 import { Badge } from '@/components/ui/badge'
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
+import UsageGuard, { UsageStatus } from '@/components/usage-guard'
 import { 
   ArrowLeft,
   TreePine,
@@ -322,18 +323,18 @@ export default function InteractiveGamesPage() {
                   </div>
                 </div>
                 
-                {game.status === 'completed' ? (
-                  <Link href={game.href}>
-                    <Button className={`bg-gradient-to-r ${game.color} hover:opacity-90 text-white border-0 text-sm px-4 py-1`}>
-                      开始游戏
-                    </Button>
-                  </Link>
-                ) : (
-                  <Button disabled className="bg-gray-100 text-gray-400 border-0 text-sm px-4 py-1">
-                    <Lock className="h-3 w-3 mr-1" />
-                    即将上线
-                  </Button>
-                )}
+            {game.status === 'completed' ? (
+              <Link href={game.href}>
+                <Button disabled={!canUse} className={`bg-gradient-to-r ${game.color} hover:opacity-90 text-white border-0 text-sm px-4 py-1 disabled:opacity-50 disabled:cursor-not-allowed`}>
+                  开始游戏
+                </Button>
+              </Link>
+            ) : (
+              <Button disabled className="bg-gray-100 text-gray-400 border-0 text-sm px-4 py-1">
+                <Lock className="h-3 w-3 mr-1" />
+                即将上线
+              </Button>
+            )}
               </div>
             </div>
           </div>
@@ -420,7 +421,7 @@ export default function InteractiveGamesPage() {
             
             {game.status === 'completed' ? (
               <Link href={game.href}>
-                <Button className={`w-full bg-gradient-to-r ${game.color} hover:opacity-90 text-white border-0 shadow-md`}>
+                <Button disabled={!canUse} className={`w-full bg-gradient-to-r ${game.color} hover:opacity-90 text-white border-0 shadow-md disabled:opacity-50 disabled:cursor-not-allowed`}>
                   <Play className="h-4 w-4 mr-2" />
                   开始游戏
                 </Button>
@@ -438,17 +439,19 @@ export default function InteractiveGamesPage() {
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-violet-50 via-purple-50 to-pink-50 relative overflow-hidden">
-      {/* 增强背景装饰元素 */}
-      <div className="absolute inset-0 bg-gradient-to-br from-violet-100/20 via-purple-100/20 to-pink-100/20"></div>
-      <div className="absolute top-10 left-10 w-72 h-72 bg-gradient-to-r from-violet-300/30 to-purple-300/30 rounded-full blur-3xl animate-pulse"></div>
-      <div className="absolute bottom-10 right-10 w-96 h-96 bg-gradient-to-r from-pink-300/30 to-rose-300/30 rounded-full blur-3xl animate-pulse"></div>
-      <div className="absolute top-1/3 right-1/4 w-64 h-64 bg-gradient-to-r from-blue-300/20 to-cyan-300/20 rounded-full blur-3xl animate-pulse delay-500"></div>
-      <div className="absolute bottom-1/4 left-1/3 w-80 h-80 bg-gradient-to-r from-green-300/20 to-emerald-300/20 rounded-full blur-3xl animate-pulse delay-1000"></div>
-      
-      <GlobalNavbar />
-      
-      <main className="container mx-auto px-4 py-8 relative z-10">
+    <UsageGuard feature="games">
+      {({ canUse, remainingUses, onUse, isLoading, usageText }) => (
+        <div className="min-h-screen bg-gradient-to-br from-violet-50 via-purple-50 to-pink-50 relative overflow-hidden">
+          {/* 增强背景装饰元素 */}
+          <div className="absolute inset-0 bg-gradient-to-br from-violet-100/20 via-purple-100/20 to-pink-100/20"></div>
+          <div className="absolute top-10 left-10 w-72 h-72 bg-gradient-to-r from-violet-300/30 to-purple-300/30 rounded-full blur-3xl animate-pulse"></div>
+          <div className="absolute bottom-10 right-10 w-96 h-96 bg-gradient-to-r from-pink-300/30 to-rose-300/30 rounded-full blur-3xl animate-pulse"></div>
+          <div className="absolute top-1/3 right-1/4 w-64 h-64 bg-gradient-to-r from-blue-300/20 to-cyan-300/20 rounded-full blur-3xl animate-pulse delay-500"></div>
+          <div className="absolute bottom-1/4 left-1/3 w-80 h-80 bg-gradient-to-r from-green-300/20 to-emerald-300/20 rounded-full blur-3xl animate-pulse delay-1000"></div>
+          
+          <GlobalNavbar />
+          
+          <main className="container mx-auto px-4 py-8 relative z-10">
         <div className="mb-8">
           <Link href="/games" className="inline-flex items-center gap-2 text-violet-600 hover:text-violet-800 transition-colors mb-6 bg-white/70 backdrop-blur-sm px-4 py-2 rounded-lg shadow-sm">
             <ArrowLeft className="h-4 w-4" />
@@ -466,6 +469,11 @@ export default function InteractiveGamesPage() {
               🎯 探索精心设计的情感互动游戏，与朋友或伴侣一起创造美好回忆，深化彼此的情感连接
             </p>
           </div>
+        </div>
+
+        {/* 使用状态提示 */}
+        <div className="max-w-4xl mx-auto mb-6">
+          <UsageStatus feature="games" className="justify-center" />
         </div>
 
         {/* 统计数据展示 */}
@@ -613,26 +621,28 @@ export default function InteractiveGamesPage() {
             </div>
           </CardContent>
         </Card>
-      </main>
-      
-      <Footer />
-      
-      <style jsx>{`
-        @keyframes fadeIn {
-          from {
-            opacity: 0;
-            transform: translateY(20px);
-          }
-          to {
-            opacity: 1;
-            transform: translateY(0);
-          }
-        }
-        
-        .animate-fadeIn {
-          animation: fadeIn 0.6s ease-out forwards;
-        }
-      `}</style>
-    </div>
+          </main>
+          
+          <Footer />
+          
+          <style jsx>{`
+            @keyframes fadeIn {
+              from {
+                opacity: 0;
+                transform: translateY(20px);
+              }
+              to {
+                opacity: 1;
+                transform: translateY(0);
+              }
+            }
+            
+            .animate-fadeIn {
+              animation: fadeIn 0.6s ease-out forwards;
+            }
+          `}</style>
+        </div>
+      )}
+    </UsageGuard>
   )
 }
