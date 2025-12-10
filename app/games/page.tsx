@@ -292,14 +292,11 @@ export default function GamesPage() {
   }
 
   const shareGame = (game: Game) => {
-    const shareText = `🎮 推荐一个好玩的游戏：${game.title}
-
-${game.description}
-
-适合：${game.players} | 时长：${game.duration}
-难度：${game.difficulty} | 评分：${game.rating}/5
-
-#丘比特AI #情感游戏`
+    let shareText = '🎮 推荐一个好玩的游戏：' + game.title + '\n\n';
+    shareText += game.description + '\n\n';
+    shareText += '适合：' + game.players + ' | 时长：' + game.duration + '\n';
+    shareText += '难度：' + game.difficulty + ' | 评分：' + game.rating + '/5\n\n';
+    shareText += '#丘比特AI #情感游戏';
     
     if (navigator.share) {
       navigator.share({
