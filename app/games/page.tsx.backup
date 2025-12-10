@@ -287,17 +287,16 @@ export default function GamesPage() {
       router.push(route)
     } else {
       // 如果路由不存在，显示游戏预览
-      const gameTitle = games.find(g => g.id === gameId)?.title || '未知游戏'
-      alert('即将开始游戏: ' + gameTitle)
+      alert('即将开始游戏: ' + (games.find(g => g.id === gameId)?.title || '未知游戏'))
     }
   }
 
   const shareGame = (game: Game) => {
-    let shareText = '🎮 推荐一个好玩的游戏：' + game.title + '\n\n'
-    shareText += game.description + '\n\n'
-    shareText += '适合：' + game.players + ' | 时长：' + game.duration + '\n'
-    shareText += '难度：' + game.difficulty + ' | 评分：' + game.rating + '/5\n\n'
-    shareText += '#丘比特AI #情感游戏'
+    let shareText = '🎮 推荐一个好玩的游戏：' + game.title + '\n\n';
+    shareText += game.description + '\n\n';
+    shareText += '适合：' + game.players + ' | 时长：' + game.duration + '\n';
+    shareText += '难度：' + game.difficulty + ' | 评分：' + game.rating + '/5\n\n';
+    shareText += '#丘比特AI #情感游戏';
     
     if (navigator.share) {
       navigator.share({
@@ -312,42 +311,42 @@ export default function GamesPage() {
 
   const generateGamesReport = () => {
     // 计算统计数据
-    const totalGames = games.length
-    const averageRating = (games.reduce((sum, g) => sum + g.rating, 0) / games.length).toFixed(1)
-    const mostPopular = games.sort((a, b) => b.popularity - a.popularity)[0].title
-    const highestRated = games.sort((a, b) => b.rating - a.rating)[0].title
+    const totalGames = games.length;
+    const averageRating = (games.reduce((sum, g) => sum + g.rating, 0) / games.length).toFixed(1);
+    const mostPopular = games.sort((a, b) => b.popularity - a.popularity)[0].title;
+    const highestRated = games.sort((a, b) => b.rating - a.rating)[0].title;
     
     // 生成游戏列表
     const gameList = games.map(game => {
-      let categoryText = '挑战任务'
-      if (game.category === 'communication') categoryText = '沟通交流'
-      else if (game.category === 'emotional') categoryText = '情感表达'
-      else if (game.category === 'fun') categoryText = '趣味游戏'
+      let categoryText = '挑战任务';
+      if (game.category === 'communication') categoryText = '沟通交流';
+      else if (game.category === 'emotional') categoryText = '情感表达';
+      else if (game.category === 'fun') categoryText = '趣味游戏';
       
-      let gameInfo = '### ' + game.title + '\n'
-      gameInfo += '**类型**: ' + categoryText + '\n'
-      gameInfo += '**难度**: ' + game.difficulty + ' | **时长**: ' + game.duration + '\n'
-      gameInfo += '**评分**: ' + game.rating + '/5 | **热度**: ' + game.popularity + '%\n\n'
-      gameInfo += game.description + '\n\n'
-      gameInfo += '特色功能: ' + game.features.join(', ') + '\n\n'
-      gameInfo += '---'
+      let gameInfo = '### ' + game.title + '\n';
+      gameInfo += '**类型**: ' + categoryText + '\n';
+      gameInfo += '**难度**: ' + game.difficulty + ' | **时长**: ' + game.duration + '\n';
+      gameInfo += '**评分**: ' + game.rating + '/5 | **热度**: ' + game.popularity + '%\n\n';
+      gameInfo += game.description + '\n\n';
+      gameInfo += '特色功能: ' + game.features.join(', ') + '\n\n';
+      gameInfo += '---';
       
-      return gameInfo
-    }).join('\n')
+      return gameInfo;
+    }).join('\n');
     
     // 组装完整报告
-    let reportContent = '# 情感游戏推荐报告\n\n'
-    reportContent += '## 游戏概览\n'
-    reportContent += '- 总游戏数: ' + totalGames + '\n'
-    reportContent += '- 平均评分: ' + averageRating + '/5\n'
-    reportContent += '- 最受欢迎: ' + mostPopular + '\n'
-    reportContent += '- 最高评分: ' + highestRated + '\n\n'
-    reportContent += '## 推荐游戏\n'
-    reportContent += gameList + '\n\n'
-    reportContent += '分析时间: ' + new Date().toLocaleString() + '\n'
-    reportContent += '工具: 丘比特AI情感游戏'
+    let reportContent = '# 情感游戏推荐报告\n\n';
+    reportContent += '## 游戏概览\n';
+    reportContent += '- 总游戏数: ' + totalGames + '\n';
+    reportContent += '- 平均评分: ' + averageRating + '/5\n';
+    reportContent += '- 最受欢迎: ' + mostPopular + '\n';
+    reportContent += '- 最高评分: ' + highestRated + '\n\n';
+    reportContent += '## 推荐游戏\n';
+    reportContent += gameList + '\n\n';
+    reportContent += '分析时间: ' + new Date().toLocaleString() + '\n';
+    reportContent += '工具: 丘比特AI情感游戏';
     
-    reportContent = reportContent.trim()
+    reportContent = reportContent.trim();
 
     const blob = new Blob([reportContent], { type: 'text/plain' })
     const url = URL.createObjectURL(blob)
@@ -546,7 +545,7 @@ export default function GamesPage() {
                       </p>
                     )}
                   </div>
-                ))}
+                )}
               </div>
 
               {filteredGames.length === 0 && (
