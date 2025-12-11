@@ -308,7 +308,7 @@ export default function EmotionTreeHolePage() {
     if (sortBy === 'latest') {
       return new Date(b.timestamp).getTime() - new Date(a.timestamp).getTime()
     } else {
-      return b.likeCount - a.likeCount
+      return (b.likeCount || 0) - (a.likeCount || 0)
     }
   })
 
