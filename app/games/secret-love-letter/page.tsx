@@ -71,7 +71,7 @@ export default function SecretLoveLetterPage() {
                 onClick={handleReset}
                 className="bg-gray-500 text-white px-6 py-3 rounded-lg font-medium hover:bg-gray-600 transition-colors flex items-center"
               >
-                <RotateCwc className="h-4 w-4 mr-2" />
+                <RotateCw className="h-4 w-4 mr-2" />
                 重新生成
               </button>
               <button
