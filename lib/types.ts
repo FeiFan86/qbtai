@@ -295,6 +295,8 @@ export const mockData: Database = {
         totalGames: 0,
         totalScore: 0,
         totalPlayTime: 0,
+        consecutiveDays: 0,
+        averageRating: 0,
         achievements: []
       },
       membership: {
