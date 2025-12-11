@@ -28,7 +28,7 @@ export function Hero() {
         </p>
         
         <div className="mt-10 flex items-center justify-center gap-x-6">
-          <Button variant="pink" size="lg" asChild className="group">
+          <Button variant="default" size="lg" asChild className="group bg-gradient-to-r from-pink-500 to-purple-600 hover:from-pink-600 hover:to-purple-700">
             <Link href="/emotion-analysis">
               立即体验
               <ArrowRight className="ml-2 h-4 w-4 transition-transform group-hover:translate-x-1" />
