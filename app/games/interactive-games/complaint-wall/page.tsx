@@ -695,34 +695,56 @@ export default function ComplaintWallPage() {
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-rose-50 via-pink-50 to-purple-50 relative overflow-hidden">
+    <div className="min-h-screen bg-gradient-to-br from-rose-50/80 via-pink-50/80 to-purple-50/80 relative overflow-hidden">
       {/* 增强背景装饰元素 */}
-      <div className="absolute inset-0 bg-gradient-to-br from-rose-100/20 via-pink-100/20 to-purple-100/20"></div>
-      <div className="absolute top-10 left-10 w-72 h-72 bg-gradient-to-r from-rose-300/30 to-pink-300/30 rounded-full blur-3xl animate-pulse"></div>
-      <div className="absolute bottom-10 right-10 w-96 h-96 bg-gradient-to-r from-purple-300/30 to-blue-300/30 rounded-full blur-3xl animate-pulse"></div>
-      <div className="absolute top-1/3 left-1/4 w-64 h-64 bg-gradient-to-r from-orange-300/20 to-red-300/20 rounded-full blur-3xl animate-pulse delay-300"></div>
-      <div className="absolute bottom-1/4 right-1/3 w-80 h-80 bg-gradient-to-r from-yellow-300/20 to-amber-300/20 rounded-full blur-3xl animate-pulse delay-700"></div>
+      <div className="absolute inset-0 overflow-hidden pointer-events-none">
+        <div className="absolute top-10 left-10 w-72 h-72 bg-gradient-to-r from-rose-300/30 to-pink-300/30 rounded-full blur-3xl animate-pulse"></div>
+        <div className="absolute bottom-10 right-10 w-96 h-96 bg-gradient-to-r from-purple-300/30 to-blue-300/30 rounded-full blur-3xl animate-pulse"></div>
+        <div className="absolute top-1/3 left-1/4 w-64 h-64 bg-gradient-to-r from-orange-300/20 to-red-300/20 rounded-full blur-3xl animate-pulse delay-300"></div>
+        <div className="absolute bottom-1/4 right-1/3 w-80 h-80 bg-gradient-to-r from-yellow-300/20 to-amber-300/20 rounded-full blur-3xl animate-pulse delay-700"></div>
+        <div className="absolute top-20 right-20 w-40 h-40 bg-red-200/20 rounded-full blur-2xl animate-pulse delay-1000"></div>
+        <div className="absolute bottom-40 left-20 w-32 h-32 bg-blue-200/20 rounded-full blur-2xl animate-pulse delay-500"></div>
+      </div>
       
       <GlobalNavbar />
       
       <main className="container mx-auto px-4 py-8 relative z-10">
         <div className="mb-6">
-          <Link href="/games/interactive-games" className="inline-flex items-center gap-2 text-rose-600 hover:text-rose-800 transition-colors mb-6 bg-white/70 backdrop-blur-sm px-4 py-2 rounded-lg shadow-sm">
+          <Link href="/games/interactive-games" className="inline-flex items-center gap-2 text-rose-600 hover:text-rose-800 transition-all duration-300 transform hover:scale-105 mb-6 bg-white/80 backdrop-blur-sm px-4 py-2 rounded-lg shadow-sm hover:shadow-md border border-white/30">
             <ArrowLeft className="h-4 w-4" />
             返回互动游戏
           </Link>
           
-            <div className="text-center mb-8">
-              <div className="inline-flex items-center justify-center mb-6 p-6 bg-gradient-to-r from-orange-500 via-red-500 to-pink-500 rounded-full shadow-2xl animate-bounce">
-                <MessageSquare className="h-12 w-12 text-white" />
-              </div>
-              <h1 className="text-6xl md:text-7xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-orange-600 via-red-600 to-pink-600 mb-6 tracking-tight">
+          <div className="text-center mb-8">
+            <div className="inline-flex items-center justify-center mb-6 p-6 bg-gradient-to-r from-orange-500 via-red-500 to-pink-500 rounded-full shadow-2xl animate-bounce hover:animate-pulse transition-all duration-300 hover:shadow-3xl">
+              <MessageSquare className="h-12 w-12 text-white" />
+            </div>
+            <div className="relative inline-block">
+              <h1 className="text-6xl md:text-7xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-orange-600 via-red-600 to-pink-600 mb-2 tracking-tight animate-fade-in-up">
                 吐槽墙
               </h1>
-              <p className="text-gray-700 max-w-2xl mx-auto text-xl bg-white/80 backdrop-blur-md px-8 py-4 rounded-xl shadow-lg border border-white/30">
-                💬 匿名吐槽释放压力，获得共鸣和建议，这里是你的情绪出口
-              </p>
+              <div className="absolute -inset-1 bg-gradient-to-r from-orange-600 via-red-600 to-pink-600 rounded-lg blur-lg opacity-30 animate-pulse"></div>
             </div>
+            <p className="text-gray-700 max-w-2xl mx-auto text-xl bg-white/80 backdrop-blur-md px-8 py-4 rounded-xl shadow-lg border border-white/30 mt-4">
+              💬 匿名吐槽释放压力，获得共鸣和建议，这里是你的情绪出口
+            </p>
+            
+            {/* 特色标签 */}
+            <div className="flex flex-wrap justify-center gap-3 mt-6">
+              <Badge variant="secondary" className="bg-orange-100 text-orange-800 border-orange-200 shadow-sm">
+                <Shield className="h-3 w-3 mr-1" />匿名保护
+              </Badge>
+              <Badge variant="secondary" className="bg-red-100 text-red-800 border-red-200 shadow-sm">
+                <Heart className="h-3 w-3 mr-1" />情感共鸣
+              </Badge>
+              <Badge variant="secondary" className="bg-pink-100 text-pink-800 border-pink-200 shadow-sm">
+                <Users className="h-3 w-3 mr-1" />社区支持
+              </Badge>
+              <Badge variant="secondary" className="bg-purple-100 text-purple-800 border-purple-200 shadow-sm">
+                <MessageCircle className="h-3 w-3 mr-1" />实时互动
+              </Badge>
+            </div>
+          </div>
         </div>
 
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">

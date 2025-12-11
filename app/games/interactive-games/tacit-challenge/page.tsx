@@ -237,48 +237,88 @@ export default function TacitChallengePage() {
     : 0
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-purple-50 via-pink-50 to-indigo-100">
+    <div className="min-h-screen bg-gradient-to-br from-purple-50/80 via-pink-50/80 to-indigo-100/80 relative overflow-hidden">
+      {/* 背景装饰元素 */}
+      <div className="absolute inset-0 overflow-hidden pointer-events-none">
+        <div className="absolute top-20 left-10 w-80 h-80 bg-gradient-to-r from-purple-300/30 to-pink-300/30 rounded-full blur-3xl animate-pulse"></div>
+        <div className="absolute bottom-20 right-10 w-96 h-96 bg-gradient-to-r from-pink-300/30 to-indigo-300/30 rounded-full blur-3xl animate-pulse"></div>
+        <div className="absolute top-1/3 left-1/4 w-64 h-64 bg-gradient-to-r from-purple-300/20 to-pink-300/20 rounded-full blur-3xl animate-pulse delay-300"></div>
+        <div className="absolute bottom-1/4 right-1/3 w-80 h-80 bg-gradient-to-r from-indigo-300/20 to-purple-300/20 rounded-full blur-3xl animate-pulse delay-700"></div>
+      </div>
+      
       <GlobalNavbar />
       
-      <main className="container mx-auto px-4 py-8">
-        <div className="mb-8">
-          <Link href="/games" className="inline-flex items-center gap-2 text-purple-600 hover:text-purple-800 transition-colors mb-6">
-            <ArrowLeft className="h-4 w-4" />
+      <main className="container mx-auto px-4 py-8 relative z-10">
+        <div className="mb-12">
+          <Link href="/games" className="inline-flex items-center gap-3 text-purple-600 hover:text-purple-800 transition-all duration-300 transform hover:scale-105 mb-8 bg-white/90 backdrop-blur-lg px-6 py-3 rounded-2xl shadow-lg hover:shadow-xl border-2 border-purple-100/50">
+            <ArrowLeft className="h-5 w-5" />
             返回游戏中心
           </Link>
           
-          <div className="text-center mb-8">
-            <h1 className="text-4xl md:text-6xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-purple-600 to-pink-600 mb-4">
-              默契挑战
-            </h1>
-            <p className="text-lg text-gray-600 max-w-2xl mx-auto">
-              测试你们之间的默契程度，发现彼此的了解和关心，让感情更加深厚
-            </p>
+          <div className="text-center mb-12">
+            <div className="inline-flex items-center justify-center mb-8 p-8 bg-gradient-to-r from-purple-500 via-pink-500 to-indigo-500 rounded-full shadow-3xl animate-bounce hover:animate-pulse transition-all duration-500 hover:shadow-4xl transform hover:scale-110">
+              <Heart className="h-16 w-16 text-white" />
+            </div>
+            
+            <div className="relative inline-block mb-6">
+              <h1 className="text-6xl md:text-7xl font-black text-transparent bg-clip-text bg-gradient-to-r from-purple-600 via-pink-600 to-indigo-600 mb-3 tracking-tight animate-fade-in-up">
+                默契挑战
+              </h1>
+              <div className="absolute -inset-2 bg-gradient-to-r from-purple-600 via-pink-600 to-indigo-600 rounded-2xl blur-2xl opacity-25 animate-pulse"></div>
+            </div>
+            
+            <div className="max-w-3xl mx-auto bg-gradient-to-r from-white/90 to-pink-50/90 backdrop-blur-xl px-10 py-6 rounded-3xl shadow-2xl border-2 border-white/30 transform hover:scale-105 transition-all duration-500">
+              <p className="text-xl text-gray-800 leading-relaxed font-medium">
+                测试你们之间的默契程度，发现彼此的了解和关心，让感情更加深厚，创造属于你们的专属记忆
+              </p>
+            </div>
+            
+            {/* 特色标签 */}
+            <div className="flex flex-wrap justify-center gap-4 mt-8">
+              <Badge variant="secondary" className="bg-gradient-to-r from-purple-100 to-pink-100 text-purple-800 border-2 border-purple-200 shadow-lg text-sm px-4 py-2 rounded-full">
+                <Brain className="h-4 w-4 mr-2" />心理测试
+              </Badge>
+              <Badge variant="secondary" className="bg-gradient-to-r from-pink-100 to-rose-100 text-pink-800 border-2 border-pink-200 shadow-lg text-sm px-4 py-2 rounded-full">
+                <Heart className="h-4 w-4 mr-2" />情感分析
+              </Badge>
+              <Badge variant="secondary" className="bg-gradient-to-r from-indigo-100 to-purple-100 text-indigo-800 border-2 border-indigo-200 shadow-lg text-sm px-4 py-2 rounded-full">
+                <Target className="h-4 w-4 mr-2" />精准评估
+              </Badge>
+              <Badge variant="secondary" className="bg-gradient-to-r from-rose-100 to-orange-100 text-rose-800 border-2 border-rose-200 shadow-lg text-sm px-4 py-2 rounded-full">
+                <Sparkles className="h-4 w-4 mr-2" />专业建议
+              </Badge>
+            </div>
           </div>
         </div>
 
-        <div className="max-w-4xl mx-auto">
+        <div className="max-w-5xl mx-auto">
 
         {/* 游戏控制区 */}
-        <Card className="mb-6">
-          <CardHeader>
-            <div className="flex flex-col md:flex-row justify-between items-center gap-4">
+        <Card className="mb-8 bg-gradient-to-br from-white/95 to-purple-50/95 backdrop-blur-2xl shadow-3xl border-2 border-white/50 rounded-3xl overflow-hidden">
+          <div className="absolute top-0 left-0 w-full h-2 bg-gradient-to-r from-purple-500 via-pink-500 to-indigo-500"></div>
+          <CardHeader className="pb-6">
+            <div className="flex flex-col md:flex-row justify-between items-center gap-6">
               <div>
-                <CardTitle>默契测试</CardTitle>
-                <CardDescription>
-                  两人分别回答相同的问题，看看你们的默契度有多高
+                <div className="flex items-center gap-3 mb-3">
+                  <div className="p-2 bg-gradient-to-r from-purple-500 to-pink-500 rounded-xl">
+                    <Brain className="h-6 w-6 text-white" />
+                  </div>
+                  <CardTitle className="text-3xl font-bold text-gray-800">默契大挑战</CardTitle>
+                </div>
+                <CardDescription className="text-lg text-gray-600">
+                  💕 两人分别回答相同的问题，测试你们之间的默契程度，发现更多美好
                 </CardDescription>
               </div>
               
-              <div className="flex gap-2">
+              <div className="flex gap-3">
                 {!gameStarted ? (
-                  <Button onClick={startTest} className="gap-2">
-                    <Play className="h-4 w-4" />
+                  <Button onClick={startTest} className="gap-3 py-4 px-8 bg-gradient-to-r from-purple-600 to-pink-600 hover:from-purple-700 hover:to-pink-700 text-white font-semibold text-lg rounded-xl shadow-xl hover:shadow-2xl transform hover:scale-105 transition-all duration-300">
+                    <Play className="h-5 w-5" />
                     开始测试
                   </Button>
                 ) : (
-                  <Button onClick={restartTest} variant="outline" className="gap-2">
-                    <RotateCcw className="h-4 w-4" />
+                  <Button onClick={restartTest} variant="outline" className="gap-3 py-4 px-6 border-2 border-purple-300 text-purple-600 hover:bg-purple-50 font-semibold text-lg rounded-xl transition-all duration-300">
+                    <RotateCcw className="h-5 w-5" />
                     重新开始
                   </Button>
                 )}
@@ -286,66 +326,66 @@ export default function TacitChallengePage() {
             </div>
           </CardHeader>
           
-          <CardContent>
+          <CardContent className="px-8 pb-8">
             {/* 当前玩家和进度 */}
             {gameStarted && !testCompleted && (
-              <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-4">
-                <div className="text-center">
-                  <div className="flex items-center justify-center gap-1 text-gray-600">
-                    <Clock className="h-4 w-4" />
-                    <span className="text-sm">用时</span>
+              <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-6">
+                <div className="text-center bg-gradient-to-r from-purple-50 to-pink-50 p-6 rounded-2xl shadow-lg border-2 border-purple-200 hover:shadow-xl transition-all duration-300 transform hover:scale-105">
+                  <div className="flex items-center justify-center gap-3 text-purple-600 mb-3">
+                    <Clock className="h-6 w-6" />
+                    <span className="text-base font-semibold">用时</span>
                   </div>
-                  <div className="text-xl font-bold">{time}秒</div>
+                  <div className="text-3xl font-black text-purple-700">{time}秒</div>
                 </div>
-                <div className="text-center">
-                  <div className="flex items-center justify-center gap-1 text-gray-600">
-                    <Users className="h-4 w-4" />
-                    <span className="text-sm">当前玩家</span>
+                <div className="text-center bg-gradient-to-r from-pink-50 to-rose-50 p-6 rounded-2xl shadow-lg border-2 border-pink-200 hover:shadow-xl transition-all duration-300 transform hover:scale-105">
+                  <div className="flex items-center justify-center gap-3 text-pink-600 mb-3">
+                    <Users className="h-6 w-6" />
+                    <span className="text-base font-semibold">当前玩家</span>
                   </div>
-                  <div className="text-xl font-bold">
-                    {currentPlayer === 'player1' ? '玩家1' : '玩家2'}
+                  <div className="text-3xl font-black text-pink-700">
+                    {currentPlayer === 'player1' ? '👤 玩家1' : '👤 玩家2'}
                   </div>
                 </div>
-                <div className="text-center">
-                  <div className="flex items-center justify-center gap-1 text-gray-600">
-                    <Target className="h-4 w-4" />
-                    <span className="text-sm">进度</span>
+                <div className="text-center bg-gradient-to-r from-blue-50 to-cyan-50 p-6 rounded-2xl shadow-lg border-2 border-blue-200 hover:shadow-xl transition-all duration-300 transform hover:scale-105">
+                  <div className="flex items-center justify-center gap-3 text-blue-600 mb-3">
+                    <Target className="h-6 w-6" />
+                    <span className="text-base font-semibold">进度</span>
                   </div>
-                  <div className="text-xl font-bold">{Math.round(progress)}%</div>
+                  <div className="text-3xl font-black text-blue-700">{Math.round(progress)}%</div>
                 </div>
               </div>
             )}
             
             {/* 测试统计（完成时显示） */}
             {testCompleted && testResult && (
-              <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-4">
-                <div className="text-center">
-                  <div className="flex items-center justify-center gap-1 text-gray-600">
-                    <Clock className="h-4 w-4" />
-                    <span className="text-sm">用时</span>
+              <div className="grid grid-cols-2 md:grid-cols-4 gap-6 mb-4">
+                <div className="text-center bg-gradient-to-r from-gray-50 to-gray-100 p-4 rounded-2xl border-2 border-gray-200">
+                  <div className="flex items-center justify-center gap-2 text-gray-600 mb-2">
+                    <Clock className="h-5 w-5" />
+                    <span className="text-sm font-medium">用时</span>
                   </div>
-                  <div className="text-xl font-bold">{time}秒</div>
+                  <div className="text-2xl font-bold">{time}秒</div>
                 </div>
-                <div className="text-center">
-                  <div className="flex items-center justify-center gap-1 text-gray-600">
-                    <Star className="h-4 w-4" />
-                    <span className="text-sm">分数</span>
+                <div className="text-center bg-gradient-to-r from-yellow-50 to-orange-50 p-4 rounded-2xl border-2 border-yellow-200">
+                  <div className="flex items-center justify-center gap-2 text-yellow-600 mb-2">
+                    <Star className="h-5 w-5" />
+                    <span className="text-sm font-medium">分数</span>
                   </div>
-                  <div className="text-xl font-bold">{testResult.score}</div>
+                  <div className="text-2xl font-bold text-yellow-600">{testResult.score}</div>
                 </div>
-                <div className="text-center">
-                  <div className="flex items-center justify-center gap-1 text-gray-600">
-                    <Heart className="h-4 w-4" />
-                    <span className="text-sm">默契度</span>
+                <div className="text-center bg-gradient-to-r from-pink-50 to-rose-50 p-4 rounded-2xl border-2 border-pink-200">
+                  <div className="flex items-center justify-center gap-2 text-pink-600 mb-2">
+                    <Heart className="h-5 w-5" />
+                    <span className="text-sm font-medium">默契度</span>
                   </div>
-                  <div className="text-xl font-bold">{testResult.matchingRate}%</div>
+                  <div className="text-2xl font-bold text-pink-600">{testResult.matchingRate}%</div>
                 </div>
-                <div className="text-center">
-                  <div className="flex items-center justify-center gap-1 text-gray-600">
-                    <Sparkles className="h-4 w-4" />
-                    <span className="text-sm">匹配度</span>
+                <div className="text-center bg-gradient-to-r from-purple-50 to-indigo-50 p-4 rounded-2xl border-2 border-purple-200">
+                  <div className="flex items-center justify-center gap-2 text-purple-600 mb-2">
+                    <Sparkles className="h-5 w-5" />
+                    <span className="text-sm font-medium">匹配度</span>
                   </div>
-                  <div className="text-xl font-bold">{testResult.personalityMatch}</div>
+                  <div className="text-2xl font-bold text-purple-600">{testResult.personalityMatch}</div>
                 </div>
               </div>
             )}

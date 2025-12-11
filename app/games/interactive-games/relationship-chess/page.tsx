@@ -226,6 +226,7 @@ export default function RelationshipChessPage() {
   const [gameHistory, setGameHistory] = useState<GameRecord[]>([])
   const [showHistory, setShowHistory] = useState(false)
   const [isPaused, setIsPaused] = useState(false)
+  const [isAnimating, setIsAnimating] = useState(false)
 
   // 计时器
   useEffect(() => {
@@ -550,71 +551,108 @@ export default function RelationshipChessPage() {
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-blue-50 via-purple-50 to-pink-50">
+    <div className="min-h-screen bg-gradient-to-br from-blue-50/80 via-purple-50/80 to-pink-50/80 relative overflow-hidden">
+      {/* 背景装饰元素 */}
+      <div className="absolute inset-0 overflow-hidden pointer-events-none">
+        <div className="absolute top-10 left-10 w-72 h-72 bg-gradient-to-r from-blue-300/30 to-purple-300/30 rounded-full blur-3xl animate-pulse"></div>
+        <div className="absolute bottom-10 right-10 w-96 h-96 bg-gradient-to-r from-purple-300/30 to-pink-300/30 rounded-full blur-3xl animate-pulse"></div>
+        <div className="absolute top-1/3 left-1/4 w-64 h-64 bg-gradient-to-r from-blue-300/20 to-cyan-300/20 rounded-full blur-3xl animate-pulse delay-300"></div>
+        <div className="absolute bottom-1/4 right-1/3 w-80 h-80 bg-gradient-to-r from-pink-300/20 to-rose-300/20 rounded-full blur-3xl animate-pulse delay-700"></div>
+      </div>
+      
       <GlobalNavbar />
       
-      <main className="container mx-auto px-4 py-8">
-        <div className="mb-6">
-          <Link href="/games" className="inline-flex items-center gap-2 text-blue-600 hover:text-blue-800 transition-colors mb-6">
-            <ArrowLeft className="h-4 w-4" />
+      <main className="container mx-auto px-4 py-8 relative z-10">
+        <div className="mb-8">
+          <Link href="/games" className="inline-flex items-center gap-3 text-blue-600 hover:text-blue-800 transition-all duration-300 transform hover:scale-105 mb-8 bg-white/90 backdrop-blur-lg px-6 py-3 rounded-2xl shadow-lg hover:shadow-xl border-2 border-blue-100/50">
+            <ArrowLeft className="h-5 w-5" />
             返回游戏中心
           </Link>
           
-          <div className="text-center mb-8">
-            <h1 className="text-4xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-blue-600 to-purple-600 mb-4">
-              关系飞行棋
-            </h1>
-            <p className="text-gray-600 max-w-2xl mx-auto text-lg">
-              通过情感话题和挑战增进彼此了解，在游戏中深化感情连接
-            </p>
+          <div className="text-center mb-12">
+            <div className="inline-flex items-center justify-center mb-8 p-8 bg-gradient-to-r from-blue-500 via-purple-500 to-pink-500 rounded-full shadow-3xl animate-bounce hover:animate-pulse transition-all duration-500 hover:shadow-4xl transform hover:scale-110">
+              <Heart className="h-16 w-16 text-white" />
+            </div>
+            
+            <div className="relative inline-block mb-6">
+              <h1 className="text-6xl md:text-7xl font-black text-transparent bg-clip-text bg-gradient-to-r from-blue-600 via-purple-600 to-pink-600 mb-3 tracking-tight animate-fade-in-up">
+                关系飞行棋
+              </h1>
+              <div className="absolute -inset-2 bg-gradient-to-r from-blue-600 via-purple-600 to-pink-600 rounded-2xl blur-2xl opacity-25 animate-pulse"></div>
+            </div>
+            
+            <div className="max-w-3xl mx-auto bg-gradient-to-r from-white/90 to-purple-50/90 backdrop-blur-xl px-10 py-6 rounded-3xl shadow-2xl border-2 border-white/30 transform hover:scale-105 transition-all duration-500">
+              <p className="text-xl text-gray-800 leading-relaxed font-medium">
+                🎲 通过情感话题和挑战增进彼此了解，在游戏中深化感情连接，创造属于你们的浪漫回忆
+              </p>
+            </div>
+            
+            {/* 特色标签 */}
+            <div className="flex flex-wrap justify-center gap-4 mt-8">
+              <Badge variant="secondary" className="bg-gradient-to-r from-blue-100 to-cyan-100 text-blue-800 border-2 border-blue-200 shadow-lg text-sm px-4 py-2 rounded-full">
+                <Heart className="h-4 w-4 mr-2" />情感互动
+              </Badge>
+              <Badge variant="secondary" className="bg-gradient-to-r from-purple-100 to-pink-100 text-purple-800 border-2 border-purple-200 shadow-lg text-sm px-4 py-2 rounded-full">
+                <Dice6 className="h-4 w-4 mr-2" />策略游戏
+              </Badge>
+              <Badge variant="secondary" className="bg-gradient-to-r from-pink-100 to-rose-100 text-pink-800 border-2 border-pink-200 shadow-lg text-sm px-4 py-2 rounded-full">
+                <MessageCircle className="h-4 w-4 mr-2" />真心话
+              </Badge>
+              <Badge variant="secondary" className="bg-gradient-to-r from-red-100 to-orange-100 text-red-800 border-2 border-red-200 shadow-lg text-sm px-4 py-2 rounded-full">
+                <Sparkles className="h-4 w-4 mr-2" />大冒险
+              </Badge>
+            </div>
           </div>
         </div>
 
         {!gameStarted ? (
           // 游戏开始界面
-          <div className="max-w-2xl mx-auto">
-            <Card className="bg-white/80 backdrop-blur-sm shadow-lg">
-              <CardHeader className="text-center">
-                <CardTitle className="text-2xl flex items-center justify-center gap-2">
-                  <Heart className="h-6 w-6 text-red-500" />
+          <div className="max-w-3xl mx-auto">
+            <Card className="bg-gradient-to-br from-white/95 to-purple-50/95 backdrop-blur-2xl shadow-3xl border-2 border-white/50 rounded-3xl overflow-hidden">
+              <div className="absolute top-0 left-0 w-full h-2 bg-gradient-to-r from-blue-500 via-purple-500 to-pink-500"></div>
+              <CardHeader className="text-center pb-6">
+                <div className="inline-flex items-center justify-center mb-4 p-3 bg-gradient-to-r from-red-500 to-pink-500 rounded-2xl">
+                  <Heart className="h-8 w-8 text-white" />
+                </div>
+                <CardTitle className="text-3xl font-bold flex items-center justify-center gap-3 text-gray-800">
                   准备开始游戏
                 </CardTitle>
-                <CardDescription>
-                  设置玩家名称，开始你们的关系探索之旅
+                <CardDescription className="text-lg text-gray-600 mt-2">
+                  设置玩家名称，开始你们的关系探索之旅，创造美好回忆
                 </CardDescription>
               </CardHeader>
-              <CardContent className="space-y-6">
-                <div className="grid grid-cols-2 gap-4">
+              <CardContent className="space-y-8 px-8 pb-8">
+                <div className="grid grid-cols-2 gap-6">
                   <div>
-                    <label className="block text-sm font-medium mb-2">玩家1名称</label>
+                    <label className="block text-lg font-semibold mb-3 text-gray-700">玩家1名称</label>
                     <input
                       type="text"
                       value={player1Name}
                       onChange={(e) => setPlayer1Name(e.target.value)}
-                      className="w-full p-3 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+                      className="w-full p-4 border-2 border-blue-200 rounded-xl text-lg bg-white/80 backdrop-blur-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-300"
                       placeholder="输入玩家1名称"
                     />
                   </div>
                   <div>
-                    <label className="block text-sm font-medium mb-2">玩家2名称</label>
+                    <label className="block text-lg font-semibold mb-3 text-gray-700">玩家2名称</label>
                     <input
                       type="text"
                       value={player2Name}
                       onChange={(e) => setPlayer2Name(e.target.value)}
-                      className="w-full p-3 border rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-500"
+                      className="w-full p-4 border-2 border-purple-200 rounded-xl text-lg bg-white/80 backdrop-blur-sm focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent transition-all duration-300"
                       placeholder="输入玩家2名称"
                     />
                   </div>
                 </div>
                 
-                <div className="flex gap-3">
-                  <Button onClick={startGame} className="flex-1 bg-gradient-to-r from-blue-500 to-purple-500 hover:from-blue-600 hover:to-purple-600 text-white">
-                    <Play className="h-4 w-4 mr-2" />
+                <div className="flex gap-4">
+                  <Button onClick={startGame} className="flex-1 py-4 bg-gradient-to-r from-blue-500 to-purple-500 hover:from-blue-600 hover:to-purple-600 text-white font-semibold text-lg rounded-xl shadow-xl hover:shadow-2xl transform hover:scale-105 transition-all duration-300">
+                    <Play className="h-5 w-5 mr-3" />
                     开始游戏
                   </Button>
                   {safeLocalStorage.getItem('relationshipChessSave') && (
-                    <Button onClick={loadGame} variant="outline">
-                      <Save className="h-4 w-4 mr-2" />
+                    <Button onClick={loadGame} variant="outline" className="py-4 px-6 border-2 border-gray-300 hover:border-blue-500 text-gray-700 font-semibold rounded-xl transition-all duration-300">
+                      <Save className="h-5 w-5 mr-2" />
                       加载游戏
                     </Button>
                   )}
@@ -625,9 +663,9 @@ export default function RelationshipChessPage() {
                     <Button
                       onClick={() => setShowHistory(!showHistory)}
                       variant="ghost"
-                      className="text-blue-600"
+                      className="text-blue-600 hover:text-blue-800 font-medium text-lg py-3 px-6 rounded-xl transition-all duration-300 hover:bg-blue-50"
                     >
-                      <History className="h-4 w-4 mr-2" />
+                      <History className="h-5 w-5 mr-3" />
                       查看游戏历史
                     </Button>
                   </div>
@@ -664,44 +702,47 @@ export default function RelationshipChessPage() {
           </div>
         ) : (
           // 游戏进行界面
-          <div className="grid grid-cols-1 lg:grid-cols-4 gap-6">
+          <div className="grid grid-cols-1 lg:grid-cols-4 gap-8">
             {/* 左侧游戏面板 */}
             <div className="lg:col-span-3">
-              <Card className="bg-white/80 backdrop-blur-sm shadow-lg">
-                <CardHeader>
+              <Card className="bg-gradient-to-br from-white/95 to-blue-50/95 backdrop-blur-2xl shadow-3xl border-2 border-white/50 rounded-3xl overflow-hidden">
+                <div className="absolute top-0 left-0 w-full h-2 bg-gradient-to-r from-blue-500 via-purple-500 to-pink-500"></div>
+                <CardHeader className="pb-6">
                   <div className="flex justify-between items-center">
-                    <CardTitle className="flex items-center gap-2">
-                      <Trophy className="h-5 w-5 text-yellow-500" />
+                    <CardTitle className="flex items-center gap-3 text-2xl font-bold text-gray-800">
+                      <div className="p-2 bg-gradient-to-r from-yellow-500 to-orange-500 rounded-xl">
+                        <Trophy className="h-6 w-6 text-white" />
+                      </div>
                       游戏进行中
                     </CardTitle>
-                    <div className="flex items-center gap-2">
-                      <Badge className={currentPlayer === 1 ? "bg-blue-100 text-blue-800 border-0" : "bg-purple-100 text-purple-800 border-0"}>
+                    <div className="flex items-center gap-4">
+                      <Badge className={currentPlayer === 1 ? "bg-gradient-to-r from-blue-200 to-cyan-200 text-blue-800 border-2 border-blue-300 shadow-lg text-base px-4 py-2" : "bg-gradient-to-r from-purple-200 to-pink-200 text-purple-800 border-2 border-purple-300 shadow-lg text-base px-4 py-2"}>
                         当前玩家: {currentPlayer === 1 ? player1Name : player2Name}
                       </Badge>
-                      <Badge className="bg-green-100 text-green-800 border-0">
+                      <Badge className="bg-gradient-to-r from-green-200 to-teal-200 text-green-800 border-2 border-green-300 shadow-lg text-base px-4 py-2">
                         {formatTime(gameTime)}
                       </Badge>
                     </div>
                   </div>
                 </CardHeader>
-                <CardContent className="space-y-6">
+                <CardContent className="space-y-8 px-8 pb-8">
                   {/* 游戏棋盘 */}
-                  <div className="bg-gradient-to-br from-blue-50 to-purple-50 p-6 rounded-xl">
-                    <div className="grid grid-cols-6 gap-2">
+                  <div className="bg-gradient-to-br from-blue-100/80 to-purple-100/80 backdrop-blur-sm p-8 rounded-3xl border-2 border-white/50 shadow-2xl">
+                    <div className="grid grid-cols-6 gap-3">
                       {boardSpaces.map((space) => (
                         <div
                           key={space.id}
-                          className={`aspect-square ${space.color} rounded-lg flex flex-col items-center justify-center text-xs p-2 relative border-2 border-white`}
+                          className={`aspect-square ${space.color} rounded-2xl flex flex-col items-center justify-center text-sm p-3 relative border-4 border-white shadow-lg hover:shadow-xl transition-all duration-300 transform hover:scale-105`}
                           title={space.description}
                         >
-                          {space.label && <div className="font-semibold">{space.label}</div>}
+                          {space.label && <div className="font-bold text-gray-800">{space.label}</div>}
                           
                           {/* 玩家棋子 */}
                           {player1Position === space.id && (
-                            <div className="absolute top-0 right-0 w-4 h-4 bg-blue-600 rounded-full border-2 border-white transform translate-x-1 -translate-y-1"></div>
+                            <div className="absolute top-0 right-0 w-6 h-6 bg-gradient-to-r from-blue-600 to-cyan-600 rounded-full border-4 border-white shadow-lg transform translate-x-2 -translate-y-2 animate-pulse"></div>
                           )}
                           {player2Position === space.id && (
-                            <div className="absolute bottom-0 left-0 w-4 h-4 bg-purple-600 rounded-full border-2 border-white transform -translate-x-1 translate-y-1"></div>
+                            <div className="absolute bottom-0 left-0 w-6 h-6 bg-gradient-to-r from-purple-600 to-pink-600 rounded-full border-4 border-white shadow-lg transform -translate-x-2 translate-y-2 animate-pulse"></div>
                           )}
                         </div>
                       ))}
@@ -710,34 +751,47 @@ export default function RelationshipChessPage() {
                   
                   {/* 游戏控制 */}
                   <div className="flex items-center justify-between">
-                    <div className="flex items-center gap-4">
+                    <div className="flex items-center gap-6">
                       {/* 骰子 */}
                       <div className="flex flex-col items-center">
-                        {renderDice()}
-                        <div className="text-sm text-gray-600 mt-2">骰子</div>
+                        <div className="relative">
+                          {renderDice()}
+                          <div className="absolute -inset-2 bg-gradient-to-r from-purple-400 to-pink-400 rounded-2xl blur-lg opacity-30 animate-pulse"></div>
+                        </div>
+                        <div className="text-base font-medium text-gray-600 mt-3">骰子</div>
                       </div>
                       
                       {/* 掷骰子按钮 */}
                       <Button
                         onClick={rollDice}
                         disabled={isRolling || isPaused || winner !== null}
-                        className="bg-gradient-to-r from-blue-500 to-purple-500 hover:from-blue-600 hover:to-purple-600"
+                        className="py-4 px-8 bg-gradient-to-r from-blue-500 to-purple-500 hover:from-blue-600 hover:to-purple-600 text-white font-bold text-lg rounded-2xl shadow-xl hover:shadow-2xl transform hover:scale-105 transition-all duration-300"
                       >
-                        {isRolling ? '掷骰子中...' : '掷骰子'}
+                        {isRolling ? (
+                          <>
+                            <Dice6 className="h-5 w-5 mr-3 animate-spin" />
+                            掷骰子中...
+                          </>
+                        ) : (
+                          <>
+                            <Dice6 className="h-5 w-5 mr-3" />
+                            掷骰子
+                          </>
+                        )}
                       </Button>
                     </div>
                     
-                    <div className="flex items-center gap-2">
+                    <div className="flex items-center gap-3">
                       {winner === null && (
-                        <Button onClick={pauseGame} variant="outline" size="sm">
-                          {isPaused ? <Play className="h-4 w-4" /> : <Pause className="h-4 w-4" />}
+                        <Button onClick={pauseGame} variant="outline" className="p-3 border-2 border-gray-300 hover:border-blue-500 rounded-xl transition-all duration-300">
+                          {isPaused ? <Play className="h-5 w-5" /> : <Pause className="h-5 w-5" />}
                         </Button>
                       )}
-                      <Button onClick={saveGame} variant="outline" size="sm">
-                        <Save className="h-4 w-4" />
+                      <Button onClick={saveGame} variant="outline" className="p-3 border-2 border-gray-300 hover:border-green-500 rounded-xl transition-all duration-300">
+                        <Save className="h-5 w-5" />
                       </Button>
-                      <Button onClick={resetGame} variant="outline" size="sm">
-                        <RotateCcw className="h-4 w-4" />
+                      <Button onClick={resetGame} variant="outline" className="p-3 border-2 border-gray-300 hover:border-red-500 rounded-xl transition-all duration-300">
+                        <RotateCcw className="h-5 w-5" />
                       </Button>
                     </div>
                   </div>
@@ -746,54 +800,62 @@ export default function RelationshipChessPage() {
             </div>
             
             {/* 右侧信息面板 */}
-            <div className="space-y-4">
+            <div className="space-y-6">
               {/* 玩家信息 */}
-              <Card className="bg-white/80 backdrop-blur-sm shadow-lg">
-                <CardHeader className="pb-3">
-                  <CardTitle className="text-lg flex items-center gap-2">
-                    <Users className="h-5 w-5 text-blue-500" />
+              <Card className="bg-gradient-to-br from-white/95 to-blue-50/95 backdrop-blur-2xl shadow-3xl border-2 border-white/50 rounded-3xl overflow-hidden">
+                <div className="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-blue-500 to-cyan-500"></div>
+                <CardHeader className="pb-4">
+                  <CardTitle className="text-xl font-bold flex items-center gap-3 text-gray-800">
+                    <div className="p-2 bg-gradient-to-r from-blue-500 to-cyan-500 rounded-xl">
+                      <Users className="h-5 w-5 text-white" />
+                    </div>
                     玩家信息
                   </CardTitle>
                 </CardHeader>
                 <CardContent className="space-y-4">
-                  <div className={`p-3 rounded-lg ${currentPlayer === 1 ? 'bg-blue-50 border-2 border-blue-200' : 'bg-gray-50'}`}>
-                    <div className="flex items-center gap-2">
-                      <div className="w-4 h-4 bg-blue-600 rounded-full"></div>
-                      <div className="font-medium">{player1Name}</div>
+                  <div className={`p-4 rounded-2xl transition-all duration-300 transform ${currentPlayer === 1 ? 'bg-gradient-to-r from-blue-100 to-cyan-100 border-4 border-blue-300 shadow-xl scale-105' : 'bg-gradient-to-r from-gray-100 to-blue-50 border-2 border-gray-200 shadow-lg'}`}>
+                    <div className="flex items-center gap-3 mb-2">
+                      <div className="w-6 h-6 bg-gradient-to-r from-blue-600 to-cyan-600 rounded-full shadow-lg"></div>
+                      <div className="font-bold text-lg text-gray-800">{player1Name}</div>
                     </div>
-                    <div className="text-sm text-gray-600">位置: {player1Position}/30</div>
+                    <div className="text-base text-gray-600 font-medium">位置: {player1Position}/30</div>
                   </div>
                   
-                  <div className={`p-3 rounded-lg ${currentPlayer === 2 ? 'bg-purple-50 border-2 border-purple-200' : 'bg-gray-50'}`}>
-                    <div className="flex items-center gap-2">
-                      <div className="w-4 h-4 bg-purple-600 rounded-full"></div>
-                      <div className="font-medium">{player2Name}</div>
+                  <div className={`p-4 rounded-2xl transition-all duration-300 transform ${currentPlayer === 2 ? 'bg-gradient-to-r from-purple-100 to-pink-100 border-4 border-purple-300 shadow-xl scale-105' : 'bg-gradient-to-r from-gray-100 to-purple-50 border-2 border-gray-200 shadow-lg'}`}>
+                    <div className="flex items-center gap-3 mb-2">
+                      <div className="w-6 h-6 bg-gradient-to-r from-purple-600 to-pink-600 rounded-full shadow-lg"></div>
+                      <div className="font-bold text-lg text-gray-800">{player2Name}</div>
                     </div>
-                    <div className="text-sm text-gray-600">位置: {player2Position}/30</div>
+                    <div className="text-base text-gray-600 font-medium">位置: {player2Position}/30</div>
                   </div>
                 </CardContent>
               </Card>
               
               {/* 任务进度 */}
-              <Card className="bg-white/80 backdrop-blur-sm shadow-lg">
-                <CardHeader className="pb-3">
-                  <CardTitle className="text-lg flex items-center gap-2">
-                    <Award className="h-5 w-5 text-yellow-500" />
+              <Card className="bg-gradient-to-br from-white/95 to-purple-50/95 backdrop-blur-2xl shadow-3xl border-2 border-white/50 rounded-3xl overflow-hidden">
+                <div className="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-purple-500 to-pink-500"></div>
+                <CardHeader className="pb-4">
+                  <CardTitle className="text-xl font-bold flex items-center gap-3 text-gray-800">
+                    <div className="p-2 bg-gradient-to-r from-yellow-500 to-orange-500 rounded-xl">
+                      <Award className="h-5 w-5 text-white" />
+                    </div>
                     任务进度
                   </CardTitle>
                 </CardHeader>
                 <CardContent>
-                  <div className="text-center mb-4">
-                    <div className="text-2xl font-bold text-purple-600">{completedTasks.length}</div>
-                    <div className="text-sm text-gray-600">已完成任务</div>
+                  <div className="text-center mb-6 p-4 bg-gradient-to-r from-purple-50 to-pink-50 rounded-2xl border-2 border-purple-200 shadow-lg">
+                    <div className="text-4xl font-black text-purple-600 mb-2">{completedTasks.length}</div>
+                    <div className="text-lg font-semibold text-gray-600">已完成任务</div>
                   </div>
                   
                   {completedTasks.length > 0 && (
-                    <div className="space-y-2 max-h-48 overflow-y-auto">
+                    <div className="space-y-3 max-h-48 overflow-y-auto pr-2">
                       {completedTasks.map((task, index) => (
-                        <div key={index} className="flex items-center gap-2 p-2 bg-gray-50 rounded text-sm">
-                          {task.icon}
-                          <span className="truncate">{task.title}</span>
+                        <div key={index} className="flex items-center gap-3 p-3 bg-gradient-to-r from-white to-gray-50 rounded-xl border-2 border-gray-200 shadow-sm hover:shadow-md transition-all duration-300 transform hover:scale-105">
+                          <div className="p-2 bg-gradient-to-r from-blue-500 to-purple-500 rounded-lg">
+                            {task.icon}
+                          </div>
+                          <span className="font-medium text-gray-800 truncate">{task.title}</span>
                         </div>
                       ))}
                     </div>
@@ -802,35 +864,44 @@ export default function RelationshipChessPage() {
               </Card>
               
               {/* 游戏说明 */}
-              <Card className="bg-white/80 backdrop-blur-sm shadow-lg">
-                <CardHeader className="pb-3">
-                  <CardTitle className="text-lg flex items-center gap-2">
-                    <Zap className="h-5 w-5 text-orange-500" />
+              <Card className="bg-gradient-to-br from-white/95 to-orange-50/95 backdrop-blur-2xl shadow-3xl border-2 border-white/50 rounded-3xl overflow-hidden">
+                <div className="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-orange-500 to-red-500"></div>
+                <CardHeader className="pb-4">
+                  <CardTitle className="text-xl font-bold flex items-center gap-3 text-gray-800">
+                    <div className="p-2 bg-gradient-to-r from-orange-500 to-red-500 rounded-xl">
+                      <Zap className="h-5 w-5 text-white" />
+                    </div>
                     游戏说明
                   </CardTitle>
                 </CardHeader>
-                <CardContent className="space-y-3">
-                  <div className="flex items-start gap-2">
-                    <div className="w-4 h-4 bg-blue-300 rounded-full mt-0.5"></div>
-                    <div className="text-sm">
-                      <div className="font-medium">真心话</div>
-                      <div className="text-gray-600">回答关于你们关系的问题</div>
+                <CardContent className="space-y-4">
+                  <div className="flex items-start gap-3 p-3 bg-gradient-to-r from-blue-50 to-cyan-50 rounded-xl border-2 border-blue-200">
+                    <div className="w-6 h-6 bg-gradient-to-r from-blue-500 to-cyan-500 rounded-full flex items-center justify-center mt-0.5">
+                      <div className="w-3 h-3 bg-white rounded-full"></div>
+                    </div>
+                    <div className="text-base">
+                      <div className="font-bold text-blue-800">真心话</div>
+                      <div className="text-gray-700">回答关于你们关系的问题</div>
                     </div>
                   </div>
                   
-                  <div className="flex items-start gap-2">
-                    <div className="w-4 h-4 bg-red-300 rounded-full mt-0.5"></div>
-                    <div className="text-sm">
-                      <div className="font-medium">大冒险</div>
-                      <div className="text-gray-600">完成有趣的挑战任务</div>
+                  <div className="flex items-start gap-3 p-3 bg-gradient-to-r from-red-50 to-pink-50 rounded-xl border-2 border-red-200">
+                    <div className="w-6 h-6 bg-gradient-to-r from-red-500 to-pink-500 rounded-full flex items-center justify-center mt-0.5">
+                      <div className="w-3 h-3 bg-white rounded-full"></div>
+                    </div>
+                    <div className="text-base">
+                      <div className="font-bold text-red-800">大冒险</div>
+                      <div className="text-gray-700">完成有趣的挑战任务</div>
                     </div>
                   </div>
                   
-                  <div className="flex items-start gap-2">
-                    <div className="w-4 h-4 bg-purple-300 rounded-full mt-0.5"></div>
-                    <div className="text-sm">
-                      <div className="font-medium">甜蜜任务</div>
-                      <div className="text-gray-600">给对方准备小惊喜</div>
+                  <div className="flex items-start gap-3 p-3 bg-gradient-to-r from-purple-50 to-indigo-50 rounded-xl border-2 border-purple-200">
+                    <div className="w-6 h-6 bg-gradient-to-r from-purple-500 to-indigo-500 rounded-full flex items-center justify-center mt-0.5">
+                      <div className="w-3 h-3 bg-white rounded-full"></div>
+                    </div>
+                    <div className="text-base">
+                      <div className="font-bold text-purple-800">甜蜜任务</div>
+                      <div className="text-gray-700">给对方准备小惊喜</div>
                     </div>
                   </div>
                 </CardContent>

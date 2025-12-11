@@ -537,24 +537,58 @@ export default function TruthOrDarePage() {
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-purple-50 via-pink-50 to-red-50">
+    <div className="min-h-screen bg-gradient-to-br from-red-50/80 via-pink-50/80 to-purple-50/80 relative overflow-hidden">
+      {/* 背景装饰元素 */}
+      <div className="absolute inset-0 overflow-hidden pointer-events-none">
+        <div className="absolute top-20 left-10 w-80 h-80 bg-gradient-to-r from-red-300/30 to-pink-300/30 rounded-full blur-3xl animate-pulse"></div>
+        <div className="absolute bottom-20 right-10 w-96 h-96 bg-gradient-to-r from-pink-300/30 to-purple-300/30 rounded-full blur-3xl animate-pulse"></div>
+        <div className="absolute top-1/3 left-1/4 w-64 h-64 bg-gradient-to-r from-red-300/20 to-pink-300/20 rounded-full blur-3xl animate-pulse delay-300"></div>
+        <div className="absolute bottom-1/4 right-1/3 w-80 h-80 bg-gradient-to-r from-purple-300/20 to-red-300/20 rounded-full blur-3xl animate-pulse delay-700"></div>
+      </div>
+      
       <GlobalNavbar />
       
-      <main className="container mx-auto px-4 py-8">
-        <div className="mb-6">
-            <Link href="/games" className="inline-flex items-center gap-2 text-purple-600 hover:text-purple-800 transition-colors mb-6">
-              <ArrowLeft className="h-4 w-4" />
-              返回游戏中心
-            </Link>
-        </div>
-        
-        <div className="text-center mb-8">
-          <h1 className="text-4xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-red-600 to-pink-600 mb-4">
-            真心话大冒险
-          </h1>
-          <p className="text-gray-600 max-w-2xl mx-auto text-lg">
-            经典游戏情感版，增进朋友间的了解和信任，创造美好回忆
-          </p>
+      <main className="container mx-auto px-4 py-8 relative z-10">
+        <div className="mb-12">
+          <Link href="/games" className="inline-flex items-center gap-3 text-purple-600 hover:text-purple-800 transition-all duration-300 transform hover:scale-105 mb-8 bg-white/90 backdrop-blur-lg px-6 py-3 rounded-2xl shadow-lg hover:shadow-xl border-2 border-purple-100/50">
+            <ArrowLeft className="h-5 w-5" />
+            返回游戏中心
+          </Link>
+          
+          <div className="text-center mb-12">
+            <div className="inline-flex items-center justify-center mb-8 p-8 bg-gradient-to-r from-red-500 via-pink-500 to-purple-500 rounded-full shadow-3xl animate-bounce hover:animate-pulse transition-all duration-500 hover:shadow-4xl transform hover:scale-110">
+              <Heart className="h-16 w-16 text-white" />
+            </div>
+            
+            <div className="relative inline-block mb-6">
+              <h1 className="text-6xl md:text-7xl font-black text-transparent bg-clip-text bg-gradient-to-r from-red-600 via-pink-600 to-purple-600 mb-3 tracking-tight animate-fade-in-up">
+                真心话大冒险
+              </h1>
+              <div className="absolute -inset-2 bg-gradient-to-r from-red-600 via-pink-600 to-purple-600 rounded-2xl blur-2xl opacity-25 animate-pulse"></div>
+            </div>
+            
+            <div className="max-w-3xl mx-auto bg-gradient-to-r from-white/90 to-pink-50/90 backdrop-blur-xl px-10 py-6 rounded-3xl shadow-2xl border-2 border-white/30 transform hover:scale-105 transition-all duration-500">
+              <p className="text-xl text-gray-800 leading-relaxed font-medium">
+                经典游戏情感版，增进朋友间的了解和信任，创造美好回忆，让每一次互动都充满惊喜和温暖
+              </p>
+            </div>
+            
+            {/* 特色标签 */}
+            <div className="flex flex-wrap justify-center gap-4 mt-8">
+              <Badge variant="secondary" className="bg-gradient-to-r from-red-100 to-pink-100 text-red-800 border-2 border-red-200 shadow-lg text-sm px-4 py-2 rounded-full">
+                <Heart className="h-4 w-4 mr-2" />真心话
+              </Badge>
+              <Badge variant="secondary" className="bg-gradient-to-r from-orange-100 to-yellow-100 text-orange-800 border-2 border-orange-200 shadow-lg text-sm px-4 py-2 rounded-full">
+                <Zap className="h-4 w-4 mr-2" />大冒险
+              </Badge>
+              <Badge variant="secondary" className="bg-gradient-to-r from-purple-100 to-indigo-100 text-purple-800 border-2 border-purple-200 shadow-lg text-sm px-4 py-2 rounded-full">
+                <Sparkles className="h-4 w-4 mr-2" />自定义
+              </Badge>
+              <Badge variant="secondary" className="bg-gradient-to-r from-blue-100 to-cyan-100 text-blue-800 border-2 border-blue-200 shadow-lg text-sm px-4 py-2 rounded-full">
+                <Trophy className="h-4 w-4 mr-2" />多难度
+              </Badge>
+            </div>
+          </div>
         </div>
 
         <div className="grid grid-cols-1 lg:grid-cols-4 gap-6">
@@ -837,99 +871,157 @@ export default function TruthOrDarePage() {
                 </div>
               </CardHeader>
               
-              <CardContent className="flex flex-col items-center justify-center min-h-[400px]">
+              <CardContent className="flex flex-col items-center justify-center min-h-[400px] p-8">
                 {!isPlaying ? (
-                  <div className="text-center space-y-6">
-                    <div className="w-24 h-24 mx-auto bg-gradient-to-br from-purple-100 to-pink-100 rounded-full flex items-center justify-center">
-                      {gameMode === 'truth' ? <Heart className="h-12 w-12 text-red-500" /> : <Zap className="h-12 w-12 text-orange-500" />}
+                  <div className="text-center space-y-8">
+                    <div className="relative">
+                      <div className="w-32 h-32 mx-auto bg-gradient-to-br from-purple-200 to-pink-300 rounded-full flex items-center justify-center shadow-lg animate-pulse">
+                        {gameMode === 'truth' ? 
+                          <Heart className="h-16 w-16 text-red-500 animate-bounce" /> : 
+                          <Zap className="h-16 w-16 text-orange-500 animate-pulse" />
+                        }
+                      </div>
+                      <div className="absolute -top-2 -right-2 w-8 h-8 bg-yellow-400 rounded-full flex items-center justify-center text-white text-sm font-bold shadow-lg">
+                        ?
+                      </div>
                     </div>
                     
-                    <div className="space-y-2">
-                      <h3 className="text-xl font-semibold text-gray-800">准备开始游戏</h3>
-                      <p className="text-gray-600">点击下方按钮获取你的{gameMode === 'truth' ? '真心话' : '大冒险'}挑战</p>
+                    <div className="space-y-3">
+                      <h3 className="text-2xl font-bold text-gray-800 bg-gradient-to-r from-purple-600 to-pink-600 bg-clip-text text-transparent">
+                        准备开始{gameMode === 'truth' ? '真心话' : '大冒险'}挑战
+                      </h3>
+                      <p className="text-gray-600 text-lg">
+                        点击下方按钮，随机抽取你的{gameMode === 'truth' ? '真心话' : '大冒险'}任务
+                      </p>
+                      <div className="text-sm text-gray-500 bg-gray-50 p-3 rounded-lg">
+                        <span className="font-medium">当前设置：</span>
+                        {difficulty === 'easy' ? '简单' : difficulty === 'medium' ? '中等' : '困难'}难度 | 
+                        {category === 'general' ? '日常通用' : 
+                         category === 'relationship' ? '情感关系' : 
+                         category === 'future' ? '未来规划' : 
+                         category === 'funny' ? '搞笑有趣' : 
+                         category === 'social' ? '社交互动' : '创意表演'}
+                      </div>
                     </div>
                     
                     <Button 
                       onClick={startGame}
                       size="lg"
-                      className="bg-gradient-to-r from-purple-500 to-pink-500 hover:from-purple-600 hover:to-pink-600 text-white px-8 py-3"
+                      className="bg-gradient-to-r from-purple-600 to-pink-600 hover:from-purple-700 hover:to-pink-700 text-white px-12 py-4 text-lg font-semibold shadow-lg hover:shadow-xl transition-all duration-300 transform hover:scale-105"
                     >
-                      <Play className="h-5 w-5 mr-2" />
-                      开始游戏
+                      <Play className="h-6 w-6 mr-3" />
+                      开始挑战
                     </Button>
                   </div>
                 ) : (
-                  <div className="w-full space-y-6">
+                  <div className="w-full space-y-8">
                     {/* 卡片内容 */}
                     <div className={`relative bg-gradient-to-br ${
                       gameMode === 'truth' 
-                        ? 'from-red-50 to-pink-50 border-red-200' 
-                        : 'from-orange-50 to-yellow-50 border-orange-200'
-                    } rounded-xl border-2 p-6 transition-all duration-300 ${
-                      showAnswer ? 'scale-100 opacity-100' : 'scale-95 opacity-80'
+                        ? 'from-red-100 to-pink-100 border-red-300 shadow-lg' 
+                        : 'from-orange-100 to-yellow-100 border-orange-300 shadow-lg'
+                    } rounded-2xl border-4 p-8 transition-all duration-500 transform ${
+                      showAnswer ? 'scale-105 rotate-0 opacity-100 shadow-2xl' : 'scale-95 -rotate-3 opacity-90'
                     }`}>
-                      <div className="text-center">
-                        <div className="mb-4">
+                      <div className="text-center relative">
+                        {/* 装饰元素 */}
+                        <div className={`absolute -top-4 -left-4 w-8 h-8 rounded-full ${
+                          gameMode === 'truth' ? 'bg-red-200' : 'bg-orange-200'
+                        } opacity-50`}></div>
+                        <div className={`absolute -bottom-4 -right-4 w-12 h-12 rounded-full ${
+                          gameMode === 'truth' ? 'bg-pink-200' : 'bg-yellow-200'
+                        } opacity-50`}></div>
+                        
+                        <div className="mb-6">
                           {gameMode === 'truth' ? (
-                            <MessageCircle className="h-8 w-8 text-red-500 mx-auto" />
+                            <div className="w-16 h-16 mx-auto bg-gradient-to-br from-red-400 to-pink-500 rounded-full flex items-center justify-center shadow-lg">
+                              <MessageCircle className="h-8 w-8 text-white" />
+                            </div>
                           ) : (
-                            <Target className="h-8 w-8 text-orange-500 mx-auto" />
+                            <div className="w-16 h-16 mx-auto bg-gradient-to-br from-orange-400 to-yellow-500 rounded-full flex items-center justify-center shadow-lg">
+                              <Target className="h-8 w-8 text-white" />
+                            </div>
                           )}
                         </div>
                         
-                        <div className={`text-lg font-medium mb-4 ${
-                          showAnswer ? 'text-gray-800' : 'text-transparent'
+                        <div className={`text-xl font-semibold mb-6 leading-relaxed transition-all duration-500 ${
+                          showAnswer ? 'text-gray-800 opacity-100' : 'text-transparent bg-gradient-to-r from-gray-300 to-gray-400 bg-clip-text opacity-60'
                         }`}>
-                          {showAnswer ? currentCard : '???'}
+                          {showAnswer ? (
+                            <span className="animate-fade-in">{currentCard}</span>
+                          ) : (
+                            <div className="space-y-2">
+                              <div className="text-4xl tracking-widest">?</div>
+                              <div className="text-sm text-gray-500">点击下方按钮揭开挑战</div>
+                            </div>
+                          )}
                         </div>
                         
                         {!showAnswer && (
-                          <div className="text-sm text-gray-500">
-                            点击显示答案
+                          <div className="text-sm text-gray-500 bg-white/50 p-3 rounded-lg border border-dashed border-gray-300">
+                            <Sparkles className="h-4 w-4 inline mr-1" />
+                            准备好接受挑战了吗？
                           </div>
                         )}
                       </div>
                     </div>
                     
                     {/* 控制按钮 */}
-                    <div className="flex flex-wrap gap-3 justify-center">
+                    <div className="flex flex-wrap gap-4 justify-center">
                       {!showAnswer ? (
                         <Button 
                           onClick={revealAnswer}
                           size="lg"
-                          className="bg-gradient-to-r from-green-500 to-teal-500 hover:from-green-600 hover:to-teal-600"
+                          className="bg-gradient-to-r from-green-600 to-teal-600 hover:from-green-700 hover:to-teal-700 text-white px-8 py-3 text-lg font-semibold shadow-lg hover:shadow-xl transition-all duration-300 transform hover:scale-105"
                         >
                           <Eye className="h-5 w-5 mr-2" />
-                          显示答案
+                          揭开挑战
                         </Button>
                       ) : (
                         <>
                           <Button 
                             onClick={nextCard}
-                            className="bg-gradient-to-r from-purple-500 to-pink-500 hover:from-purple-600 hover:to-pink-600"
+                            size="lg"
+                            className="bg-gradient-to-r from-purple-600 to-pink-600 hover:from-purple-700 hover:to-pink-700 text-white px-6 py-3 font-semibold shadow-lg hover:shadow-xl transition-all duration-300 transform hover:scale-105"
                           >
-                            <Shuffle className="h-4 w-4 mr-2" />
+                            <Shuffle className="h-5 w-5 mr-2" />
                             下一题
                           </Button>
                           
                           <Button 
                             onClick={skipCard}
                             variant="outline"
+                            size="lg"
+                            className="border-gray-300 hover:border-gray-400 px-6 py-3"
                           >
-                            <SkipForward className="h-4 w-4 mr-2" />
+                            <SkipForward className="h-5 w-5 mr-2" />
                             跳过
                           </Button>
                           
                           <Button 
                             onClick={resetGame}
                             variant="outline"
+                            size="lg"
+                            className="border-gray-300 hover:border-gray-400 px-6 py-3"
                           >
-                            <RotateCcw className="h-4 w-4 mr-2" />
+                            <RotateCcw className="h-5 w-5 mr-2" />
                             重新开始
                           </Button>
                         </>
                       )}
                     </div>
+                    
+                    {/* 当前连胜显示 */}
+                    {currentStreak > 0 && (
+                      <div className="text-center">
+                        <div className="inline-flex items-center gap-2 px-4 py-2 bg-gradient-to-r from-yellow-100 to-orange-100 rounded-full border border-yellow-200">
+                          <Flame className="h-4 w-4 text-orange-500" />
+                          <span className="text-sm font-medium text-orange-700">
+                            连胜 {currentStreak} 次！
+                          </span>
+                        </div>
+                      </div>
+                    )}
                   </div>
                 )}
               </CardContent>

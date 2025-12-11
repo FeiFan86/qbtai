@@ -484,78 +484,132 @@ export default function MemoryPuzzlePage() {
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-purple-50 via-pink-50 to-indigo-100">
+    <div className="min-h-screen bg-gradient-to-br from-purple-50/80 via-pink-50/80 to-indigo-50/80 relative overflow-hidden">
+      {/* 背景装饰元素 */}
+      <div className="absolute inset-0 overflow-hidden pointer-events-none">
+        <div className="absolute top-10 left-10 w-72 h-72 bg-gradient-to-r from-purple-300/30 to-pink-300/30 rounded-full blur-3xl animate-pulse"></div>
+        <div className="absolute bottom-10 right-10 w-96 h-96 bg-gradient-to-r from-indigo-300/30 to-blue-300/30 rounded-full blur-3xl animate-pulse"></div>
+        <div className="absolute top-1/3 left-1/4 w-64 h-64 bg-gradient-to-r from-purple-300/20 to-violet-300/20 rounded-full blur-3xl animate-pulse delay-300"></div>
+        <div className="absolute bottom-1/4 right-1/3 w-80 h-80 bg-gradient-to-r from-pink-300/20 to-rose-300/20 rounded-full blur-3xl animate-pulse delay-700"></div>
+      </div>
+      
       <GlobalNavbar />
       
       {/* 加载状态提示 */}
       {isLoading && (
-        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
-          <Card className="w-full max-w-sm">
-            <CardContent className="p-4 text-center">
-              <div className="mb-2">正在保存游戏进度...</div>
+        <div className="fixed inset-0 bg-black/50 backdrop-blur-sm flex items-center justify-center z-50">
+          <Card className="w-full max-w-sm bg-white/90 backdrop-blur-sm border-0 shadow-2xl">
+            <CardContent className="p-6 text-center">
+              <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-purple-600 mx-auto mb-3"></div>
+              <div className="font-medium text-gray-800 mb-2">正在保存游戏进度...</div>
               <div className="w-full bg-gray-200 rounded-full h-2 overflow-hidden">
-                <div className="h-full bg-purple-500 animate-pulse" style={{ width: '60%' }}></div>
+                <div className="h-full bg-gradient-to-r from-purple-500 to-pink-500 animate-pulse" style={{ width: '60%' }}></div>
               </div>
             </CardContent>
           </Card>
         </div>
       )}
       
-      <main className="container mx-auto px-4 py-8">
+      <main className="container mx-auto px-4 py-8 relative z-10">
         <div className="mb-8">
-          <Link href="/games" className="inline-flex items-center gap-2 text-purple-600 hover:text-purple-800 transition-colors mb-6">
+          <Link href="/games" className="inline-flex items-center gap-2 text-purple-600 hover:text-purple-800 transition-all duration-300 transform hover:scale-105 mb-6 bg-white/80 backdrop-blur-sm px-4 py-2 rounded-lg shadow-sm hover:shadow-md border border-white/30">
             <ArrowLeft className="h-4 w-4" />
             返回游戏中心
           </Link>
           
           <div className="text-center mb-8">
-            <h1 className="text-4xl md:text-6xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-purple-600 to-pink-600 mb-4">
-              记忆拼图
-            </h1>
-            <p className="text-lg text-gray-600 max-w-2xl mx-auto">
-              通过拼图游戏重温你们的美好回忆，考验记忆力的同时增进感情
+            <div className="inline-flex items-center justify-center mb-6 p-6 bg-gradient-to-r from-purple-500 via-pink-500 to-indigo-500 rounded-full shadow-2xl animate-bounce hover:animate-pulse transition-all duration-300 hover:shadow-3xl">
+              <div className="text-4xl text-white">🧠</div>
+            </div>
+            
+            <div className="relative inline-block mb-4">
+              <h1 className="text-5xl md:text-6xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-purple-600 via-pink-600 to-indigo-600 mb-2 tracking-tight animate-fade-in-up">
+                记忆拼图
+              </h1>
+              <div className="absolute -inset-1 bg-gradient-to-r from-purple-600 via-pink-600 to-indigo-600 rounded-lg blur-lg opacity-30 animate-pulse"></div>
+            </div>
+            
+            <p className="text-lg text-gray-700 max-w-2xl mx-auto bg-white/80 backdrop-blur-md px-8 py-4 rounded-xl shadow-lg border border-white/30">
+              🧩 通过拼图游戏重温你们的美好回忆，考验记忆力的同时增进感情
             </p>
+            
+            {/* 特色标签 */}
+            <div className="flex flex-wrap justify-center gap-3 mt-6">
+              <Badge variant="secondary" className="bg-purple-100 text-purple-800 border-purple-200 shadow-sm">
+                <Trophy className="h-3 w-3 mr-1" />成就系统
+              </Badge>
+              <Badge variant="secondary" className="bg-pink-100 text-pink-800 border-pink-200 shadow-sm">
+                <Star className="h-3 w-3 mr-1" />难度分级
+              </Badge>
+              <Badge variant="secondary" className="bg-indigo-100 text-indigo-800 border-indigo-200 shadow-sm">
+                <Heart className="h-3 w-3 mr-1" />情感回忆
+              </Badge>
+              <Badge variant="secondary" className="bg-violet-100 text-violet-800 border-violet-200 shadow-sm">
+                <Target className="h-3 w-3 mr-1" />挑战自我
+              </Badge>
+            </div>
           </div>
         </div>
 
         <div className="max-w-6xl mx-auto">
 
         {/* 游戏统计 */}
-        <Card className="mb-8 bg-white/80 backdrop-blur-sm shadow-lg">
-          <CardHeader>
-            <CardTitle className="flex items-center gap-2">
-              <Award className="h-5 w-5 text-yellow-500" />
-              游戏统计
-            </CardTitle>
+        <Card className="mb-8 bg-white/80 backdrop-blur-sm shadow-lg border border-white/20 hover:shadow-xl transition-all duration-300 transform hover:-translate-y-1">
+          <CardHeader className="pb-4 bg-gradient-to-r from-purple-500/10 to-pink-500/10 border-b border-purple-200/30">
+            <div className="flex items-center gap-3">
+              <div className="p-2 bg-gradient-to-r from-purple-500 to-pink-500 rounded-lg">
+                <Award className="h-5 w-5 text-white" />
+              </div>
+              <div>
+                <CardTitle className="text-lg font-bold">游戏统计</CardTitle>
+                <CardDescription className="text-sm">实时追踪你的游戏表现</CardDescription>
+              </div>
+            </div>
           </CardHeader>
-          <CardContent>
-            <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-              <div className="text-center">
-                <div className="text-2xl font-bold text-purple-600">{totalPoints}</div>
-                <div className="text-sm text-gray-500">总积分</div>
+          <CardContent className="p-6">
+            <div className="grid grid-cols-2 md:grid-cols-4 gap-6">
+              <div className="text-center p-4 bg-gradient-to-br from-purple-50 to-pink-50 rounded-xl border border-purple-200/30">
+                <div className="text-3xl font-bold text-purple-600 mb-1">{totalPoints}</div>
+                <div className="text-sm text-gray-600 flex items-center justify-center gap-1">
+                  <Star className="h-3 w-3" />总积分
+                </div>
               </div>
-              <div className="text-center">
-                <div className="text-2xl font-bold text-pink-600">{currentStreak}</div>
-                <div className="text-sm text-gray-500">连胜</div>
+              <div className="text-center p-4 bg-gradient-to-br from-pink-50 to-rose-50 rounded-xl border border-pink-200/30">
+                <div className="text-3xl font-bold text-pink-600 mb-1">{currentStreak}</div>
+                <div className="text-sm text-gray-600 flex items-center justify-center gap-1">
+                  <Target className="h-3 w-3" />连胜
+                </div>
               </div>
-              <div className="text-center">
-                <div className="text-2xl font-bold text-blue-600">{gameStarted ? currentScore : 0}</div>
-                <div className="text-sm text-gray-500">当前得分</div>
+              <div className="text-center p-4 bg-gradient-to-br from-blue-50 to-cyan-50 rounded-xl border border-blue-200/30">
+                <div className="text-3xl font-bold text-blue-600 mb-1">{gameStarted ? currentScore : 0}</div>
+                <div className="text-sm text-gray-600 flex items-center justify-center gap-1">
+                  <Heart className="h-3 w-3" />当前得分
+                </div>
               </div>
-              <div className="text-center">
-                <div className="text-2xl font-bold text-green-600">{unlockedAchievements.length}/{achievements.length}</div>
-                <div className="text-sm text-gray-500">成就解锁</div>
+              <div className="text-center p-4 bg-gradient-to-br from-green-50 to-emerald-50 rounded-xl border border-green-200/30">
+                <div className="text-3xl font-bold text-green-600 mb-1">{unlockedAchievements.length}/{achievements.length}</div>
+                <div className="text-sm text-gray-600 flex items-center justify-center gap-1">
+                  <Trophy className="h-3 w-3" />成就解锁
+                </div>
               </div>
             </div>
             
-            <div className="flex flex-wrap gap-3 mt-4">
+            <div className="flex flex-wrap gap-3 mt-6 justify-center">
               <Button 
                 onClick={toggleAchievements}
                 variant="outline"
-                className="flex items-center gap-2"
+                className="flex items-center gap-2 bg-white/80 backdrop-blur-sm border-purple-200 hover:bg-purple-50 hover:border-purple-300 transition-all duration-300"
               >
-                <Trophy className="h-4 w-4" />
+                <Trophy className="h-4 w-4 text-purple-600" />
                 查看成就
+              </Button>
+              <Button 
+                onClick={shareScore}
+                variant="outline"
+                className="flex items-center gap-2 bg-white/80 backdrop-blur-sm border-pink-200 hover:bg-pink-50 hover:border-pink-300 transition-all duration-300"
+              >
+                <Share2 className="h-4 w-4 text-pink-600" />
+                分享成绩
               </Button>
             </div>
           </CardContent>

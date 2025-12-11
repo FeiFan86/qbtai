@@ -502,37 +502,75 @@ export default function CollaborativeDoodlePage() {
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-blue-50 via-purple-50 to-pink-50">
+    <div className="min-h-screen bg-gradient-to-br from-blue-50/50 via-purple-50/50 to-pink-50/50 relative overflow-hidden">
+      {/* 背景装饰 */}
+      <div className="absolute inset-0 overflow-hidden pointer-events-none">
+        <div className="absolute top-10 left-10 w-32 h-32 bg-blue-200/20 rounded-full blur-xl animate-pulse"></div>
+        <div className="absolute top-40 right-20 w-24 h-24 bg-purple-200/20 rounded-full blur-xl animate-pulse delay-300"></div>
+        <div className="absolute bottom-20 left-1/3 w-40 h-40 bg-pink-200/20 rounded-full blur-xl animate-pulse delay-700"></div>
+        <div className="absolute bottom-10 right-10 w-28 h-28 bg-green-200/20 rounded-full blur-xl animate-pulse delay-1000"></div>
+      </div>
+      
       <GlobalNavbar />
       
-      <main className="container mx-auto px-4 py-8">
+      <main className="container mx-auto px-4 py-8 relative z-10">
         <div className="mb-6">
-          <Link href="/games" className="inline-flex items-center gap-2 text-blue-600 hover:text-blue-800 transition-colors mb-6">
+          <Link href="/games" className="inline-flex items-center gap-2 text-blue-600 hover:text-blue-800 transition-all duration-300 transform hover:scale-105 mb-6 bg-white/80 backdrop-blur-sm px-4 py-2 rounded-lg shadow-sm hover:shadow-md">
             <ArrowLeft className="h-4 w-4" />
             返回游戏中心
           </Link>
           
-          <div className="text-center mb-8">
-            <h1 className="text-4xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-blue-600 to-purple-600 mb-4">
-              协作涂鸦板
-            </h1>
-            <p className="text-gray-600 max-w-2xl mx-auto text-lg">
-              实时协作绘画，双人猜词游戏，创意无限，乐趣无穷
-            </p>
+          <div className="text-center mb-8 animate-fade-in-up">
+            <div className="inline-block bg-gradient-to-r from-blue-500/10 to-purple-500/10 p-6 rounded-2xl backdrop-blur-sm border border-white/20 shadow-lg mb-4">
+              <h1 className="text-4xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-blue-600 via-purple-600 to-pink-600 mb-2">
+                协作涂鸦板
+              </h1>
+              <p className="text-gray-600 max-w-2xl mx-auto text-lg">
+                实时协作绘画，双人猜词游戏，创意无限，乐趣无穷
+              </p>
+            </div>
+            
+            {/* 特色标签 */}
+            <div className="flex flex-wrap justify-center gap-2 mt-4">
+              <Badge variant="secondary" className="bg-blue-100 text-blue-800 border-blue-200">
+                <Users className="h-3 w-3 mr-1" />多人协作
+              </Badge>
+              <Badge variant="secondary" className="bg-green-100 text-green-800 border-green-200">
+                <Target className="h-3 w-3 mr-1" />猜词游戏
+              </Badge>
+              <Badge variant="secondary" className="bg-purple-100 text-purple-800 border-purple-200">
+                <Pencil className="h-3 w-3 mr-1" />自由创作
+              </Badge>
+              <Badge variant="secondary" className="bg-pink-100 text-pink-800 border-pink-200">
+                <Share2 className="h-3 w-3 mr-1" />实时分享
+              </Badge>
+            </div>
           </div>
         </div>
 
         <Tabs defaultValue="free-draw" className="space-y-6">
-          <TabsList className="grid w-full grid-cols-3">
-            <TabsTrigger value="free-draw" onClick={() => setGameMode('free-draw')}>
+          <TabsList className="grid w-full grid-cols-3 bg-white/80 backdrop-blur-sm border border-white/20 shadow-lg rounded-2xl p-1">
+            <TabsTrigger 
+              value="free-draw" 
+              onClick={() => setGameMode('free-draw')}
+              className="data-[state=active]:bg-gradient-to-r data-[state=active]:from-blue-500/20 data-[state=active]:to-purple-500/20 data-[state=active]:border data-[state=active]:border-blue-200/50 data-[state=active]:shadow-sm transition-all duration-300 rounded-xl"
+            >
               <Pencil className="h-4 w-4 mr-2" />
               自由绘画
             </TabsTrigger>
-            <TabsTrigger value="guess-word" onClick={() => setGameMode('guess-word')}>
+            <TabsTrigger 
+              value="guess-word" 
+              onClick={() => setGameMode('guess-word')}
+              className="data-[state=active]:bg-gradient-to-r data-[state=active]:from-green-500/20 data-[state=active]:to-teal-500/20 data-[state=active]:border data-[state=active]:border-green-200/50 data-[state=active]:shadow-sm transition-all duration-300 rounded-xl"
+            >
               <Target className="h-4 w-4 mr-2" />
               猜词游戏
             </TabsTrigger>
-            <TabsTrigger value="collaborative" onClick={() => setGameMode('collaborative')}>
+            <TabsTrigger 
+              value="collaborative" 
+              onClick={() => setGameMode('collaborative')}
+              className="data-[state=active]:bg-gradient-to-r data-[state=active]:from-purple-500/20 data-[state=active]:to-pink-500/20 data-[state=active]:border data-[state=active]:border-purple-200/50 data-[state=active]:shadow-sm transition-all duration-300 rounded-xl"
+            >
               <Users className="h-4 w-4 mr-2" />
               协作模式
             </TabsTrigger>
@@ -541,44 +579,67 @@ export default function CollaborativeDoodlePage() {
           <TabsContent value="free-draw" className="space-y-6">
             <div className="grid grid-cols-1 lg:grid-cols-4 gap-6">
               {/* 工具栏 */}
-              <Card className="lg:col-span-1 bg-white/80 backdrop-blur-sm shadow-lg">
-                <CardHeader>
-                  <CardTitle className="flex items-center gap-2">
-                    <Palette className="h-5 w-5 text-blue-500" />
-                    绘画工具
-                  </CardTitle>
+              <Card className="lg:col-span-1 bg-white/80 backdrop-blur-sm shadow-lg border border-white/20 hover:shadow-xl transition-all duration-300 transform hover:-translate-y-1">
+                <CardHeader className="pb-4">
+                  <div className="flex items-center gap-3">
+                    <div className="p-2 bg-gradient-to-r from-blue-500 to-purple-500 rounded-lg">
+                      <Palette className="h-5 w-5 text-white" />
+                    </div>
+                    <div>
+                      <CardTitle className="text-lg font-bold">绘画工具</CardTitle>
+                      <CardDescription className="text-xs">选择工具开始创作</CardDescription>
+                    </div>
+                  </div>
                 </CardHeader>
-                <CardContent className="space-y-4">
+                <CardContent className="space-y-6">
                   {/* 工具选择 */}
                   <div>
-                    <label className="block text-sm font-medium mb-2">绘画工具</label>
-                    <div className="grid grid-cols-3 gap-2">
+                    <label className="block text-sm font-semibold mb-3 text-gray-700">绘画工具</label>
+                    <div className="grid grid-cols-3 gap-3">
                       <button
                         onClick={() => setTool('pen')}
-                        className={`p-2 rounded-lg border transition-all ${
-                          tool === 'pen' ? 'border-blue-500 bg-blue-50 text-blue-700' : 'border-gray-200 hover:border-gray-300'
+                        className={`group p-3 rounded-xl border-2 transition-all duration-300 transform hover:scale-105 ${
+                          tool === 'pen' 
+                            ? 'border-blue-500 bg-blue-50 shadow-md' 
+                            : 'border-gray-200 hover:border-gray-300 hover:shadow-sm'
                         }`}
                       >
-                        <Pencil className="h-4 w-4 mx-auto" />
-                        <span className="text-xs mt-1">画笔</span>
+                        <Pencil className={`h-5 w-5 mx-auto mb-1 transition-colors ${
+                          tool === 'pen' ? 'text-blue-600' : 'text-gray-500 group-hover:text-gray-700'
+                        }`} />
+                        <span className={`text-xs font-medium transition-colors ${
+                          tool === 'pen' ? 'text-blue-700' : 'text-gray-600 group-hover:text-gray-800'
+                        }`}>画笔</span>
                       </button>
                       <button
                         onClick={() => setTool('eraser')}
-                        className={`p-2 rounded-lg border transition-all ${
-                          tool === 'eraser' ? 'border-blue-500 bg-blue-50 text-blue-700' : 'border-gray-200 hover:border-gray-300'
+                        className={`group p-3 rounded-xl border-2 transition-all duration-300 transform hover:scale-105 ${
+                          tool === 'eraser' 
+                            ? 'border-gray-500 bg-gray-50 shadow-md' 
+                            : 'border-gray-200 hover:border-gray-300 hover:shadow-sm'
                         }`}
                       >
-                        <Eraser className="h-4 w-4 mx-auto" />
-                        <span className="text-xs mt-1">橡皮</span>
+                        <Eraser className={`h-5 w-5 mx-auto mb-1 transition-colors ${
+                          tool === 'eraser' ? 'text-gray-600' : 'text-gray-500 group-hover:text-gray-700'
+                        }`} />
+                        <span className={`text-xs font-medium transition-colors ${
+                          tool === 'eraser' ? 'text-gray-700' : 'text-gray-600 group-hover:text-gray-800'
+                        }`}>橡皮</span>
                       </button>
                       <button
                         onClick={() => setTool('brush')}
-                        className={`p-2 rounded-lg border transition-all ${
-                          tool === 'brush' ? 'border-blue-500 bg-blue-50 text-blue-700' : 'border-gray-200 hover:border-gray-300'
+                        className={`group p-3 rounded-xl border-2 transition-all duration-300 transform hover:scale-105 ${
+                          tool === 'brush' 
+                            ? 'border-purple-500 bg-purple-50 shadow-md' 
+                            : 'border-gray-200 hover:border-gray-300 hover:shadow-sm'
                         }`}
                       >
-                        <Brush className="h-4 w-4 mx-auto" />
-                        <span className="text-xs mt-1">刷子</span>
+                        <Brush className={`h-5 w-5 mx-auto mb-1 transition-colors ${
+                          tool === 'brush' ? 'text-purple-600' : 'text-gray-500 group-hover:text-gray-700'
+                        }`} />
+                        <span className={`text-xs font-medium transition-colors ${
+                          tool === 'brush' ? 'text-purple-700' : 'text-gray-600 group-hover:text-gray-800'
+                        }`}>刷子</span>
                       </button>
                     </div>
                   </div>
@@ -642,30 +703,73 @@ export default function CollaborativeDoodlePage() {
 
               {/* 画布区域 */}
               <div className="lg:col-span-3">
-                <Card className="bg-white/80 backdrop-blur-sm shadow-lg">
-                  <CardHeader>
-                    <CardTitle className="flex items-center gap-2">
-                      <Pencil className="h-5 w-5 text-blue-500" />
-                      画布区域
-                    </CardTitle>
-                    <CardDescription>
-                      使用鼠标或触摸屏进行绘画，支持撤销重做功能
-                    </CardDescription>
+                <Card className="bg-white/80 backdrop-blur-sm shadow-lg border border-white/20 hover:shadow-xl transition-all duration-300 transform hover:-translate-y-1">
+                  <CardHeader className="pb-4">
+                    <div className="flex items-center justify-between">
+                      <div className="flex items-center gap-3">
+                        <div className="p-2 bg-gradient-to-r from-blue-500 to-purple-500 rounded-lg">
+                          <Pencil className="h-5 w-5 text-white" />
+                        </div>
+                        <div>
+                          <CardTitle className="text-lg font-bold">画布区域</CardTitle>
+                          <CardDescription className="text-sm">
+                            使用鼠标或触摸屏进行绘画，支持撤销重做功能
+                          </CardDescription>
+                        </div>
+                      </div>
+                      
+                      {/* 画布状态指示器 */}
+                      <div className="flex items-center gap-2">
+                        <div className={`w-3 h-3 rounded-full ${isDrawing ? 'bg-green-500 animate-pulse' : 'bg-gray-400'}`}></div>
+                        <span className="text-xs text-gray-500">{isDrawing ? '绘画中...' : '准备就绪'}</span>
+                      </div>
+                    </div>
                   </CardHeader>
                   <CardContent>
                     <div 
                       ref={containerRef}
-                      className="border-2 border-dashed border-gray-300 rounded-lg bg-white overflow-hidden"
+                      className="border-2 border-dashed border-gray-300/50 rounded-xl bg-white overflow-hidden relative group hover:border-gray-400 transition-all duration-300"
                       style={{ height: '500px' }}
                     >
+                      {/* 画布网格背景 */}
+                      <div className="absolute inset-0 bg-gradient-to-br from-gray-50 to-gray-100 opacity-30 pointer-events-none"></div>
+                      
+                      {/* 画布提示 */}
+                      <div className="absolute inset-0 flex items-center justify-center pointer-events-none transition-opacity duration-300 opacity-0 group-hover:opacity-100">
+                        <div className="bg-black/70 text-white px-4 py-2 rounded-lg text-sm backdrop-blur-sm">
+                          点击并拖动开始绘画
+                        </div>
+                      </div>
+                      
                       <canvas
                         ref={canvasRef}
                         onMouseDown={startDrawing}
                         onMouseMove={draw}
                         onMouseUp={stopDrawing}
                         onMouseLeave={stopDrawing}
-                        className="cursor-crosshair w-full h-full"
+                        className="cursor-crosshair w-full h-full relative z-10"
                       />
+                    </div>
+                    
+                    {/* 画布操作栏 */}
+                    <div className="flex items-center justify-between mt-4">
+                      <div className="flex items-center gap-2">
+                        <Badge variant="outline" className="text-xs">
+                          <Pencil className="h-3 w-3 mr-1" />
+                          {tool === 'pen' ? '画笔' : tool === 'eraser' ? '橡皮' : '刷子'}
+                        </Badge>
+                        <Badge variant="outline" className="text-xs">
+                          <div className="w-3 h-3 rounded-full mr-1" style={{ backgroundColor: color }}></div>
+                          颜色
+                        </Badge>
+                        <Badge variant="outline" className="text-xs">
+                          大小: {brushSize}px
+                        </Badge>
+                      </div>
+                      
+                      <div className="text-sm text-gray-500">
+                        历史记录: {historyIndex + 1}/{canvasHistory.length}
+                      </div>
                     </div>
                   </CardContent>
                 </Card>
