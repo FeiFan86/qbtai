@@ -264,7 +264,7 @@ ${currentFood.description}
       {({ canUse, remainingUses, onUse, isLoading, usageText }) => (
         <GamePageTemplate
           title="今天吃什么"
-          description="解决"今天吃什么"的世纪难题，让选择变得有趣！"
+          description="解决'今天吃什么'的世纪难题，让选择变得有趣！"
           icon={<Utensils className="h-8 w-8 text-white" />}
           bgGradient="bg-gradient-to-br from-orange-50/80 via-white to-red-50/80"
         >
