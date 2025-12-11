@@ -19,6 +19,8 @@ interface GenerationResult {
   resonanceScore: number;
   style: string;
   estimatedReadingTime: number;
+  imageSuggestions: string[];
+  hashtags: string[];
 }
 
 // 情感状态映射
@@ -30,13 +32,19 @@ const emotionMappings = {
   reflective: { keywords: ['思考', '回忆', '感悟', '成长', '经历'], style: '正式得体', intensity: 70 }
 }
 
-// 平台适配配置
+// 扩展平台适配配置
 const platformConfigs = {
-  wechat: { maxLength: 300, style: '轻松随意', emoji: '💬', hashtag: false },
-  instagram: { maxLength: 200, style: '诗意浪漫', emoji: '📸', hashtag: true },
-  douyin: { maxLength: 150, style: '活泼俏皮', emoji: '🎵', hashtag: true },
-  xiaohongshu: { maxLength: 250, style: '正式得体', emoji: '📕', hashtag: true },
-  email: { maxLength: 500, style: '正式得体', emoji: '📧', hashtag: false }
+  wechat: { maxLength: 300, style: '轻松随意', emoji: '💬', hashtag: false, imageSupport: true },
+  wechat_moment: { maxLength: 150, style: '文艺清新', emoji: '📱', hashtag: false, imageSupport: true },
+  instagram: { maxLength: 200, style: '诗意浪漫', emoji: '📸', hashtag: true, imageSupport: true },
+  douyin: { maxLength: 150, style: '活泼俏皮', emoji: '🎵', hashtag: true, imageSupport: true },
+  xiaohongshu: { maxLength: 250, style: '正式得体', emoji: '📕', hashtag: true, imageSupport: true },
+  weibo: { maxLength: 140, style: '简洁有力', emoji: '🐦', hashtag: true, imageSupport: true },
+  tiktok: { maxLength: 100, style: '潮流时尚', emoji: '🎬', hashtag: true, imageSupport: true },
+  telegram: { maxLength: 400, style: '自由表达', emoji: '✈️', hashtag: false, imageSupport: true },
+  whatsapp: { maxLength: 350, style: '亲切自然', emoji: '💚', hashtag: false, imageSupport: true },
+  email: { maxLength: 500, style: '正式得体', emoji: '📧', hashtag: false, imageSupport: true },
+  letter: { maxLength: 1000, style: '深情款款', emoji: '✉️', hashtag: false, imageSupport: true }
 }
 
 export default function ContentCreationEnhancedPage() {
@@ -49,33 +57,82 @@ export default function ContentCreationEnhancedPage() {
   const [isGenerating, setIsGenerating] = useState(false)
   const [result, setResult] = useState<GenerationResult | null>(null)
   const [copied, setCopied] = useState(false)
+  const [includeImage, setIncludeImage] = useState(true)
+  const [selectedImageType, setSelectedImageType] = useState('romantic')
   const [userPreferences, setUserPreferences] = useState({
     preferredEmojis: ['❤️', '✨', '💕', '🌟'],
     tone: 'warm',
     signature: ''
   })
 
-  // 情感驱动的创意模板库
+  // 扩展情感驱动的创意模板库（丰富示例）
   const emotionTemplates = {
     happy: [
-      '今天的心情超级好！想和你分享这份快乐～',
-      '和你在一起的每一天都充满阳光和欢笑',
-      '生活中的小确幸，因为有你的陪伴而更加美好'
+      '今天的心情超级好！想和你分享这份快乐～就像阳光洒满心间，每一个细胞都在跳舞！',
+      '和你在一起的每一天都充满阳光和欢笑，连空气都变得甜蜜起来～',
+      '生活中的小确幸，因为有你的陪伴而更加美好！比如今天早上的咖啡特别香，因为想着你～',
+      '刚刚看到一只超可爱的小猫，让我想起了你温柔的笑容，瞬间心情爆表💕',
+      '今天完成了重要的项目！想和你一起庆祝这份喜悦，分享成功的喜悦！'
     ],
     romantic: [
-      '亲爱的，我想对你说...',
-      '在这个特别的日子里，我想表达对你的爱意',
-      '和你在一起的时光，是我最珍贵的礼物'
+      '亲爱的，我想对你说：遇见你是我生命中最美的意外，爱你是我做过最正确的决定❤️',
+      '在这个特别的日子里，我想表达对你的爱意：时光荏苒，但爱你如初，永不褪色✨',
+      '和你在一起的时光，是我最珍贵的礼物。每一个拥抱、每一次微笑都让我感到无比幸福～',
+      '还记得我们第一次约会的地方吗？那里的灯光、音乐，还有你羞涩的笑容，我都记得清清楚楚💕',
+      '想对你说：愿我们的爱如星辰大海，永恒而璀璨；如春风细雨，温柔而绵长🌙'
     ],
     grateful: [
-      '感谢你一直以来的包容和支持',
-      '想对你说声谢谢，因为...',
-      '有你在我身边，我感到无比幸运'
+      '感谢你一直以来的包容和支持，让我能够勇敢做自己，追逐梦想✨',
+      '想对你说声谢谢，因为你的存在让我变成了更好的自己，学会了爱与珍惜❤️',
+      '有你在我身边，我感到无比幸运。谢谢你陪我走过风雨，分享阳光～',
+      '感谢你在我最需要的时候给予温暖，在我迷茫时指引方向，你是我的避风港💕',
+      '想表达我的感激：谢谢你理解我的任性，包容我的小脾气，让我感受到被爱的幸福🌟'
     ],
     caring: [
-      '今天过得怎么样？要注意休息哦',
-      '想提醒你一些重要的事情...',
-      '我知道你最近很辛苦，想给你一些鼓励'
+      '今天过得怎么样？要注意休息哦～记得按时吃饭，工作再忙也要照顾好自己💪',
+      '想提醒你一些重要的事情：天气转凉了，记得多穿衣服，别感冒了哦～',
+      '我知道你最近很辛苦，想给你一些鼓励：你是最棒的！加油，我一直在你身边💕',
+      '今天工作累不累？晚上想吃什么？我可以准备你喜欢的食物，一起放松一下～',
+      '想对你说：无论遇到什么困难，记得我永远是你最坚强的后盾，我们一起面对🌈'
+    ],
+    reflective: [
+      '最近在思考我们的关系，发现我们一起经历了很多美好的时光，感谢有你的陪伴💭',
+      '回望过去的一年，我们一起成长，一起面对挑战，感谢彼此的坚持和支持🌱',
+      '有时候会想，如果没有遇见你，我的生活会是什么样子？感谢命运让我们相遇✨',
+      '在我们的关系中，我学到了很多：包容、理解、珍惜...这些都是你教会我的💕',
+      '想和你一起规划未来：我们的梦想、目标，还有那些想要一起实现的愿望🌟'
+    ]
+  }
+
+  // 配图建议库（基于情感和场景）
+  const imageSuggestions = {
+    romantic: [
+      '浪漫的日落或星空照片',
+      '牵手或拥抱的温馨画面',
+      '鲜花或烛光晚餐场景',
+      '海边或山景的浪漫时刻',
+      '纪念日特别时刻的回忆'
+    ],
+    happy: [
+      '阳光明媚的户外活动',
+      '笑脸或庆祝的欢乐瞬间',
+      '美食或旅行中的快乐时刻',
+      '宠物或可爱事物的萌照',
+      '色彩鲜艳的活力场景'
+    ],
+    grateful: [
+      '温馨的家庭或朋友聚会',
+      '感恩主题的温馨画面',
+      '帮助或支持的温暖瞬间',
+      '成长或进步的见证时刻',
+      '简单而美好的生活片段'
+    ],
+    caring: [
+      '关心照顾的温馨场景',
+      '健康生活的积极画面',
+      '放松休息的舒适时刻',
+      '互相支持的温暖瞬间',
+      '日常生活中的小确幸'
     ]
   }
 
@@ -125,11 +182,19 @@ export default function ContentCreationEnhancedPage() {
     }
     
     // 添加标签（如果需要）
+    let hashtags = []
     if (config.hashtag) {
-      optimized += '\n#情感表达 #情侣日常'
+      hashtags = ['#情感表达', '#情侣日常', '#爱情故事', '#幸福时刻']
+      optimized += `\n${hashtags.slice(0, 2).join(' ')}`
     }
     
-    return optimized
+    return { content: optimized, hashtags }
+  }
+
+  // 生成配图建议
+  const generateImageSuggestions = (emotion: string) => {
+    const suggestions = imageSuggestions[emotion as keyof typeof imageSuggestions] || imageSuggestions.romantic
+    return suggestions.slice(0, 3) // 返回前3个建议
   }
 
   // 生成个性化内容
@@ -167,13 +232,16 @@ export default function ContentCreationEnhancedPage() {
       let content = generatePersonalizedContent(detectedEmotion)
       
       // 平台适配
-      const platformOptimized = optimizeForPlatform(content, platform)
+      const { content: platformOptimized, hashtags } = optimizeForPlatform(content, platform)
       
       // 预测共鸣度
       const resonanceScore = predictResonance(content, detectedEmotion)
       
       // 计算阅读时间
       const readingTime = Math.ceil(content.length / 200) // 假设200字/分钟
+      
+      // 生成配图建议
+      const imageSuggestions = includeImage ? generateImageSuggestions(detectedEmotion) : []
       
       setResult({
         content: platformOptimized,
@@ -183,13 +251,15 @@ export default function ContentCreationEnhancedPage() {
           '可以增加对未来的美好期许',
           '尝试不同的情感表达方式'
         ],
-        contentType: `${detectedEmotion === 'romantic' ? '情感表达' : detectedEmotion === 'grateful' ? '感谢表达' : '日常关心'}`,
+        contentType: `${detectedEmotion === 'romantic' ? '情感表达' : detectedEmotion === 'grateful' ? '感谢表达' : detectedEmotion === 'happy' ? '快乐分享' : '日常关心'}`,
         emotionIntensity: emotionConfig.intensity,
         keywords: emotionConfig.keywords.slice(0, 4),
         platform: platform,
         resonanceScore: resonanceScore,
         style: emotionConfig.style,
-        estimatedReadingTime: readingTime
+        estimatedReadingTime: readingTime,
+        imageSuggestions: imageSuggestions,
+        hashtags: hashtags
       })
       setIsGenerating(false)
     }, 2500)
@@ -354,11 +424,17 @@ export default function ContentCreationEnhancedPage() {
                           onChange={(e) => setPlatform(e.target.value)}
                           className="w-full p-3 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-rose-500 focus:border-transparent"
                         >
-                          <option value="wechat">💬 微信/朋友圈</option>
+                          <option value="wechat">💬 微信聊天</option>
+                          <option value="wechat_moment">📱 微信朋友圈</option>
                           <option value="instagram">📸 Instagram</option>
                           <option value="douyin">🎵 抖音</option>
                           <option value="xiaohongshu">📕 小红书</option>
+                          <option value="weibo">🐦 微博</option>
+                          <option value="tiktok">🎬 TikTok</option>
+                          <option value="telegram">✈️ Telegram</option>
+                          <option value="whatsapp">💚 WhatsApp</option>
                           <option value="email">📧 邮件</option>
+                          <option value="letter">✉️ 书信</option>
                         </select>
                       </div>
                       
@@ -375,6 +451,52 @@ export default function ContentCreationEnhancedPage() {
                           <option value="medium">中等长度</option>
                           <option value="long">详细丰富</option>
                         </select>
+                      </div>
+                    </div>
+
+                    {/* 配图设置 */}
+                    <div className="mb-6">
+                      <label className="block text-sm font-medium text-gray-700 mb-3">
+                        配图设置
+                      </label>
+                      <div className="space-y-3">
+                        <div className="flex items-center space-x-2">
+                          <input
+                            type="checkbox"
+                            id="includeImage"
+                            checked={includeImage}
+                            onChange={(e) => setIncludeImage(e.target.checked)}
+                            className="h-4 w-4 text-rose-500 focus:ring-rose-500 border-gray-300 rounded"
+                          />
+                          <label htmlFor="includeImage" className="text-sm text-gray-700">
+                            生成配图建议
+                          </label>
+                        </div>
+                        
+                        {includeImage && (
+                          <div>
+                            <label className="block text-sm text-gray-600 mb-2">配图风格</label>
+                            <div className="grid grid-cols-3 gap-2">
+                              {['romantic', 'happy', 'grateful', 'caring', 'reflective'].map((type) => (
+                                <button
+                                  key={type}
+                                  type="button"
+                                  onClick={() => setSelectedImageType(type)}
+                                  className={`p-2 rounded text-xs font-medium transition-all ${
+                                    selectedImageType === type 
+                                      ? 'bg-rose-500 text-white' 
+                                      : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
+                                  }`}
+                                >
+                                  {type === 'romantic' ? '浪漫' : 
+                                   type === 'happy' ? '快乐' : 
+                                   type === 'grateful' ? '感恩' : 
+                                   type === 'caring' ? '关心' : '思考'}
+                                </button>
+                              ))}
+                            </div>
+                          </div>
+                        )}
                       </div>
                     </div>
 
@@ -435,6 +557,45 @@ export default function ContentCreationEnhancedPage() {
                           <div className="text-lg font-bold text-green-600">{result.style}</div>
                         </div>
                       </div>
+
+                      {/* 配图建议 */}
+                      {result.imageSuggestions && result.imageSuggestions.length > 0 && (
+                        <div className="mb-6">
+                          <h4 className="text-lg font-medium text-gray-900 mb-3 flex items-center">
+                            <span className="w-6 h-6 bg-gradient-to-r from-purple-500 to-pink-500 rounded-full flex items-center justify-center mr-2">
+                              <span className="text-white text-xs">📷</span>
+                            </span>
+                            配图建议
+                          </h4>
+                          <div className="bg-purple-50 rounded-lg p-4">
+                            <ul className="space-y-2">
+                              {result.imageSuggestions.map((suggestion, index) => (
+                                <li key={index} className="flex items-start space-x-2">
+                                  <span className="text-purple-500 mt-0.5">•</span>
+                                  <span className="text-gray-700 text-sm">{suggestion}</span>
+                                </li>
+                              ))}
+                            </ul>
+                            <p className="text-xs text-purple-600 mt-2">
+                              💡 建议：使用高质量、情感匹配的图片效果更佳
+                            </p>
+                          </div>
+                        </div>
+                      )}
+
+                      {/* 标签建议 */}
+                      {result.hashtags && result.hashtags.length > 0 && (
+                        <div className="mb-6">
+                          <h4 className="text-lg font-medium text-gray-900 mb-3">标签建议</h4>
+                          <div className="flex flex-wrap gap-2">
+                            {result.hashtags.map((tag, index) => (
+                              <span key={index} className="px-3 py-1 bg-gray-100 text-gray-700 rounded-full text-sm">
+                                {tag}
+                              </span>
+                            ))}
+                          </div>
+                        </div>
+                      )}
 
                       {/* 操作按钮 */}
                       <div className="flex space-x-3">
