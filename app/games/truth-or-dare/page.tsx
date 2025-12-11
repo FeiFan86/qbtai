@@ -75,7 +75,11 @@ export default function TruthOrDarePage() {
     const question = getRandomQuestion()
     if (question) {
       setCurrentQuestion(question)
-      setUsedQuestions(prev => new Set([...prev, question.id]))
+      setUsedQuestions(prev => {
+        const newSet = new Set(prev)
+        newSet.add(question.id)
+        return newSet
+      })
       setTimer(30) // 30秒倒计时
       setIsTimerRunning(true)
       
