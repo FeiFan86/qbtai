@@ -216,127 +216,151 @@ export default function ConversationChallengePage() {
 
   if (gameCompleted) {
     return (
-      <GamePageTemplate
-        title="对话挑战"
-        description="情商训练游戏，通过不同场景测试你的情感智慧和沟通能力"
-        icon={<Brain className="h-8 w-8 text-white" />}
-        bgGradient="bg-gradient-to-br from-indigo-50/80 via-pink-50/80 to-purple-50/80"
-        showFooter={true}
-      >
-        <div className="max-w-4xl mx-auto">
-          <Card className="text-center py-12">
-            <CardHeader>
-              <div className="flex justify-center mb-4">
-                <div className={`p-4 rounded-full ${scoreLevel.badge}`}>
-                  <Trophy className="h-12 w-12" />
-                </div>
-              </div>
-              <CardTitle className="text-3xl font-bold mb-2">
-                挑战完成！
-              </CardTitle>
-              <CardDescription className="text-lg">
-                你的情商评估结果
-              </CardDescription>
-            </CardHeader>
-              
-              <CardContent className="space-y-6">
-                <div className="text-center">
-                  <div className={`text-4xl font-bold mb-2 ${scoreLevel.color}`}>
-                    {score}/{totalPossibleScore} 分
-                  </div>
-                  <Badge className={`${scoreLevel.badge} ${scoreLevel.color} px-4 py-2 text-lg`}>
-                    {scoreLevel.text}
-                  </Badge>
-                </div>
-                
-                <div className="w-full max-w-md mx-auto">
-                  <Progress value={(score / totalPossibleScore) * 100} className="h-3" />
-                </div>
-                
-                <GameStats
-                  title="挑战统计"
-                  description="本次情商挑战结果"
-                  stats={[
-                    {
-                      value: challenges.length,
-                      label: "挑战完成",
-                      icon: <CheckCircle className="h-3 w-3" />,
-                      bgColor: "bg-gradient-to-br from-blue-50 to-cyan-50",
-                      textColor: "text-blue-600"
-                    },
-                    {
-                      value: Math.round((score / totalPossibleScore) * 100) + "%",
-                      label: "正确率",
-                      icon: <Target className="h-3 w-3" />,
-                      bgColor: "bg-gradient-to-br from-green-50 to-emerald-50",
-                      textColor: "text-green-600"
-                    }
-                  ]}
-                />
-                
-                <div className="flex flex-col sm:flex-row gap-4 justify-center">
-                  <Button onClick={handleRestart} variant="outline">
-                    <RotateCcw className="h-4 w-4 mr-2" />
-                    重新挑战
-                  </Button>
-                  <Button onClick={() => setShowShareModal(true)}>
-                    <Share2 className="h-4 w-4 mr-2" />
-                    分享成绩
-                  </Button>
-                </div>
-              </CardContent>
-            </Card>
-          </div>
-          
-          {/* 分享模态框 */}
-          {showShareModal && (
-            <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
-              <Card className="max-w-md w-full">
+      <UsageGuard feature="games">
+        {({ canUse, remainingUses, onUse, isLoading, usageText }) => (
+          <GamePageTemplate
+            title="对话挑战"
+            description="情商训练游戏，通过不同场景测试你的情感智慧和沟通能力"
+            icon={<Brain className="h-8 w-8 text-white" />}
+            bgGradient="bg-gradient-to-br from-indigo-50/80 via-pink-50/80 to-purple-50/80"
+            showFooter={true}
+          >
+            <div className="max-w-4xl mx-auto">
+              <Card className="text-center py-12">
                 <CardHeader>
-                  <CardTitle>分享你的成绩</CardTitle>
-                  <CardDescription>
-                    让朋友们知道你的情商水平
+                  <div className="flex justify-center mb-4">
+                    <div className={`p-4 rounded-full ${scoreLevel.badge}`}>
+                      <Trophy className="h-12 w-12" />
+                    </div>
+                  </div>
+                  <CardTitle className="text-3xl font-bold mb-2">
+                    挑战完成！
+                  </CardTitle>
+                  <CardDescription className="text-lg">
+                    你的情商评估结果
                   </CardDescription>
                 </CardHeader>
-              <CardContent className="space-y-4">
-                <div className="text-center py-4 border rounded-lg bg-gray-50">
-                  <div className="text-lg font-bold">
-                    我在情景对话挑战中获得了 {score} 分！
+                  
+                <CardContent className="space-y-6">
+                  <div className="text-center">
+                    <div className={`text-4xl font-bold mb-2 ${scoreLevel.color}`}>
+                      {score}/{totalPossibleScore} 分
+                    </div>
+                    <Badge className={`${scoreLevel.badge} ${scoreLevel.color} px-4 py-2 text-lg`}>
+                      {scoreLevel.text}
+                    </Badge>
                   </div>
-                  <div className="text-sm text-gray-500">
-                    情商等级：{scoreLevel.text}
+                  
+                  <div className="w-full max-w-md mx-auto">
+                    <Progress value={(score / totalPossibleScore) * 100} className="h-3" />
                   </div>
+                  
+                  <GameStats
+                    title="挑战统计"
+                    description="本次情商挑战结果"
+                    stats={[
+                      {
+                        value: challenges.length,
+                        label: "挑战完成",
+                        icon: <CheckCircle className="h-3 w-3" />,
+                        bgColor: "bg-gradient-to-br from-blue-50 to-cyan-50",
+                        textColor: "text-blue-600"
+                      },
+                      {
+                        value: Math.round((score / totalPossibleScore) * 100) + "%",
+                        label: "正确率",
+                        icon: <Target className="h-3 w-3" />,
+                        bgColor: "bg-gradient-to-br from-green-50 to-emerald-50",
+                        textColor: "text-green-600"
+                      }
+                    ]}
+                  />
+                  
+                  <div className="flex flex-col sm:flex-row gap-4 justify-center">
+                    <Button onClick={handleRestart} variant="outline">
+                      <RotateCcw className="h-4 w-4 mr-2" />
+                      重新挑战
+                    </Button>
+                    <Button onClick={() => setShowShareModal(true)}>
+                      <Share2 className="h-4 w-4 mr-2" />
+                      分享成绩
+                    </Button>
+                  </div>
+                </CardContent>
+              </Card>
+              
+              {/* 分享模态框 */}
+              {showShareModal && (
+                <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
+                  <Card className="max-w-md w-full">
+                    <CardHeader>
+                      <CardTitle>分享你的成绩</CardTitle>
+                      <CardDescription>
+                        让朋友们知道你的情商水平
+                      </CardDescription>
+                    </CardHeader>
+                    <CardContent className="space-y-4">
+                      <div className="text-center py-4 border rounded-lg bg-gray-50">
+                        <div className="text-lg font-bold">
+                          我在情景对话挑战中获得了 {score} 分！
+                        </div>
+                        <div className="text-sm text-gray-500">
+                          情商等级：{scoreLevel.text}
+                        </div>
+                      </div>
+                      <div className="flex gap-2">
+                        <Button variant="outline" className="flex-1">
+                          复制文本
+                        </Button>
+                        <Button className="flex-1">
+                          分享到社交媒体
+                        </Button>
+                      </div>
+                      <Button variant="ghost" onClick={() => setShowShareModal(false)} className="w-full">
+                        关闭
+                      </Button>
+                    </CardContent>
+                  </Card>
                 </div>
-                <div className="flex gap-2">
-                  <Button variant="outline" className="flex-1">
-                    复制文本
-                  </Button>
-                  <Button className="flex-1">
-                    分享到社交媒体
-                  </Button>
-                </div>
-                <Button variant="ghost" onClick={() => setShowShareModal(false)} className="w-full">
-                  关闭
-                </Button>
-              </CardContent>
-            </Card>
-          </div>
+              )}
+            </div>
+          </GamePageTemplate>
         )}
-      </div>
+      </UsageGuard>
     )
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-indigo-50 via-pink-50 to-purple-50">
-      <GlobalNavbar />
-      
-      <main className="container mx-auto px-4 py-8">
-        <div className="mx-auto max-w-4xl">
-          <div className="mb-6">
-            <Link href="/games">
-              <Button variant="outline" className="mb-4">
-                <ArrowLeft className="h-4 w-4 mr-2" />
-                返回游戏中心
+    <UsageGuard feature="games">
+      {({ canUse, remainingUses, onUse, isLoading, usageText }) => (
+        <GamePageTemplate
+          title="对话挑战"
+          description="情商训练游戏，通过不同场景测试你的情感智慧和沟通能力"
+          icon={<Brain className="h-8 w-8 text-white" />}
+          bgGradient="bg-gradient-to-br from-indigo-50 via-pink-50 to-purple-50"
+        >
+          <div className="max-w-4xl mx-auto">
+            {/* 游戏进度 */}
+            <Card className="mb-6">
+              <CardContent className="pt-6">
+                <div className="flex justify-center items-center mb-2">
+                  <span className="text-sm font-medium text-gray-500">
+                    {currentChallengeIndex + 1} / {challenges.length}
+                  </span>
+                </div>
+                <Progress value={((currentChallengeIndex + 1) / challenges.length) * 100} className="mb-4" />
+                <div className="flex items-center justify-between">
+                  <Badge variant="outline" className="flex items-center gap-1">
+                    <Star className="h-3 w-3" />
+                    当前得分: {score}
+                  </Badge>
+                  <Badge variant="outline" className="flex items-center gap-1">
+                    <Target className="h-3 w-3" />
+                    可能得分: {totalPossibleScore}
+                  </Badge>
+                </div>
+              </CardContent>
+            </Card>
               </Button>
             </Link>
           </div>
@@ -469,10 +493,9 @@ export default function ConversationChallengePage() {
               </div>
             </CardContent>
           </Card>
-        </div>
-      </main>
-      
-      <Footer />
-    </div>
+          </div>
+        </GamePageTemplate>
+      )}
+    </UsageGuard>
   )
 }
