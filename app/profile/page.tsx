@@ -414,7 +414,7 @@ export default function ProfilePage() {
                       </button>
                       <button className="w-full text-left py-2 text-rose-600 hover:text-rose-700 flex items-center justify-between">
                         <span>两步验证</span>
-                        <span className="text-sm text-gray-400">{user?.twoFactorEnabled ? '已开启' : '未开启'}</span>
+                        <span className="text-sm text-gray-400">{'twoFactorEnabled' in user ? (user as any).twoFactorEnabled ? '已开启' : '未开启' : '未开启'}</span>
                       </button>
                       <button className="w-full text-left py-2 text-rose-600 hover:text-rose-700">
                         注销账户
