@@ -361,138 +361,112 @@ export default function ConversationChallengePage() {
                 </div>
               </CardContent>
             </Card>
-              </Button>
-            </Link>
-          </div>
-          
-          {/* 进度指示器 */}
-          <Card className="mb-6">
-            <CardContent className="pt-6">
-              <div className="flex items-center justify-between mb-2">
-                <span className="text-sm font-medium">挑战进度</span>
-                <span className="text-sm text-gray-500">
-                  {currentChallengeIndex + 1} / {challenges.length}
-                </span>
-              </div>
-              <Progress value={((currentChallengeIndex + 1) / challenges.length) * 100} className="mb-4" />
-              <div className="flex items-center justify-between">
-                <Badge variant="outline" className="flex items-center gap-1">
-                  <Star className="h-3 w-3" />
-                  当前得分: {score}
-                </Badge>
-                <Badge variant="outline" className="flex items-center gap-1">
-                  <Target className="h-3 w-3" />
-                  可能得分: {totalPossibleScore}
-                </Badge>
-              </div>
-            </CardContent>
-          </Card>
-          
-          {/* 挑战内容 */}
-          <Card className="mb-6">
-            <CardHeader>
-              <div className="flex items-center justify-between">
-                <CardTitle className="flex items-center gap-2">
-                  <MessageCircle className="h-5 w-5 text-blue-500" />
-                  情景对话挑战
-                </CardTitle>
-                <div className="flex gap-2">
-                  <Badge variant="outline">{currentChallenge.category}</Badge>
-                  <Badge variant="outline">{currentChallenge.difficulty}</Badge>
+            
+            {/* 挑战内容 */}
+            <Card className="mb-6">
+              <CardHeader>
+                <div className="flex items-center justify-between">
+                  <CardTitle className="flex items-center gap-2">
+                    <MessageCircle className="h-5 w-5 text-blue-500" />
+                    情景对话挑战
+                  </CardTitle>
+                  <div className="flex gap-2">
+                    <Badge variant="outline">{currentChallenge.category}</Badge>
+                    <Badge variant="outline">{currentChallenge.difficulty}</Badge>
+                  </div>
                 </div>
-              </div>
-            </CardHeader>
-            <CardContent className="space-y-6">
-              <div className="bg-blue-50 p-4 rounded-lg border-l-4 border-blue-400">
-                <div className="text-sm font-medium text-blue-800 mb-2">情境描述</div>
-                <p className="text-gray-700">{currentChallenge.scenario}</p>
-              </div>
-              
-              <div className="bg-purple-50 p-4 rounded-lg border-l-4 border-purple-400">
-                <div className="text-sm font-medium text-purple-800 mb-2 flex items-center gap-2">
-                  {getEmotionIcon(currentChallenge.emotionType)}
-                  考察能力: {currentChallenge.emotionType}
+              </CardHeader>
+              <CardContent className="space-y-6">
+                <div className="bg-blue-50 p-4 rounded-lg border-l-4 border-blue-400">
+                  <div className="text-sm font-medium text-blue-800 mb-2">情境描述</div>
+                  <p className="text-gray-700">{currentChallenge.scenario}</p>
                 </div>
-                <p className="text-gray-700 font-medium">{currentChallenge.question}</p>
-              </div>
-              
-              {/* 选项 */}
-              <div className="space-y-3">
-                {currentChallenge.options.map((option) => (
-                  <div
-                    key={option.id}
-                    onClick={() => handleAnswerSelect(option.id)}
-                    className={`p-4 border rounded-lg cursor-pointer transition-all ${
-                      selectedAnswer === option.id
-                        ? 'border-blue-400 bg-blue-50'
-                        : 'border-gray-200 hover:border-gray-300 hover:bg-gray-50'
-                    } ${
-                      showResult && option.id === selectedAnswer
-                        ? option.score >= 8 
-                          ? 'border-green-400 bg-green-50' 
-                          : option.score >= 5
-                            ? 'border-yellow-400 bg-yellow-50'
-                            : 'border-red-400 bg-red-50'
-                        : ''
-                    }`}
-                  >
-                    <div className="flex items-center justify-between">
-                      <div className="flex items-center gap-3">
-                        <div className={`w-6 h-6 rounded-full border-2 flex items-center justify-center text-sm ${
-                          selectedAnswer === option.id
-                            ? 'border-blue-500 bg-blue-500 text-white'
-                            : 'border-gray-300'
-                        } ${
-                          showResult && option.id === selectedAnswer
-                            ? option.score >= 8 
-                              ? 'border-green-500 bg-green-500 text-white' 
-                              : option.score >= 5
-                                ? 'border-yellow-500 bg-yellow-500 text-white'
-                                : 'border-red-500 bg-red-500 text-white'
-                            : ''
-                        }`}>
-                          {option.id.toUpperCase()}
+                
+                <div className="bg-purple-50 p-4 rounded-lg border-l-4 border-purple-400">
+                  <div className="text-sm font-medium text-purple-800 mb-2 flex items-center gap-2">
+                    {getEmotionIcon(currentChallenge.emotionType)}
+                    考察能力: {currentChallenge.emotionType}
+                  </div>
+                  <p className="text-gray-700 font-medium">{currentChallenge.question}</p>
+                </div>
+                
+                {/* 选项 */}
+                <div className="space-y-3">
+                  {currentChallenge.options.map((option) => (
+                    <div
+                      key={option.id}
+                      onClick={() => handleAnswerSelect(option.id)}
+                      className={`p-4 border rounded-lg cursor-pointer transition-all ${
+                        selectedAnswer === option.id
+                          ? 'border-blue-400 bg-blue-50'
+                          : 'border-gray-200 hover:border-gray-300 hover:bg-gray-50'
+                      } ${
+                        showResult && option.id === selectedAnswer
+                          ? option.score >= 8 
+                            ? 'border-green-400 bg-green-50' 
+                            : option.score >= 5
+                              ? 'border-yellow-400 bg-yellow-50'
+                              : 'border-red-400 bg-red-50'
+                          : ''
+                      }`}
+                    >
+                      <div className="flex items-center justify-between">
+                        <div className="flex items-center gap-3">
+                          <div className={`w-6 h-6 rounded-full border-2 flex items-center justify-center text-sm ${
+                            selectedAnswer === option.id
+                              ? 'border-blue-500 bg-blue-500 text-white'
+                              : 'border-gray-300'
+                          } ${
+                            showResult && option.id === selectedAnswer
+                              ? option.score >= 8 
+                                ? 'border-green-500 bg-green-500 text-white' 
+                                : option.score >= 5
+                                  ? 'border-yellow-500 bg-yellow-500 text-white'
+                                  : 'border-red-500 bg-red-500 text-white'
+                              : ''
+                          }`}>
+                            {option.id.toUpperCase()}
+                          </div>
+                          <span className="text-gray-700">{option.text}</span>
                         </div>
-                        <span className="text-gray-700">{option.text}</span>
+                        
+                        {showResult && option.id === selectedAnswer && (
+                          <div className="flex items-center gap-2">
+                            <Badge variant={option.score >= 8 ? 'default' : option.score >= 5 ? 'secondary' : 'destructive'}>
+                              {option.score} 分
+                            </Badge>
+                            {option.score >= 8 ? <CheckCircle className="h-5 w-5 text-green-500" /> : <XCircle className="h-5 w-5 text-red-500" />}
+                          </div>
+                        )}
                       </div>
                       
                       {showResult && option.id === selectedAnswer && (
-                        <div className="flex items-center gap-2">
-                          <Badge variant={option.score >= 8 ? 'default' : option.score >= 5 ? 'secondary' : 'destructive'}>
-                            {option.score} 分
-                          </Badge>
-                          {option.score >= 8 ? <CheckCircle className="h-5 w-5 text-green-500" /> : <XCircle className="h-5 w-5 text-red-500" />}
+                        <div className="mt-3 p-3 bg-gray-50 rounded text-sm">
+                          <span className="font-medium">解析：</span> {option.explanation}
                         </div>
                       )}
                     </div>
-                    
-                    {showResult && option.id === selectedAnswer && (
-                      <div className="mt-3 p-3 bg-gray-50 rounded text-sm">
-                        <span className="font-medium">解析：</span> {option.explanation}
-                      </div>
-                    )}
-                  </div>
-                ))}
-              </div>
-              
-              <div className="flex justify-center">
-                {!showResult ? (
-                  <Button 
-                    onClick={handleSubmitAnswer}
-                    disabled={!selectedAnswer}
-                    size="lg"
-                    className="px-8"
-                  >
-                    提交答案
-                  </Button>
-                ) : (
-                  <Button onClick={handleNextChallenge} size="lg" className="px-8">
-                    {currentChallengeIndex < challenges.length - 1 ? '下一题' : '查看结果'}
-                  </Button>
-                )}
-              </div>
-            </CardContent>
-          </Card>
+                  ))}
+                </div>
+                
+                <div className="flex justify-center">
+                  {!showResult ? (
+                    <Button 
+                      onClick={handleSubmitAnswer}
+                      disabled={!selectedAnswer}
+                      size="lg"
+                      className="px-8"
+                    >
+                      提交答案
+                    </Button>
+                  ) : (
+                    <Button onClick={handleNextChallenge} size="lg" className="px-8">
+                      {currentChallengeIndex < challenges.length - 1 ? '下一题' : '查看结果'}
+                    </Button>
+                  )}
+                </div>
+              </CardContent>
+            </Card>
           </div>
         </GamePageTemplate>
       )}

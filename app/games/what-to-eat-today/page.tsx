@@ -29,37 +29,37 @@ interface FoodOption {
 }
 
 export default function WhatToEatToday() {
-  const router = useRouter()
+  const [currentFood, setCurrentFood] = useState<FoodOption | null>(null)
   const [selectedCuisine, setSelectedCuisine] = useState<CuisineType | 'all'>('all')
   const [selectedBudget, setSelectedBudget] = useState<BudgetType | 'all'>('all')
   const [selectedMeal, setSelectedMeal] = useState<MealType | 'all'>('all')
-  const [currentFood, setCurrentFood] = useState<FoodOption | null>(null)
   const [showDetails, setShowDetails] = useState(false)
   const [favorites, setFavorites] = useState<number[]>([])
 
+  // 美食选项数据
   const foodOptions: FoodOption[] = [
     // 中餐
     {
       id: 1,
-      name: '麻辣香锅',
+      name: '红烧肉',
       cuisine: 'chinese',
       budget: 'medium',
       meal: 'dinner',
-      description: '麻辣鲜香，食材丰富，适合重口味爱好者',
-      cookingTime: '30-40分钟',
-      priceRange: '¥50-100',
+      description: '传统中式菜肴，肥瘦相间，色泽红亮，口感软糯香甜',
+      cookingTime: '60分钟',
+      priceRange: '¥30-50',
       popularity: 95,
       shareable: true
     },
     {
       id: 2,
-      name: '小笼包',
+      name: '宫保鸡丁',
       cuisine: 'chinese',
       budget: 'cheap',
-      meal: 'breakfast',
-      description: '皮薄馅多，汤汁鲜美，经典早餐选择',
-      cookingTime: '15分钟',
-      priceRange: '¥20-40',
+      meal: 'lunch',
+      description: '川菜经典，鸡肉嫩滑，花生香脆，麻辣鲜香',
+      cookingTime: '30分钟',
+      priceRange: '¥20-35',
       popularity: 90,
       shareable: true
     },
@@ -69,23 +69,23 @@ export default function WhatToEatToday() {
       id: 3,
       name: '意大利面',
       cuisine: 'western',
-      budget: 'medium',
-      meal: 'lunch',
-      description: '经典意式风味，酱汁浓郁，营养均衡',
+      budget: 'cheap',
+      meal: 'dinner',
+      description: '经典番茄肉酱意面，面条Q弹，酱汁浓郁',
       cookingTime: '25分钟',
-      priceRange: '¥60-120',
+      priceRange: '¥25-40',
       popularity: 88,
       shareable: true
     },
     {
       id: 4,
-      name: '牛排套餐',
+      name: '牛排',
       cuisine: 'western',
       budget: 'expensive',
       meal: 'dinner',
-      description: '优质牛排配红酒，浪漫晚餐首选',
+      description: '精选牛肉，外焦里嫩，配以黑胡椒酱汁',
       cookingTime: '40分钟',
-      priceRange: '¥150-300',
+      priceRange: '¥80-150',
       popularity: 85,
       shareable: true
     },
@@ -97,9 +97,9 @@ export default function WhatToEatToday() {
       cuisine: 'japanese',
       budget: 'medium',
       meal: 'lunch',
-      description: '新鲜刺身搭配精致寿司，日式美味',
-      cookingTime: '20分钟',
-      priceRange: '¥80-150',
+      description: '新鲜三文鱼、金枪鱼等寿司组合，口感清淡鲜美',
+      cookingTime: '45分钟',
+      priceRange: '¥50-80',
       popularity: 92,
       shareable: true
     },
@@ -111,23 +111,23 @@ export default function WhatToEatToday() {
       cuisine: 'fastfood',
       budget: 'cheap',
       meal: 'lunch',
-      description: '经典汉堡配薯条可乐，快捷方便',
-      cookingTime: '10分钟',
-      priceRange: '¥30-60',
+      description: '经典牛肉汉堡，配薯条和可乐，满足感十足',
+      cookingTime: '15分钟',
+      priceRange: '¥25-45',
       popularity: 82,
-      shareable: true
+      shareable: false
     },
     
     // 韩餐
     {
       id: 7,
-      name: '韩式烤肉',
+      name: '韩式拌饭',
       cuisine: 'korean',
-      budget: 'medium',
-      meal: 'dinner',
-      description: '烤肉配泡菜，韩剧同款美食体验',
+      budget: 'cheap',
+      meal: 'lunch',
+      description: '五彩蔬菜配牛肉和米饭，营养丰富，口味平衡',
       cookingTime: '35分钟',
-      priceRange: '¥70-130',
+      priceRange: '¥20-35',
       popularity: 87,
       shareable: true
     },
@@ -139,9 +139,9 @@ export default function WhatToEatToday() {
       cuisine: 'thai',
       budget: 'medium',
       meal: 'dinner',
-      description: '酸辣开胃，泰式经典，风味独特',
-      cookingTime: '30分钟',
-      priceRange: '¥60-110',
+      description: '酸辣鲜香的泰式汤品，虾肉Q弹，香料浓郁',
+      cookingTime: '40分钟',
+      priceRange: '¥35-60',
       popularity: 84,
       shareable: true
     }
@@ -189,7 +189,6 @@ export default function WhatToEatToday() {
     }
     
     await onUse()
-    
     const randomIndex = Math.floor(Math.random() * filteredFoods.length)
     setCurrentFood(filteredFoods[randomIndex])
     setShowDetails(false)
@@ -212,7 +211,7 @@ ${currentFood.description}
 
 💰 价格：${currentFood.priceRange}
 ⏰ 时间：${currentFood.cookingTime}
-🍴 菜系：${getCuisineLabel(currentFood.cuisine)}
+🍴 菜系：getCuisineLabel(currentFood.cuisine)}
 
 今天一起吃这个吧！😋`
     
@@ -341,62 +340,52 @@ ${currentFood.description}
           {/* 主游戏区域 */}
           <div className="max-w-2xl mx-auto">
             {!currentFood ? (
-              // 初始界面
               <GameCard
-                title="准备抽取美食推荐"
-                description="点击下方按钮，随机抽取符合条件的美食推荐"
-                icon={<Utensils className="h-6 w-6 text-white" />}
-                button={{
-                  text: "随机推荐",
-                  onClick: () => pickRandomFood(onUse),
-                  disabled: !canUse || getFilteredFoods().length === 0
-                }}
+                title="开始选择"
+                description="点击按钮，让命运决定你今天的美食！"
+                icon={<Zap className="h-5 w-5 text-white" />}
               >
                 <div className="text-center py-8">
-                  <div className="w-32 h-32 mx-auto mb-6 bg-gradient-to-br from-orange-400 to-red-500 rounded-full shadow-lg flex items-center justify-center animate-pulse">
-                    <Utensils className="h-12 w-12 text-white" />
-                  </div>
+                  <div className="text-6xl mb-4">🍽️</div>
+                  <button
+                    onClick={() => pickRandomFood(onUse)}
+                    disabled={!canUse}
+                    className="bg-gradient-to-r from-orange-500 to-red-500 text-white px-8 py-4 rounded-xl font-bold text-lg hover:from-orange-600 hover:to-red-600 transition-all transform hover:scale-105 disabled:opacity-50 disabled:cursor-not-allowed"
+                  >
+                    <Utensils className="h-5 w-5 mr-2 inline" />
+                    随机选择美食
+                  </button>
+                  <p className="text-gray-500 text-sm mt-4">
+                    根据你的筛选条件，从 {getFilteredFoods().length} 种美食中随机选择
+                  </p>
                 </div>
               </GameCard>
             ) : (
-              // 美食推荐展示
               <GameCard
                 title={currentFood.name}
-                badge={{
-                  text: getCuisineLabel(currentFood.cuisine),
-                  variant: 'secondary'
-                }}
+                description={currentFood.description}
+                icon={<Utensils className="h-5 w-5 text-white" />}
               >
-                <div className="flex items-start justify-between mb-4">
-                  <div>
-                    <div className="flex flex-wrap gap-2 mb-4">
-                      <span className={`inline-flex items-center px-2 py-1 rounded-full text-xs font-medium ${getCuisineColor(currentFood.cuisine)}`}>
-                        {getCuisineLabel(currentFood.cuisine)}
-                      </span>
-                      <span className={`inline-flex items-center px-2 py-1 rounded-full text-xs font-medium ${getBudgetColor(currentFood.budget)}`}>
-                        <DollarSign className="h-3 w-3 mr-1" />
-                        {currentFood.budget === 'cheap' ? '经济' : currentFood.budget === 'medium' ? '中等' : '豪华'}
-                      </span>
-                    </div>
+                <div className="flex items-center gap-2 mb-4">
+                  <span className={`px-2 py-1 rounded-full text-xs font-medium ${getCuisineColor(currentFood.cuisine)}`}>
+                    {getCuisineLabel(currentFood.cuisine)}
+                  </span>
+                  <span className={`px-2 py-1 rounded-full text-xs font-medium ${getBudgetColor(currentFood.budget)}`}>
+                    {currentFood.budget === 'cheap' ? '经济实惠' : currentFood.budget === 'medium' ? '中等价位' : '豪华大餐'}
+                  </span>
+                  <div className="flex items-center">
+                    <Star className="h-4 w-4 text-yellow-500 mr-1" />
+                    <span className="text-sm text-gray-600">{currentFood.popularity}%</span>
                   </div>
-                  
                   <button
                     onClick={() => toggleFavorite(currentFood.id)}
-                    className={`p-2 rounded-full transition-colors ${
-                      favorites.includes(currentFood.id) 
-                        ? 'text-red-500 bg-red-50' 
-                        : 'text-gray-400 hover:text-red-500'
-                    }`}
+                    className="ml-auto"
                   >
-                    <Heart className="h-5 w-5" fill={favorites.includes(currentFood.id) ? 'currentColor' : 'none'} />
+                    <Heart className={`h-5 w-5 ${favorites.includes(currentFood.id) ? 'text-red-500 fill-red-500' : 'text-gray-400'}`} />
                   </button>
                 </div>
                 
-                <p className="text-gray-700 mb-4">
-                  {currentFood.description}
-                </p>
-                
-                <div className="grid grid-cols-2 gap-4 mb-6 text-sm text-gray-600">
+                <div className="space-y-2 mb-6">
                   <div className="flex items-center">
                     <Clock className="h-4 w-4 mr-2" />
                     <span>制作时间：{currentFood.cookingTime}</span>
