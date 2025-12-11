@@ -413,8 +413,8 @@ export function ChatEmotionAnalysisEnhanced({
                 <Button 
                   onClick={handleGenerateResult} 
                   disabled={isGeneratingAnalysis}
-                  variant="pink"
-                  className="flex items-center gap-2 px-6"
+                  variant="default"
+                  className="flex items-center gap-2 px-6 bg-gradient-to-r from-pink-500 to-purple-600 hover:from-pink-600 hover:to-purple-700"
                 >
                   {isGeneratingAnalysis ? <LoadingSpinner size="sm" /> : <Brain className="h-4 w-4" />}
                   生成情感分析结果
