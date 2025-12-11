@@ -182,7 +182,7 @@ export default function ContentCreationEnhancedPage() {
     }
     
     // 添加标签（如果需要）
-    let hashtags = []
+    let hashtags: string[] = []
     if (config.hashtag) {
       hashtags = ['#情感表达', '#情侣日常', '#爱情故事', '#幸福时刻']
       optimized += `\n${hashtags.slice(0, 2).join(' ')}`
