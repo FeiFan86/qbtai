@@ -410,7 +410,7 @@ export default function ProfilePage() {
                     <div className="space-y-3">
                       <button className="w-full text-left py-2 text-rose-600 hover:text-rose-700 flex items-center justify-between">
                         <span>修改密码</span>
-                        <span className="text-sm text-gray-400">上次修改：{user?.passwordChangedAt ? new Date(user.passwordChangedAt).toLocaleDateString('zh-CN') : '从未修改'}</span>
+                        <span className="text-sm text-gray-400">上次修改：{'passwordChangedAt' in user ? new Date((user as any).passwordChangedAt).toLocaleDateString('zh-CN') : '从未修改'}</span>
                       </button>
                       <button className="w-full text-left py-2 text-rose-600 hover:text-rose-700 flex items-center justify-between">
                         <span>两步验证</span>
