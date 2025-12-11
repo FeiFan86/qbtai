@@ -76,6 +76,34 @@ export default function GamesPage() {
     },
     {
       id: 4,
+      title: '今天吃什么',
+      description: '解决情侣美食选择困难，智能推荐美食选择',
+      icon: <Utensils className="h-6 w-6" />,
+      color: 'from-orange-400 to-red-600',
+      players: '2人',
+      difficulty: '简单',
+      category: 'fun',
+      duration: '10-30分钟',
+      popularity: 93,
+      rating: 4.9,
+      features: ['智能推荐', '偏好设置', '历史记录']
+    },
+    {
+      id: 5,
+      title: '情侣飞行棋',
+      description: '完整棋盘游戏，在线对战增进感情互动',
+      icon: <Gamepad2 className="h-6 w-6" />,
+      color: 'from-pink-400 to-purple-600',
+      players: '2人',
+      difficulty: '中等',
+      category: 'challenge',
+      duration: '40-90分钟',
+      popularity: 91,
+      rating: 4.8,
+      features: ['棋盘游戏', '在线对战', '任务系统']
+    },
+    {
+      id: 6,
       title: '情感记忆拼图',
       description: '重温美好回忆，强化情感连接',
       icon: <Trophy className="h-6 w-6" />,
@@ -86,49 +114,21 @@ export default function GamesPage() {
       duration: '30-60分钟',
       popularity: 90,
       rating: 4.9,
-      features: ['回忆重温', '情感强化', '美好时光']
-    },
-    {
-      id: 5,
-      title: '协作涂鸦板',
-      description: '共同创作艺术作品，培养协作精神',
-      icon: <Star className="h-6 w-6" />,
-      color: 'from-orange-400 to-red-600',
-      players: '2人+',
-      difficulty: '简单',
-      category: 'fun',
-      duration: '20-50分钟',
-      popularity: 85,
-      rating: 4.5,
-      features: ['创意协作', '艺术表达', '团队配合']
-    },
-    {
-      id: 6,
-      title: '关系飞行棋',
-      description: '情感话题棋盘游戏，深度探索彼此内心',
-      icon: <Gamepad2 className="h-6 w-6" />,
-      color: 'from-pink-400 to-purple-600',
-      players: '2人',
-      difficulty: '中等',
-      category: 'challenge',
-      duration: '40-90分钟',
-      popularity: 87,
-      rating: 4.7,
-      features: ['深度话题', '棋盘游戏', '情感探索']
+      features: ['回忆重温', '拼图游戏', '情感强化']
     },
     {
       id: 7,
-      title: '抱怨墙',
-      description: '安全发泄负面情绪，建立健康沟通渠道',
-      icon: <TrendingUp className="h-6 w-6" />,
-      color: 'from-red-400 to-orange-600',
+      title: '性格分析',
+      description: '深度了解彼此性格特点，优化相处方式',
+      icon: <ThumbsUp className="h-6 w-6" />,
+      color: 'from-indigo-400 to-purple-600',
       players: '2人',
-      difficulty: '简单',
-      category: 'communication',
-      duration: '15-30分钟',
-      popularity: 82,
-      rating: 4.4,
-      features: ['情绪宣泄', '健康沟通', '关系修复']
+      difficulty: '中等',
+      category: 'challenge',
+      duration: '25-45分钟',
+      popularity: 89,
+      rating: 4.7,
+      features: ['性格测试', '匹配分析', '关系优化']
     },
     {
       id: 8,
@@ -140,42 +140,14 @@ export default function GamesPage() {
       difficulty: '简单',
       category: 'fun',
       duration: '20-40分钟',
-      popularity: 89,
-      rating: 4.6,
-      features: ['随机惊喜', '趣味互动', '创意挑战']
+      popularity: 94,
+      rating: 4.8,
+      features: ['随机任务', '成就系统', '积分挑战']
     },
     {
       id: 9,
-      title: '性格分析',
-      description: '深度了解彼此性格特点，优化相处方式',
-      icon: <ThumbsUp className="h-6 w-6" />,
-      color: 'from-indigo-400 to-purple-600',
-      players: '2人',
-      difficulty: '中等',
-      category: 'challenge',
-      duration: '25-45分钟',
-      popularity: 84,
-      rating: 4.5,
-      features: ['性格测试', '匹配分析', '关系优化']
-    },
-    {
-      id: 10,
-      title: '对话挑战',
-      description: '通过不同场景对话练习，提升沟通技巧',
-      icon: <Users2 className="h-6 w-6" />,
-      color: 'from-yellow-400 to-amber-600',
-      players: '2人',
-      difficulty: '中等',
-      category: 'communication',
-      duration: '30-60分钟',
-      popularity: 86,
-      rating: 4.7,
-      features: ['对话练习', '沟通技巧', '情景模拟']
-    },
-    {
-      id: 11,
       title: '秘密情书',
-      description: '创建加密情书，生成专属链接分享给TA',
+      description: '创意表达工具，制作个性化情书',
       icon: <Lock className="h-6 w-6" />,
       color: 'from-pink-400 to-purple-600',
       players: '1-2人',
@@ -183,50 +155,8 @@ export default function GamesPage() {
       category: 'emotional',
       duration: '10-30分钟',
       popularity: 92,
-      rating: 4.8,
-      features: ['加密链接', '阅后即焚', '密码保护']
-    },
-    {
-      id: 12,
-      title: '时光胶囊',
-      description: '写下对未来想说的话，设置开启时间与好友分享',
-      icon: <Gift className="h-6 w-6" />,
-      color: 'from-blue-400 to-teal-600',
-      players: '1-多人',
-      difficulty: '简单',
-      category: 'emotional',
-      duration: '15-45分钟',
-      popularity: 88,
-      rating: 4.7,
-      features: ['定时开启', '多人协作', '回忆封存']
-    },
-    {
-      id: 13,
-      title: '爱情冒险卡牌',
-      description: '随机抽取任务卡，完成挑战获得积分增进感情',
-      icon: <Heart className="h-6 w-6" />,
-      color: 'from-purple-400 to-pink-600',
-      players: '2人',
-      difficulty: '中等',
-      category: 'fun',
-      duration: '15-45分钟',
-      popularity: 91,
-      rating: 4.8,
-      features: ['随机任务', '积分系统', '分享挑战']
-    },
-    {
-      id: 14,
-      title: '今天吃什么',
-      description: '解决情侣美食选择困难，智能推荐适合的餐厅',
-      icon: <Utensils className="h-6 w-6" />,
-      color: 'from-orange-400 to-red-600',
-      players: '2人',
-      difficulty: '简单',
-      category: 'fun',
-      duration: '10-30分钟',
-      popularity: 93,
       rating: 4.9,
-      features: ['智能推荐', '筛选条件', '美食分享']
+      features: ['情书模板', '个性化编辑', '保存分享']
     }
   ]
 
@@ -263,20 +193,15 @@ export default function GamesPage() {
   const startGame = async (gameId: number) => {
     // 根据游戏ID启动对应的游戏
     const gameRoutes = {
-      1: '/games/interactive-games/emotion-tree-hole',
-      2: '/games/interactive-games/truth-or-dare',
-      3: '/games/interactive-games/tacit-challenge',
-      4: '/games/interactive-games/memory-puzzle',
-      5: '/games/interactive-games/collaborative-doodle',
-      6: '/games/interactive-games/relationship-chess',
-      7: '/games/interactive-games/complaint-wall',
-      8: '/games/interactive-games/couple-blind-box',
-      9: '/games/personality-analysis',
-      10: '/games/conversation-challenge',
-      11: '/games/secret-love-letter',
-      12: '/games/time-capsule',
-      13: '/games/love-adventure-cards',
-      14: '/games/what-to-eat-today'
+      1: '/games/emotional-treehole',
+      2: '/games/truth-or-dare',
+      3: '/games/compatibility-challenge',
+      4: '/games/what-to-eat',
+      5: '/games/couple-air-chess',
+      6: '/games/emotional-memory-puzzle',
+      7: '/games/personality-analysis',
+      8: '/games/couple-blind-box',
+      9: '/games/secret-love-letter'
     }
     
     const route = gameRoutes[gameId as keyof typeof gameRoutes]
