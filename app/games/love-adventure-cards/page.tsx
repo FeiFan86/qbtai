@@ -4,10 +4,13 @@ import React, { useState } from 'react'
 import { useRouter } from 'next/navigation'
 import { 
   Heart, Sparkles, Trophy, Share2,
-  RotateCcw, Users, Clock, Star, Zap
+  RotateCcw, Users, Clock, Star, Zap, CheckCircle
 } from 'lucide-react'
 import GlobalNavbar from '@/components/global-navbar'
 import UsageGuard, { UsageStatus } from '@/components/usage-guard'
+import GamePageTemplate from '@/components/game-page-template'
+import GameCard from '@/components/game-card'
+import GameStats from '@/components/game-stats'
 
 type TaskType = 'romantic' | 'fun' | 'growth' | 'social'
 
@@ -184,145 +187,152 @@ ${currentCard.description}
   return (
     <UsageGuard feature="games">
       {({ canUse, remainingUses, onUse, isLoading, usageText }) => (
-        <div className="min-h-screen bg-gradient-to-br from-purple-50 via-white to-pink-50">
-          <GlobalNavbar />
+        <GamePageTemplate
+          title="爱情冒险卡牌"
+          description="抽取冒险任务卡牌，与伴侣一起完成有趣的挑战，增进感情"
+          icon={<Heart className="h-8 w-8 text-white" />}
+          bgGradient="bg-gradient-to-br from-purple-50/80 via-white to-pink-50/80"
+        >
+          {/* 使用状态提示 */}
+          <div className="max-w-md mx-auto mb-8">
+            <div className="bg-white/80 backdrop-blur-md px-6 py-3 rounded-xl shadow-lg border border-white/30 text-center">
+              <span className="text-sm text-gray-600">
+                {usageText}
+              </span>
+            </div>
+          </div>
 
-          <main className="pt-16">
-            <div className="container py-8">
-              {/* 页面标题 */}
-              <div className="text-center mb-8">
-                <div className="inline-flex items-center px-4 py-2 rounded-full bg-white/80 backdrop-blur-sm border border-purple-200 mb-4">
-                  <Heart className="h-5 w-5 text-purple-500 mr-2" />
-                  <span className="text-sm font-medium text-purple-700">爱情冒险卡牌</span>
+          {/* 积分统计 */}
+          <GameStats
+            title="游戏统计"
+            description="追踪你的冒险任务完成情况"
+            stats={[
+              {
+                value: totalPoints,
+                label: "总积分",
+                icon: <Trophy className="h-3 w-3" />,
+                bgColor: "bg-gradient-to-br from-purple-50 to-pink-50",
+                textColor: "text-purple-600"
+              },
+              {
+                value: completedTasks.length,
+                label: "完成数",
+                icon: <CheckCircle className="h-3 w-3" />,
+                bgColor: "bg-gradient-to-br from-green-50 to-emerald-50",
+                textColor: "text-green-600"
+              },
+              {
+                value: taskCards.length - completedTasks.length,
+                label: "剩余卡牌",
+                icon: <Heart className="h-3 w-3" />,
+                bgColor: "bg-gradient-to-br from-blue-50 to-cyan-50",
+                textColor: "text-blue-600"
+              }
+            ]}
+          />
+
+          {/* 主游戏区域 */}
+          <div className="max-w-2xl mx-auto">
+            {!currentCard ? (
+              // 抽卡界面
+              <GameCard
+                title="准备抽取任务卡牌"
+                description="点击下方按钮，随机抽取一张爱情冒险任务卡"
+                icon={<Heart className="h-6 w-6 text-white" />}
+                button={{
+                  text: "抽取任务卡",
+                  onClick: drawCard,
+                  disabled: !canUse
+                }}
+              >
+                <div className="text-center py-8">
+                  <div className="w-32 h-48 mx-auto mb-6 bg-gradient-to-br from-purple-400 to-pink-500 rounded-2xl shadow-lg flex items-center justify-center animate-pulse">
+                    <Heart className="h-12 w-12 text-white" />
+                  </div>
                 </div>
-                <h1 className="text-3xl font-bold text-gray-900 mb-2">
-                  爱情冒险卡牌挑战
-                </h1>
-                <p className="text-gray-600">
-                  随机抽取任务卡，完成挑战获得积分，增进感情！
+              </GameCard>
+            ) : (
+              // 任务卡展示
+              <GameCard
+                title={currentCard.title}
+                badge={{
+                  text: currentCard.type === 'romantic' ? '浪漫任务' :
+                       currentCard.type === 'fun' ? '趣味挑战' :
+                       currentCard.type === 'growth' ? '成长任务' : '社交任务',
+                  variant: 'secondary'
+                }}
+              >
+                <div className="flex items-center justify-between mb-4">
+                  <span className={`inline-flex items-center px-3 py-1 rounded-full text-sm font-medium ${getTypeColor(currentCard.type)}`}>
+                    {getTypeIcon(currentCard.type)}
+                    <span className="ml-1">
+                      {currentCard.type === 'romantic' ? '浪漫任务' :
+                       currentCard.type === 'fun' ? '趣味挑战' :
+                       currentCard.type === 'growth' ? '成长任务' : '社交任务'}
+                    </span>
+                  </span>
+                  <span className={`px-2 py-1 rounded-full text-xs font-medium ${getDifficultyColor(currentCard.difficulty)}`}>
+                    {currentCard.difficulty === 'easy' ? '简单' :
+                     currentCard.difficulty === 'medium' ? '中等' : '困难'}
+                  </span>
+                </div>
+                
+                <p className="text-gray-700 mb-4">
+                  {currentCard.description}
                 </p>
-              </div>
-
-              {/* 使用状态提示 */}
-              <div className="max-w-2xl mx-auto mb-6">
-                <UsageStatus feature="games" className="justify-center" />
-              </div>
-
-              {/* 积分统计 */}
-              <div className="max-w-2xl mx-auto grid grid-cols-3 gap-4 mb-8">
-                <div className="bg-white rounded-xl shadow-sm border border-gray-200 p-4 text-center">
-                  <div className="text-2xl font-bold text-purple-600 mb-1">{totalPoints}</div>
-                  <div className="text-sm text-gray-500">总积分</div>
+                
+                <div className="flex items-center justify-between text-sm text-gray-500 mb-6">
+                  <span className="flex items-center">
+                    <Clock className="h-4 w-4 mr-1" />
+                    预计时间：{currentCard.time}
+                  </span>
+                  <span className="flex items-center">
+                    <Trophy className="h-4 w-4 mr-1" />
+                    积分：{currentCard.points}分
+                  </span>
                 </div>
-                <div className="bg-white rounded-xl shadow-sm border border-gray-200 p-4 text-center">
-                  <div className="text-2xl font-bold text-green-600 mb-1">{completedTasks.length}</div>
-                  <div className="text-sm text-gray-500">完成数</div>
-                </div>
-                <div className="bg-white rounded-xl shadow-sm border border-gray-200 p-4 text-center">
-                  <div className="text-2xl font-bold text-blue-600 mb-1">{taskCards.length - completedTasks.length}</div>
-                  <div className="text-sm text-gray-500">剩余卡牌</div>
-                </div>
-              </div>
-
-              {/* 主游戏区域 */}
-              <div className="max-w-2xl mx-auto">
-                {!currentCard ? (
-                  // 抽卡界面
-                  <div className="bg-white rounded-xl shadow-lg border border-purple-200 p-8 text-center">
-                    <div className="w-32 h-48 mx-auto mb-6 bg-gradient-to-br from-purple-400 to-pink-500 rounded-2xl shadow-lg flex items-center justify-center">
-                      <Heart className="h-12 w-12 text-white" />
-                    </div>
-                    <h3 className="text-xl font-semibold text-gray-900 mb-4">
-                      准备抽取任务卡牌
-                    </h3>
-                    <p className="text-gray-600 mb-6">
-                      点击下方按钮，随机抽取一张爱情冒险任务卡
-                    </p>
+                
+                <div className="flex gap-3">
+                  <button
+                    onClick={() => completeTask(onUse)}
+                    disabled={!canUse}
+                    className="flex-1 bg-gradient-to-r from-green-500 to-teal-500 text-white py-3 rounded-lg font-medium hover:from-green-600 hover:to-teal-600 transition-all disabled:opacity-50 disabled:cursor-not-allowed"
+                  >
+                    完成任务
+                  </button>
+                  
+                  {currentCard.shareable && (
                     <button
-                      onClick={drawCard}
-                      disabled={!canUse}
-                      className="bg-gradient-to-r from-purple-500 to-pink-500 text-white px-8 py-3 rounded-lg font-medium hover:from-purple-600 hover:to-pink-600 transition-all disabled:opacity-50 disabled:cursor-not-allowed"
+                      onClick={shareTask}
+                      className="flex items-center justify-center px-4 py-3 bg-blue-500 text-white rounded-lg hover:bg-blue-600 transition-colors"
                     >
-                      <Zap className="h-4 w-4 mr-2 inline" />
-                      抽取任务卡
+                      <Share2 className="h-4 w-4" />
                     </button>
-                  </div>
-                ) : (
-                  // 任务卡展示
-                  <div className="bg-white rounded-xl shadow-lg border border-purple-200 p-6">
-                    <div className="flex items-center justify-between mb-4">
-                      <span className={`inline-flex items-center px-3 py-1 rounded-full text-sm font-medium ${getTypeColor(currentCard.type)}`}>
-                        {getTypeIcon(currentCard.type)}
-                        <span className="ml-1">
-                          {currentCard.type === 'romantic' ? '浪漫任务' :
-                           currentCard.type === 'fun' ? '趣味挑战' :
-                           currentCard.type === 'growth' ? '成长任务' : '社交任务'}
-                        </span>
-                      </span>
-                      <span className={`px-2 py-1 rounded-full text-xs font-medium ${getDifficultyColor(currentCard.difficulty)}`}>
-                        {currentCard.difficulty === 'easy' ? '简单' :
-                         currentCard.difficulty === 'medium' ? '中等' : '困难'}
-                      </span>
-                    </div>
-                    
-                    <h3 className="text-xl font-bold text-gray-900 mb-3">
-                      {currentCard.title}
-                    </h3>
-                    
-                    <p className="text-gray-700 mb-4">
-                      {currentCard.description}
-                    </p>
-                    
-                    <div className="flex items-center justify-between text-sm text-gray-500 mb-6">
-                      <span className="flex items-center">
-                        <Clock className="h-4 w-4 mr-1" />
-                        预计时间：{currentCard.time}
-                      </span>
-                      <span className="flex items-center">
-                        <Trophy className="h-4 w-4 mr-1" />
-                        积分：{currentCard.points}分
-                      </span>
-                    </div>
-                    
-                    <div className="flex gap-3">
-                      <button
-                        onClick={() => completeTask(onUse)}
-                        disabled={!canUse}
-                        className="flex-1 bg-gradient-to-r from-green-500 to-teal-500 text-white py-3 rounded-lg font-medium hover:from-green-600 hover:to-teal-600 transition-all disabled:opacity-50 disabled:cursor-not-allowed"
-                      >
-                        完成任务
-                      </button>
-                      
-                      {currentCard.shareable && (
-                        <button
-                          onClick={shareTask}
-                          className="flex items-center justify-center px-4 py-3 bg-blue-500 text-white rounded-lg hover:bg-blue-600 transition-colors"
-                        >
-                          <Share2 className="h-4 w-4" />
-                        </button>
-                      )}
-                      
-                      <button
-                        onClick={drawCard}
-                        className="flex items-center justify-center px-4 py-3 bg-gray-500 text-white rounded-lg hover:bg-gray-600 transition-colors"
-                      >
-                        <RotateCcw className="h-4 w-4" />
-                      </button>
-                    </div>
-                  </div>
-                )}
+                  )}
+                  
+                  <button
+                    onClick={() => setCurrentCard(null)}
+                    className="flex items-center justify-center px-4 py-3 bg-gray-500 text-white rounded-lg hover:bg-gray-600 transition-colors"
+                  >
+                    <RotateCcw className="h-4 w-4" />
+                  </button>
+                </div>
+              </GameCard>
+            )}
 
-                {!canUse && (
-                  <p className="text-center text-amber-600 mt-4">
-                    使用次数已用完，请登录或等待重置
-                  </p>
-                )}
+            {!canUse && (
+              <div className="text-center text-amber-600 mt-4">
+                <p>使用次数已用完，请登录或等待重置</p>
               </div>
+            )}
 
-              {/* 任务完成记录 */}
-              {completedTasks.length > 0 && (
-                <div className="max-w-2xl mx-auto mt-8">
-                  <h3 className="text-lg font-semibold text-gray-900 mb-4">已完成任务</h3>
+            {/* 任务完成记录 */}
+            {completedTasks.length > 0 && (
+              <div className="max-w-2xl mx-auto mt-8">
+                <GameCard
+                  title="已完成任务"
+                  icon={<CheckCircle className="h-5 w-5 text-white" />}
+                >
                   <div className="grid gap-3">
                     {completedTasks.map(taskId => {
                       const task = taskCards.find(t => t.id === taskId)
@@ -338,11 +348,11 @@ ${currentCard.description}
                       )
                     })}
                   </div>
-                </div>
-              )}
-            </div>
-          </main>
-        </div>
+                </GameCard>
+              </div>
+            )}
+          </div>
+        </GamePageTemplate>
       )}
     </UsageGuard>
   )

@@ -21,6 +21,9 @@ import {
 } from 'lucide-react'
 import Link from 'next/link'
 import UsageGuard, { UsageStatus } from '@/components/usage-guard'
+import GamePageTemplate from '@/components/game-page-template'
+import GameCard from '@/components/game-card'
+import GameStats from '@/components/game-stats'
 
 // 测试题目数据
 const testQuestions = [

@@ -21,6 +21,9 @@ import {
 } from 'lucide-react'
 import Link from 'next/link'
 import UsageGuard, { UsageStatus } from '@/components/usage-guard'
+import GamePageTemplate from '@/components/game-page-template'
+import GameCard from '@/components/game-card'
+import GameStats from '@/components/game-stats'
 
 // 模拟挑战数据
 const challenges = [
@@ -213,34 +216,28 @@ export default function ConversationChallengePage() {
 
   if (gameCompleted) {
     return (
-      <div className="min-h-screen bg-gradient-to-br from-indigo-50 via-pink-50 to-purple-50">
-        <GlobalNavbar />
-        
-        <main className="container mx-auto px-4 py-8">
-          <div className="mx-auto max-w-4xl">
-            <div className="mb-6">
-              <Link href="/games">
-                <Button variant="outline" className="mb-4">
-                  <ArrowLeft className="h-4 w-4 mr-2" />
-                  返回游戏中心
-                </Button>
-              </Link>
-            </div>
-            
-            <Card className="text-center py-12">
-              <CardHeader>
-                <div className="flex justify-center mb-4">
-                  <div className={`p-4 rounded-full ${scoreLevel.badge}`}>
-                    <Trophy className="h-12 w-12" />
-                  </div>
+      <GamePageTemplate
+        title="对话挑战"
+        description="情商训练游戏，通过不同场景测试你的情感智慧和沟通能力"
+        icon={<Brain className="h-8 w-8 text-white" />}
+        bgGradient="bg-gradient-to-br from-indigo-50/80 via-pink-50/80 to-purple-50/80"
+        showFooter={true}
+      >
+        <div className="max-w-4xl mx-auto">
+          <Card className="text-center py-12">
+            <CardHeader>
+              <div className="flex justify-center mb-4">
+                <div className={`p-4 rounded-full ${scoreLevel.badge}`}>
+                  <Trophy className="h-12 w-12" />
                 </div>
-                <CardTitle className="text-3xl font-bold mb-2">
-                  挑战完成！
-                </CardTitle>
-                <CardDescription className="text-lg">
-                  你的情商评估结果
-                </CardDescription>
-              </CardHeader>
+              </div>
+              <CardTitle className="text-3xl font-bold mb-2">
+                挑战完成！
+              </CardTitle>
+              <CardDescription className="text-lg">
+                你的情商评估结果
+              </CardDescription>
+            </CardHeader>
               
               <CardContent className="space-y-6">
                 <div className="text-center">
@@ -256,16 +253,26 @@ export default function ConversationChallengePage() {
                   <Progress value={(score / totalPossibleScore) * 100} className="h-3" />
                 </div>
                 
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-4 max-w-lg mx-auto">
-                  <div className="text-center">
-                    <div className="text-2xl font-bold text-blue-600">{challenges.length}</div>
-                    <div className="text-sm text-gray-500">挑战完成</div>
-                  </div>
-                  <div className="text-center">
-                    <div className="text-2xl font-bold text-green-600">{Math.round((score / totalPossibleScore) * 100)}%</div>
-                    <div className="text-sm text-gray-500">正确率</div>
-                  </div>
-                </div>
+                <GameStats
+                  title="挑战统计"
+                  description="本次情商挑战结果"
+                  stats={[
+                    {
+                      value: challenges.length,
+                      label: "挑战完成",
+                      icon: <CheckCircle className="h-3 w-3" />,
+                      bgColor: "bg-gradient-to-br from-blue-50 to-cyan-50",
+                      textColor: "text-blue-600"
+                    },
+                    {
+                      value: Math.round((score / totalPossibleScore) * 100) + "%",
+                      label: "正确率",
+                      icon: <Target className="h-3 w-3" />,
+                      bgColor: "bg-gradient-to-br from-green-50 to-emerald-50",
+                      textColor: "text-green-600"
+                    }
+                  ]}
+                />
                 
                 <div className="flex flex-col sm:flex-row gap-4 justify-center">
                   <Button onClick={handleRestart} variant="outline">
@@ -280,20 +287,17 @@ export default function ConversationChallengePage() {
               </CardContent>
             </Card>
           </div>
-        </main>
-        
-        <Footer />
-        
-        {/* 分享模态框 */}
-        {showShareModal && (
-          <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
-            <Card className="max-w-md w-full">
-              <CardHeader>
-                <CardTitle>分享你的成绩</CardTitle>
-                <CardDescription>
-                  让朋友们知道你的情商水平
-                </CardDescription>
-              </CardHeader>
+          
+          {/* 分享模态框 */}
+          {showShareModal && (
+            <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
+              <Card className="max-w-md w-full">
+                <CardHeader>
+                  <CardTitle>分享你的成绩</CardTitle>
+                  <CardDescription>
+                    让朋友们知道你的情商水平
+                  </CardDescription>
+                </CardHeader>
               <CardContent className="space-y-4">
                 <div className="text-center py-4 border rounded-lg bg-gray-50">
                   <div className="text-lg font-bold">

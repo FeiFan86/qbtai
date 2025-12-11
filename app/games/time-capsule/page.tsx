@@ -6,9 +6,12 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/com
 import { Input } from '@/components/ui/input';
 import { Textarea } from '@/components/ui/textarea';
 import { Label } from '@/components/ui/label';
+import { Switch } from '@/components/ui/switch';
 import { Calendar, Clock, Users, Share2, Copy, Gift } from 'lucide-react';
 import GlobalNavbar from '@/components/global-navbar';
 import UsageGuard, { UsageStatus } from '@/components/usage-guard';
+import GamePageTemplate from '@/components/game-page-template';
+import GameCard from '@/components/game-card';
 
 interface TimeCapsule {
   id: string;
@@ -68,215 +71,139 @@ export default function TimeCapsule() {
     return Math.ceil(diffTime / (1000 * 60 * 60 * 24));
   };
 
-  if (createdCapsule) {
-    const daysUntilOpen = getDaysUntilOpen();
-    
-    return (
-      <UsageGuard feature="games">
-        {({ canUse, remainingUses, onUse, isLoading, usageText }) => (
-          <div className="min-h-screen bg-gradient-to-br from-blue-50 via-white to-teal-50">
-            <GlobalNavbar />
-            
-            <main className="pt-16">
-              <div className="container py-8">
-                {/* 使用状态提示 */}
-                <div className="max-w-md mx-auto mb-6">
-                  <UsageStatus feature="games" className="justify-center" />
-                </div>
-                
-                <div className="max-w-md mx-auto">
-                  <Card className="shadow-lg">
-                    <CardHeader className="text-center">
-                      <CardTitle className="text-2xl text-blue-600 flex items-center justify-center">
-                        <Gift className="h-6 w-6 mr-2" />
-                        时光胶囊创建成功！
-                      </CardTitle>
-                      <CardDescription>你的时光胶囊已封存，将在指定时间开启</CardDescription>
-                    </CardHeader>
-                    <CardContent className="space-y-4">
-                      <div className="text-center">
-                        <div className="text-4xl font-bold text-blue-600 mb-2">{daysUntilOpen}</div>
-                        <div className="text-sm text-gray-600">天后开启</div>
-                      </div>
-
-                      <div className="bg-blue-50 p-4 rounded-lg">
-                        <h3 className="font-semibold text-blue-800 mb-2">{createdCapsule.title}</h3>
-                        <p className="text-sm text-blue-700 line-clamp-3">{createdCapsule.message}</p>
-                      </div>
-
-                      <div className="grid grid-cols-2 gap-4 text-sm">
-                        <div className="flex items-center space-x-2">
-                          <Calendar className="h-4 w-4 text-gray-500" />
-                          <span>开启日期：{new Date(createdCapsule.openDate).toLocaleDateString()}</span>
-                        </div>
-                        <div className="flex items-center space-x-2">
-                          <Users className="h-4 w-4 text-gray-500" />
-                          <span>参与者：{createdCapsule.participants.length}人</span>
-                        </div>
-                        <div className="flex items-center space-x-2">
-                          <Clock className="h-4 w-4 text-gray-500" />
-                          <span>创建时间：{createdCapsule.createdAt.toLocaleDateString()}</span>
-                        </div>
-                        <div className="flex items-center space-x-2">
-                          <Share2 className="h-4 w-4 text-gray-500" />
-                          <span>{createdCapsule.isPublic ? '公开' : '私密'}</span>
-                        </div>
-                      </div>
-
-                      <div className="bg-gray-50 p-3 rounded-lg border">
-                        <p className="text-sm text-gray-600 break-all">{createdCapsule.shareLink}</p>
-                      </div>
-
-                      <div className="flex space-x-2">
-                        <Button onClick={copyToClipboard} className="flex-1">
-                          <Copy className="h-4 w-4 mr-2" />
-                          复制链接
-                        </Button>
-                        <Button variant="outline" className="flex-1">
-                          <Share2 className="h-4 w-4 mr-2" />
-                          邀请好友
-                        </Button>
-                      </div>
-
-                      <Button 
-                        variant="ghost" 
-                        onClick={() => setCreatedCapsule(null)}
-                        className="w-full"
-                      >
-                        创建新的时光胶囊
-                      </Button>
-                    </CardContent>
-                  </Card>
-                </div>
-              </div>
-            </main>
-          </div>
-        )}
-      </UsageGuard>
-    );
-  }
-
-  const minDate = new Date();
-  minDate.setDate(minDate.getDate() + 1);
-  const maxDate = new Date();
-  maxDate.setFullYear(maxDate.getFullYear() + 10);
-
   return (
     <UsageGuard feature="games">
       {({ canUse, remainingUses, onUse, isLoading, usageText }) => (
-        <div className="min-h-screen bg-gradient-to-br from-blue-50 via-white to-teal-50">
-          <GlobalNavbar />
-          
-          <main className="pt-16">
-            <div className="container py-8">
-              {/* 页面标题 */}
-              <div className="text-center mb-8">
-                <div className="inline-flex items-center px-4 py-2 rounded-full bg-white/80 backdrop-blur-sm border border-blue-200 mb-4">
-                  <Gift className="h-5 w-5 text-blue-500 mr-2" />
-                  <span className="text-sm font-medium text-blue-700">时光胶囊</span>
+        <GamePageTemplate
+          title="时光胶囊"
+          description="封存美好回忆，在未来某个时刻一起开启"
+          icon={<Gift className="h-8 w-8 text-white" />}
+          bgGradient="bg-gradient-to-br from-blue-50/80 via-white to-teal-50/80"
+        >
+          <div className="max-w-md mx-auto">
+            {!createdCapsule ? (
+              // 创建时光胶囊界面
+              <GameCard
+                title="📦 创建时光胶囊"
+                description="封存现在的美好，让未来的你们一起回忆"
+                icon={<Gift className="h-6 w-6 text-white" />}
+              >
+                <div className="space-y-4">
+                  <div className="space-y-2">
+                    <Label htmlFor="title">胶囊标题</Label>
+                    <Input
+                      id="title"
+                      placeholder="给这个时光胶囊起个名字"
+                      value={title}
+                      onChange={(e) => setTitle(e.target.value)}
+                    />
+                  </div>
+
+                  <div className="space-y-2">
+                    <Label htmlFor="message">胶囊内容</Label>
+                    <Textarea
+                      id="message"
+                      placeholder="写下你想对未来的自己和TA说的话..."
+                      value={message}
+                      onChange={(e) => setMessage(e.target.value)}
+                      rows={6}
+                      className="resize-none"
+                    />
+                  </div>
+
+                  <div className="space-y-2">
+                    <Label htmlFor="openDate">开启日期</Label>
+                    <Input
+                      id="openDate"
+                      type="date"
+                      min={new Date().toISOString().split('T')[0]}
+                      value={openDate}
+                      onChange={(e) => setOpenDate(e.target.value)}
+                    />
+                  </div>
+
+                  <div className="space-y-2">
+                    <Label htmlFor="participants">参与者（用逗号分隔）</Label>
+                    <Input
+                      id="participants"
+                      placeholder="添加参与者的名字或邮箱"
+                      value={participants}
+                      onChange={(e) => setParticipants(e.target.value)}
+                    />
+                  </div>
+
+                  <div className="flex items-center justify-between">
+                    <div className="space-y-0.5">
+                      <Label htmlFor="isPublic">公开可见</Label>
+                      <p className="text-sm text-gray-500">允许其他人看到这个胶囊</p>
+                    </div>
+                    <Switch
+                      id="isPublic"
+                      checked={isPublic}
+                      onCheckedChange={setIsPublic}
+                    />
+                  </div>
+
+                  <Button 
+                    onClick={createTimeCapsule}
+                    disabled={!message.trim() || !openDate || !canUse}
+                    className="w-full bg-gradient-to-r from-blue-500 to-teal-500 hover:from-blue-600 hover:to-teal-600 disabled:opacity-50 disabled:cursor-not-allowed"
+                  >
+                    {isLoading ? '创建中...' : '封存时光胶囊'}
+                  </Button>
+                  
+                  {!canUse && (
+                    <p className="text-sm text-amber-600 text-center mt-2">
+                      使用次数已用完，请登录或等待重置
+                    </p>
+                  )}
                 </div>
-                <h1 className="text-3xl font-bold text-gray-900 mb-2">
-                  创建时光胶囊
-                </h1>
-                <p className="text-gray-600">
-                  写下对未来想说的话，设置开启时间与好友分享
-                </p>
-              </div>
-
-              {/* 使用状态提示 */}
-              <div className="max-w-md mx-auto mb-6">
-                <UsageStatus feature="games" className="justify-center" />
-              </div>
-              
-              <div className="max-w-md mx-auto">
-                <Card className="shadow-lg">
-                  <CardHeader className="text-center">
-                    <CardTitle className="text-2xl text-blue-600 flex items-center justify-center">
-                      <Gift className="h-6 w-6 mr-2" />
-                      创建时光胶囊
-                    </CardTitle>
-                    <CardDescription>写下对未来想说的话，设置开启时间与好友分享</CardDescription>
-                  </CardHeader>
-                  <CardContent className="space-y-4">
-                    <div className="space-y-2">
-                      <Label htmlFor="title">胶囊标题</Label>
-                      <Input
-                        id="title"
-                        placeholder="给未来的自己/TA/我们..."
-                        value={title}
-                        onChange={(e) => setTitle(e.target.value)}
-                      />
-                    </div>
-
-                    <div className="space-y-2">
-                      <Label htmlFor="message">胶囊内容</Label>
-                      <Textarea
-                        id="message"
-                        placeholder="写下你想对未来的自己或TA说的话..."
-                        value={message}
-                        onChange={(e) => setMessage(e.target.value)}
-                        rows={6}
-                        className="resize-none"
-                      />
-                    </div>
-
-                    <div className="space-y-2">
-                      <Label htmlFor="openDate">开启时间</Label>
-                      <Input
-                        id="openDate"
-                        type="date"
-                        min={minDate.toISOString().split('T')[0]}
-                        max={maxDate.toISOString().split('T')[0]}
-                        value={openDate}
-                        onChange={(e) => setOpenDate(e.target.value)}
-                      />
-                      <p className="text-sm text-gray-500">至少选择明天及以后的日期</p>
-                    </div>
-
-                    <div className="space-y-2">
-                      <Label htmlFor="participants">邀请参与者（可选）</Label>
-                      <Input
-                        id="participants"
-                        placeholder="输入好友邮箱或用户名，用逗号分隔"
-                        value={participants}
-                        onChange={(e) => setParticipants(e.target.value)}
-                      />
-                      <p className="text-sm text-gray-500">留空则为个人胶囊</p>
-                    </div>
-
-                    <div className="flex items-center justify-between">
-                      <div className="space-y-0.5">
-                        <Label htmlFor="isPublic">公开分享</Label>
-                        <p className="text-sm text-gray-500">允许他人通过链接查看</p>
-                      </div>
-                      <input
-                        type="checkbox"
-                        id="isPublic"
-                        checked={isPublic}
-                        onChange={(e) => setIsPublic(e.target.checked)}
-                        className="h-4 w-4 rounded border-gray-300 text-blue-600 focus:ring-blue-500"
-                      />
-                    </div>
-
+              </GameCard>
+            ) : (
+              // 创建成功界面
+              <GameCard
+                title="✨ 时光胶囊创建成功！"
+                description="你的时光胶囊已封存，将在指定时间开启"
+                icon={<Gift className="h-6 w-6 text-white" />}
+              >
+                <div className="space-y-4">
+                  <div className="bg-gray-50 p-3 rounded-lg border">
+                    <p className="text-sm text-gray-600 break-all">{createdCapsule.shareLink}</p>
+                  </div>
+                  
+                  <div className="text-center">
+                    <div className="text-4xl font-bold text-blue-600 mb-2">{getDaysUntilOpen()}</div>
+                    <div className="text-sm text-gray-600">天后开启</div>
+                  </div>
+                  
+                  <div className="bg-blue-50 p-4 rounded-lg">
+                    <h4 className="font-medium text-blue-800 mb-2">胶囊信息</h4>
+                    <p className="text-sm text-blue-700 mb-2">标题：{createdCapsule.title}</p>
+                    <p className="text-sm text-blue-700 mb-2">开启时间：{new Date(createdCapsule.openDate).toLocaleDateString()}</p>
+                    <p className="text-sm text-blue-700 mb-2">参与者：{createdCapsule.participants.length > 0 ? createdCapsule.participants.join(', ') : '仅自己'}</p>
+                    <p className="text-sm text-blue-700">可见性：{createdCapsule.isPublic ? '公开' : '私密'}</p>
+                  </div>
+                  
+                  <div className="flex gap-3">
                     <Button 
-                      onClick={createTimeCapsule}
-                      disabled={!message.trim() || !openDate || !canUse}
-                      className="w-full bg-blue-500 hover:bg-blue-600 disabled:opacity-50 disabled:cursor-not-allowed"
+                      onClick={copyToClipboard}
+                      className="flex-1 bg-gradient-to-r from-blue-500 to-teal-500 hover:from-blue-600 hover:to-teal-600"
                     >
-                      {isLoading ? '创建中...' : '创建时光胶囊'}
+                      <Copy className="h-4 w-4 mr-2" />
+                      复制链接
                     </Button>
-                    
-                    {!canUse && (
-                      <p className="text-sm text-amber-600 text-center">
-                        使用次数已用完，请登录或等待重置
-                      </p>
-                    )}
-                  </CardContent>
-                </Card>
-              </div>
-            </div>
-          </main>
-        </div>
+                    <Button 
+                      onClick={() => setCreatedCapsule(null)}
+                      variant="outline"
+                    >
+                      创建新的胶囊
+                    </Button>
+                  </div>
+                </div>
+              </GameCard>
+            )}
+          </div>
+        </GamePageTemplate>
       )}
     </UsageGuard>
   );

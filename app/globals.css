@@ -48,6 +48,12 @@
     --shadow: 0 4px 8px rgba(255, 107, 107, 0.12);
     --shadow-md: 0 8px 16px rgba(255, 107, 107, 0.14);
     --shadow-lg: 0 12px 24px rgba(255, 107, 107, 0.16);
+    --shadow-xl: 0 20px 40px rgba(255, 107, 107, 0.18);
+    --shadow-2xl: 0 25px 50px rgba(255, 107, 107, 0.2);
+    --shadow-3xl: 0 35px 75px rgba(255, 107, 107, 0.25);
+    
+    /* 动画 */
+    --animation-duration: 300ms;
     --shadow-xl: 0 16px 32px rgba(255, 107, 107, 0.18);
     --shadow-2xl: 0 24px 48px rgba(255, 107, 107, 0.2);
     --shadow-glow: 0 0 20px rgba(255, 107, 107, 0.3);
@@ -125,6 +131,71 @@
   :focus-visible {
     outline: 2px solid var(--primary-500);
     outline-offset: 2px;
+  }
+}
+
+/* 动画效果 */
+@layer utilities {
+  /* 渐变文本效果 */
+  .text-gradient {
+    @apply bg-gradient-to-r from-purple-600 via-pink-600 to-indigo-600;
+    -webkit-background-clip: text;
+    background-clip: text;
+  }
+  
+  /* 淡入向上动画 */
+  .animate-fade-in-up {
+    animation: fadeInUp 0.8s ease-out;
+  }
+  
+  @keyframes fadeInUp {
+    from {
+      opacity: 0;
+      transform: translateY(30px);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+  
+  /* 缓慢旋转 */
+  .animate-spin-slow {
+    animation: spin 3s linear infinite;
+  }
+  
+  @keyframes spin {
+    from {
+      transform: rotate(0deg);
+    }
+    to {
+      transform: rotate(360deg);
+    }
+  }
+  
+  /* 脉冲延迟效果 */
+  .delay-300 {
+    animation-delay: 300ms;
+  }
+  
+  .delay-700 {
+    animation-delay: 700ms;
+  }
+  
+  /* 悬停缩放效果 */
+  .hover-scale-105:hover {
+    transform: scale(1.05);
+  }
+  
+  /* 玻璃态效果 */
+  .glass {
+    backdrop-filter: blur(8px);
+    background-color: rgba(255, 255, 255, 0.8);
+  }
+  
+  .glass-dark {
+    backdrop-filter: blur(8px);
+    background-color: rgba(0, 0, 0, 0.3);
   }
 }
 
