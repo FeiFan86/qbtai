@@ -263,6 +263,8 @@ export default function CompatibilityChallengePage() {
                     relationship: { label: '关系处理', color: 'bg-pink-100 text-pink-800' }
                   }[category]
                   
+                  if (!config) return null
+                  
                   return (
                     <div key={category} className="flex items-center justify-between">
                       <span className="text-sm font-medium">{config.label}</span>
