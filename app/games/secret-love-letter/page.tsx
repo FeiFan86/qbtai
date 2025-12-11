@@ -1,7 +1,7 @@
 'use client'
 
 import React, { useState } from 'react'
-import { PenTool, Share2, RotateCwc } from 'lucide-react'
+import { PenTool, Share2, RotateCw } from 'lucide-react'
 import UnifiedGameTemplate from '@/components/unified-game-template'
 
 export default function SecretLoveLetterPage() {
