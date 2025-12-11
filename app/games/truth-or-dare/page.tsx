@@ -12,7 +12,7 @@ import {
   Users,
   Heart,
   Star,
-  Skip,
+  ChevronRight,
   CheckCircle
 } from 'lucide-react'
 import { motion, AnimatePresence } from 'framer-motion'
@@ -257,7 +257,7 @@ export default function TruthOrDarePage() {
                         onClick={skipQuestion}
                         className="flex-1"
                       >
-                        <Skip className="h-4 w-4 mr-2" />
+                        <ChevronRight className="h-4 w-4 mr-2" />
                         跳过
                       </Button>
                       <Button

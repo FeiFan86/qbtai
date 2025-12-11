@@ -238,7 +238,8 @@ export default function EmotionDiaryPage() {
                     <Button 
                       onClick={handleSaveDiary} 
                       disabled={!title.trim() || !content.trim() || isSaving}
-                      variant="pink"
+                      variant="default"
+                      className="bg-gradient-to-r from-rose-500 to-pink-500 hover:from-rose-600 hover:to-pink-600"
                     >
                       {isSaving ? '保存中...' : '保存并分析'}
                     </Button>
