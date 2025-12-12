@@ -391,8 +391,9 @@ export default function ContentCreationEnhancedPage() {
   }
 
   return (
-    <UsageGuard feature="content-creation">
-      {({ canUse, remainingUses, onUse, isLoading, usageText }) => (
+    <UsageGuard 
+      feature="content-creation"
+      children={({ canUse, remainingUses, onUse, isLoading, usageText }) => (
         <div className="min-h-screen bg-gradient-to-br from-rose-50 via-white to-pink-50">
           {/* 全局导航栏 */}
           <GlobalNavbar />
