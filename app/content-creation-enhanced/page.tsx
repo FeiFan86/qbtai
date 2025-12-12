@@ -787,8 +787,6 @@ export default function ContentCreationEnhancedPage() {
                 </div>
               </div>
             </div>
-          </main>
-
           {/* 页脚 */}
           <footer className="bg-gray-50 border-t border-gray-200">
             <div className="container py-8">
