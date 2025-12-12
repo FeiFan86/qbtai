@@ -448,158 +448,187 @@ export default function ContentCreationEnhancedPage() {
                 </div>
               </div>
 
-              <div className="max-w-4xl mx-auto grid lg:grid-cols-3 gap-8">
-                {/* 左侧 - 创作设置 */}
-                <div className="lg:col-span-2 space-y-6">
-                  {/* 情感驱动创作 */}
-                  <div className="bg-white rounded-xl shadow-sm border border-gray-200 p-6">
-                    <h3 className="text-lg font-semibold text-gray-900 mb-4 flex items-center">
-                      <Heart className="h-5 w-5 text-rose-500 mr-2" />
-                      情感驱动创作
-                    </h3>
-                    
-                    {/* 情感选择 */}
-                    <div className="mb-4">
-                      <label className="block text-sm font-medium text-gray-700 mb-2">
-                        当前情感状态
-                      </label>
-                      <div className="grid grid-cols-2 md:grid-cols-4 gap-2">
-                        {Object.entries(emotionMappings).map(([key, config]) => (
-                          <button
-                            key={key}
-                            onClick={() => setCurrentEmotion(key)}
-                            className={`p-3 rounded-lg text-sm font-medium transition-all ${
-                              currentEmotion === key 
-                                ? 'bg-rose-500 text-white' 
-                                : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
-                            }`}
-                          >
-                            {key === 'romantic' ? '浪漫' : 
-                             key === 'happy' ? '快乐' : 
-                             key === 'grateful' ? '感恩' : 
-                             key === 'caring' ? '关心' : 
-                             key === 'reflective' ? '思考' : 
-                             key === 'encouraging' ? '鼓励' : 
-                             key === 'apologetic' ? '道歉' : 
-                             key === 'proud' ? '自豪' : 
-                             key === 'playful' ? '调皮' : '怀念'}
-                          </button>
-                        ))}
-                      </div>
-                    </div>
-
-                    {/* 内容提示 */}
-                    <div className="mb-4">
-                      <label className="block text-sm font-medium text-gray-700 mb-2">
-                        内容提示（基于当前情感）
-                      </label>
-                      <textarea
-                        value={prompt}
-                        onChange={(e) => setPrompt(e.target.value)}
-                        placeholder={
-                          currentEmotion === 'romantic' ? '描述您想表达的浪漫情感...' :
-                          currentEmotion === 'happy' ? '分享您的快乐时刻...' :
-                          '表达您的感谢和珍惜...'
-                        }
-                        className="w-full h-32 p-3 border border-gray-200 rounded-lg resize-none focus:outline-none focus:ring-2 focus:ring-rose-500 focus:border-transparent"
-                      />
-                    </div>
-
-                    {/* 平台选择 */}
-                    <div className="grid grid-cols-2 gap-4 mb-6">
-                      <div>
-                        <label className="block text-sm font-medium text-gray-700 mb-2">
-                          发布平台
-                        </label>
-                        <select
-                          value={platform}
-                          onChange={(e) => setPlatform(e.target.value)}
-                          className="w-full p-3 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-rose-500 focus:border-transparent"
+              <div className="max-w-4xl mx-auto space-y-6">
+                {/* 情感驱动创作 */}
+                <div className="bg-white rounded-xl shadow-sm border border-gray-200 p-6">
+                  <h3 className="text-lg font-semibold text-gray-900 mb-4 flex items-center">
+                    <Heart className="h-5 w-5 text-rose-500 mr-2" />
+                    情感驱动创作
+                  </h3>
+                  
+                  {/* 情感选择 */}
+                  <div className="mb-4">
+                    <label className="block text-sm font-medium text-gray-700 mb-2">
+                      当前情感状态
+                    </label>
+                    <div className="grid grid-cols-2 md:grid-cols-5 gap-2">
+                      {Object.entries(emotionMappings).map(([key, config]) => (
+                        <button
+                          key={key}
+                          onClick={() => setCurrentEmotion(key)}
+                          className={`p-3 rounded-lg text-sm font-medium transition-all ${
+                            currentEmotion === key 
+                              ? 'bg-rose-500 text-white' 
+                              : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
+                          }`}
                         >
-                          <option value="wechat">💬 微信聊天</option>
-                          <option value="wechat_moment">📱 微信朋友圈</option>
-                          <option value="instagram">📸 Instagram</option>
-                          <option value="douyin">🎵 抖音</option>
-                          <option value="xiaohongshu">📕 小红书</option>
-                          <option value="weibo">🐦 微博</option>
-                          <option value="tiktok">🎬 TikTok</option>
-                          <option value="telegram">✈️ Telegram</option>
-                          <option value="whatsapp">💚 WhatsApp</option>
-                          <option value="email">📧 邮件</option>
-                          <option value="letter">✉️ 书信</option>
-                        </select>
-                      </div>
-                      
-                      <div>
-                        <label className="block text-sm font-medium text-gray-700 mb-2">
-                          内容长度
-                        </label>
-                        <select
-                          value={length}
-                          onChange={(e) => setLength(e.target.value)}
-                          className="w-full p-3 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-rose-500 focus:border-transparent"
-                        >
-                          <option value="short">简短精炼</option>
-                          <option value="medium">中等长度</option>
-                          <option value="long">详细丰富</option>
-                        </select>
-                      </div>
+                          {key === 'romantic' ? '浪漫' : 
+                           key === 'happy' ? '快乐' : 
+                           key === 'grateful' ? '感恩' : 
+                           key === 'caring' ? '关心' : 
+                           key === 'reflective' ? '思考' : 
+                           key === 'encouraging' ? '鼓励' : 
+                           key === 'apologetic' ? '道歉' : 
+                           key === 'proud' ? '自豪' : 
+                           key === 'playful' ? '调皮' : '怀念'}
+                        </button>
+                      ))}
                     </div>
-
-                    {/* 配图设置 */}
-                    <div className="mb-6">
-                      <label className="block text-sm font-medium text-gray-700 mb-3">
-                        配图设置
-                      </label>
-                      <div className="space-y-3">
-                        <div className="flex items-center space-x-2">
-                          <input
-                            type="checkbox"
-                            id="includeImage"
-                            checked={includeImage}
-                            onChange={(e) => setIncludeImage(e.target.checked)}
-                            className="h-4 w-4 text-rose-500 focus:ring-rose-500 border-gray-300 rounded"
-                          />
-                          <label htmlFor="includeImage" className="text-sm text-gray-700">
-                            生成配图建议
-                          </label>
-                        </div>
-                        
-                        {includeImage && (
-                          <div>
-                            <label className="block text-sm text-gray-600 mb-2">配图风格</label>
-                            <div className="grid grid-cols-3 gap-2">
-                              {['romantic', 'happy', 'grateful', 'caring', 'reflective'].map((type) => (
-                                <button
-                                  key={type}
-                                  type="button"
-                                  onClick={() => setSelectedImageType(type)}
-                                  className={`p-2 rounded text-xs font-medium transition-all ${
-                                    selectedImageType === type 
-                                      ? 'bg-rose-500 text-white' 
-                                      : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
-                                  }`}
-                                >
-                                  {type === 'romantic' ? '浪漫' : 
-                                   type === 'happy' ? '快乐' : 
-                                   type === 'grateful' ? '感恩' : 
-                                   type === 'caring' ? '关心' : '思考'}
-                                </button>
-                              ))}
-                            </div>
-                          </div>
-                        )}
-                      </div>
-                    </div>
-
-                    <button
-                      onClick={() => handleGenerate(onUse)}
-                      disabled={!prompt.trim() || isGenerating || !canUse}
-                      className="w-full bg-gradient-to-r from-rose-500 to-pink-500 text-white py-3 rounded-lg font-medium hover:from-rose-600 hover:to-pink-600 transition-all disabled:opacity-50 disabled:cursor-not-allowed"
-                    >
-                      {isGenerating || isLoading ? '智能生成中...' : '智能生成内容'}
-                    </button>
                   </div>
+
+                  {/* 情感示例 */}
+                  <div className="mb-4 bg-blue-50 rounded-lg p-4">
+                    <h4 className="font-medium text-gray-900 mb-3 flex items-center">
+                      <Play className="h-4 w-4 text-blue-500 mr-2" />
+                      {currentEmotion === 'romantic' ? '浪漫' : 
+                       currentEmotion === 'happy' ? '快乐' : 
+                       currentEmotion === 'grateful' ? '感恩' : 
+                       currentEmotion === 'caring' ? '关心' : 
+                       currentEmotion === 'reflective' ? '思考' : 
+                       currentEmotion === 'encouraging' ? '鼓励' : 
+                       currentEmotion === 'apologetic' ? '道歉' : 
+                       currentEmotion === 'proud' ? '自豪' : 
+                       currentEmotion === 'playful' ? '调皮' : '怀念'}示例
+                    </h4>
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-2">
+                      {emotionTemplates[currentEmotion as keyof typeof emotionTemplates].slice(0, 4).map((example, index) => (
+                        <button
+                          key={index}
+                          onClick={() => handleExampleClick(example, currentEmotion)}
+                          className="p-3 bg-white hover:bg-blue-100 rounded text-left transition-all text-sm border border-blue-100"
+                        >
+                          <p className="text-gray-600 line-clamp-2">
+                            {example.substring(0, 50)}...
+                          </p>
+                        </button>
+                      ))}
+                    </div>
+                  </div>
+
+                  {/* 内容提示 */}
+                  <div className="mb-4">
+                    <label className="block text-sm font-medium text-gray-700 mb-2">
+                      内容提示（基于当前情感）
+                    </label>
+                    <textarea
+                      value={prompt}
+                      onChange={(e) => setPrompt(e.target.value)}
+                      placeholder={
+                        currentEmotion === 'romantic' ? '描述您想表达的浪漫情感...' :
+                        currentEmotion === 'happy' ? '分享您的快乐时刻...' :
+                        currentEmotion === 'grateful' ? '表达您的感谢和珍惜...' :
+                        currentEmotion === 'caring' ? '表达您的关心和体贴...' :
+                        currentEmotion === 'reflective' ? '分享您的思考和感悟...' :
+                        currentEmotion === 'encouraging' ? '给予鼓励和支持...' :
+                        currentEmotion === 'apologetic' ? '表达歉意和反省...' :
+                        currentEmotion === 'proud' ? '分享成就和自豪...' :
+                        currentEmotion === 'playful' ? '表达幽默和调皮...' :
+                        '分享怀旧和回忆...'
+                      }
+                      className="w-full h-32 p-3 border border-gray-200 rounded-lg resize-none focus:outline-none focus:ring-2 focus:ring-rose-500 focus:border-transparent"
+                    />
+                  </div>
+
+                  {/* 平台和长度设置 */}
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-6">
+                    <div>
+                      <label className="block text-sm font-medium text-gray-700 mb-2">
+                        发布平台
+                      </label>
+                      <select
+                        value={platform}
+                        onChange={(e) => setPlatform(e.target.value)}
+                        className="w-full p-3 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-rose-500 focus:border-transparent"
+                      >
+                        <option value="wechat">💬 微信聊天</option>
+                        <option value="wechat_moment">📱 微信朋友圈</option>
+                        <option value="instagram">📸 Instagram</option>
+                        <option value="douyin">🎵 抖音</option>
+                        <option value="xiaohongshu">📕 小红书</option>
+                        <option value="weibo">🐦 微博</option>
+                        <option value="tiktok">🎬 TikTok</option>
+                        <option value="telegram">✈️ Telegram</option>
+                        <option value="whatsapp">💚 WhatsApp</option>
+                        <option value="email">📧 邮件</option>
+                        <option value="letter">✉️ 书信</option>
+                      </select>
+                    </div>
+                    
+                    <div>
+                      <label className="block text-sm font-medium text-gray-700 mb-2">
+                        内容长度
+                      </label>
+                      <select
+                        value={length}
+                        onChange={(e) => setLength(e.target.value)}
+                        className="w-full p-3 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-rose-500 focus:border-transparent"
+                      >
+                        <option value="short">简短精炼</option>
+                        <option value="medium">中等长度</option>
+                        <option value="long">详细丰富</option>
+                      </select>
+                    </div>
+                  </div>
+
+                  {/* AI图片生成 */}
+                  <div className="mb-6">
+                    <label className="block text-sm font-medium text-gray-700 mb-3">
+                      AI图片生成
+                    </label>
+                    <div className="space-y-3">
+                      <button
+                        onClick={() => generateImage(prompt)}
+                        disabled={!prompt.trim() || isGeneratingImage}
+                        className="w-full bg-gradient-to-r from-purple-500 to-indigo-500 text-white py-2 rounded-lg font-medium hover:from-purple-600 hover:to-indigo-600 transition-all disabled:opacity-50 disabled:cursor-not-allowed"
+                      >
+                        {isGeneratingImage ? '生成中...' : '生成匹配图片'}
+                      </button>
+                      
+                      {generatedImages.length > 0 && (
+                        <div className="space-y-3">
+                          <h5 className="text-sm font-medium text-gray-700">生成结果</h5>
+                          <div className="grid grid-cols-3 gap-2">
+                            {generatedImages.map((img, index) => (
+                              <div key={index} className="relative group">
+                                <img 
+                                  src={img} 
+                                  alt="AI生成图片"
+                                  className="w-full h-20 object-cover rounded-lg"
+                                />
+                                <div className="absolute inset-0 bg-black bg-opacity-0 group-hover:bg-opacity-20 transition-all rounded-lg flex items-center justify-center">
+                                  <button 
+                                    onClick={() => downloadImage(img, index)}
+                                    className="opacity-0 group-hover:opacity-100 bg-white text-black px-2 py-1 rounded text-xs hover:bg-gray-100 transition-colors"
+                                  >
+                                    下载
+                                  </button>
+                                </div>
+                              </div>
+                            ))}
+                          </div>
+                        </div>
+                      )}
+                    </div>
+                  </div>
+
+                  <button
+                    onClick={() => handleGenerate(onUse)}
+                    disabled={!prompt.trim() || isGenerating || !canUse}
+                    className="w-full bg-gradient-to-r from-rose-500 to-pink-500 text-white py-3 rounded-lg font-medium hover:from-rose-600 hover:to-pink-600 transition-all disabled:opacity-50 disabled:cursor-not-allowed"
+                  >
+                    {isGenerating || isLoading ? '智能生成中...' : '智能生成内容'}
+                  </button>
+                </div>
 
                   {/* 生成结果 */}
                   {result && (
@@ -708,117 +737,6 @@ export default function ContentCreationEnhancedPage() {
                       </div>
                     </div>
                   )}
-                </div>
-
-                {/* 右侧 - 实用功能 */}
-                <div className="space-y-6">
-                  {/* 快速示例 */}
-                  <div className="bg-white rounded-xl shadow-sm border border-gray-200 p-6">
-                    <h4 className="font-semibold text-gray-900 mb-3 flex items-center">
-                      <Play className="h-4 w-4 text-blue-500 mr-2" />
-                      快速示例
-                    </h4>
-                    <div className="space-y-3">
-                      {Object.entries(emotionMappings).map(([emotion, config]) => (
-                        <div key={emotion} className="space-y-2">
-                          <div className="flex items-center justify-between">
-                            <div className="flex items-center space-x-2">
-                              <span className="text-lg">{config.emoji}</span>
-                              <span className="font-medium text-gray-700">
-                                {emotion === 'romantic' ? '浪漫' : 
-                                 emotion === 'happy' ? '快乐' : 
-                                 emotion === 'grateful' ? '感恩' : 
-                                 emotion === 'caring' ? '关心' : 
-                                 emotion === 'reflective' ? '思考' : 
-                                 emotion === 'encouraging' ? '鼓励' : 
-                                 emotion === 'apologetic' ? '道歉' : 
-                                 emotion === 'proud' ? '自豪' : 
-                                 emotion === 'playful' ? '调皮' : '怀念'}
-                              </span>
-                            </div>
-                            <span className="text-xs text-gray-500">{emotionTemplates[emotion as keyof typeof emotionTemplates].length}个示例</span>
-                          </div>
-                          <div className="space-y-1">
-                            {emotionTemplates[emotion as keyof typeof emotionTemplates].slice(0, 2).map((example, index) => (
-                              <button
-                                key={index}
-                                onClick={() => handleExampleClick(example, emotion)}
-                                className="w-full p-2 bg-gray-50 hover:bg-blue-50 rounded text-left transition-all text-sm"
-                              >
-                                <p className="text-gray-600 line-clamp-2">
-                                  {example.substring(0, 40)}...
-                                </p>
-                              </button>
-                            ))}
-                          </div>
-                        </div>
-                      ))}
-                    </div>
-                  </div>
-
-                  {/* AI图片生成 */}
-                  <div className="bg-white rounded-xl shadow-sm border border-gray-200 p-6">
-                    <h4 className="font-semibold text-gray-900 mb-3 flex items-center">
-                      <Sparkles className="h-4 w-4 text-purple-500 mr-2" />
-                      AI图片生成
-                    </h4>
-                    <div className="space-y-4">
-                      <button
-                        onClick={() => generateImage(prompt)}
-                        disabled={!prompt.trim() || isGeneratingImage}
-                        className="w-full bg-gradient-to-r from-purple-500 to-indigo-500 text-white py-2 rounded-lg font-medium hover:from-purple-600 hover:to-indigo-600 transition-all disabled:opacity-50 disabled:cursor-not-allowed"
-                      >
-                        {isGeneratingImage ? '生成中...' : '生成匹配图片'}
-                      </button>
-                      
-                      {generatedImages.length > 0 && (
-                        <div className="space-y-3">
-                          <h5 className="text-sm font-medium text-gray-700">生成结果</h5>
-                          <div className="grid grid-cols-2 gap-2">
-                            {generatedImages.map((img, index) => (
-                              <div key={index} className="relative group">
-                                <img 
-                                  src={img} 
-                                  alt="AI生成图片"
-                                  className="w-full h-20 object-cover rounded-lg"
-                                />
-                                <div className="absolute inset-0 bg-black bg-opacity-0 group-hover:bg-opacity-20 transition-all rounded-lg flex items-center justify-center">
-                                  <button 
-                                    onClick={() => downloadImage(img, index)}
-                                    className="opacity-0 group-hover:opacity-100 bg-white text-black px-2 py-1 rounded text-xs hover:bg-gray-100 transition-colors"
-                                  >
-                                    下载
-                                  </button>
-                                </div>
-                              </div>
-                            ))}
-                          </div>
-                        </div>
-                      )}
-                    </div>
-                  </div>
-
-                  {/* 热门话题 */}
-                  <div className="bg-white rounded-xl shadow-sm border border-gray-200 p-6">
-                    <h4 className="font-semibold text-gray-900 mb-3 flex items-center">
-                      <TrendingUp className="h-4 w-4 text-orange-500 mr-2" />
-                      热门话题
-                    </h4>
-                    <div className="space-y-2">
-                      {[
-                        '纪念日惊喜创意',
-                        '日常暖心小举动',
-                        '情侣旅行计划',
-                        '沟通技巧分享',
-                        '未来规划讨论'
-                      ].map((topic, index) => (
-                        <div key={index} className="flex items-center space-x-2 text-sm">
-                          <span className="text-orange-500">🔥</span>
-                          <span className="text-gray-600">{topic}</span>
-                        </div>
-                      ))}
-                    </div>
-                  </div>
                 </div>
               </div>
 
