@@ -23,13 +23,18 @@ interface GenerationResult {
   hashtags: string[];
 }
 
-// 情感状态映射
+// 情感状态映射（丰富情感选项）
 const emotionMappings = {
-  happy: { keywords: ['开心', '快乐', '幸福', '兴奋', '喜悦'], style: '活泼俏皮', intensity: 85 },
-  romantic: { keywords: ['爱', '浪漫', '温柔', '深情', '甜蜜'], style: '诗意浪漫', intensity: 90 },
-  grateful: { keywords: ['感谢', '感激', '感恩', '珍惜', '感动'], style: '深情款款', intensity: 80 },
-  caring: { keywords: ['关心', '体贴', '照顾', '温暖', '支持'], style: '轻松随意', intensity: 75 },
-  reflective: { keywords: ['思考', '回忆', '感悟', '成长', '经历'], style: '正式得体', intensity: 70 }
+  romantic: { keywords: ['爱', '浪漫', '温柔', '深情', '甜蜜'], style: '诗意浪漫', intensity: 95, emoji: '❤️' },
+  happy: { keywords: ['开心', '快乐', '幸福', '兴奋', '喜悦'], style: '活泼俏皮', intensity: 90, emoji: '😊' },
+  grateful: { keywords: ['感谢', '感激', '感恩', '珍惜', '感动'], style: '深情款款', intensity: 85, emoji: '🙏' },
+  caring: { keywords: ['关心', '体贴', '照顾', '温暖', '支持'], style: '轻松随意', intensity: 80, emoji: '🤗' },
+  reflective: { keywords: ['思考', '回忆', '感悟', '成长', '经历'], style: '正式得体', intensity: 75, emoji: '💭' },
+  encouraging: { keywords: ['鼓励', '加油', '支持', '勇敢', '前进'], style: '积极向上', intensity: 85, emoji: '💪' },
+  apologetic: { keywords: ['道歉', '对不起', '抱歉', '愧疚', '谅解'], style: '诚恳真挚', intensity: 70, emoji: '😔' },
+  proud: { keywords: ['骄傲', '自豪', '成就', '成功', '进步'], style: '自信满满', intensity: 88, emoji: '🏆' },
+  playful: { keywords: ['调皮', '玩笑', '有趣', '幽默', '轻松'], style: '轻松幽默', intensity: 82, emoji: '😄' },
+  nostalgic: { keywords: ['怀念', '回忆', '往昔', '时光', '青春'], style: '怀旧温馨', intensity: 78, emoji: '📸' }
 }
 
 // 扩展平台适配配置
@@ -59,27 +64,29 @@ export default function ContentCreationEnhancedPage() {
   const [copied, setCopied] = useState(false)
   const [includeImage, setIncludeImage] = useState(true)
   const [selectedImageType, setSelectedImageType] = useState('romantic')
+  const [isGeneratingImage, setIsGeneratingImage] = useState(false)
+  const [generatedImages, setGeneratedImages] = useState<string[]>([])
   const [userPreferences, setUserPreferences] = useState({
     preferredEmojis: ['❤️', '✨', '💕', '🌟'],
     tone: 'warm',
     signature: ''
   })
 
-  // 扩展情感驱动的创意模板库（丰富示例）
+  // 扩展情感驱动的创意模板库（丰富示例，可点击生成）
   const emotionTemplates = {
-    happy: [
-      '今天的心情超级好！想和你分享这份快乐～就像阳光洒满心间，每一个细胞都在跳舞！',
-      '和你在一起的每一天都充满阳光和欢笑，连空气都变得甜蜜起来～',
-      '生活中的小确幸，因为有你的陪伴而更加美好！比如今天早上的咖啡特别香，因为想着你～',
-      '刚刚看到一只超可爱的小猫，让我想起了你温柔的笑容，瞬间心情爆表💕',
-      '今天完成了重要的项目！想和你一起庆祝这份喜悦，分享成功的喜悦！'
-    ],
     romantic: [
       '亲爱的，我想对你说：遇见你是我生命中最美的意外，爱你是我做过最正确的决定❤️',
       '在这个特别的日子里，我想表达对你的爱意：时光荏苒，但爱你如初，永不褪色✨',
       '和你在一起的时光，是我最珍贵的礼物。每一个拥抱、每一次微笑都让我感到无比幸福～',
       '还记得我们第一次约会的地方吗？那里的灯光、音乐，还有你羞涩的笑容，我都记得清清楚楚💕',
       '想对你说：愿我们的爱如星辰大海，永恒而璀璨；如春风细雨，温柔而绵长🌙'
+    ],
+    happy: [
+      '今天的心情超级好！想和你分享这份快乐～就像阳光洒满心间，每一个细胞都在跳舞！',
+      '和你在一起的每一天都充满阳光和欢笑，连空气都变得甜蜜起来～',
+      '生活中的小确幸，因为有你的陪伴而更加美好！比如今天早上的咖啡特别香，因为想着你～',
+      '刚刚看到一只超可爱的小猫，让我想起了你温柔的笑容，瞬间心情爆表💕',
+      '今天完成了重要的项目！想和你一起庆祝这份喜悦，分享成功的喜悦！'
     ],
     grateful: [
       '感谢你一直以来的包容和支持，让我能够勇敢做自己，追逐梦想✨',
@@ -101,6 +108,41 @@ export default function ContentCreationEnhancedPage() {
       '有时候会想，如果没有遇见你，我的生活会是什么样子？感谢命运让我们相遇✨',
       '在我们的关系中，我学到了很多：包容、理解、珍惜...这些都是你教会我的💕',
       '想和你一起规划未来：我们的梦想、目标，还有那些想要一起实现的愿望🌟'
+    ],
+    encouraging: [
+      '我知道你最近在努力，想对你说：加油！你比自己想象的更强大，我相信你一定能成功💪',
+      '看着你一步步前进，我为你感到骄傲！继续努力，美好的未来在等着你✨',
+      '不要害怕失败，每一次尝试都是成长的机会。相信自己，你真的很棒！🌟',
+      '无论遇到什么困难，记得我永远支持你。坚持就是胜利，我们一起加油！🔥',
+      '你是最棒的！继续展现你的才华和能力，让世界看到你的光芒✨'
+    ],
+    apologetic: [
+      '对不起，我知道我做错了，希望能得到你的原谅。我会努力改正的😔',
+      '我真的很抱歉，我的无心之言伤害了你。希望你能原谅我的错误❤️',
+      '对不起，我意识到自己的问题，会认真反思并改进。请给我一个机会🙏',
+      '我为自己的行为感到愧疚，希望能弥补我的过错。请接受我的道歉😌',
+      '对不起，我知道道歉不能改变什么，但我会用实际行动证明我的诚意💕'
+    ],
+    proud: [
+      '为你感到骄傲！你的努力和成就让我深受鼓舞，继续加油！🏆',
+      '看到你取得的进步，我真的很开心！你是最棒的，继续闪耀吧！✨',
+      '你的成功不是偶然，而是你坚持和努力的结果。为你感到自豪！💪',
+      '恭喜你！这个成就证明了你无限的可能性，继续向前冲！🌟',
+      '你的表现让我感到无比自豪，继续保持这份热情和努力！🔥'
+    ],
+    playful: [
+      '今天想和你玩个小游戏～猜猜我现在在想什么？😄',
+      '你知道吗？你笑起来的样子特别可爱，就像阳光一样温暖☀️',
+      '我们来个有趣的挑战吧！看谁先完成今天的任务？😏',
+      '突然想逗你开心～分享一个好笑的事情给你听！🤣',
+      '今天天气这么好，我们一起去创造一些有趣的回忆吧！🌈'
+    ],
+    nostalgic: [
+      '还记得我们第一次见面的场景吗？那时候的我们多么青涩美好📸',
+      '翻看旧照片，想起我们一起走过的点点滴滴，真的很温暖💕',
+      '时光飞逝，但那些美好的回忆永远留在心里，谢谢你陪我成长✨',
+      '突然很想念我们一起度过的那些时光，每一刻都值得珍藏🌟',
+      '回望过去，发现我们的故事是如此精彩。期待创造更多美好回忆❤️'
     ]
   }
 
@@ -195,6 +237,48 @@ export default function ContentCreationEnhancedPage() {
   const generateImageSuggestions = (emotion: string) => {
     const suggestions = imageSuggestions[emotion as keyof typeof imageSuggestions] || imageSuggestions.romantic
     return suggestions.slice(0, 3) // 返回前3个建议
+  }
+
+  // 生成AI图片
+  const generateImage = async (prompt: string) => {
+    setIsGeneratingImage(true)
+    
+    // 模拟AI图片生成（实际项目中可接入真实AI服务）
+    setTimeout(() => {
+      const emotionConfig = emotionMappings[currentEmotion as keyof typeof emotionMappings]
+      const mockImages = [
+        `https://picsum.photos/400/300?random=1&emotion=${currentEmotion}`,
+        `https://picsum.photos/400/300?random=2&emotion=${currentEmotion}`,
+        `https://picsum.photos/400/300?random=3&emotion=${currentEmotion}`
+      ]
+      setGeneratedImages(mockImages)
+      setIsGeneratingImage(false)
+    }, 3000)
+  }
+
+  // 下载图片
+  const downloadImage = async (imageUrl: string, index: number) => {
+    try {
+      const response = await fetch(imageUrl)
+      const blob = await response.blob()
+      const url = URL.createObjectURL(blob)
+      const a = document.createElement('a')
+      a.href = url
+      a.download = `AI生成图片_${currentEmotion === 'romantic' ? '浪漫' : currentEmotion === 'happy' ? '快乐' : '感恩'}_${index + 1}.jpg`
+      document.body.appendChild(a)
+      a.click()
+      document.body.removeChild(a)
+      URL.revokeObjectURL(url)
+    } catch (error) {
+      console.error('下载图片失败:', error)
+      alert('下载失败，请重试')
+    }
+  }
+
+  // 点击示例快速生成
+  const handleExampleClick = (exampleText: string, emotion: string) => {
+    setPrompt(exampleText)
+    setCurrentEmotion(emotion)
   }
 
   // 生成个性化内容
@@ -390,7 +474,15 @@ export default function ContentCreationEnhancedPage() {
                                 : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
                             }`}
                           >
-                            {key === 'romantic' ? '浪漫' : key === 'happy' ? '快乐' : key === 'grateful' ? '感恩' : '关心'}
+                            {key === 'romantic' ? '浪漫' : 
+                             key === 'happy' ? '快乐' : 
+                             key === 'grateful' ? '感恩' : 
+                             key === 'caring' ? '关心' : 
+                             key === 'reflective' ? '思考' : 
+                             key === 'encouraging' ? '鼓励' : 
+                             key === 'apologetic' ? '道歉' : 
+                             key === 'proud' ? '自豪' : 
+                             key === 'playful' ? '调皮' : '怀念'}
                           </button>
                         ))}
                       </div>
@@ -618,75 +710,111 @@ export default function ContentCreationEnhancedPage() {
                   )}
                 </div>
 
-                {/* 右侧 - 智能分析 */}
+                {/* 右侧 - 实用功能 */}
                 <div className="space-y-6">
-                  {/* 情感共鸣预测 */}
+                  {/* 快速示例 */}
                   <div className="bg-white rounded-xl shadow-sm border border-gray-200 p-6">
                     <h4 className="font-semibold text-gray-900 mb-3 flex items-center">
-                      <TrendingUp className="h-4 w-4 text-green-500 mr-2" />
-                      共鸣度预测
+                      <Play className="h-4 w-4 text-blue-500 mr-2" />
+                      快速示例
                     </h4>
                     <div className="space-y-3">
-                      <div className="flex justify-between items-center">
-                        <span className="text-sm text-gray-600">情感匹配度</span>
-                        <span className="text-sm font-medium text-green-600">
-                          {result ? Math.min(result.resonanceScore + 10, 95) : 85}%
-                        </span>
-                      </div>
-                      <div className="flex justify-between items-center">
-                        <span className="text-sm text-gray-600">个性化程度</span>
-                        <span className="text-sm font-medium text-blue-600">
-                          {userPreferences.signature ? '高' : '中'}
-                        </span>
-                      </div>
-                      <div className="flex justify-between items-center">
-                        <span className="text-sm text-gray-600">平台适配度</span>
-                        <span className="text-sm font-medium text-purple-600">优秀</span>
-                      </div>
-                    </div>
-                  </div>
-
-                  {/* 个性化设置 */}
-                  <div className="bg-white rounded-xl shadow-sm border border-gray-200 p-6">
-                    <h4 className="font-semibold text-gray-900 mb-3 flex items-center">
-                      <Users className="h-4 w-4 text-rose-500 mr-2" />
-                      个性化设置
-                    </h4>
-                    <div className="space-y-3">
-                      <div>
-                        <label className="block text-sm text-gray-600 mb-1">个性签名</label>
-                        <input
-                          type="text"
-                          value={userPreferences.signature}
-                          onChange={(e) => setUserPreferences(prev => ({...prev, signature: e.target.value}))}
-                          placeholder="例如：爱你的XX"
-                          className="w-full p-2 border border-gray-200 rounded text-sm"
-                        />
-                      </div>
-                      <div>
-                        <label className="block text-sm text-gray-600 mb-1">偏好表情</label>
-                        <div className="flex space-x-2">
-                          {userPreferences.preferredEmojis.map((emoji, index) => (
-                            <span key={index} className="text-lg">{emoji}</span>
-                          ))}
+                      {Object.entries(emotionMappings).map(([emotion, config]) => (
+                        <div key={emotion} className="space-y-2">
+                          <div className="flex items-center justify-between">
+                            <div className="flex items-center space-x-2">
+                              <span className="text-lg">{config.emoji}</span>
+                              <span className="font-medium text-gray-700">
+                                {emotion === 'romantic' ? '浪漫' : 
+                                 emotion === 'happy' ? '快乐' : 
+                                 emotion === 'grateful' ? '感恩' : 
+                                 emotion === 'caring' ? '关心' : 
+                                 emotion === 'reflective' ? '思考' : 
+                                 emotion === 'encouraging' ? '鼓励' : 
+                                 emotion === 'apologetic' ? '道歉' : 
+                                 emotion === 'proud' ? '自豪' : 
+                                 emotion === 'playful' ? '调皮' : '怀念'}
+                              </span>
+                            </div>
+                            <span className="text-xs text-gray-500">{emotionTemplates[emotion as keyof typeof emotionTemplates].length}个示例</span>
+                          </div>
+                          <div className="space-y-1">
+                            {emotionTemplates[emotion as keyof typeof emotionTemplates].slice(0, 2).map((example, index) => (
+                              <button
+                                key={index}
+                                onClick={() => handleExampleClick(example, emotion)}
+                                className="w-full p-2 bg-gray-50 hover:bg-blue-50 rounded text-left transition-all text-sm"
+                              >
+                                <p className="text-gray-600 line-clamp-2">
+                                  {example.substring(0, 40)}...
+                                </p>
+                              </button>
+                            ))}
+                          </div>
                         </div>
-                      </div>
+                      ))}
                     </div>
                   </div>
 
-                  {/* 模板库 */}
+                  {/* AI图片生成 */}
                   <div className="bg-white rounded-xl shadow-sm border border-gray-200 p-6">
                     <h4 className="font-semibold text-gray-900 mb-3 flex items-center">
-                      <Palette className="h-4 w-4 text-purple-500 mr-2" />
-                      情感模板库
+                      <Sparkles className="h-4 w-4 text-purple-500 mr-2" />
+                      AI图片生成
+                    </h4>
+                    <div className="space-y-4">
+                      <button
+                        onClick={() => generateImage(prompt)}
+                        disabled={!prompt.trim() || isGeneratingImage}
+                        className="w-full bg-gradient-to-r from-purple-500 to-indigo-500 text-white py-2 rounded-lg font-medium hover:from-purple-600 hover:to-indigo-600 transition-all disabled:opacity-50 disabled:cursor-not-allowed"
+                      >
+                        {isGeneratingImage ? '生成中...' : '生成匹配图片'}
+                      </button>
+                      
+                      {generatedImages.length > 0 && (
+                        <div className="space-y-3">
+                          <h5 className="text-sm font-medium text-gray-700">生成结果</h5>
+                          <div className="grid grid-cols-2 gap-2">
+                            {generatedImages.map((img, index) => (
+                              <div key={index} className="relative group">
+                                <img 
+                                  src={img} 
+                                  alt="AI生成图片"
+                                  className="w-full h-20 object-cover rounded-lg"
+                                />
+                                <div className="absolute inset-0 bg-black bg-opacity-0 group-hover:bg-opacity-20 transition-all rounded-lg flex items-center justify-center">
+                                  <button 
+                                    onClick={() => downloadImage(img, index)}
+                                    className="opacity-0 group-hover:opacity-100 bg-white text-black px-2 py-1 rounded text-xs hover:bg-gray-100 transition-colors"
+                                  >
+                                    下载
+                                  </button>
+                                </div>
+                              </div>
+                            ))}
+                          </div>
+                        </div>
+                      )}
+                    </div>
+                  </div>
+
+                  {/* 热门话题 */}
+                  <div className="bg-white rounded-xl shadow-sm border border-gray-200 p-6">
+                    <h4 className="font-semibold text-gray-900 mb-3 flex items-center">
+                      <TrendingUp className="h-4 w-4 text-orange-500 mr-2" />
+                      热门话题
                     </h4>
                     <div className="space-y-2">
-                      {Object.entries(emotionTemplates).map(([emotion, templates]) => (
-                        <div key={emotion} className="text-sm">
-                          <span className="font-medium text-gray-700">
-                            {emotion === 'romantic' ? '浪漫' : emotion === 'happy' ? '快乐' : '感恩'}:
-                          </span>
-                          <p className="text-gray-600 truncate">{templates[0]}</p>
+                      {[
+                        '纪念日惊喜创意',
+                        '日常暖心小举动',
+                        '情侣旅行计划',
+                        '沟通技巧分享',
+                        '未来规划讨论'
+                      ].map((topic, index) => (
+                        <div key={index} className="flex items-center space-x-2 text-sm">
+                          <span className="text-orange-500">🔥</span>
+                          <span className="text-gray-600">{topic}</span>
                         </div>
                       ))}
                     </div>
