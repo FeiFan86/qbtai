@@ -628,7 +628,7 @@ export default function ContentCreationEnhancedPage() {
                   >
                     {isGenerating || isLoading ? '智能生成中...' : '智能生成内容'}
                   </button>
-              </div>
+                </div>
 
               {/* 生成结果 */}
               {result && (
