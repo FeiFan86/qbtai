@@ -52,21 +52,21 @@ const platformConfigs = {
   letter: { maxLength: 1000, style: '深情款款', emoji: '✉️', hashtag: false, imageSupport: true }
 }
 
-// 简化的 UsageGuard 组件
-const SimpleUsageGuard = ({ feature, children }: any) => {
-  const [canUse] = useState(true)
-  const [remainingUses] = useState(10)
-  const [isLoading] = useState(false)
-  const usageText = '今日剩余使用次数：10'
-  
-  const onUse = async () => {
-    // 简化的使用处理
-  }
-  
-  return children({ canUse, remainingUses, onUse, isLoading, usageText })
-}
-
 export default function ContentCreationEnhancedPage() {
+
+  // 简化的 UsageGuard 组件
+  const SimpleUsageGuard = ({ feature, children }: any) => {
+    const [canUse] = useState(true)
+    const [remainingUses] = useState(10)
+    const [isLoading] = useState(false)
+    const usageText = '今日剩余使用次数：10'
+    
+    const onUse = async () => {
+      // 简化的使用处理
+    }
+    
+    return children({ canUse, remainingUses, onUse, isLoading, usageText })
+  }
   const [prompt, setPrompt] = useState('')
   const [style, setStyle] = useState('casual')
   const [length, setLength] = useState('medium')
@@ -404,11 +404,12 @@ export default function ContentCreationEnhancedPage() {
     }
   }
 
-  const renderContent = ({ canUse, remainingUses, onUse, isLoading, usageText }: any) => {
-    return (
-      <div className="min-h-screen bg-gradient-to-br from-rose-50 via-white to-pink-50">
-        {/* 全局导航栏 */}
-        <GlobalNavbar />
+  return (
+    <SimpleUsageGuard feature="content-creation">
+      {({ canUse, remainingUses, onUse, isLoading, usageText }) => (
+        <div className="min-h-screen bg-gradient-to-br from-rose-50 via-white to-pink-50">
+          {/* 全局导航栏 */}
+          <GlobalNavbar />
 
           {/* 主要内容 */}
           <main className="pt-16">
@@ -806,8 +807,7 @@ export default function ContentCreationEnhancedPage() {
               </div>
             </div>
           </footer>
-          </div>
-    );
+        )
   };
 
   return (
