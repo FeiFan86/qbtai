@@ -407,8 +407,8 @@ export default function ContentCreationEnhancedPage() {
   const renderContent = ({ canUse, remainingUses, onUse, isLoading, usageText }: any) => {
     return (
       <div className="min-h-screen bg-gradient-to-br from-rose-50 via-white to-pink-50">
-          {/* 全局导航栏 */}
-          <GlobalNavbar />
+        {/* 全局导航栏 */}
+        <GlobalNavbar />
 
           {/* 主要内容 */}
           <main className="pt-16">

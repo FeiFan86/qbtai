@@ -26,7 +26,7 @@ interface UsageGuardProps {
   onUsageLimitReached?: () => void
 }
 
-export function UsageGuard({ feature, children, onUsageLimitReached }: UsageGuardProps) {
+export default function UsageGuard({ feature, children, onUsageLimitReached }: UsageGuardProps) {
   const { user, isAuthenticated } = useAuth()
   const [showLoginModal, setShowLoginModal] = useState(false)
   const [canUse, setCanUse] = useState(false)
@@ -108,8 +108,6 @@ export function UsageGuard({ feature, children, onUsageLimitReached }: UsageGuar
     </>
   )
 }
-
-export default UsageGuard
 
 // 使用状态显示组件
 interface UsageStatusProps {
@@ -236,5 +234,3 @@ export function UsageLimitAlert({ feature, onUpgrade, className = '' }: UsageLim
     </>
   )
 }
-
-export default UsageGuard
