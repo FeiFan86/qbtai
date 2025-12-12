@@ -430,7 +430,9 @@ export default function ContentCreationEnhancedPage() {
 
               {/* 使用状态提示 */}
               <div className="max-w-4xl mx-auto mb-6">
-                <UsageStatus feature="content-creation" className="justify-center" />
+                <div className="flex items-center justify-center space-x-2 text-sm text-gray-600">
+                  <span>今日剩余使用次数：10</span>
+                </div>
               </div>
 
               {/* 智能分析面板 */}
