@@ -628,117 +628,117 @@ export default function ContentCreationEnhancedPage() {
                   >
                     {isGenerating || isLoading ? '智能生成中...' : '智能生成内容'}
                   </button>
-                </div>
+              </div>
 
-                  {/* 生成结果 */}
-                  {result && (
-                    <div className="bg-white rounded-xl shadow-sm border border-gray-200 p-6">
-                      <div className="flex justify-between items-center mb-6">
-                        <h3 className="text-xl font-semibold text-gray-900">生成结果</h3>
-                        <div className="flex items-center space-x-2">
-                          <span className="px-3 py-1 rounded-full bg-rose-100 text-rose-700 text-sm font-medium">
-                            {result.contentType}
-                          </span>
-                          <span className="px-3 py-1 rounded-full bg-blue-100 text-blue-700 text-sm font-medium">
-                            共鸣度: {result.resonanceScore}%
-                          </span>
-                          <span className="px-3 py-1 rounded-full bg-green-100 text-green-700 text-sm font-medium">
-                            {result.estimatedReadingTime}分钟阅读
-                          </span>
-                        </div>
+              {/* 生成结果 */}
+              {result && (
+                <div className="max-w-4xl mx-auto">
+                  <div className="bg-white rounded-xl shadow-sm border border-gray-200 p-6">
+                    <div className="flex justify-between items-center mb-6">
+                      <h3 className="text-xl font-semibold text-gray-900">生成结果</h3>
+                      <div className="flex items-center space-x-2">
+                        <span className="px-3 py-1 rounded-full bg-rose-100 text-rose-700 text-sm font-medium">
+                          {result.contentType}
+                        </span>
+                        <span className="px-3 py-1 rounded-full bg-blue-100 text-blue-700 text-sm font-medium">
+                          共鸣度: {result.resonanceScore}%
+                        </span>
+                        <span className="px-3 py-1 rounded-full bg-green-100 text-green-700 text-sm font-medium">
+                          {result.estimatedReadingTime}分钟阅读
+                        </span>
                       </div>
-                      
-                      {/* 平台适配预览 */}
+                    </div>
+                    
+                    {/* 平台适配预览 */}
+                    <div className="mb-6">
+                      <div className="flex items-center mb-3">
+                        <Smartphone className="h-4 w-4 text-gray-500 mr-2" />
+                        <span className="text-sm font-medium text-gray-700">
+                          {platform === 'wechat' ? '微信适配' : platform === 'instagram' ? 'Instagram优化' : '抖音风格'}
+                        </span>
+                      </div>
+                      <div className="p-4 bg-gray-50 rounded-lg border">
+                        <p className="text-gray-700 leading-relaxed whitespace-pre-line">
+                          {result.content}
+                        </p>
+                      </div>
+                    </div>
+
+                    {/* 数据分析 */}
+                    <div className="grid grid-cols-3 gap-4 mb-6">
+                      <div className="text-center p-3 bg-rose-50 rounded-lg">
+                        <div className="text-sm text-gray-600">情感强度</div>
+                        <div className="text-lg font-bold text-rose-600">{result.emotionIntensity}%</div>
+                      </div>
+                      <div className="text-center p-3 bg-blue-50 rounded-lg">
+                        <div className="text-sm text-gray-600">内容长度</div>
+                        <div className="text-lg font-bold text-blue-600">{result.content.length}字</div>
+                      </div>
+                      <div className="text-center p-3 bg-green-50 rounded-lg">
+                        <div className="text-sm text-gray-600">风格匹配</div>
+                        <div className="text-lg font-bold text-green-600">{result.style}</div>
+                      </div>
+                    </div>
+
+                    {/* 配图建议 */}
+                    {result.imageSuggestions && result.imageSuggestions.length > 0 && (
                       <div className="mb-6">
-                        <div className="flex items-center mb-3">
-                          <Smartphone className="h-4 w-4 text-gray-500 mr-2" />
-                          <span className="text-sm font-medium text-gray-700">
-                            {platform === 'wechat' ? '微信适配' : platform === 'instagram' ? 'Instagram优化' : '抖音风格'}
+                        <h4 className="text-lg font-medium text-gray-900 mb-3 flex items-center">
+                          <span className="w-6 h-6 bg-gradient-to-r from-purple-500 to-pink-500 rounded-full flex items-center justify-center mr-2">
+                            <span className="text-white text-xs">📷</span>
                           </span>
-                        </div>
-                        <div className="p-4 bg-gray-50 rounded-lg border">
-                          <p className="text-gray-700 leading-relaxed whitespace-pre-line">
-                            {result.content}
+                          配图建议
+                        </h4>
+                        <div className="bg-purple-50 rounded-lg p-4">
+                          <ul className="space-y-2">
+                            {result.imageSuggestions.map((suggestion, index) => (
+                              <li key={index} className="flex items-start space-x-2">
+                                <span className="text-purple-500 mt-0.5">•</span>
+                                <span className="text-gray-700 text-sm">{suggestion}</span>
+                              </li>
+                            ))}
+                          </ul>
+                          <p className="text-xs text-purple-600 mt-2">
+                            💡 建议：使用高质量、情感匹配的图片效果更佳
                           </p>
                         </div>
                       </div>
+                    )}
 
-                      {/* 数据分析 */}
-                      <div className="grid grid-cols-3 gap-4 mb-6">
-                        <div className="text-center p-3 bg-rose-50 rounded-lg">
-                          <div className="text-sm text-gray-600">情感强度</div>
-                          <div className="text-lg font-bold text-rose-600">{result.emotionIntensity}%</div>
-                        </div>
-                        <div className="text-center p-3 bg-blue-50 rounded-lg">
-                          <div className="text-sm text-gray-600">内容长度</div>
-                          <div className="text-lg font-bold text-blue-600">{result.content.length}字</div>
-                        </div>
-                        <div className="text-center p-3 bg-green-50 rounded-lg">
-                          <div className="text-sm text-gray-600">风格匹配</div>
-                          <div className="text-lg font-bold text-green-600">{result.style}</div>
-                        </div>
-                      </div>
-
-                      {/* 配图建议 */}
-                      {result.imageSuggestions && result.imageSuggestions.length > 0 && (
-                        <div className="mb-6">
-                          <h4 className="text-lg font-medium text-gray-900 mb-3 flex items-center">
-                            <span className="w-6 h-6 bg-gradient-to-r from-purple-500 to-pink-500 rounded-full flex items-center justify-center mr-2">
-                              <span className="text-white text-xs">📷</span>
+                    {/* 标签建议 */}
+                    {result.hashtags && result.hashtags.length > 0 && (
+                      <div className="mb-6">
+                        <h4 className="text-lg font-medium text-gray-900 mb-3">标签建议</h4>
+                        <div className="flex flex-wrap gap-2">
+                          {result.hashtags.map((tag, index) => (
+                            <span key={index} className="px-3 py-1 bg-gray-100 text-gray-700 rounded-full text-sm">
+                              {tag}
                             </span>
-                            配图建议
-                          </h4>
-                          <div className="bg-purple-50 rounded-lg p-4">
-                            <ul className="space-y-2">
-                              {result.imageSuggestions.map((suggestion, index) => (
-                                <li key={index} className="flex items-start space-x-2">
-                                  <span className="text-purple-500 mt-0.5">•</span>
-                                  <span className="text-gray-700 text-sm">{suggestion}</span>
-                                </li>
-                              ))}
-                            </ul>
-                            <p className="text-xs text-purple-600 mt-2">
-                              💡 建议：使用高质量、情感匹配的图片效果更佳
-                            </p>
-                          </div>
+                          ))}
                         </div>
-                      )}
-
-                      {/* 标签建议 */}
-                      {result.hashtags && result.hashtags.length > 0 && (
-                        <div className="mb-6">
-                          <h4 className="text-lg font-medium text-gray-900 mb-3">标签建议</h4>
-                          <div className="flex flex-wrap gap-2">
-                            {result.hashtags.map((tag, index) => (
-                              <span key={index} className="px-3 py-1 bg-gray-100 text-gray-700 rounded-full text-sm">
-                                {tag}
-                              </span>
-                            ))}
-                          </div>
-                        </div>
-                      )}
-
-                      {/* 操作按钮 */}
-                      <div className="flex space-x-3">
-                        <button 
-                          onClick={saveContent}
-                          className="flex-1 flex items-center justify-center space-x-2 bg-green-500 text-white px-4 py-2 rounded-lg hover:bg-green-600 transition-colors"
-                        >
-                          <Download className="h-4 w-4" />
-                          <span>保存</span>
-                        </button>
-                        <button 
-                          onClick={shareContent}
-                          className="flex-1 flex items-center justify-center space-x-2 bg-blue-500 text-white px-4 py-2 rounded-lg hover:bg-blue-600 transition-colors"
-                        >
-                          <Share2 className="h-4 w-4" />
-                          <span>分享</span>
-                        </button>
                       </div>
+                    )}
+
+                    {/* 操作按钮 */}
+                    <div className="flex space-x-3">
+                      <button 
+                        onClick={saveContent}
+                        className="flex-1 flex items-center justify-center space-x-2 bg-green-500 text-white px-4 py-2 rounded-lg hover:bg-green-600 transition-colors"
+                      >
+                        <Download className="h-4 w-4" />
+                        <span>保存</span>
+                      </button>
+                      <button 
+                        onClick={shareContent}
+                        className="flex-1 flex items-center justify-center space-x-2 bg-blue-500 text-white px-4 py-2 rounded-lg hover:bg-blue-600 transition-colors"
+                      >
+                        <Share2 className="h-4 w-4" />
+                        <span>分享</span>
+                      </button>
                     </div>
-                  )}
+                  </div>
                 </div>
-              </div>
+              )}
 
               {/* 功能特色 */}
               <div className="max-w-4xl mx-auto mt-12">
