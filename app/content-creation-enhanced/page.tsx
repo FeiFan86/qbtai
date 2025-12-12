@@ -630,8 +630,8 @@ export default function ContentCreationEnhancedPage() {
                   </button>
                 </div>
 
-              {/* 生成结果 */}
-              {result && (
+                {/* 生成结果 */}
+                {result && (
                 <div className="max-w-4xl mx-auto">
                   <div className="bg-white rounded-xl shadow-sm border border-gray-200 p-6">
                     <div className="flex justify-between items-center mb-6">
