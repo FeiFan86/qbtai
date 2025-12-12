@@ -810,11 +810,7 @@ export default function ContentCreationEnhancedPage() {
             </div>
           </footer>
         )
-  };
-
-  return (
-    <SimpleUsageGuard feature="content-creation">
-      {({ canUse, remainingUses, onUse, isLoading, usageText }) => renderContent({ canUse, remainingUses, onUse, isLoading, usageText })}
+      }
     </SimpleUsageGuard>
   )
 }
