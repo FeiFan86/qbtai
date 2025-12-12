@@ -54,19 +54,7 @@ const platformConfigs = {
 
 export default function ContentCreationEnhancedPage() {
 
-  // 简化的 UsageGuard 组件
-  const SimpleUsageGuard = ({ feature, children }: any) => {
-    const [canUse] = useState(true)
-    const [remainingUses] = useState(10)
-    const [isLoading] = useState(false)
-    const usageText = '今日剩余使用次数：10'
-    
-    const onUse = async () => {
-      // 简化的使用处理
-    }
-    
-    return children({ canUse, remainingUses, onUse, isLoading, usageText })
-  }
+
   const [prompt, setPrompt] = useState('')
   const [style, setStyle] = useState('casual')
   const [length, setLength] = useState('medium')
@@ -310,13 +298,10 @@ export default function ContentCreationEnhancedPage() {
     return content
   }
 
-  const handleGenerate = async (onRecordUsage: () => Promise<void>) => {
+  const handleGenerate = async () => {
     if (!prompt.trim()) return
     
     setIsGenerating(true)
-    
-    // 记录使用次数
-    await onRecordUsage()
     
     // 检测情感状态
     const detectedEmotion = detectEmotion(prompt)
@@ -404,10 +389,18 @@ export default function ContentCreationEnhancedPage() {
     }
   }
 
+  // 简化的使用状态
+  const canUse = true
+  const remainingUses = 10
+  const isLoading = false
+  const usageText = '今日剩余使用次数：10'
+  
+  const onUse = async () => {
+    // 简化的使用处理
+  }
+
   return (
-    <SimpleUsageGuard feature="content-creation">
-      {({ canUse, remainingUses, onUse, isLoading, usageText }) => (
-        <div className="min-h-screen bg-gradient-to-br from-rose-50 via-white to-pink-50">
+    <div className="min-h-screen bg-gradient-to-br from-rose-50 via-white to-pink-50">
           {/* 全局导航栏 */}
           <GlobalNavbar />
 
@@ -638,11 +631,14 @@ export default function ContentCreationEnhancedPage() {
                   </div>
 
                   <button
-                    onClick={() => handleGenerate(onUse)}
+                    onClick={() => {
+                      handleGenerate()
+                      onUse()
+                    }}
                     disabled={!prompt.trim() || isGenerating || !canUse}
                     className="w-full bg-gradient-to-r from-rose-500 to-pink-500 text-white py-3 rounded-lg font-medium hover:from-rose-600 hover:to-pink-600 transition-all disabled:opacity-50 disabled:cursor-not-allowed"
                   >
-                    {isGenerating || isLoading ? '智能生成中...' : '智能生成内容'}
+                    {isGenerating ? '智能生成中...' : '智能生成内容'}
                   </button>
                 </div>
 
@@ -809,8 +805,8 @@ export default function ContentCreationEnhancedPage() {
               </div>
             </div>
           </footer>
-        )
-      }
-    </SimpleUsageGuard>
+        </main>
+      </div>
+    </div>
   )
 }
