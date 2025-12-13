@@ -889,7 +889,9 @@ ${result.suggestions.map(suggestion => `- ${suggestion}`).join('\n')}
 
               {/* 使用状态提示 */}
               <div className="max-w-4xl mx-auto mb-6">
-                <UsageStatus feature="social-assistant" className="justify-center" />
+                <div className="flex items-center justify-center space-x-2 text-sm text-gray-600">
+                  <span>{usageText}</span>
+                </div>
               </div>
 
               {/* 示例展示区 */}
