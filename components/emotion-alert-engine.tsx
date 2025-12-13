@@ -254,7 +254,7 @@ export function EmotionAlertEngine({ diaries, onAlertAcknowledge }: EmotionAlert
     const newAlerts: Alert[] = []
     
     alertRules.forEach(rule => {
-      if (rule.condition(entries, timeframe)) {
+      if (rule.condition(diaries, timeframe)) {
         newAlerts.push({
           id: `${rule.id}_${Date.now()}`,
           ruleId: rule.id,
@@ -269,15 +269,15 @@ export function EmotionAlertEngine({ diaries, onAlertAcknowledge }: EmotionAlert
     })
     
     return newAlerts
-  }, [entries, timeframe])
+  }, [diaries, timeframe])
 
   // 生成个性化建议
   const generatedAdvice = useMemo(() => {
     return [
-      ...adviceGenerator.generateGrowthAdvice(entries),
-      ...adviceGenerator.generateMaintenanceAdvice(entries)
+      ...adviceGenerator.generateGrowthAdvice(diaries),
+      ...adviceGenerator.generateMaintenanceAdvice(diaries)
     ].sort((a, b) => b.relevance - a.relevance).slice(0, 5) // 只显示前5条
-  }, [entries])
+  }, [diaries])
 
   // 更新预警状态
   useEffect(() => {
@@ -403,7 +403,7 @@ export function EmotionAlertEngine({ diaries, onAlertAcknowledge }: EmotionAlert
           
           <div className="flex items-center space-x-1 text-sm text-gray-500">
             <Brain className="h-4 w-4" />
-            <span>基于 {entries.length} 条记录分析</span>
+            <span>基于 {diaries.length} 条记录分析</span>
           </div>
         </div>
 
@@ -457,15 +457,15 @@ export function EmotionAlertEngine({ diaries, onAlertAcknowledge }: EmotionAlert
         <div className="grid md:grid-cols-3 gap-4">
           <div className="text-center p-4 bg-green-50 rounded-lg border border-green-200">
             <div className="text-2xl font-bold text-green-600">
-              {entries.filter(e => e.mood === 'positive').length}
+              {diaries.filter(e => e.mood === 'positive').length}
             </div>
             <div className="text-sm text-green-700">积极记录</div>
           </div>
           
           <div className="text-center p-4 bg-blue-50 rounded-lg border border-blue-200">
             <div className="text-2xl font-bold text-blue-600">
-              {entries.length > 0 
-                ? (entries.reduce((sum, e) => sum + e.rating, 0) / entries.length).toFixed(1)
+              {diaries.length > 0 
+                ? (diaries.reduce((sum, e) => sum + e.rating, 0) / diaries.length).toFixed(1)
                 : '0.0'}
             </div>
             <div className="text-sm text-blue-700">平均强度</div>
@@ -473,7 +473,7 @@ export function EmotionAlertEngine({ diaries, onAlertAcknowledge }: EmotionAlert
           
           <div className="text-center p-4 bg-purple-50 rounded-lg border border-purple-200">
             <div className="text-2xl font-bold text-purple-600">
-              {new Set(entries.flatMap(e => e.tags)).size}
+              {new Set(diaries.flatMap(e => e.tags)).size}
             </div>
             <div className="text-sm text-purple-700">情感标签</div>
           </div>
@@ -483,13 +483,13 @@ export function EmotionAlertEngine({ diaries, onAlertAcknowledge }: EmotionAlert
           <div className="flex items-center justify-between">
             <span>记录连续性:</span>
             <span className="font-medium">
-              {entries.length >= 5 ? '良好' : entries.length >= 2 ? '一般' : '需要改进'}
+              {diaries.length >= 5 ? '良好' : diaries.length >= 2 ? '一般' : '需要改进'}
             </span>
           </div>
           <div className="flex items-center justify-between">
             <span>情感多样性:</span>
             <span className="font-medium">
-              {new Set(entries.map(e => e.emotion)).size >= 5 ? '丰富' : '适中'}
+              {new Set(diaries.map(e => e.emotion)).size >= 5 ? '丰富' : '适中'}
             </span>
           </div>
         </div>
