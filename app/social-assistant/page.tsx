@@ -5,9 +5,35 @@ import GlobalNavbar from '@/components/global-navbar'
 import { ConversationAnalysisEnhanced } from '@/components/conversation-analysis-enhanced'
 import { SocialStrategiesEnhanced } from '@/components/social-strategies-enhanced'
 
+interface AnalysisResult {
+  conversationAnalysis: {
+    overallSentiment: string
+    communicationStyle: string
+    emotionalIntelligence: number
+    conflictLevel: number
+    empathyScore: number
+  }
+  participantAnalysis: {
+    user: {
+      emotionalState: string
+      communicationStyle: string
+      needs: string[]
+      strengths: string[]
+    }
+    other: {
+      emotionalState: string
+      communicationStyle: string
+      needs: string[]
+      strengths: string[]
+    }
+  }
+  improvementSuggestions: string[]
+  responseTemplates: string[]
+}
+
 export default function SocialAssistantPage() {
   const [messages, setMessages] = useState<string[]>(['你好，最近工作怎么样？', '工作压力有点大，项目进度很紧'])
-  const [analysisResult, setAnalysisResult] = useState(null)
+  const [analysisResult, setAnalysisResult] = useState<AnalysisResult | null>(null)
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState('')
 
@@ -117,14 +143,14 @@ export default function SocialAssistantPage() {
           {analysisResult && (
             <div className="max-w-4xl mx-auto grid grid-cols-1 lg:grid-cols-2 gap-6">
               <ConversationAnalysisEnhanced 
-                result={analysisResult}
+                result={analysisResult || undefined}
                 loading={loading}
                 error={error}
                 onRetry={handleRetry}
               />
               
               <SocialStrategiesEnhanced 
-                result={analysisResult}
+                result={analysisResult || undefined}
                 loading={loading}
                 error={error}
                 onRetry={handleRetry}
