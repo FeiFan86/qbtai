@@ -295,7 +295,7 @@ export function EmotionAlertEngine({ diaries, onAlertAcknowledge }: EmotionAlert
     setAlerts(prev => prev.map(alert => 
       alert.id === alertId ? { ...alert, acknowledged: true } : alert
     ))
-    onAlertAcknowledge(alertId)
+    onAlertAcknowledge?.(alertId)
   }
 
   const getSeverityColor = (severity: string) => {
