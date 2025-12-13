@@ -45,13 +45,13 @@ interface ReportData {
 }
 
 interface EmotionHealthReportProps {
-  entries: EmotionEntry[]
-  period: 'week' | 'month' | '3months' | 'custom'
+  diaries: EmotionEntry[]
+  period?: 'week' | 'month' | '3months' | 'custom'
   customStart?: Date
   customEnd?: Date
 }
 
-export function EmotionHealthReport({ entries, period, customStart, customEnd }: EmotionHealthReportProps) {
+export function EmotionHealthReport({ diaries: entries, period = 'month', customStart, customEnd }: EmotionHealthReportProps) {
   const [selectedMonth, setSelectedMonth] = useState(new Date())
   const reportRef = useRef<HTMLDivElement>(null)
 
