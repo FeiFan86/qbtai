@@ -1860,7 +1860,6 @@ ${result.suggestions.map(suggestion => `- ${suggestion}`).join('\n')}
             </div>
           </div>
             </div>
-          </main>
 
           {/* 页脚 */}
           <footer className="bg-gray-50 border-t border-gray-200">
