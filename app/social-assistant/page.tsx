@@ -3,7 +3,7 @@
 import React, { useState } from 'react'
 import { Users, MessageCircle, TrendingUp, Award, Play, Copy, Check, Heart, Download, Share2, Mic, Volume2, Zap, Lightbulb, FileText, Clock, BarChart3, TrendingUp as TrendingUpIcon, GitCompare } from 'lucide-react'
 import GlobalNavbar from '@/components/global-navbar'
-import UsageGuard, { UsageStatus } from '@/components/usage-guard'
+import UsageGuard from '@/components/usage-guard'
 
 // 多人对话角色分析
 interface ConversationRole {
