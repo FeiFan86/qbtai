@@ -51,8 +51,8 @@ interface PersonalizedAdvice {
 }
 
 interface EmotionAlertEngineProps {
-  entries: EmotionEntry[]
-  onAlertAcknowledge: (alertId: string) => void
+  diaries: EmotionEntry[]
+  onAlertAcknowledge?: (alertId: string) => void
 }
 
 // 预警规则定义

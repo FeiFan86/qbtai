@@ -9,27 +9,20 @@ import {
   User, UserCheck, Users as Family, BookOpen, Mail
 } from 'lucide-react'
 
-interface SocialEmotionEntry {
-  id: string
+interface Diary {
+  id: number
   date: string
-  relationship: 'partner' | 'friend' | 'family' | 'colleague' | 'other'
-  withPerson: string // 对方姓名或昵称
+  title: string
   emotion: string
-  intensity: number
   mood: 'positive' | 'neutral' | 'negative'
   content: string
   tags: string[]
-  isPrivate: boolean
-  sharedWith?: string[] // 分享给的用户列表
-  mutualEmotion?: 'positive' | 'neutral' | 'negative' // 对方的情绪（如果知道）
+  rating: number
 }
 
 interface SocialEmotionManagerProps {
-  entries: SocialEmotionEntry[]
-  onAddEntry: (entry: Omit<SocialEmotionEntry, 'id'>) => void
-  onEditEntry: (id: string, updates: Partial<SocialEmotionEntry>) => void
-  onDeleteEntry: (id: string) => void
-  onShareEntry: (id: string, shareWith: string[]) => void
+  diaries: Diary[]
+  setDiaries: React.Dispatch<React.SetStateAction<Diary[]>>
 }
 
 const relationshipConfig = {
@@ -82,11 +75,8 @@ const moodColors = {
 }
 
 export function SocialEmotionManager({ 
-  entries, 
-  onAddEntry, 
-  onEditEntry, 
-  onDeleteEntry, 
-  onShareEntry 
+  diaries: entries, 
+  setDiaries 
 }: SocialEmotionManagerProps) {
   const [activeRelationship, setActiveRelationship] = useState<SocialEmotionEntry['relationship'] | 'all'>('all')
   const [searchTerm, setSearchTerm] = useState('')

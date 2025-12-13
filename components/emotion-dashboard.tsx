@@ -11,17 +11,19 @@ import { zhCN } from 'date-fns/locale'
 import { TrendingUp, BarChart3, PieChart as PieChartIcon, Calendar, Filter, Download } from 'lucide-react'
 
 interface EmotionEntry {
-  id: string
+  id: number
   date: string
+  title: string
   emotion: string
-  intensity: number
   mood: 'positive' | 'neutral' | 'negative'
+  content: string
   tags: string[]
+  rating: number
 }
 
 interface EmotionDashboardProps {
-  entries: EmotionEntry[]
-  timeRange: 'week' | 'month' | '3months' | 'year'
+  diaries: EmotionEntry[]
+  timeRange?: 'week' | 'month' | '3months' | 'year'
 }
 
 const moodColors = {
@@ -32,7 +34,7 @@ const moodColors = {
 
 const intensityColors = ['#E5E7EB', '#D1D5DB', '#9CA3AF', '#6B7280', '#374151']
 
-export function EmotionDashboard({ entries, timeRange }: EmotionDashboardProps) {
+export function EmotionDashboard({ diaries: entries, timeRange = 'month' }: EmotionDashboardProps) {
   const [activeChart, setActiveChart] = useState<'trend' | 'distribution' | 'heatmap'>('trend')
 
   // 根据时间范围过滤数据

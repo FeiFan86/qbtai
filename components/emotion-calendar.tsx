@@ -6,17 +6,19 @@ import { zhCN } from 'date-fns/locale'
 import { ChevronLeft, ChevronRight, Calendar, Heart, TrendingUp, BarChart3 } from 'lucide-react'
 
 interface EmotionEntry {
-  id: string
+  id: number
   date: string
+  title: string
   emotion: string
-  intensity: number // 1-5
   mood: 'positive' | 'neutral' | 'negative'
+  content: string
   tags: string[]
+  rating: number
 }
 
 interface EmotionCalendarProps {
-  entries: EmotionEntry[]
-  onDateSelect: (date: Date) => void
+  diaries: EmotionEntry[]
+  onDateSelect?: (date: Date) => void
   selectedDate?: Date
 }
 
@@ -40,7 +42,7 @@ const intensityColors = [
   'bg-gray-600'       // 强度5
 ]
 
-export function EmotionCalendar({ entries, onDateSelect, selectedDate }: EmotionCalendarProps) {
+export function EmotionCalendar({ diaries, onDateSelect, selectedDate }: EmotionCalendarProps) {
   const [currentMonth, setCurrentMonth] = useState(new Date())
   const [monthStats, setMonthStats] = useState({
     positive: 0,

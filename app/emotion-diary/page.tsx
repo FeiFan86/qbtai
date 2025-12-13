@@ -4,12 +4,12 @@ import React, { useState } from 'react'
 import { MessageCircle, Calendar, Heart, Plus, Search, Edit, Trash2, Download, Share2, Filter, BarChart3, TrendingUp, Star, Award, Users, Zap, Activity, FileText } from 'lucide-react'
 import GlobalNavbar from '@/components/global-navbar'
 import UsageGuard, { UsageStatus } from '@/components/usage-guard'
-import EmotionCalendar from '@/components/emotion-calendar'
-import EmotionDashboard from '@/components/emotion-dashboard'
-import SocialEmotionManager from '@/components/social-emotion-manager'
-import EnhancedEmotionEditor from '@/components/enhanced-emotion-editor'
-import EmotionAlertEngine from '@/components/emotion-alert-engine'
-import EmotionHealthReport from '@/components/emotion-health-report'
+import { EmotionCalendar } from '@/components/emotion-calendar'
+import { EmotionDashboard } from '@/components/emotion-dashboard'
+import { SocialEmotionManager } from '@/components/social-emotion-manager'
+import { EnhancedEmotionEditor } from '@/components/enhanced-emotion-editor'
+import { EmotionAlertEngine } from '@/components/emotion-alert-engine'
+import { EmotionHealthReport } from '@/components/emotion-health-report'
 
 interface Diary {
   id: number;
