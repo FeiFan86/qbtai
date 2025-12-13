@@ -131,7 +131,8 @@ export function EnhancedEmotionEditor({ newDiary, setNewDiary, handleAddDiary, c
   useEffect(() => {
     const selectedEmotion = emotionOptions.find(e => e.value === formData.emotion)
     if (selectedEmotion) {
-      setFormData(prev => ({ ...prev, mood: selectedEmotion.mood as 'positive' | 'neutral' | 'negative' }))
+      const mood: 'positive' | 'neutral' | 'negative' = selectedEmotion.mood
+      setFormData(prev => ({ ...prev, mood }))
     }
   }, [formData.emotion])
 
