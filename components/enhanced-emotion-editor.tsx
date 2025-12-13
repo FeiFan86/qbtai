@@ -174,7 +174,7 @@ export function EnhancedEmotionEditor({ newDiary, setNewDiary, handleAddDiary, c
       title: template.name,
       emotion: template.emotion,
       content: prev.content ? `${prev.content}\n\n${template.prompt}` : template.prompt,
-      tags: [...new Set([...prev.tags, ...template.tags])]
+      tags: Array.from(new Set([...prev.tags, ...template.tags]))
     }))
     setSelectedTemplate(template)
     setActiveTab('write')
