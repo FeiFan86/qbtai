@@ -244,7 +244,7 @@ const adviceGenerator = {
   }
 }
 
-export function EmotionAlertEngine({ entries, onAlertAcknowledge }: EmotionAlertEngineProps) {
+export function EmotionAlertEngine({ diaries, onAlertAcknowledge }: EmotionAlertEngineProps) {
   const [alerts, setAlerts] = useState<Alert[]>([])
   const [advice, setAdvice] = useState<PersonalizedAdvice[]>([])
   const [timeframe, setTimeframe] = useState<number>(7) // 默认7天
