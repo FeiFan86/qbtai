@@ -245,13 +245,32 @@ export default function ContentCreationEnhancedPage() {
   const generateImage = async (prompt: string) => {
     setIsGeneratingImage(true)
     
-    // 模拟AI图片生成（实际项目中可接入真实AI服务）
+    // 基于文字内容生成更匹配的图片URL
     setTimeout(() => {
       const emotionConfig = emotionMappings[currentEmotion as keyof typeof emotionMappings]
+      
+      // 根据情感和关键词生成更匹配的图片
+      const imageThemes = {
+        romantic: ['love', 'couple', 'romance', 'heart', 'sunset'],
+        happy: ['happy', 'smile', 'joy', 'celebration', 'sunshine'],
+        grateful: ['thankful', 'gratitude', 'family', 'friends', 'nature'],
+        caring: ['care', 'support', 'help', 'comfort', 'warmth'],
+        reflective: ['thinking', 'reflection', 'books', 'coffee', 'quiet'],
+        encouraging: ['motivation', 'success', 'achievement', 'teamwork', 'growth'],
+        apologetic: ['sorry', 'apology', 'forgiveness', 'reconciliation', 'peace'],
+        proud: ['proud', 'achievement', 'success', 'medal', 'victory'],
+        playful: ['fun', 'play', 'game', 'laughter', 'adventure'],
+        nostalgic: ['memory', 'old', 'vintage', 'retro', 'past']
+      }
+      
+      const theme = imageThemes[currentEmotion as keyof typeof imageThemes] || ['nature', 'beautiful']
+      const selectedTheme = theme[Math.floor(Math.random() * theme.length)]
+      
+      // 使用更相关的图片API
       const mockImages = [
-        `https://picsum.photos/400/300?random=1&emotion=${currentEmotion}`,
-        `https://picsum.photos/400/300?random=2&emotion=${currentEmotion}`,
-        `https://picsum.photos/400/300?random=3&emotion=${currentEmotion}`
+        `https://source.unsplash.com/400x300/?${selectedTheme},${currentEmotion}&1`,
+        `https://source.unsplash.com/400x300/?${selectedTheme},${currentEmotion}&2`,
+        `https://source.unsplash.com/400x300/?${selectedTheme},${currentEmotion}&3`
       ]
       setGeneratedImages(mockImages)
       setIsGeneratingImage(false)
@@ -559,17 +578,17 @@ export default function ContentCreationEnhancedPage() {
                     onChange={(e) => setPlatform(e.target.value)}
                     className="w-full p-3 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-rose-500 focus:border-transparent"
                   >
-                    <option value="wechat">💬 微信聊天</option>
+                    <option value="wechat">💚 微信聊天</option>
                     <option value="wechat_moment">📱 微信朋友圈</option>
-                    <option value="instagram">📸 Instagram</option>
+                    <option value="instagram">📷 Instagram</option>
                     <option value="douyin">🎵 抖音</option>
-                    <option value="xiaohongshu">📕 小红书</option>
-                    <option value="weibo">🐦 微博</option>
-                    <option value="tiktok">🎬 TikTok</option>
+                    <option value="xiaohongshu">📖 小红书</option>
+                    <option value="weibo">🌐 微博</option>
+                    <option value="tiktok">🎥 TikTok</option>
                     <option value="telegram">✈️ Telegram</option>
-                    <option value="whatsapp">💚 WhatsApp</option>
+                    <option value="whatsapp">📲 WhatsApp</option>
                     <option value="email">📧 邮件</option>
-                    <option value="letter">✉️ 书信</option>
+                    <option value="letter">✍️ 书信</option>
                   </select>
                 </div>
                 
@@ -692,30 +711,7 @@ export default function ContentCreationEnhancedPage() {
                     </div>
                   </div>
 
-                  {/* 配图建议 */}
-                  {result.imageSuggestions && result.imageSuggestions.length > 0 && (
-                    <div className="mb-6">
-                      <h4 className="text-lg font-medium text-gray-900 mb-3 flex items-center">
-                        <span className="w-6 h-6 bg-gradient-to-r from-purple-500 to-pink-500 rounded-full flex items-center justify-center mr-2">
-                          <span className="text-white text-xs">📷</span>
-                        </span>
-                        配图建议
-                      </h4>
-                      <div className="bg-purple-50 rounded-lg p-4">
-                        <ul className="space-y-2">
-                          {result.imageSuggestions.map((suggestion, index) => (
-                            <li key={index} className="flex items-start space-x-2">
-                              <span className="text-purple-500 mt-0.5">•</span>
-                              <span className="text-gray-700 text-sm">{suggestion}</span>
-                            </li>
-                          ))}
-                        </ul>
-                        <p className="text-xs text-purple-600 mt-2">
-                          💡 建议：使用高质量、情感匹配的图片效果更佳
-                        </p>
-                      </div>
-                    </div>
-                  )}
+
 
                   {/* 标签建议 */}
                   {result.hashtags && result.hashtags.length > 0 && (
