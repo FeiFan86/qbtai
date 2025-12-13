@@ -42,6 +42,18 @@ const ratingColors = [
   'bg-gray-600'       // 强度5
 ]
 
+// 显示强度点数
+const getIntensityDots = (rating: number) => {
+  return Array.from({ length: 5 }, (_, i) => (
+    <div
+      key={i}
+      className={`w-1.5 h-1.5 rounded-full ${
+        i < rating ? 'bg-gray-800' : 'bg-gray-300'
+      }`}
+    />
+  ))
+}
+
 export function EmotionCalendar({ diaries, onDateSelect, selectedDate }: EmotionCalendarProps) {
   const [currentMonth, setCurrentMonth] = useState(new Date())
   const [monthStats, setMonthStats] = useState({
@@ -210,7 +222,7 @@ export function EmotionCalendar({ diaries, onDateSelect, selectedDate }: Emotion
                 <div className="flex flex-col items-center space-y-1">
                   <span className="text-lg">{emotionIcons[emotion.mood]}</span>
                   <div className="flex space-x-1">
-                    {getIntensityDots(emotion.intensity)}
+                    {getIntensityDots(emotion.rating)}
                   </div>
                 </div>
               )}
