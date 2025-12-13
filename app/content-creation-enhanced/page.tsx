@@ -251,30 +251,32 @@ export default function ContentCreationEnhancedPage() {
       
       // 根据情感和关键词生成更匹配的图片
       const imageThemes = {
-        romantic: ['love', 'couple', 'romance', 'heart', 'sunset'],
+        romantic: ['couple', 'love', 'romance', 'heart', 'sunset'],
         happy: ['happy', 'smile', 'joy', 'celebration', 'sunshine'],
-        grateful: ['thankful', 'gratitude', 'family', 'friends', 'nature'],
+        grateful: ['family', 'friends', 'thankful', 'gratitude', 'nature'],
         caring: ['care', 'support', 'help', 'comfort', 'warmth'],
-        reflective: ['thinking', 'reflection', 'books', 'coffee', 'quiet'],
-        encouraging: ['motivation', 'success', 'achievement', 'teamwork', 'growth'],
-        apologetic: ['sorry', 'apology', 'forgiveness', 'reconciliation', 'peace'],
-        proud: ['proud', 'achievement', 'success', 'medal', 'victory'],
-        playful: ['fun', 'play', 'game', 'laughter', 'adventure'],
-        nostalgic: ['memory', 'old', 'vintage', 'retro', 'past']
+        reflective: ['thinking', 'books', 'coffee', 'quiet', 'reflection'],
+        encouraging: ['motivation', 'success', 'teamwork', 'growth', 'achievement'],
+        apologetic: ['peace', 'reconciliation', 'forgiveness', 'sorry', 'apology'],
+        proud: ['achievement', 'success', 'victory', 'medal', 'proud'],
+        playful: ['fun', 'game', 'laughter', 'adventure', 'play'],
+        nostalgic: ['memory', 'vintage', 'retro', 'old', 'past']
       }
       
       const theme = imageThemes[currentEmotion as keyof typeof imageThemes] || ['nature', 'beautiful']
       const selectedTheme = theme[Math.floor(Math.random() * theme.length)]
       
-      // 使用更相关的图片API
+      // 使用更可靠的图片API，使用picsum.photos
       const mockImages = [
-        `https://source.unsplash.com/400x300/?${selectedTheme},${currentEmotion}&1`,
-        `https://source.unsplash.com/400x300/?${selectedTheme},${currentEmotion}&2`,
-        `https://source.unsplash.com/400x300/?${selectedTheme},${currentEmotion}&3`
+        `https://picsum.photos/400/300?random=${Date.now()}_1&theme=${selectedTheme}`,
+        `https://picsum.photos/400/300?random=${Date.now()}_2&theme=${selectedTheme}`,
+        `https://picsum.photos/400/300?random=${Date.now()}_3&theme=${selectedTheme}`
       ]
+      
+      console.log('Generated images:', mockImages)
       setGeneratedImages(mockImages)
       setIsGeneratingImage(false)
-    }, 3000)
+    }, 2000)
   }
 
   // 下载图片
