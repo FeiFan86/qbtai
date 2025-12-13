@@ -850,12 +850,7 @@ ${result.suggestions.map(suggestion => `- ${suggestion}`).join('\n')}
   }
 
   return (
-    <UsageGuard 
-      feature="social-assistant"
-      onUsageLimitReached={() => console.log('Usage limit reached')}
-    >
-      {({ canUse, remainingUses, onUse, isLoading, usageText }) => (
-        <div className="min-h-screen bg-gradient-to-br from-rose-50 via-white to-pink-50">
+    <div className="min-h-screen bg-gradient-to-br from-rose-50 via-white to-pink-50">
           {/* 导航栏 */}
           <GlobalNavbar />
 
