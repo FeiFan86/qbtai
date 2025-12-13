@@ -68,6 +68,7 @@ export default function ContentCreationEnhancedPage() {
   const [selectedImageType, setSelectedImageType] = useState('romantic')
   const [isGeneratingImage, setIsGeneratingImage] = useState(false)
   const [generatedImages, setGeneratedImages] = useState<string[]>([])
+  const [analyzedEmotion, setAnalyzedEmotion] = useState<string>('') // 智能分析的情感结果
   const [userPreferences, setUserPreferences] = useState({
     preferredEmojis: ['❤️', '✨', '💕', '🌟'],
     tone: 'warm',
@@ -185,10 +186,13 @@ export default function ContentCreationEnhancedPage() {
     const lowerText = text.toLowerCase()
     for (const [emotion, config] of Object.entries(emotionMappings)) {
       if (config.keywords.some(keyword => lowerText.includes(keyword))) {
+        setAnalyzedEmotion(emotion) // 保存智能分析的情感结果
         return emotion
       }
     }
-    return 'romantic' // 默认浪漫情感
+    const defaultEmotion = 'romantic'
+    setAnalyzedEmotion(defaultEmotion) // 保存默认情感结果
+    return defaultEmotion // 默认浪漫情感
   }
 
   // 预测情感共鸣度
@@ -460,7 +464,20 @@ export default function ContentCreationEnhancedPage() {
                 <div className="text-center p-4 bg-blue-50 rounded-lg">
                   <Target className="h-8 w-8 text-blue-500 mx-auto mb-2" />
                   <div className="text-sm font-medium text-gray-700">检测情感</div>
-                  <div className="text-lg font-bold text-blue-600">{currentEmotion === 'romantic' ? '浪漫' : currentEmotion === 'happy' ? '快乐' : '感恩'}</div>
+                  <div className="text-lg font-bold text-blue-600">
+                    {analyzedEmotion || prompt ? 
+                      (analyzedEmotion === 'romantic' ? '浪漫' : 
+                       analyzedEmotion === 'happy' ? '快乐' : 
+                       analyzedEmotion === 'grateful' ? '感恩' : 
+                       analyzedEmotion === 'caring' ? '关心' : 
+                       analyzedEmotion === 'reflective' ? '思考' : 
+                       analyzedEmotion === 'encouraging' ? '鼓励' : 
+                       analyzedEmotion === 'apologetic' ? '道歉' : 
+                       analyzedEmotion === 'proud' ? '自豪' : 
+                       analyzedEmotion === 'playful' ? '调皮' : 
+                       analyzedEmotion === 'nostalgic' ? '怀念' : '--') : 
+                      '--'}
+                  </div>
                 </div>
                 <div className="text-center p-4 bg-green-50 rounded-lg">
                   <TrendingUp className="h-8 w-8 text-green-500 mx-auto mb-2" />
@@ -580,17 +597,17 @@ export default function ContentCreationEnhancedPage() {
                     onChange={(e) => setPlatform(e.target.value)}
                     className="w-full p-3 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-rose-500 focus:border-transparent"
                   >
-                    <option value="wechat">💚 微信聊天</option>
+                    <option value="wechat">💬 微信聊天</option>
                     <option value="wechat_moment">📱 微信朋友圈</option>
-                    <option value="instagram">📷 Instagram</option>
+                    <option value="instagram">📸 Instagram</option>
                     <option value="douyin">🎵 抖音</option>
-                    <option value="xiaohongshu">📖 小红书</option>
-                    <option value="weibo">🌐 微博</option>
-                    <option value="tiktok">🎥 TikTok</option>
+                    <option value="xiaohongshu">📕 小红书</option>
+                    <option value="weibo">🐦 微博</option>
+                    <option value="tiktok">🎵 TikTok</option>
                     <option value="telegram">✈️ Telegram</option>
-                    <option value="whatsapp">📲 WhatsApp</option>
+                    <option value="whatsapp">💚 WhatsApp</option>
                     <option value="email">📧 邮件</option>
-                    <option value="letter">✍️ 书信</option>
+                    <option value="letter">✉️ 书信</option>
                   </select>
                 </div>
                 
