@@ -401,410 +401,411 @@ export default function ContentCreationEnhancedPage() {
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-rose-50 via-white to-pink-50">
-          {/* 全局导航栏 */}
-          <GlobalNavbar />
+      {/* 全局导航栏 */}
+      <GlobalNavbar />
 
-          {/* 主要内容 */}
-          <main className="pt-16">
-            <div className="container py-12">
-              {/* 页面标题 */}
-              <div className="text-center mb-12">
-                <div className="inline-flex items-center px-4 py-2 rounded-full bg-white/80 backdrop-blur-sm border border-gray-200 mb-4">
-                  <Zap className="h-5 w-5 text-rose-500 mr-2" />
-                  <span className="text-sm font-medium text-gray-700">智能内容创作</span>
+      {/* 主要内容 */}
+      <main className="pt-16">
+        <div className="container py-12">
+          {/* 页面标题 */}
+          <div className="text-center mb-12">
+            <div className="inline-flex items-center px-4 py-2 rounded-full bg-white/80 backdrop-blur-sm border border-gray-200 mb-4">
+              <Zap className="h-5 w-5 text-rose-500 mr-2" />
+              <span className="text-sm font-medium text-gray-700">智能内容创作</span>
+            </div>
+            <h1 className="text-3xl md:text-4xl font-bold text-gray-900 mb-4">
+              AI智能内容生成器
+            </h1>
+            <p className="text-lg text-gray-600 max-w-2xl mx-auto">
+              基于情感分析的多平台智能内容创作，让您的表达更加精准动人
+            </p>
+          </div>
+
+          {/* 使用状态提示 */}
+          <div className="max-w-4xl mx-auto mb-6">
+            <div className="flex items-center justify-center space-x-2 text-sm text-gray-600">
+              <span>今日剩余使用次数：10</span>
+            </div>
+          </div>
+
+          {/* 智能分析面板 */}
+          <div className="max-w-4xl mx-auto mb-6">
+            <div className="bg-white rounded-xl shadow-sm border border-gray-200 p-6">
+              <h3 className="text-lg font-semibold text-gray-900 mb-4 flex items-center">
+                <Brain className="h-5 w-5 text-rose-500 mr-2" />
+                智能情感分析
+              </h3>
+              <div className="grid md:grid-cols-3 gap-4">
+                <div className="text-center p-4 bg-blue-50 rounded-lg">
+                  <Target className="h-8 w-8 text-blue-500 mx-auto mb-2" />
+                  <div className="text-sm font-medium text-gray-700">检测情感</div>
+                  <div className="text-lg font-bold text-blue-600">{currentEmotion === 'romantic' ? '浪漫' : currentEmotion === 'happy' ? '快乐' : '感恩'}</div>
                 </div>
-                <h1 className="text-3xl md:text-4xl font-bold text-gray-900 mb-4">
-                  AI智能内容生成器
-                </h1>
-                <p className="text-lg text-gray-600 max-w-2xl mx-auto">
-                  基于情感分析的多平台智能内容创作，让您的表达更加精准动人
-                </p>
-              </div>
-
-              {/* 使用状态提示 */}
-              <div className="max-w-4xl mx-auto mb-6">
-                <div className="flex items-center justify-center space-x-2 text-sm text-gray-600">
-                  <span>今日剩余使用次数：10</span>
+                <div className="text-center p-4 bg-green-50 rounded-lg">
+                  <TrendingUp className="h-8 w-8 text-green-500 mx-auto mb-2" />
+                  <div className="text-sm font-medium text-gray-700">共鸣预测</div>
+                  <div className="text-lg font-bold text-green-600">{result ? `${result.resonanceScore}%` : '--%'}</div>
                 </div>
-              </div>
-
-              {/* 智能分析面板 */}
-              <div className="max-w-4xl mx-auto mb-6">
-                <div className="bg-white rounded-xl shadow-sm border border-gray-200 p-6">
-                  <h3 className="text-lg font-semibold text-gray-900 mb-4 flex items-center">
-                    <Brain className="h-5 w-5 text-rose-500 mr-2" />
-                    智能情感分析
-                  </h3>
-                  <div className="grid md:grid-cols-3 gap-4">
-                    <div className="text-center p-4 bg-blue-50 rounded-lg">
-                      <Target className="h-8 w-8 text-blue-500 mx-auto mb-2" />
-                      <div className="text-sm font-medium text-gray-700">检测情感</div>
-                      <div className="text-lg font-bold text-blue-600">{currentEmotion === 'romantic' ? '浪漫' : currentEmotion === 'happy' ? '快乐' : '感恩'}</div>
-                    </div>
-                    <div className="text-center p-4 bg-green-50 rounded-lg">
-                      <TrendingUp className="h-8 w-8 text-green-500 mx-auto mb-2" />
-                      <div className="text-sm font-medium text-gray-700">共鸣预测</div>
-                      <div className="text-lg font-bold text-green-600">{result ? `${result.resonanceScore}%` : '--%'}</div>
-                    </div>
-                    <div className="text-center p-4 bg-purple-50 rounded-lg">
-                      <Smartphone className="h-8 w-8 text-purple-500 mx-auto mb-2" />
-                      <div className="text-sm font-medium text-gray-700">平台适配</div>
-                      <div className="text-lg font-bold text-purple-600">
-                        {platform === 'wechat' ? '微信' : platform === 'instagram' ? 'Ins' : '抖音'}
-                      </div>
-                    </div>
+                <div className="text-center p-4 bg-purple-50 rounded-lg">
+                  <Smartphone className="h-8 w-8 text-purple-500 mx-auto mb-2" />
+                  <div className="text-sm font-medium text-gray-700">平台适配</div>
+                  <div className="text-lg font-bold text-purple-600">
+                    {platform === 'wechat' ? '微信' : platform === 'instagram' ? 'Ins' : '抖音'}
                   </div>
                 </div>
               </div>
+            </div>
+          </div>
 
-              <div className="max-w-4xl mx-auto space-y-6">
-                {/* 情感驱动创作 */}
-                <div className="bg-white rounded-xl shadow-sm border border-gray-200 p-6">
-                  <h3 className="text-lg font-semibold text-gray-900 mb-4 flex items-center">
-                    <Heart className="h-5 w-5 text-rose-500 mr-2" />
-                    情感驱动创作
-                  </h3>
-                  
-                  {/* 情感选择 */}
-                  <div className="mb-4">
-                    <label className="block text-sm font-medium text-gray-700 mb-2">
-                      当前情感状态
-                    </label>
-                    <div className="grid grid-cols-2 md:grid-cols-5 gap-2">
-                      {Object.entries(emotionMappings).map(([key, config]) => (
-                        <button
-                          key={key}
-                          onClick={() => setCurrentEmotion(key)}
-                          className={`p-3 rounded-lg text-sm font-medium transition-all ${
-                            currentEmotion === key 
-                              ? 'bg-rose-500 text-white' 
-                              : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
-                          }`}
-                        >
-                          {key === 'romantic' ? '浪漫' : 
-                           key === 'happy' ? '快乐' : 
-                           key === 'grateful' ? '感恩' : 
-                           key === 'caring' ? '关心' : 
-                           key === 'reflective' ? '思考' : 
-                           key === 'encouraging' ? '鼓励' : 
-                           key === 'apologetic' ? '道歉' : 
-                           key === 'proud' ? '自豪' : 
-                           key === 'playful' ? '调皮' : '怀念'}
-                        </button>
-                      ))}
-                    </div>
-                  </div>
+          <div className="max-w-4xl mx-auto space-y-6">
+            {/* 情感驱动创作 */}
+            <div className="bg-white rounded-xl shadow-sm border border-gray-200 p-6">
+              <h3 className="text-lg font-semibold text-gray-900 mb-4 flex items-center">
+                <Heart className="h-5 w-5 text-rose-500 mr-2" />
+                情感驱动创作
+              </h3>
+              
+              {/* 情感选择 */}
+              <div className="mb-4">
+                <label className="block text-sm font-medium text-gray-700 mb-2">
+                  当前情感状态
+                </label>
+                <div className="grid grid-cols-2 md:grid-cols-5 gap-2">
+                  {Object.entries(emotionMappings).map(([key, config]) => (
+                    <button
+                      key={key}
+                      onClick={() => setCurrentEmotion(key)}
+                      className={`p-3 rounded-lg text-sm font-medium transition-all ${
+                        currentEmotion === key 
+                          ? 'bg-rose-500 text-white' 
+                          : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
+                      }`}
+                    >
+                      {key === 'romantic' ? '浪漫' : 
+                       key === 'happy' ? '快乐' : 
+                       key === 'grateful' ? '感恩' : 
+                       key === 'caring' ? '关心' : 
+                       key === 'reflective' ? '思考' : 
+                       key === 'encouraging' ? '鼓励' : 
+                       key === 'apologetic' ? '道歉' : 
+                       key === 'proud' ? '自豪' : 
+                       key === 'playful' ? '调皮' : '怀念'}
+                    </button>
+                  ))}
+                </div>
+              </div>
 
-                  {/* 情感示例 */}
-                  <div className="mb-4 bg-blue-50 rounded-lg p-4">
-                    <h4 className="font-medium text-gray-900 mb-3 flex items-center">
-                      <Play className="h-4 w-4 text-blue-500 mr-2" />
-                      {currentEmotion === 'romantic' ? '浪漫' : 
-                       currentEmotion === 'happy' ? '快乐' : 
-                       currentEmotion === 'grateful' ? '感恩' : 
-                       currentEmotion === 'caring' ? '关心' : 
-                       currentEmotion === 'reflective' ? '思考' : 
-                       currentEmotion === 'encouraging' ? '鼓励' : 
-                       currentEmotion === 'apologetic' ? '道歉' : 
-                       currentEmotion === 'proud' ? '自豪' : 
-                       currentEmotion === 'playful' ? '调皮' : '怀念'}示例
-                    </h4>
-                    <div className="grid grid-cols-1 md:grid-cols-2 gap-2">
-                      {emotionTemplates[currentEmotion as keyof typeof emotionTemplates].slice(0, 4).map((example, index) => (
-                        <button
-                          key={index}
-                          onClick={() => handleExampleClick(example, currentEmotion)}
-                          className="p-3 bg-white hover:bg-blue-100 rounded text-left transition-all text-sm border border-blue-100"
-                        >
-                          <p className="text-gray-600 line-clamp-2">
-                            {example.substring(0, 50)}...
-                          </p>
-                        </button>
-                      ))}
-                    </div>
-                  </div>
+              {/* 情感示例 */}
+              <div className="mb-4 bg-blue-50 rounded-lg p-4">
+                <h4 className="font-medium text-gray-900 mb-3 flex items-center">
+                  <Play className="h-4 w-4 text-blue-500 mr-2" />
+                  {currentEmotion === 'romantic' ? '浪漫' : 
+                   currentEmotion === 'happy' ? '快乐' : 
+                   currentEmotion === 'grateful' ? '感恩' : 
+                   currentEmotion === 'caring' ? '关心' : 
+                   currentEmotion === 'reflective' ? '思考' : 
+                   currentEmotion === 'encouraging' ? '鼓励' : 
+                   currentEmotion === 'apologetic' ? '道歉' : 
+                   currentEmotion === 'proud' ? '自豪' : 
+                   currentEmotion === 'playful' ? '调皮' : '怀念'}示例
+                </h4>
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-2">
+                  {emotionTemplates[currentEmotion as keyof typeof emotionTemplates].slice(0, 4).map((example, index) => (
+                    <button
+                      key={index}
+                      onClick={() => handleExampleClick(example, currentEmotion)}
+                      className="p-3 bg-white hover:bg-blue-100 rounded text-left transition-all text-sm border border-blue-100"
+                    >
+                      <p className="text-gray-600 line-clamp-2">
+                        {example.substring(0, 50)}...
+                      </p>
+                    </button>
+                  ))}
+                </div>
+              </div>
 
-                  {/* 内容提示 */}
-                  <div className="mb-4">
-                    <label className="block text-sm font-medium text-gray-700 mb-2">
-                      内容提示（基于当前情感）
-                    </label>
-                    <textarea
-                      value={prompt}
-                      onChange={(e) => setPrompt(e.target.value)}
-                      placeholder={
-                        currentEmotion === 'romantic' ? '描述您想表达的浪漫情感...' :
-                        currentEmotion === 'happy' ? '分享您的快乐时刻...' :
-                        currentEmotion === 'grateful' ? '表达您的感谢和珍惜...' :
-                        currentEmotion === 'caring' ? '表达您的关心和体贴...' :
-                        currentEmotion === 'reflective' ? '分享您的思考和感悟...' :
-                        currentEmotion === 'encouraging' ? '给予鼓励和支持...' :
-                        currentEmotion === 'apologetic' ? '表达歉意和反省...' :
-                        currentEmotion === 'proud' ? '分享成就和自豪...' :
-                        currentEmotion === 'playful' ? '表达幽默和调皮...' :
-                        '分享怀旧和回忆...'
-                      }
-                      className="w-full h-32 p-3 border border-gray-200 rounded-lg resize-none focus:outline-none focus:ring-2 focus:ring-rose-500 focus:border-transparent"
-                    />
-                  </div>
+              {/* 内容提示 */}
+              <div className="mb-4">
+                <label className="block text-sm font-medium text-gray-700 mb-2">
+                  内容提示（基于当前情感）
+                </label>
+                <textarea
+                  value={prompt}
+                  onChange={(e) => setPrompt(e.target.value)}
+                  placeholder={
+                    currentEmotion === 'romantic' ? '描述您想表达的浪漫情感...' :
+                    currentEmotion === 'happy' ? '分享您的快乐时刻...' :
+                    currentEmotion === 'grateful' ? '表达您的感谢和珍惜...' :
+                    currentEmotion === 'caring' ? '表达您的关心和体贴...' :
+                    currentEmotion === 'reflective' ? '分享您的思考和感悟...' :
+                    currentEmotion === 'encouraging' ? '给予鼓励和支持...' :
+                    currentEmotion === 'apologetic' ? '表达歉意和反省...' :
+                    currentEmotion === 'proud' ? '分享成就和自豪...' :
+                    currentEmotion === 'playful' ? '表达幽默和调皮...' :
+                    '分享怀旧和回忆...'
+                  }
+                  className="w-full h-32 p-3 border border-gray-200 rounded-lg resize-none focus:outline-none focus:ring-2 focus:ring-rose-500 focus:border-transparent"
+                />
+              </div>
 
-                  {/* 平台和长度设置 */}
-                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-6">
-                    <div>
-                      <label className="block text-sm font-medium text-gray-700 mb-2">
-                        发布平台
-                      </label>
-                      <select
-                        value={platform}
-                        onChange={(e) => setPlatform(e.target.value)}
-                        className="w-full p-3 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-rose-500 focus:border-transparent"
-                      >
-                        <option value="wechat">💬 微信聊天</option>
-                        <option value="wechat_moment">📱 微信朋友圈</option>
-                        <option value="instagram">📸 Instagram</option>
-                        <option value="douyin">🎵 抖音</option>
-                        <option value="xiaohongshu">📕 小红书</option>
-                        <option value="weibo">🐦 微博</option>
-                        <option value="tiktok">🎬 TikTok</option>
-                        <option value="telegram">✈️ Telegram</option>
-                        <option value="whatsapp">💚 WhatsApp</option>
-                        <option value="email">📧 邮件</option>
-                        <option value="letter">✉️ 书信</option>
-                      </select>
-                    </div>
-                    
-                    <div>
-                      <label className="block text-sm font-medium text-gray-700 mb-2">
-                        内容长度
-                      </label>
-                      <select
-                        value={length}
-                        onChange={(e) => setLength(e.target.value)}
-                        className="w-full p-3 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-rose-500 focus:border-transparent"
-                      >
-                        <option value="short">简短精炼</option>
-                        <option value="medium">中等长度</option>
-                        <option value="long">详细丰富</option>
-                      </select>
-                    </div>
-                  </div>
-
-                  {/* AI图片生成 */}
-                  <div className="mb-6">
-                    <label className="block text-sm font-medium text-gray-700 mb-3">
-                      AI图片生成
-                    </label>
-                    <div className="space-y-3">
-                      <button
-                        onClick={() => generateImage(prompt)}
-                        disabled={!prompt.trim() || isGeneratingImage}
-                        className="w-full bg-gradient-to-r from-purple-500 to-indigo-500 text-white py-2 rounded-lg font-medium hover:from-purple-600 hover:to-indigo-600 transition-all disabled:opacity-50 disabled:cursor-not-allowed"
-                      >
-                        {isGeneratingImage ? '生成中...' : '生成匹配图片'}
-                      </button>
-                      
-                      {generatedImages.length > 0 && (
-                        <div className="space-y-3">
-                          <h5 className="text-sm font-medium text-gray-700">生成结果</h5>
-                          <div className="grid grid-cols-3 gap-2">
-                            {generatedImages.map((img, index) => (
-                              <div key={index} className="relative group">
-                                <img 
-                                  src={img} 
-                                  alt="AI生成图片"
-                                  className="w-full h-20 object-cover rounded-lg"
-                                />
-                                <div className="absolute inset-0 bg-black bg-opacity-0 group-hover:bg-opacity-20 transition-all rounded-lg flex items-center justify-center">
-                                  <button 
-                                    onClick={() => downloadImage(img, index)}
-                                    className="opacity-0 group-hover:opacity-100 bg-white text-black px-2 py-1 rounded text-xs hover:bg-gray-100 transition-colors"
-                                  >
-                                    下载
-                                  </button>
-                                </div>
-                              </div>
-                            ))}
-                          </div>
-                        </div>
-                      )}
-                    </div>
-                  </div>
-
-                  <button
-                    onClick={() => {
-                      handleGenerate()
-                      onUse()
-                    }}
-                    disabled={!prompt.trim() || isGenerating || !canUse}
-                    className="w-full bg-gradient-to-r from-rose-500 to-pink-500 text-white py-3 rounded-lg font-medium hover:from-rose-600 hover:to-pink-600 transition-all disabled:opacity-50 disabled:cursor-not-allowed"
+              {/* 平台和长度设置 */}
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-6">
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 mb-2">
+                    发布平台
+                  </label>
+                  <select
+                    value={platform}
+                    onChange={(e) => setPlatform(e.target.value)}
+                    className="w-full p-3 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-rose-500 focus:border-transparent"
                   >
-                    {isGenerating ? '智能生成中...' : '智能生成内容'}
-                  </button>
+                    <option value="wechat">💬 微信聊天</option>
+                    <option value="wechat_moment">📱 微信朋友圈</option>
+                    <option value="instagram">📸 Instagram</option>
+                    <option value="douyin">🎵 抖音</option>
+                    <option value="xiaohongshu">📕 小红书</option>
+                    <option value="weibo">🐦 微博</option>
+                    <option value="tiktok">🎬 TikTok</option>
+                    <option value="telegram">✈️ Telegram</option>
+                    <option value="whatsapp">💚 WhatsApp</option>
+                    <option value="email">📧 邮件</option>
+                    <option value="letter">✉️ 书信</option>
+                  </select>
                 </div>
+                
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 mb-2">
+                    内容长度
+                  </label>
+                  <select
+                    value={length}
+                    onChange={(e) => setLength(e.target.value)}
+                    className="w-full p-3 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-rose-500 focus:border-transparent"
+                  >
+                    <option value="short">简短精炼</option>
+                    <option value="medium">中等长度</option>
+                    <option value="long">详细丰富</option>
+                  </select>
+                </div>
+              </div>
 
-                {/* 生成结果 */}
-                {result && (
-                <div className="max-w-4xl mx-auto">
-                  <div className="bg-white rounded-xl shadow-sm border border-gray-200 p-6">
-                    <div className="flex justify-between items-center mb-6">
-                      <h3 className="text-xl font-semibold text-gray-900">生成结果</h3>
-                      <div className="flex items-center space-x-2">
-                        <span className="px-3 py-1 rounded-full bg-rose-100 text-rose-700 text-sm font-medium">
-                          {result.contentType}
-                        </span>
-                        <span className="px-3 py-1 rounded-full bg-blue-100 text-blue-700 text-sm font-medium">
-                          共鸣度: {result.resonanceScore}%
-                        </span>
-                        <span className="px-3 py-1 rounded-full bg-green-100 text-green-700 text-sm font-medium">
-                          {result.estimatedReadingTime}分钟阅读
-                        </span>
+              {/* AI图片生成 */}
+              <div className="mb-6">
+                <label className="block text-sm font-medium text-gray-700 mb-3">
+                  AI图片生成
+                </label>
+                <div className="space-y-3">
+                  <button
+                    onClick={() => generateImage(prompt)}
+                    disabled={!prompt.trim() || isGeneratingImage}
+                    className="w-full bg-gradient-to-r from-purple-500 to-indigo-500 text-white py-2 rounded-lg font-medium hover:from-purple-600 hover:to-indigo-600 transition-all disabled:opacity-50 disabled:cursor-not-allowed"
+                  >
+                    {isGeneratingImage ? '生成中...' : '生成匹配图片'}
+                  </button>
+                  
+                  {generatedImages.length > 0 && (
+                    <div className="space-y-3">
+                      <h5 className="text-sm font-medium text-gray-700">生成结果</h5>
+                      <div className="grid grid-cols-3 gap-2">
+                        {generatedImages.map((img, index) => (
+                          <div key={index} className="relative group">
+                            <img 
+                              src={img} 
+                              alt="AI生成图片"
+                              className="w-full h-20 object-cover rounded-lg"
+                            />
+                            <div className="absolute inset-0 bg-black bg-opacity-0 group-hover:bg-opacity-20 transition-all rounded-lg flex items-center justify-center">
+                              <button 
+                                onClick={() => downloadImage(img, index)}
+                                className="opacity-0 group-hover:opacity-100 bg-white text-black px-2 py-1 rounded text-xs hover:bg-gray-100 transition-colors"
+                              >
+                                下载
+                              </button>
+                            </div>
+                          </div>
+                        ))}
                       </div>
                     </div>
-                    
-                    {/* 平台适配预览 */}
+                  )}
+                </div>
+              </div>
+
+              <button
+                onClick={() => {
+                  handleGenerate()
+                  onUse()
+                }}
+                disabled={!prompt.trim() || isGenerating || !canUse}
+                className="w-full bg-gradient-to-r from-rose-500 to-pink-500 text-white py-3 rounded-lg font-medium hover:from-rose-600 hover:to-pink-600 transition-all disabled:opacity-50 disabled:cursor-not-allowed"
+              >
+                {isGenerating ? '智能生成中...' : '智能生成内容'}
+              </button>
+            </div>
+
+            {/* 生成结果 */}
+            {result && (
+              <div className="max-w-4xl mx-auto">
+                <div className="bg-white rounded-xl shadow-sm border border-gray-200 p-6">
+                  <div className="flex justify-between items-center mb-6">
+                    <h3 className="text-xl font-semibold text-gray-900">生成结果</h3>
+                    <div className="flex items-center space-x-2">
+                      <span className="px-3 py-1 rounded-full bg-rose-100 text-rose-700 text-sm font-medium">
+                        {result.contentType}
+                      </span>
+                      <span className="px-3 py-1 rounded-full bg-blue-100 text-blue-700 text-sm font-medium">
+                        共鸣度: {result.resonanceScore}%
+                      </span>
+                      <span className="px-3 py-1 rounded-full bg-green-100 text-green-700 text-sm font-medium">
+                        {result.estimatedReadingTime}分钟阅读
+                      </span>
+                    </div>
+                  </div>
+                  
+                  {/* 平台适配预览 */}
+                  <div className="mb-6">
+                    <div className="flex items-center mb-3">
+                      <Smartphone className="h-4 w-4 text-gray-500 mr-2" />
+                      <span className="text-sm font-medium text-gray-700">
+                        {platform === 'wechat' ? '微信适配' : platform === 'instagram' ? 'Instagram优化' : '抖音风格'}
+                      </span>
+                    </div>
+                    <div className="p-4 bg-gray-50 rounded-lg border">
+                      <p className="text-gray-700 leading-relaxed whitespace-pre-line">
+                        {result.content}
+                      </p>
+                    </div>
+                  </div>
+
+                  {/* 数据分析 */}
+                  <div className="grid grid-cols-3 gap-4 mb-6">
+                    <div className="text-center p-3 bg-rose-50 rounded-lg">
+                      <div className="text-sm text-gray-600">情感强度</div>
+                      <div className="text-lg font-bold text-rose-600">{result.emotionIntensity}%</div>
+                    </div>
+                    <div className="text-center p-3 bg-blue-50 rounded-lg">
+                      <div className="text-sm text-gray-600">内容长度</div>
+                      <div className="text-lg font-bold text-blue-600">{result.content.length}字</div>
+                    </div>
+                    <div className="text-center p-3 bg-green-50 rounded-lg">
+                      <div className="text-sm text-gray-600">风格匹配</div>
+                      <div className="text-lg font-bold text-green-600">{result.style}</div>
+                    </div>
+                  </div>
+
+                  {/* 配图建议 */}
+                  {result.imageSuggestions && result.imageSuggestions.length > 0 && (
                     <div className="mb-6">
-                      <div className="flex items-center mb-3">
-                        <Smartphone className="h-4 w-4 text-gray-500 mr-2" />
-                        <span className="text-sm font-medium text-gray-700">
-                          {platform === 'wechat' ? '微信适配' : platform === 'instagram' ? 'Instagram优化' : '抖音风格'}
+                      <h4 className="text-lg font-medium text-gray-900 mb-3 flex items-center">
+                        <span className="w-6 h-6 bg-gradient-to-r from-purple-500 to-pink-500 rounded-full flex items-center justify-center mr-2">
+                          <span className="text-white text-xs">📷</span>
                         </span>
-                      </div>
-                      <div className="p-4 bg-gray-50 rounded-lg border">
-                        <p className="text-gray-700 leading-relaxed whitespace-pre-line">
-                          {result.content}
+                        配图建议
+                      </h4>
+                      <div className="bg-purple-50 rounded-lg p-4">
+                        <ul className="space-y-2">
+                          {result.imageSuggestions.map((suggestion, index) => (
+                            <li key={index} className="flex items-start space-x-2">
+                              <span className="text-purple-500 mt-0.5">•</span>
+                              <span className="text-gray-700 text-sm">{suggestion}</span>
+                            </li>
+                          ))}
+                        </ul>
+                        <p className="text-xs text-purple-600 mt-2">
+                          💡 建议：使用高质量、情感匹配的图片效果更佳
                         </p>
                       </div>
                     </div>
+                  )}
 
-                    {/* 数据分析 */}
-                    <div className="grid grid-cols-3 gap-4 mb-6">
-                      <div className="text-center p-3 bg-rose-50 rounded-lg">
-                        <div className="text-sm text-gray-600">情感强度</div>
-                        <div className="text-lg font-bold text-rose-600">{result.emotionIntensity}%</div>
-                      </div>
-                      <div className="text-center p-3 bg-blue-50 rounded-lg">
-                        <div className="text-sm text-gray-600">内容长度</div>
-                        <div className="text-lg font-bold text-blue-600">{result.content.length}字</div>
-                      </div>
-                      <div className="text-center p-3 bg-green-50 rounded-lg">
-                        <div className="text-sm text-gray-600">风格匹配</div>
-                        <div className="text-lg font-bold text-green-600">{result.style}</div>
-                      </div>
-                    </div>
-
-                    {/* 配图建议 */}
-                    {result.imageSuggestions && result.imageSuggestions.length > 0 && (
-                      <div className="mb-6">
-                        <h4 className="text-lg font-medium text-gray-900 mb-3 flex items-center">
-                          <span className="w-6 h-6 bg-gradient-to-r from-purple-500 to-pink-500 rounded-full flex items-center justify-center mr-2">
-                            <span className="text-white text-xs">📷</span>
+                  {/* 标签建议 */}
+                  {result.hashtags && result.hashtags.length > 0 && (
+                    <div className="mb-6">
+                      <h4 className="text-lg font-medium text-gray-900 mb-3">标签建议</h4>
+                      <div className="flex flex-wrap gap-2">
+                        {result.hashtags.map((tag, index) => (
+                          <span key={index} className="px-3 py-1 bg-gray-100 text-gray-700 rounded-full text-sm">
+                            {tag}
                           </span>
-                          配图建议
-                        </h4>
-                        <div className="bg-purple-50 rounded-lg p-4">
-                          <ul className="space-y-2">
-                            {result.imageSuggestions.map((suggestion, index) => (
-                              <li key={index} className="flex items-start space-x-2">
-                                <span className="text-purple-500 mt-0.5">•</span>
-                                <span className="text-gray-700 text-sm">{suggestion}</span>
-                              </li>
-                            ))}
-                          </ul>
-                          <p className="text-xs text-purple-600 mt-2">
-                            💡 建议：使用高质量、情感匹配的图片效果更佳
-                          </p>
-                        </div>
+                        ))}
                       </div>
-                    )}
+                    </div>
+                  )}
 
-                    {/* 标签建议 */}
-                    {result.hashtags && result.hashtags.length > 0 && (
-                      <div className="mb-6">
-                        <h4 className="text-lg font-medium text-gray-900 mb-3">标签建议</h4>
-                        <div className="flex flex-wrap gap-2">
-                          {result.hashtags.map((tag, index) => (
-                            <span key={index} className="px-3 py-1 bg-gray-100 text-gray-700 rounded-full text-sm">
-                              {tag}
-                            </span>
-                          ))}
-                        </div>
-                      </div>
-                    )}
-
-                    {/* 操作按钮 */}
-                    <div className="flex space-x-3">
-                      <button 
-                        onClick={saveContent}
-                        className="flex-1 flex items-center justify-center space-x-2 bg-green-500 text-white px-4 py-2 rounded-lg hover:bg-green-600 transition-colors"
-                      >
-                        <Download className="h-4 w-4" />
-                        <span>保存</span>
-                      </button>
-                      <button 
-                        onClick={shareContent}
-                        className="flex-1 flex items-center justify-center space-x-2 bg-blue-500 text-white px-4 py-2 rounded-lg hover:bg-blue-600 transition-colors"
-                      >
-                        <Share2 className="h-4 w-4" />
-                        <span>分享</span>
-                      </button>
-                    </div>
-                  </div>
-                </div>
-              )}
-
-              {/* 功能特色 */}
-              <div className="max-w-4xl mx-auto mt-12">
-                <h2 className="text-2xl font-bold text-gray-900 text-center mb-8">智能创作特色</h2>
-                <div className="grid md:grid-cols-4 gap-6">
-                  <div className="text-center p-4">
-                    <div className="w-12 h-12 bg-gradient-to-r from-rose-500 to-pink-500 rounded-full flex items-center justify-center mx-auto mb-3">
-                      <Brain className="h-6 w-6 text-white" />
-                    </div>
-                    <h3 className="font-semibold text-gray-900 mb-2">情感驱动</h3>
-                    <p className="text-gray-600 text-sm">基于实时情感状态智能生成匹配内容</p>
-                  </div>
-                  <div className="text-center p-4">
-                    <div className="w-12 h-12 bg-gradient-to-r from-blue-500 to-cyan-500 rounded-full flex items-center justify-center mx-auto mb-3">
-                      <Smartphone className="h-6 w-6 text-white" />
-                    </div>
-                    <h3 className="font-semibold text-gray-900 mb-2">多平台适配</h3>
-                    <p className="text-gray-600 text-sm">自动优化内容格式适应不同社交平台</p>
-                  </div>
-                  <div className="text-center p-4">
-                    <div className="w-12 h-12 bg-gradient-to-r from-green-500 to-teal-500 rounded-full flex items-center justify-center mx-auto mb-3">
-                      <TrendingUp className="h-6 w-6 text-white" />
-                    </div>
-                    <h3 className="font-semibold text-gray-900 mb-2">共鸣预测</h3>
-                    <p className="text-gray-600 text-sm">AI预测内容的情感共鸣效果</p>
-                  </div>
-                  <div className="text-center p-4">
-                    <div className="w-12 h-12 bg-gradient-to-r from-purple-500 to-indigo-500 rounded-full flex items-center justify-center mx-auto mb-3">
-                      <Palette className="h-6 w-6 text-white" />
-                    </div>
-                    <h3 className="font-semibold text-gray-900 mb-2">个性化模板</h3>
-                    <p className="text-gray-600 text-sm">基于用户偏好建立个性化文案库</p>
+                  {/* 操作按钮 */}
+                  <div className="flex space-x-3">
+                    <button 
+                      onClick={saveContent}
+                      className="flex-1 flex items-center justify-center space-x-2 bg-green-500 text-white px-4 py-2 rounded-lg hover:bg-green-600 transition-colors"
+                    >
+                      <Download className="h-4 w-4" />
+                      <span>保存</span>
+                    </button>
+                    <button 
+                      onClick={shareContent}
+                      className="flex-1 flex items-center justify-center space-x-2 bg-blue-500 text-white px-4 py-2 rounded-lg hover:bg-blue-600 transition-colors"
+                    >
+                      <Share2 className="h-4 w-4" />
+                      <span>分享</span>
+                    </button>
                   </div>
                 </div>
               </div>
-            </div>
-          {/* 页脚 */}
-          <footer className="bg-gray-50 border-t border-gray-200">
-            <div className="container py-8">
-              <div className="text-center">
-                <div className="flex items-center justify-center space-x-2 mb-4">
-                  <div className="w-6 h-6 bg-gradient-to-r from-rose-500 to-pink-500 rounded-full flex items-center justify-center">
-                    <Zap className="h-3 w-3 text-white" />
+            )}
+
+            {/* 功能特色 */}
+            <div className="max-w-4xl mx-auto mt-12">
+              <h2 className="text-2xl font-bold text-gray-900 text-center mb-8">智能创作特色</h2>
+              <div className="grid md:grid-cols-4 gap-6">
+                <div className="text-center p-4">
+                  <div className="w-12 h-12 bg-gradient-to-r from-rose-500 to-pink-500 rounded-full flex items-center justify-center mx-auto mb-3">
+                    <Brain className="h-6 w-6 text-white" />
                   </div>
-                  <span className="text-gray-900 font-semibold">丘比特AI智能创作</span>
+                  <h3 className="font-semibold text-gray-900 mb-2">情感驱动</h3>
+                  <p className="text-gray-600 text-sm">基于实时情感状态智能生成匹配内容</p>
                 </div>
-                <p className="text-gray-600 text-sm">
-                  © 2024 情感驱动的智能内容创作平台. 让表达更精准，让爱更动人.
-                </p>
+                <div className="text-center p-4">
+                  <div className="w-12 h-12 bg-gradient-to-r from-blue-500 to-cyan-500 rounded-full flex items-center justify-center mx-auto mb-3">
+                    <Smartphone className="h-6 w-6 text-white" />
+                  </div>
+                  <h3 className="font-semibold text-gray-900 mb-2">多平台适配</h3>
+                  <p className="text-gray-600 text-sm">自动优化内容格式适应不同社交平台</p>
+                </div>
+                <div className="text-center p-4">
+                  <div className="w-12 h-12 bg-gradient-to-r from-green-500 to-teal-500 rounded-full flex items-center justify-center mx-auto mb-3">
+                    <TrendingUp className="h-6 w-6 text-white" />
+                  </div>
+                  <h3 className="font-semibold text-gray-900 mb-2">共鸣预测</h3>
+                  <p className="text-gray-600 text-sm">AI预测内容的情感共鸣效果</p>
+                </div>
+                <div className="text-center p-4">
+                  <div className="w-12 h-12 bg-gradient-to-r from-purple-500 to-indigo-500 rounded-full flex items-center justify-center mx-auto mb-3">
+                    <Palette className="h-6 w-6 text-white" />
+                  </div>
+                  <h3 className="font-semibold text-gray-900 mb-2">个性化模板</h3>
+                  <p className="text-gray-600 text-sm">基于用户偏好建立个性化文案库</p>
+                </div>
               </div>
             </div>
-          </footer>
-        </main>
-      </div>
+          </div>
+        </div>
+      </main>
+
+      {/* 页脚 */}
+      <footer className="bg-gray-50 border-t border-gray-200">
+        <div className="container py-8">
+          <div className="text-center">
+            <div className="flex items-center justify-center space-x-2 mb-4">
+              <div className="w-6 h-6 bg-gradient-to-r from-rose-500 to-pink-500 rounded-full flex items-center justify-center">
+                <Zap className="h-3 w-3 text-white" />
+              </div>
+              <span className="text-gray-900 font-semibold">丘比特AI智能创作</span>
+            </div>
+            <p className="text-gray-600 text-sm">
+              © 2024 情感驱动的智能内容创作平台. 让表达更精准，让爱更动人.
+            </p>
+          </div>
+        </div>
+      </footer>
     </div>
   )
 }
