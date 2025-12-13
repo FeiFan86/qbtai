@@ -57,7 +57,7 @@ export function EmotionCalendar({ diaries, onDateSelect, selectedDate }: Emotion
     const monthStart = startOfMonth(currentMonth)
     const monthEnd = endOfMonth(currentMonth)
     
-    const monthEntries = entries.filter(entry => {
+    const monthEntries = diaries.filter(entry => {
       const entryDate = new Date(entry.date)
       return entryDate >= monthStart && entryDate <= monthEnd
     })
@@ -73,7 +73,7 @@ export function EmotionCalendar({ diaries, onDateSelect, selectedDate }: Emotion
     }
 
     setMonthStats(stats)
-  }, [entries, currentMonth])
+  }, [diaries, currentMonth])
 
   const monthStart = startOfMonth(currentMonth)
   const monthEnd = endOfMonth(currentMonth)
@@ -84,7 +84,7 @@ export function EmotionCalendar({ diaries, onDateSelect, selectedDate }: Emotion
   const emptyDays = Array(startDay).fill(null)
 
   const getDayEmotion = (date: Date) => {
-    return entries.find(entry => isSameDay(new Date(entry.date), date))
+    return diaries.find(entry => isSameDay(new Date(entry.date), date))
   }
 
   const getDayColor = (date: Date) => {
