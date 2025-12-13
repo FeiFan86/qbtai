@@ -4,15 +4,14 @@ import React, { useState, useEffect } from 'react'
 import { Sparkles, BookOpen, Zap, Lightbulb, Star, Calendar, Tag, Lock, Send, RotateCw } from 'lucide-react'
 
 interface EmotionEntry {
-  id: string
+  id: number
   date: string
   title: string
   emotion: string
-  intensity: number
   mood: 'positive' | 'neutral' | 'negative'
   content: string
   tags: string[]
-  isPrivate: boolean
+  rating: number
 }
 
 interface Template {

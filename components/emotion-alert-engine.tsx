@@ -10,13 +10,14 @@ import {
 } from 'lucide-react'
 
 interface EmotionEntry {
-  id: string
+  id: number
   date: string
+  title: string
   emotion: string
-  intensity: number
   mood: 'positive' | 'neutral' | 'negative'
   content: string
   tags: string[]
+  rating: number
 }
 
 interface AlertRule {
