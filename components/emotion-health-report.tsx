@@ -28,7 +28,7 @@ interface ReportData {
     neutral: number
     negative: number
   }
-  avgIntensity: number
+  avgRating: number
   mostFrequentEmotions: Array<{emotion: string, count: number}>
   popularTags: Array<{tag: string, count: number}>
   consistencyScore: number
@@ -160,7 +160,7 @@ export function EmotionHealthReport({ diaries: entries, period = 'month', custom
       period: `${format(startDate, 'yyyy年MM月dd日')} - ${format(endDate, 'yyyy年MM月dd日')}`,
       totalEntries: periodEntries.length,
       moodDistribution,
-      avgIntensity: periodEntries.reduce((sum, e) => sum + e.intensity, 0) / periodEntries.length,
+      avgRating: periodEntries.reduce((sum, e) => sum + e.rating, 0) / periodEntries.length,
       mostFrequentEmotions,
       popularTags,
       consistencyScore: Math.round(consistencyScore),
@@ -220,7 +220,7 @@ export function EmotionHealthReport({ diaries: entries, period = 'month', custom
 - 消极情绪: ${reportData.moodDistribution.negative} 条 (${((reportData.moodDistribution.negative / reportData.totalEntries) * 100).toFixed(1)}%)
 
 关键指标:
-- 平均情感强度: ${reportData.avgIntensity.toFixed(1)}/5
+- 平均情感强度: ${reportData.avgRating.toFixed(1)}/5
 - 记录一致性: ${reportData.consistencyScore}/100
 - 情感多样性: ${reportData.growthIndicators.emotionalDiversity}/100
 - 自我觉察: ${reportData.growthIndicators.selfAwareness}/100
@@ -450,7 +450,7 @@ export function EmotionHealthReport({ diaries: entries, period = 'month', custom
               <h4 className="font-medium text-gray-700 mb-2">平均情感强度</h4>
               <div className="flex items-center space-x-2">
                 <Star className="h-4 w-4 text-yellow-500" />
-                <span>{reportData.avgIntensity.toFixed(1)}/5</span>
+                <span>{reportData.avgRating.toFixed(1)}/5</span>
               </div>
             </div>
           </div>

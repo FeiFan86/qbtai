@@ -22,7 +22,7 @@ interface EmotionEntry {
 
 interface AlertRule {
   id: string
-  type: 'negative_trend' | 'intensity_spike' | 'pattern_change' | 'consistency_warning'
+  type: 'negative_trend' | 'rating_spike' | 'pattern_change' | 'consistency_warning'
   condition: (entries: EmotionEntry[], timeframe: number) => boolean
   severity: 'low' | 'medium' | 'high'
   message: string
@@ -81,8 +81,8 @@ const alertRules: AlertRule[] = [
     suggestion: '建议关注情绪变化，尝试放松活动或寻求支持'
   },
   {
-    id: 'intensity_spike',
-    type: 'intensity_spike',
+    id: 'rating_spike',
+    type: 'rating_spike',
     condition: (entries, timeframe) => {
       const recentEntries = entries.filter(e => 
         isWithinInterval(new Date(e.date), {
@@ -94,12 +94,12 @@ const alertRules: AlertRule[] = [
       if (recentEntries.length < 3) return false
       
       // 检查强度是否有显著变化
-      const intensities = recentEntries.map(e => e.intensity)
-      const avgIntensity = intensities.reduce((a, b) => a + b, 0) / intensities.length
-      const maxIntensity = Math.max(...intensities)
-      const minIntensity = Math.min(...intensities)
+      const ratings = recentEntries.map(e => e.rating)
+      const avgRating = ratings.reduce((a, b) => a + b, 0) / ratings.length
+      const maxRating = Math.max(...ratings)
+      const minRating = Math.min(...ratings)
       
-      return (maxIntensity - minIntensity) >= 3 // 强度变化超过3个级别
+      return (maxRating - minRating) >= 3 // 强度变化超过3个级别
     },
     severity: 'low',
     message: '情感强度波动较大',
@@ -175,7 +175,7 @@ const adviceGenerator = {
     if (recentEntries.length < 3) return []
     
     const positiveRatio = recentEntries.filter(e => e.mood === 'positive').length / recentEntries.length
-    const avgIntensity = recentEntries.reduce((sum, e) => sum + e.intensity, 0) / recentEntries.length
+    const avgRating = recentEntries.reduce((sum, e) => sum + e.rating, 0) / recentEntries.length
     
     const advice: PersonalizedAdvice[] = []
     
@@ -195,9 +195,9 @@ const adviceGenerator = {
       })
     }
     
-    if (avgIntensity > 3.5) {
+    if (avgRating > 3.5) {
       advice.push({
-        id: 'emotional_intensity',
+        id: 'emotional_rating',
         type: 'improvement',
         title: '情感体验丰富',
         content: '您的情感体验强度较高，这表明您对生活有深刻的感受。',
@@ -465,7 +465,7 @@ export function EmotionAlertEngine({ entries, onAlertAcknowledge }: EmotionAlert
           <div className="text-center p-4 bg-blue-50 rounded-lg border border-blue-200">
             <div className="text-2xl font-bold text-blue-600">
               {entries.length > 0 
-                ? (entries.reduce((sum, e) => sum + e.intensity, 0) / entries.length).toFixed(1)
+                ? (entries.reduce((sum, e) => sum + e.rating, 0) / entries.length).toFixed(1)
                 : '0.0'}
             </div>
             <div className="text-sm text-blue-700">平均强度</div>

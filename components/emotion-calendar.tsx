@@ -34,7 +34,7 @@ const emotionIcons = {
   negative: '😔'
 }
 
-const intensityColors = [
+const ratingColors = [
   'bg-gray-200',      // 强度1
   'bg-gray-300',      // 强度2  
   'bg-gray-400',      // 强度3
@@ -49,7 +49,7 @@ export function EmotionCalendar({ diaries, onDateSelect, selectedDate }: Emotion
     neutral: 0,
     negative: 0,
     total: 0,
-    avgIntensity: 0
+    avgRating: 0
   })
 
   // 计算月份统计数据
@@ -67,8 +67,8 @@ export function EmotionCalendar({ diaries, onDateSelect, selectedDate }: Emotion
       neutral: monthEntries.filter(e => e.mood === 'neutral').length,
       negative: monthEntries.filter(e => e.mood === 'negative').length,
       total: monthEntries.length,
-      avgIntensity: monthEntries.length > 0 
-        ? monthEntries.reduce((sum, e) => sum + e.intensity, 0) / monthEntries.length
+      avgRating: monthEntries.length > 0 
+        ? monthEntries.reduce((sum, e) => sum + e.rating, 0) / monthEntries.length
         : 0
     }
 
@@ -94,11 +94,11 @@ export function EmotionCalendar({ diaries, onDateSelect, selectedDate }: Emotion
     return `bg-gradient-to-br ${emotionColors[emotion.mood]} border-${emotion.mood === 'positive' ? 'green' : emotion.mood === 'negative' ? 'rose' : 'blue'}-200`
   }
 
-  const getIntensityDots = (intensity: number) => {
+  const getRatingDots = (rating: number) => {
     return Array(5).fill(0).map((_, i) => (
       <div 
         key={i}
-        className={`w-1 h-1 rounded-full ${i < intensity ? intensityColors[intensity - 1] : 'bg-gray-200'}`}
+        className={`w-1 h-1 rounded-full ${i < rating ? ratingColors[rating - 1] : 'bg-gray-200'}`}
       />
     ))
   }
@@ -156,7 +156,7 @@ export function EmotionCalendar({ diaries, onDateSelect, selectedDate }: Emotion
           <div className="text-sm text-rose-700">低落日</div>
         </div>
         <div className="text-center p-3 bg-purple-50 rounded-lg">
-          <div className="text-2xl font-bold text-purple-600">{monthStats.avgIntensity.toFixed(1)}</div>
+          <div className="text-2xl font-bold text-purple-600">{monthStats.avgRating.toFixed(1)}</div>
           <div className="text-sm text-purple-700">平均强度</div>
         </div>
       </div>
