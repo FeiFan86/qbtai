@@ -1,11 +1,11 @@
 'use client'
 
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from './ui/card'
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
 import { Badge } from '@/components/ui/badge'
-import { Button } from './ui/button'
+import { Button } from '@/components/ui/button'
 import { Lightbulb, MessageSquare, ArrowRight, CheckCircle, TrendingUp } from 'lucide-react'
-import { LoadingSkeleton, CardSkeleton } from './loading-skeleton'
-import { LoadingSpinner } from './loading-spinner'
+import { LoadingSkeleton, CardSkeleton } from '@/components/loading-skeleton'
+import { LoadingSpinner } from '@/components/loading-spinner'
 
 interface SocialStrategiesProps {
   result?: {

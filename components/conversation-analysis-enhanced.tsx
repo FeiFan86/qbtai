@@ -1,12 +1,12 @@
 'use client'
 
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from './ui/card'
-import { Badge } from './ui/badge'
-import { Button } from './ui/button'
-import { Progress } from './ui/progress'
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
+import { Badge } from '@/components/ui/badge'
+import { Button } from '@/components/ui/button'
+import { Progress } from '@/components/ui/progress'
 import { MessageCircle, Users, TrendingUp, AlertTriangle, RefreshCw } from 'lucide-react'
-import { LoadingSkeleton, CardSkeleton } from './loading-skeleton'
-import { LoadingSpinner } from './loading-spinner'
+import { LoadingSkeleton, CardSkeleton } from '@/components/loading-skeleton'
+import { LoadingSpinner } from '@/components/loading-spinner'
 
 // 临时替代 cn 函数
 const cn = (...classes: (string | undefined)[]) => {
