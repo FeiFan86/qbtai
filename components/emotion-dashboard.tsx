@@ -106,7 +106,7 @@ export function EmotionDashboard({ diaries: entries, timeRange = 'month' }: Emot
       }
 
       const avgIntensity = dayEntries.length > 0 
-        ? dayEntries.reduce((sum, e) => sum + e.intensity, 0) / dayEntries.length
+        ? dayEntries.reduce((sum, e) => sum + e.rating, 0) / dayEntries.length
         : 0
 
       data.push({
@@ -141,8 +141,8 @@ export function EmotionDashboard({ diaries: entries, timeRange = 'month' }: Emot
   const intensityData = useMemo(() => {
     const intensityCounts = [0, 0, 0, 0, 0]
     filteredEntries.forEach(entry => {
-      if (entry.intensity >= 1 && entry.intensity <= 5) {
-        intensityCounts[entry.intensity - 1]++
+      if (entry.rating >= 1 && entry.rating <= 5) {
+        intensityCounts[entry.rating - 1]++
       }
     })
 
@@ -179,7 +179,7 @@ export function EmotionDashboard({ diaries: entries, timeRange = 'month' }: Emot
       ? ((filteredEntries.filter(e => e.mood === 'positive').length / totalEntries) * 100).toFixed(1)
       : '0.0'
     const avgIntensity = totalEntries > 0 
-      ? (filteredEntries.reduce((sum, e) => sum + e.intensity, 0) / totalEntries).toFixed(1)
+      ? (filteredEntries.reduce((sum, e) => sum + e.rating, 0) / totalEntries).toFixed(1)
       : '0.0'
 
     return {
