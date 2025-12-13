@@ -95,16 +95,15 @@ const templates: Template[] = [
   }
 ]
 
-export function EnhancedEmotionEditor({ entry, onSave, onCancel, isEditing = false }: EnhancedEmotionEditorProps) {
+export function EnhancedEmotionEditor({ newDiary, setNewDiary, handleAddDiary, canUse, isLoading, onUse }: EnhancedEmotionEditorProps) {
   const [formData, setFormData] = useState<Omit<EmotionEntry, 'id'>>({
     date: new Date().toISOString().split('T')[0],
     title: '',
     emotion: '快乐',
-    intensity: 3,
+    rating: 3,
     mood: 'positive',
     content: '',
-    tags: [],
-    isPrivate: false
+    tags: []
   })
 
   const [currentTag, setCurrentTag] = useState('')
@@ -113,21 +112,20 @@ export function EnhancedEmotionEditor({ entry, onSave, onCancel, isEditing = fal
   const [aiAdvice, setAiAdvice] = useState<AIAdvice[]>([])
   const [isGeneratingAdvice, setIsGeneratingAdvice] = useState(false)
 
-  // 初始化表单数据
+  // 同步表单数据与 newDiary
   useEffect(() => {
-    if (entry) {
+    if (newDiary) {
       setFormData({
-        date: entry.date,
-        title: entry.title,
-        emotion: entry.emotion,
-        intensity: entry.intensity,
-        mood: entry.mood,
-        content: entry.content,
-        tags: entry.tags,
-        isPrivate: entry.isPrivate
+        date: newDiary.date || new Date().toISOString().split('T')[0],
+        title: newDiary.title || '',
+        emotion: newDiary.emotion || '快乐',
+        rating: newDiary.rating || 3,
+        mood: newDiary.mood || 'positive',
+        content: newDiary.content || '',
+        tags: newDiary.tags || []
       })
     }
-  }, [entry])
+  }, [newDiary])
 
   // 根据情感选择自动设置mood
   useEffect(() => {
@@ -143,7 +141,8 @@ export function EnhancedEmotionEditor({ entry, onSave, onCancel, isEditing = fal
       return
     }
 
-    onSave(formData)
+    setNewDiary(formData)
+    handleAddDiary(onUse)
   }
 
   const addTag = () => {
@@ -219,7 +218,7 @@ export function EnhancedEmotionEditor({ entry, onSave, onCancel, isEditing = fal
         <div className="flex items-center space-x-3">
           <BookOpen className="h-6 w-6 text-rose-500" />
           <h2 className="text-xl font-semibold text-gray-900">
-            {isEditing ? '编辑情感日记' : '写情感日记'}
+            写情感日记
           </h2>
         </div>
         
@@ -304,14 +303,14 @@ export function EnhancedEmotionEditor({ entry, onSave, onCancel, isEditing = fal
             
             <div>
               <label className="block text-sm font-medium text-gray-700 mb-2">
-                强度: {formData.intensity}/5
+                强度: {formData.rating}/5
               </label>
               <div className="flex space-x-1">
                 {[1, 2, 3, 4, 5].map(star => (
                   <button
                     key={star}
-                    onClick={() => setFormData({...formData, intensity: star})}
-                    className={`p-1 ${star <= formData.intensity ? 'text-yellow-400' : 'text-gray-300'}`}
+                    onClick={() => setFormData({...formData, rating: star})}
+                    className={`p-1 ${star <= formData.rating ? 'text-yellow-400' : 'text-gray-300'}`}
                   >
                     <Star className="h-5 w-5 fill-current" />
                   </button>
@@ -379,20 +378,7 @@ export function EnhancedEmotionEditor({ entry, onSave, onCancel, isEditing = fal
             </div>
           </div>
 
-          {/* 隐私设置 */}
-          <div className="flex items-center space-x-2">
-            <input
-              type="checkbox"
-              id="isPrivate"
-              checked={formData.isPrivate}
-              onChange={(e) => setFormData({...formData, isPrivate: e.target.checked})}
-              className="rounded border-gray-300 text-rose-500 focus:ring-rose-500"
-            />
-            <label htmlFor="isPrivate" className="flex items-center space-x-2 text-sm text-gray-700">
-              <Lock className="h-4 w-4" />
-              <span>设为私密日记</span>
-            </label>
-          </div>
+
         </div>
       )}
 
@@ -489,7 +475,7 @@ export function EnhancedEmotionEditor({ entry, onSave, onCancel, isEditing = fal
       {/* 操作按钮 */}
       <div className="flex justify-end space-x-3 mt-6 pt-6 border-t border-gray-200">
         <button
-          onClick={onCancel}
+          onClick={() => {}}
           className="px-4 py-2 border border-gray-300 rounded-lg text-gray-700 hover:bg-gray-50 transition-colors"
         >
           取消
@@ -500,7 +486,7 @@ export function EnhancedEmotionEditor({ entry, onSave, onCancel, isEditing = fal
           className="flex items-center space-x-2 px-4 py-2 bg-gradient-to-r from-rose-500 to-pink-500 text-white rounded-lg hover:from-rose-600 hover:to-pink-600 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
         >
           <Send className="h-4 w-4" />
-          <span>{isEditing ? '更新日记' : '保存日记'}</span>
+          <span>保存日记</span>
         </button>
       </div>
 
