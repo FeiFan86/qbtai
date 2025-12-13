@@ -185,7 +185,7 @@ export function EmotionCalendar({ diaries, onDateSelect, selectedDate }: Emotion
           return (
             <button
               key={day.toISOString()}
-              onClick={() => onDateSelect(day)}
+              onClick={() => onDateSelect?.(day)}
               className={`
                 h-20 p-2 rounded-lg border-2 transition-all duration-200
                 flex flex-col items-center justify-center
