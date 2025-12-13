@@ -165,7 +165,7 @@ export function getFeatureStatusText(feature: string, isGuest: boolean, usage?: 
   if (isGuest) {
     const guestUsage = canGuestUseFeature(feature)
     if (!guestUsage.canUse) {
-      return `游客使用次数已用完，请登录后继续使用或等待${Math.ceil((guestUsage.resetTime?.getTime()! - Date.now()) / (1000 * 60))}分钟后重置`
+      return `游客使用次数已用完，请登录后继续使用或等待${guestUsage.resetTime ? Math.ceil((guestUsage.resetTime.getTime() - Date.now()) / (1000 * 60)) : 0}分钟后重置`
     }
     return `游客还可使用 ${guestUsage.remaining} 次`
   }
